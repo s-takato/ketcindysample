@@ -1,0 +1,29 @@
+Ketinit();
+
+ Slider("X",[0,SW.y-0.5],[2*pi,SW.y-0.5]);
+ Setwindow([-2.2,7],[-1.2,1.2]);
+ Setunitlen("12.5mm");
+ cntr=[-1,0];
+ pA=cntr+[1,0];
+ Circledata("1",[cntr,pA]);
+ Listplot("1",[cntr,pA]);
+ Setax([7,"se"]);
+ mf(s):=(
+  regional(tmp);
+  pP=cntr+[cos(s),sin(s)];
+  Listplot("2",[cntr,pP]);
+  Listplot("3",[[s,sin(s)],[s,0]],["da"]);
+  Listplot("4",[pP,[s,sin(s)]],["da"]);
+  Anglemark("1",[pA,cntr,s],[0.7,"E=x"]);
+  Setcolor("red");
+  tmp=Assign("x=[0,s]",["s",s]);
+  Plotdata("1","sin(x)",tmp,["color->[1,0,0]"]);
+  Setcolor("black");
+  Htickmark([pi/2,"n","\frac{\pi}{2}",pi,"n","\pi",
+     2*pi,"n","2\pi"]);
+  Vtickmark([-1,"-1",1,"1"]);
+ );
+ Setpara("sinecurve","mf(s)","s=[0,2*pi]",["Div=32"]);
+ mf(X.x);
+
+Windispg();
