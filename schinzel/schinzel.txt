@@ -1,0 +1,47 @@
+Ketinit();
+
+Setwindow([-5,10],[-5,5]);
+Slider("S",[-9,YMIN-1],[10,YMIN-1]);
+Findpt(n):=(
+  regional(k,r,c,b,a,Eps,cs,pL,str,tmp);
+  Eps=10^(-10);
+  if(mod(n,2)==0,
+    k=n/2;
+    r=sqrt(5^(k-1)/4);
+    c=[1/2,0];
+  ,
+    k=(n-1)/2;
+    r=sqrt(5^(2*k)/9);
+    c=[1/3,0];
+  );
+  b=floor(r);
+  pL=[];
+  forall(0..b,y,
+    x=sqrt(r^2-y^2)+c_1;
+    a=round(x);
+    if(abs(x-a)<Eps,
+      pL=append(pL,[a,y]);
+      if(y>0,pL=append(pL,[a,-y]));
+    );
+    x=-sqrt(r^2-y^2)+c_1;
+    a=round(x);
+    if(abs(x-a)<Eps,
+      pL=append(pL,[x,y]);
+      if(y>0,pL=append(pL,[x,-y]));
+    );
+  );
+  cs=c/r*4;
+  Circledata("1",[cs,cs+[4,0]]);
+  forall(1..(length(pL)),
+    Pointdata(text(#),[pL_#/r*4],["Size=3","Color=red"]);
+  );
+  Expr([cs_1+4,0],"se",Sprintf(r+c_1,3));
+  Expr([cs_1-4,0],"sw",Sprintf(-r+c_1,3));
+  str="n="+n+",\mbox{Number}="+length(pL);
+  Expr([[1,YMAX],"ne",str],["size->24"]);
+  pL;
+);
+
+Findpt(round(S.x+10));
+
+Windispg();
