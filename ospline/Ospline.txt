@@ -1,0 +1,13 @@
+Ketinit();
+
+Ospline("1",[A,B,C,D]);
+Putoncurve("P","bzo1");
+m=Derivative("bzo1","x="+P.x);
+//Lineplot("1",[P,P+[1,m]]);
+//Defvar("m",m);
+//Plotdata("1","m*(x-P.x)+P.y","x",["Num=1"]);
+fun=Assign("m*(x-P.x)+P.y",["m",m]);
+Plotdata("1",fun,"x",["Num=1"]);
+Windispg();
+
+//Help("Deri");
