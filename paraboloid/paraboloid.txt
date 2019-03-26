@@ -1,0 +1,29 @@
+Start3d();
+
+Putaxes3d(4);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+fd1=[
+ "z=4-(x^2+y^2)",
+ "x=R*cos(T)","y=R*sin(T)",
+ "R=[0,2]","T=[0,2*pi]","e"
+];
+
+fd2=[
+ "p", // defined as parametric functions
+ "x=R*cos(T)","y=R*sin(T)","z=4-R^2",
+ "R=[0,2]","T=[0,2*pi]","e"
+];
+
+if(Isangle(), //if TH/FI is selected
+ Sf3data("1",fd1);
+,
+ Startsurf();
+ Sfbdparadata("1",fd1,["dr,1.5"],["do"]);
+ Crvsfparadata("1","ax3d","sfbd3d1",fd1,["Color=red"]);
+ if(Gccexists(),
+   ExeccmdC("1",[""]);
+ );
+);
+
+Windispg();

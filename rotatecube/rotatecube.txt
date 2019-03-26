@@ -1,0 +1,48 @@
+Start3d([Sl,S,Sr]);
+Slider("Sl-S-Sr",[-2*pi,SW.y-1.5],[2*pi,SW.y-1.5]);
+
+Putaxes3d(5);
+Xyzax3data("","x=[-4.5,4.5]"," =[-0.5,0.5]","z=[-4.5,4.5]");
+
+Ch=[2];
+ptL=[[2,2,-2],[2,-2,-2],[-2,-2,-2],[-2,2,-2],[2,2,2],[2,-2,2],[-2,-2,2],[-2,2,2]];
+fL=[[1,2,6,5],[1,5,8,4],[1,4,3,2],[2,3,7,6],[3,4,8,7],[5,6,7,8]];
+polyhed=[ptL,fL];
+
+Putpoint3d(["A",1/sqrt(3)*[1,1,1]],["fix"]);
+Perpplane("B-C","O",[1,1,1],["P"]);
+
+P3d=Rotatepoint3d(B3d,A3d,S.x);
+Q3d=Rotatepoint3d(C3d,A3d,S.x);
+
+matT1=[A3d,B3d,C3d];
+matT2=[A3d,P3d,Q3d];
+
+if(contains(Ch,1),
+  qtL=apply(ptL,matT2*#);
+  polyhed2=[qtL,fL];
+  VertexEdgeFace("1",polyhed2,["Pt=fix","Edg=nogeo"]);
+  Nohiddenbyfaces("1","phf3d1",[],["do"]);
+  Skeletonparadata("1",phe3d1,Datalist3d(),[1.5]);
+);
+
+if(contains(Ch,2),
+  mf(s):=(
+    Sk=pi/12*s;
+    Ps3d=Rotatepoint3d(B3d,A3d,Sk);//S.x
+    Qs3d=Rotatepoint3d(C3d,A3d,Sk);//S.x
+    matT=[A3d,Ps3d,Qs3d];
+    stL=apply(ptL,matT*#);
+    polyheds=[stL,fL];
+    VertexEdgeFace("s1",polyheds,["Pt=fix","Edg=nogeo"]);
+    Nohiddenbyfaces("s1","phf3ds1",[],["nodisp"]);
+  );
+  Setpara("rotcube","mf(s)","s=[0,24]",["Div=24"],
+  ["Frate=10","Scale=1","OpA=","Title=rotate cube"]);
+  mf(S.x);
+);
+
+Windispg();
+
+
+
