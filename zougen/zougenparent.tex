@@ -1,0 +1,17 @@
+\documentclass{ujarticle}
+\special{papersize=100mm,100mm}
+\usepackage{ketpic,ketlayer}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{color}
+
+\setmargin{5}{5}{5}{5}
+
+\begin{document}
+
+\begin{layer}{140}{0} % Set y to a positive number to display grids
+\putnotese{10}{0}{\input{zougentable.tex}}
+\putnotese{30}{25}{\input{zougengraph.tex}}
+\end{layer}
+
+\end{document}

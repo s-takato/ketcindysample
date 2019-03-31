@@ -1,6 +1,7 @@
 Ketinit();
+Setparent(Cdyname()+"fig");
 
-//Setwindow([-3,5],[-3,5]);
+Setwindow([-3,5],[-3,5]);
 
 Slider("S",[0,-4],[8,-4]);
 s=S.x/2;
@@ -21,4 +22,5 @@ forall(1..n,
  Listplot(text(#)+"d",[[x,y1],[x,y2]],["dr,3","Color=red"]);
 );
 
+Figpdf();
 Windispg();
