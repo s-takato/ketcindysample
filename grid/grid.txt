@@ -1,0 +1,30 @@
+Ketinit();
+
+Addax(0);
+
+SW.xy=[0,0];
+Slider("H",[1,-0.5],[10,-0.5]);
+h=round(H.x)/10;
+n=round(XMAX/h);
+ctr=1;
+forall(0..n,
+  if(isinteger(h*#),
+    Listplot(text(ctr),[[0,h*#],[YMAX,h*#]]);
+  ,
+    Listplot(text(ctr),[[0,h*#],[YMAX,h*#]],["da,0.5,0.5"]);
+  );
+  ctr=ctr+1;
+);
+n=round(YMAX/h);
+forall(0..n,
+ if(isinteger(h*#),
+   Listplot(text(ctr),[[h*#,0],[h*#,XMAX]]);
+ ,
+   Listplot(text(ctr),[[h*#,0],[h*#,XMAX]],["da,0.5,0.5"]);
+ );
+ ctr=ctr+1;
+);
+
+Windispg();
+
+//Help("Opt");
