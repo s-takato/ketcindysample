@@ -1,12 +1,18 @@
 # To make html
-#    20190404
+#    20190405
 
 thisfile <- function(){
-  str <- readline("File ")
+  path <- readline("Main Path ")
+  if((nchar(path)>0)&&(substring(path,nchar(path))!="/")){
+    path=paste(path,"/",sep="")
+    setwd(path)
+  }
+  str <- readline("File(html) ")
   if(nchar(str)>0){
     tmp=grep(".",str,fixed=T)
     if(length(tmp)==0){
       str=paste(str,".html",sep="")
+      str=paste(path,str,sep="")
     }
   }else{
     str=""
@@ -71,6 +77,36 @@ thisitem <- function(){
   c(str,name)
 }
 
+thispathno <- function(){
+  num=""
+  while(nchar(num)==0){
+    num=readline("No of Path ")
+  }
+  num=as.numeric(num)
+  num
+}
+
+thisimageno <- function(){
+  num=""
+  while(nchar(num)==0){
+    num=readline("No of Image ")
+  }
+  num=as.numeric(num)
+  num
+}
+
+thisitemno <- function(){
+  str=""
+  while(nchar(str)==0){
+    str=readline("No of Item ")
+  }
+  tmp=toupper(substring(str,1,1))
+  if(tmp=="N"){return("next")}
+  if(tmp=="E"){return("end")}
+  out=as.numeric(str)
+  out
+}
+
 wfile=thisfile()
 maintitle=thismaintitle()
 
@@ -88,29 +124,56 @@ tmp=gsub("日","",tmp,fixed=T)
 cat('<font size="5">&emsp;&emsp;',tmp,"</font></p>\n",file=wfile,sep="",append=T)
 cat("\n",file=wfile,append=T)
 
+cat("Input info/data of each item\n")
 cmdL=c()
 str=""
 while(str!="end"){
-  title=thistitle()
-  path=thispath()
+  Plist=dir()
+  for(J in 1:length(Plist)){
+    cat(J,Plist[J],"\n")
+  }
+  path=Plist[thispathno()]
+#  path=thispathno()
+  Flist=dir(path)
+  for(J in 1:length(Flist)){
+    cat(J,Flist[J],"\n")
+  }
+  title=path
+#  title=thistitle()
   cmdL=c(paste("<!-- ",title," -->",sep=""))
   cmdL=c(cmdL,'<table border="1" height="30">')
   tmp='    <tr><th colspan="2" align="left"><font size="5">&emsp;'
   tmp=paste(tmp,title,'</font></th></tr>',sep="")
   cmdL=c(cmdL,tmp)
-  image=thisimage()
+  image=Flist[thisimageno()]
+  tmp=strsplit(image,".",fixed=T)
+  tmp=tmp[[1]]
+  name=toupper(tmp[2])
+#  image=thisimage()
   tmp='    <tr><td rowspan="20"><img src="'
-  tmp=paste(tmp,path,image[1],'" alt=',image[2],' width="240"></td></tr>',sep="")
+  tmp=paste(tmp,path,"/",image,'" alt=',name,' width="240"></td></tr>',sep="")
   cmdL=c(cmdL,tmp)
   head='    <tr><td align="center" width="80"><a href="'
   tail='</a></td></tr>'
+  str=""
   while((str!="end")&&(str!="next")){
-    str=thisitem()
-    name=str[[2]]
-    str=str[[1]]
+    str=thisitemno()
+    if(is.numeric(str)){
+      str=Flist[str]
+    }
+    tmp=strsplit(str,".",fixed=T)
+    tmp=tmp[[1]]
+    if(length(tmp)>1){
+      name=tmp[2]
+    }else{
+      name=""
+    }
+#    str=thisitem()
+#    name=str[[2]]
+#    str=str[[1]]
     cat("File=",str,",Name=",name,"\n",sep="")
     if(nchar(name)>0){
-      tmp=paste(head,path,str,'">',name,tail,sep="")
+      tmp=paste(head,path,"/",str,'">',name,tail,sep="")
       cmdL=c(cmdL,tmp)
     }
   }

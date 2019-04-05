@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>schinzel.cdy</title>
+    <title>s0101figure.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -206,6 +206,13 @@ Invert(Fig):=(
   if(isstring(Fig),tmp=parse(Fig),tmp=Fig); // 16.01.27
   reverse(tmp);
 );
+Invert(nm,Fig):=Invert(nm,Fig,["nodisp"]);  // from 160127
+Invert(nm,Fig,options):=(
+  regional(name,tmp);
+  name="-inv"+nm;
+  tmp=Invert(Fig);
+  Listplot(name,tmp,options);
+);// to 160127
 Drwxy():=Drwxy(0,[]); //190103from
 Drwxy(Arg):=(
   if(islist(Arg),Drwxy(0,Arg); Drwxy(Arg,[]));
@@ -710,50 +717,8 @@ Pcrd(pt):=(
   );
  tmp;
 );
-Slider(ptstr,p1,p2):=Slider(ptstr,p1,p2,[]);
-Slider(ptstr,p1,p2,options):=(//190120
-  regional(pA,pB,pC,seg,sname,Alpha,color,size,tmp,tmp1);
-  color="Color=0.6*[0,0,1]"; //190120from
-  size="size->2";
-  forall(options,
-    tmp=Toupper(substring(#,0,1));
-    if(tmp=="C",
-      color=#;
-    );
-    if(tmp=="S",
-      tmp=Strsplit(#,"=");
-      size="size->"+tmp_2;
-    );
-  ); //190120to
-  tmp=Indexall(ptstr,"-");
-  if(length(tmp)>0, //190209from
-    pA=substring(ptstr,0,tmp_1-1);
-    pC=substring(ptstr,tmp_1,tmp_2-1);
-    pB=substring(ptstr,tmp_2,length(ptstr));
-    seg=pA+pB;
-    Alpha="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    sname="";
-    forall(1..(length(seg)),
-      tmp=substring(seg,#-1,#);
-      tmp1=indexof(Alpha,tmp);
-      if(tmp1>0,
-        sname=sname+unicode(text(tmp1+96),base->10);
-      ,
-        sname=sname+tmp;
-      );
-    ); 
-    Putpoint(pA,p1);
-    Putpoint(pB,p2);
-    Listplot([parse(pA),parse(pB)],["Msg=n","notex",color,size]);
-    Putonseg(pC,parse("sg"+pA+pB));
-    PTEXCEPTION=concat(TEXCEPTION,[pA,pC,pB]);
-  ,
-    pA=""; pB=""; pC=ptstr;
-    tmp=pC+"l"+pC+pC+"r";
-    Listplot(tmp,[p1,p2],["Msg=n","notex",color,size]);
-    Putonseg(pC,parse("sg"+tmp));
-    PTEXCEPTION=concat(TEXCEPTION,[pC]);
-  ); //190209to
+Addax(param):=(
+  ADDAXES=text(param);
 );
 Listplot(list):=Listplot(list,[]);
 Listplot(Arg1,Arg2):=(
@@ -1051,50 +1016,6 @@ Ptsize(n):=(
   TenSize=TenSizeInit*n;
   Com2nd("Setpt("+text(n)+")"); // 14.01.19
 );
-Putonseg(name,sgstr):=(
-  regional(seg,p1,p2);
-  if(isstring(sgstr),seg=parse(sgstr),seg=sgstr);
-  Putonseg(name,LLcrd(seg_1),LLcrd(seg_2));
-);
-Putonseg(name,p1,p2):=Putonseg(name,p1,p2,[]);
-Putonseg(name,p1org,p2org,options):=(
-  regional(Eps,par,p1,p2,dx,dy,p,tmp,tmp1,tmp2);
-  Eps=10^(-5);
-  par=0.5;
-  tmp=Divoptions(options);
-  if(length(tmp_6)>0,
-    par=tmp_6_1;
-  );
-  p1=Lcrd(p1org);//16.10.11from
-  p2=Lcrd(p2org);
-  p1=Pcrd(p1); p2=Pcrd(p2); //190120
-  dx=p2_1-p1_1;
-  dy=p2_2-p1_2;
-  p=parse(name+".xy");
-  if(abs(dx)>abs(dy), //190120from
-    if(p1_1>p2_1,tmp=p1;p1=p2;p2=tmp);
-    if(p_1<p1_1,parse(name+".xy="+Textformat(p1,5));p=p1);
-    if(p_1>p2_1,parse(name+".xy="+Textformat(p2,5));p=p2);
-    tmp=(p2_2-p1_2)/(p2_1-p1_1)*(p_1-p1_1)+p1_2;
-    parse(name+".y="+tmp);
-  ,
-    if(p1_2>p2_2,tmp=p1;p1=p2;p2=tmp);
-    if(p_2<p1_2,parse(name+".xy="+Textformat(p1,5));p=p1);
-    if(p_2>p2_2,parse(name+".xy="+Textformat(p2,5));p=p2);
-    tmp=(p2_1-p1_1)/(p2_2-p1_2)*(p_2-p1_2)+p1_1;
-    parse(name+".x="+tmp);
-  ); //190120to
-);
-LLcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=pt.xy
-  ,
-    tmp=pt;
-  );
-  tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
-  tmp;
-);
 Circledata(cenrad):=Circledata(cenrad,[]);
 Circledata(para1,para2):=(
   regional(name,cenrad,options,str,n); 
@@ -1315,36 +1236,6 @@ Lineplot(Arg1,Arg2):=(
   );
 );
 Lineplot(list):=Lineplot(list,[]);
-Sprintf(value,dig):=(
-  regional(vv,tmp,tmp1);
-  if(!islist(value),  // 17.03.12from
-    if(isstring(value),
-      vv=value;
-    ,
-      vv=Textformat(value,dig);
-    );  // 17.03.12from
-    if(indexof(vv,".")==0,vv=vv+".");
-    vv=vv+"0000000000000000";
-    tmp=indexof(vv,".")+dig;
-    vv=substring(vv,0,tmp);
-  ,
-    vv=apply(value,Sprintf(#,dig));
-  );
-  vv;
-);
-Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
-Expr(list):=Expr(list,[]);
-Expr(listorg,options):=( //16.10.09
-  regional(list,str,tmp,tmp1,tmp2);
-  list=listorg;
-  forall(1..round(length(list)/3),
-    str=list_(3*#);
-    if(!isstring(str),str=format(str,5));
-    str="$"+str+"$";
-    list_(3*#)=str;
-  );
-  Letter(list,options);
-);
 Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
 Letter(list):=Letter(list,[]);
 Letter(Pt,Dr,St,options):=Letter([Pt,Dr,St],options);//181218
@@ -1554,6 +1445,16 @@ Arrowdata(nm,ptlist,optionsorg):=(
     );
   );
   [Lcrd(pA),Lcrd(pB)];
+);
+LLcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=pt.xy
+  ,
+    tmp=pt;
+  );
+  tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
+  tmp;
 );
 Arrowhead(point,Houkou):=Arrowhead(point,Houkou,[]); //181018from
 Arrowhead(Arg1,Arg2,Arg3):=(
@@ -2083,67 +1984,52 @@ Inwindow(point,xrng,yrng):=(
   tmp=(x>xmin-Eps)&(x<xmax+Eps)&(y>ymin-Eps)&(y<ymax+Eps);
   if(tmp,true,false);
 );
-Addax(param):=(
-  ADDAXES=text(param);
+Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
+Expr(list):=Expr(list,[]);
+Expr(listorg,options):=( //16.10.09
+  regional(list,str,tmp,tmp1,tmp2);
+  list=listorg;
+  forall(1..round(length(list)/3),
+    str=list_(3*#);
+    if(!isstring(str),str=format(str,5));
+    str="$"+str+"$";
+    list_(3*#)=str;
+  );
+  Letter(list,options);
 );
-ptsL=[
-[19,[651042,0],[649167,49375],[649167,-49375],[-573921,307359],[-573921,-307359],[-548958,350000],[-548958,-350000],[-520833,390625],[-520833,-390625],[-489708,429000],[-489708,-429000],[274722,590240],[274722,-590240],[229167,609375],[229167,-609375],[182292,625000],[182292,-625000],[134367,637025],[134367,-637025]]
-];
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
+Setketcindyjs(["Color=white","Nolabel=all"]);
 
-Setwindow([-5,10],[-5,5]);
-Slider("S",[-9,YMIN-1],[10,YMIN-1]);
-Findpt(n):=(
-  regional(Eps,k,r,c,b,a,cs,pL,str,tmp);
-  Eps=10^(-10);
-  if(mod(n,2)==0,
-    k=n/2;
-    r=sqrt(5^(k-1)/4);
-    c=[1/2,0];
-  ,
-    k=(n-1)/2;
-    r=sqrt(5^(2*k)/9);
-    c=[1/3,0];
-  );
-    tmp=select(ptsL,#_1==n);
-    if(length(tmp)>0,
-      pL=tmp_1;
-      pL=pL_(2..(length(pL)));
-    ,
-    b=floor(r);
-    pL=[];
-    forall(0..b,y,
-      x=sqrt(r^2-y^2)+c_1;
-      a=round(x);
-      if(abs(x-a)<Eps,
-        pL=append(pL,[x,y]);
-        if(y>0,pL=append(pL,[x,-y]));
-      );
-      x=-sqrt(r^2-y^2)+c_1;
-      a=round(x);
-      if(abs(x-a)<Eps,
-        pL=append(pL,[x,y]);
-        if(y>0,pL=append(pL,[x,-y]));
-      );
-    );
-  );
-  cs=c/r*4;
-  Circledata("1",[cs,cs+[4,0]]);
-  forall(1..(length(pL)),
-    Pointdata(text(#),[pL_#/r*4],["Size=3","Color=red"]);
-  );
-  Expr([cs_1+4,0],"se",Sprintf(r+c_1,3));
-  Expr([cs_1-4,0],"sw",Sprintf(-r+c_1,3));
-  str="n="+n+",\mbox{Number}="+length(pL);
-  Expr([[1,YMAX],"ne",str],["size->24"]);
-  pL;
-);
-
-Findpt(round(S.x+10));
+Addax(0);
+Listplot("1",[A,B,C,A]);
+Circledata("1",[A,B,C]); 
+Letter([A,"sw","A",B,"se","B",C,"n2","C"]);
 
 Windispg();
+
+Help("Setketcindyj");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;
 </script>
     <script type="text/javascript">
@@ -2159,19 +2045,21 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0, 1.0, 1.0], labeled: false, size: 1.5},
-    {name: "NE", type: "Free", pos: [4.0, 2.0, 0.4], color: [1.0, 1.0, 1.0], labeled: false, size: 1.5},
-    {name: "S", type: "Free", pos: [4.0, 2.6666666666666665, -0.4444444444444444], color: [1.0, 0.0, 0.0], labeled: true, size: 3.0}
+    {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0, 1.0, 1.0], size: 1.5, labeled: false},
+    {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0, 1.0, 1.0], size: 1.5, labeled: false},
+    {name: "A", type: "Free", pos: [4.0, 1.0, -1.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0},
+    {name: "B", type: "Free", pos: [4.0, -1.0, 1.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0},
+    {name: "C", type: "Free", pos: [-2.0, -4.0, -1.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 911,
-    height: 463,
-    transform: [{visibleRect: [-15.198715586907145, 8.013227800744787, 16.889418595415936, -8.295011635496252]}],
+    width: 829,
+    height: 467,
+    transform: [{visibleRect: [-11.299503192975395, 6.685191925979293, 11.74425608617984, -6.296033144425405]}],
     axes: true,
     grid: 1.0,
     snap: true,
-    background: "rgb(168,176,192)"
+    background: "rgb(255,255,255)"
   }],
   csconsole: false,
   cinderella: {build: 1901, version: [2, 9, 1901]}

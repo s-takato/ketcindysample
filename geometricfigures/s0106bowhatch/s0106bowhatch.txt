@@ -1,0 +1,33 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
+
+Addax(0);
+
+Listplot([A,B,C,A]);
+Circledata([D,E]);
+Bowdata([B,A],[1,0.5,"Expr=c","da"]); 
+Bowdata([C,B],[1,0.5,"Expr=a","da"]);
+Bowdata([A,C],[1,0.5,"Expr=b","da"]); 
+Pointdata("I",D,["size=4"]);
+Letter([A,"sw","A",B,"ne","B",C,"se","C",D,"se","I"]);
+
+Ch=[1];
+if(contains(Ch,1),
+ if(!Ptselected(),
+  Hatchdata("1",["i"],[["crDE"]],["dr,0.7"]);
+ );
+);
+if(contains(Ch,2),
+ if(!Ptselected(),
+  Hatchdata("2",["oi"],[["crDE"],["sgABCA"]],["dr,0.7",""]); 
+ );
+);
+
+Figpdf();
+Windispg();
+
+
+//Help("Hatch");
+
+

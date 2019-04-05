@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>schinzel.cdy</title>
+    <title>s0106bowdotfill.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -206,6 +206,13 @@ Invert(Fig):=(
   if(isstring(Fig),tmp=parse(Fig),tmp=Fig); // 16.01.27
   reverse(tmp);
 );
+Invert(nm,Fig):=Invert(nm,Fig,["nodisp"]);  // from 160127
+Invert(nm,Fig,options):=(
+  regional(name,tmp);
+  name="-inv"+nm;
+  tmp=Invert(Fig);
+  Listplot(name,tmp,options);
+);// to 160127
 Drwxy():=Drwxy(0,[]); //190103from
 Drwxy(Arg):=(
   if(islist(Arg),Drwxy(0,Arg); Drwxy(Arg,[]));
@@ -710,50 +717,20 @@ Pcrd(pt):=(
   );
  tmp;
 );
-Slider(ptstr,p1,p2):=Slider(ptstr,p1,p2,[]);
-Slider(ptstr,p1,p2,options):=(//190120
-  regional(pA,pB,pC,seg,sname,Alpha,color,size,tmp,tmp1);
-  color="Color=0.6*[0,0,1]"; //190120from
-  size="size->2";
-  forall(options,
-    tmp=Toupper(substring(#,0,1));
-    if(tmp=="C",
-      color=#;
-    );
-    if(tmp=="S",
-      tmp=Strsplit(#,"=");
-      size="size->"+tmp_2;
-    );
-  ); //190120to
-  tmp=Indexall(ptstr,"-");
-  if(length(tmp)>0, //190209from
-    pA=substring(ptstr,0,tmp_1-1);
-    pC=substring(ptstr,tmp_1,tmp_2-1);
-    pB=substring(ptstr,tmp_2,length(ptstr));
-    seg=pA+pB;
-    Alpha="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    sname="";
-    forall(1..(length(seg)),
-      tmp=substring(seg,#-1,#);
-      tmp1=indexof(Alpha,tmp);
-      if(tmp1>0,
-        sname=sname+unicode(text(tmp1+96),base->10);
-      ,
-        sname=sname+tmp;
-      );
-    ); 
-    Putpoint(pA,p1);
-    Putpoint(pB,p2);
-    Listplot([parse(pA),parse(pB)],["Msg=n","notex",color,size]);
-    Putonseg(pC,parse("sg"+pA+pB));
-    PTEXCEPTION=concat(TEXCEPTION,[pA,pC,pB]);
+Setparent():=Setparent("");
+Setparent(file):=( // 17.11.27
+  if(length(file)>0, //180618
+    Texparent=file;
   ,
-    pA=""; pB=""; pC=ptstr;
-    tmp=pC+"l"+pC+pC+"r";
-    Listplot(tmp,[p1,p2],["Msg=n","notex",color,size]);
-    Putonseg(pC,parse("sg"+tmp));
-    PTEXCEPTION=concat(TEXCEPTION,[pC]);
-  ); //190209to
+    if(isstring(Texparent), //180618from
+      println("Texparent="+Dqq(Texparent));
+    ,
+      println("Texparent not defined");
+    );
+  ); //180618to
+);
+Addax(param):=(
+  ADDAXES=text(param);
 );
 Listplot(list):=Listplot(list,[]);
 Listplot(Arg1,Arg2):=(
@@ -1051,50 +1028,6 @@ Ptsize(n):=(
   TenSize=TenSizeInit*n;
   Com2nd("Setpt("+text(n)+")"); // 14.01.19
 );
-Putonseg(name,sgstr):=(
-  regional(seg,p1,p2);
-  if(isstring(sgstr),seg=parse(sgstr),seg=sgstr);
-  Putonseg(name,LLcrd(seg_1),LLcrd(seg_2));
-);
-Putonseg(name,p1,p2):=Putonseg(name,p1,p2,[]);
-Putonseg(name,p1org,p2org,options):=(
-  regional(Eps,par,p1,p2,dx,dy,p,tmp,tmp1,tmp2);
-  Eps=10^(-5);
-  par=0.5;
-  tmp=Divoptions(options);
-  if(length(tmp_6)>0,
-    par=tmp_6_1;
-  );
-  p1=Lcrd(p1org);//16.10.11from
-  p2=Lcrd(p2org);
-  p1=Pcrd(p1); p2=Pcrd(p2); //190120
-  dx=p2_1-p1_1;
-  dy=p2_2-p1_2;
-  p=parse(name+".xy");
-  if(abs(dx)>abs(dy), //190120from
-    if(p1_1>p2_1,tmp=p1;p1=p2;p2=tmp);
-    if(p_1<p1_1,parse(name+".xy="+Textformat(p1,5));p=p1);
-    if(p_1>p2_1,parse(name+".xy="+Textformat(p2,5));p=p2);
-    tmp=(p2_2-p1_2)/(p2_1-p1_1)*(p_1-p1_1)+p1_2;
-    parse(name+".y="+tmp);
-  ,
-    if(p1_2>p2_2,tmp=p1;p1=p2;p2=tmp);
-    if(p_2<p1_2,parse(name+".xy="+Textformat(p1,5));p=p1);
-    if(p_2>p2_2,parse(name+".xy="+Textformat(p2,5));p=p2);
-    tmp=(p2_1-p1_1)/(p2_2-p1_2)*(p_2-p1_2)+p1_1;
-    parse(name+".x="+tmp);
-  ); //190120to
-);
-LLcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=pt.xy
-  ,
-    tmp=pt;
-  );
-  tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
-  tmp;
-);
 Circledata(cenrad):=Circledata(cenrad,[]);
 Circledata(para1,para2):=(
   regional(name,cenrad,options,str,n); 
@@ -1315,35 +1248,205 @@ Lineplot(Arg1,Arg2):=(
   );
 );
 Lineplot(list):=Lineplot(list,[]);
-Sprintf(value,dig):=(
-  regional(vv,tmp,tmp1);
-  if(!islist(value),  // 17.03.12from
-    if(isstring(value),
-      vv=value;
-    ,
-      vv=Textformat(value,dig);
-    );  // 17.03.12from
-    if(indexof(vv,".")==0,vv=vv+".");
-    vv=vv+"0000000000000000";
-    tmp=indexof(vv,".")+dig;
-    vv=substring(vv,0,tmp);
+Bowdata(plist):=Bowdata(plist,[]);
+Bowdata(plist,options):=(
+  regional(nm,tmp);
+  if(islist(plist), // 16.12.04from
+    tmp=Textformat(plist,5);
+    tmp=replace(tmp,",","");
+    nm=substring(tmp,1,length(tmp)-1);
+    Bowdata(nm,plist,options);
   ,
-    vv=apply(value,Sprintf(#,dig));
-  );
-  vv;
+    nm=plist;
+    tmp=options;
+    Bowdata(nm,tmp,[]);
+  ); // 16.12.04until
 );
-Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
-Expr(list):=Expr(list,[]);
-Expr(listorg,options):=( //16.10.09
-  regional(list,str,tmp,tmp1,tmp2);
-  list=listorg;
-  forall(1..round(length(list)/3),
-    str=list_(3*#);
-    if(!isstring(str),str=format(str,5));
-    str="$"+str+"$";
-    list_(3*#)=str;
+Bowdata(nm,plist,options):=(
+  regional(name,Out,pB,pA,pC,ra,tmp,tmp1,tmp2,Ltype,eqL,realL,
+    Bname,Bpos,Th,Cut,Num,Hgt,opstr,opcindy,Ydata,pC,Msg,
+    Th1,Th2,Noflg,Bops,Bmov,Tmov,Nmov,rev,color);
+  name="bw"+nm;
+  tmp=Divoptions(options);
+  Ltype=tmp_1;
+  Noflg=tmp_2;
+  color=tmp_(length(tmp)-2);
+  opstr=tmp_(length(tmp)-1);
+  opcindy=tmp_(length(tmp));
+  eqL=tmp_5;
+  realL=tmp_6;
+  pA=Lcrd(plist_1); pB=Lcrd(plist_2);
+  Hgt=1/2*|pB-pA|*0.2;
+  Cut=0;
+  Num=24;
+  Bname="";
+  Msg="Y";  //190206
+  Tmov=0;//16.11.01from
+  Nmov=0;
+  Bmov="";
+  rev=0;//16.11.01until
+  if(length(realL)>0,
+    Hgt=realL_1*Hgt; // 15.04.12
+    if(length(realL)>1,Cut=realL_2);
   );
-  Letter(list,options);
+  forall(eqL,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(tmp1=="L",
+      if(indexof(#,"rot")>0,
+        Bname="Letterrot(";
+      ,
+        Bname="Letter(";
+      );
+      Bops=tmp_2;
+    );
+    if(tmp1=="E",
+      if(indexof(#,"rot")>0,
+        Bname="Exprrot(";
+      ,
+        Bname="Expr(";
+      );
+      Bops=tmp_2;
+    );
+    if(tmp1=="M", //190206from
+      Msg=Toupper(substring(tmp_2,0,1));
+    ); //190206to
+  );
+  Ydata=MakeBowdata(pA,pB,Hgt); 
+  pC=Ydata_1;
+  ra=Ydata_2;
+  Th=(Ydata_3+Ydata_4)*0.5;
+  BOWMIDDLE=[pC_1+ra*cos(Th),pC_2+ra*sin(Th)];
+  Bpos="md"+name; // 16.10.31from[moved]
+  tmp="Defvar("+Dq+Bpos+"="+Textformat(BOWMIDDLE,5)+Dq+");";
+  parse(tmp);// 16.10.31to[moved]
+  if(length(Bname)>0,  //16.11.01from
+    tmp=indexof(Bops,",");
+    if(tmp>0,
+      tmp1=substring(Bops,0,tmp-1);
+      if(length(tmp1)>=4 & substring(tmp1,0,1)=="t" & indexof(tmp1,"n")>0,
+        Bmov=tmp1;
+        Bops=substring(Bops,tmp,length(Bops));
+      );
+    );
+    if(length(Bmov)>0,
+      tmp=indexof(Bmov,"t");
+      if(tmp>0,
+        tmp1=indexof(Bmov,"n");
+        Tmov=parse(substring(Bmov,tmp,tmp1-1));
+        tmp=indexof(Bmov,"r");
+        if(tmp>0,
+          Nmov=parse(substring(Bmov,tmp1,tmp-1));
+          rev=1;
+        ,
+          Nmov=parse(substring(Bmov,tmp1,length(Bmov)));
+        );
+      );
+    );
+    Bname=Bname+Bpos;//16.11.01
+    if(abs(Tmov)+abs(Nmov)>0,
+      tmp=Pcrd(pA)-Pcrd(pB);
+      tmp1=1/Norm(tmp)*tmp;
+      tmp2=[-tmp1_2,tmp1_1];
+      tmp=MARKLEN*(Tmov*tmp1+Nmov*tmp2);
+      tmp=LLcrd(tmp);
+      Bname=Bname+"+"+text(tmp);
+    );
+    Bname=Bname+",";
+    if(indexof(Bname,"rot")>0,
+      if(rev==1,tmp=pB-pA,tmp=pA-pB);
+      Bname=Bname+Textformat(tmp,5)+",";
+    ,
+      Bname=Bname+Dq+"c"+Dq+",";
+    );
+    Bname=Bname+Dq+Bops+Dq+")";
+    parse(Bname);
+  );//16.11.01until
+  if(Cut==0,
+    Th1=Ydata_3;
+    Th2=Ydata_4;
+    Out=[];
+    forall(0..Num,
+      tmp=Th1+#*(Th2-Th1)/Num;
+      Out=append(Out,pC+ra*[cos(tmp),sin(tmp)]);
+    );
+  ,
+    Th1=Ydata_3;
+    Th2=Th-Cut/(2*ra);
+    tmp1=[];
+    forall(0..Num/2,
+      tmp=Th1+#*(Th2-Th1)/(Num/2);
+      tmp1=append(tmp1,pC+ra*[cos(tmp),sin(tmp)]);
+    );
+    Th1=Th+Cut/(2*ra);
+    Th2=Ydata_4;
+    tmp2=[];
+    forall(0..Num/2,
+      tmp=Th1+#*(Th2-Th1)/(Num/2);
+      tmp2=append(tmp2,pC+ra*[cos(tmp),sin(tmp)]);
+    );
+    Out=[tmp1,tmp2];
+  );
+  if(Noflg<3,
+    if(Msg=="Y", //190206
+      println("generate bowdata "+name+" and "+Bpos);//16.10.31
+    );
+    if(Measuredepth(Out)==1,Out=[Out]);
+    tmp1=[];
+    forall(Out,tmp2,
+      tmp=apply(tmp2,Pcrd(#));
+      tmp1=append(tmp1,tmp);
+    );
+    tmp=name+"="+Textformat(tmp1,5);
+    parse(tmp);
+  );
+  if(Noflg<2,
+    if(isstring(Ltype),
+      Ltype=GetLinestyle(text(Noflg)+Ltype,name);
+    ,
+      if(Noflg==1,Ltype=0);
+    );
+    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
+  );
+);
+Letterrot(pt,dir,str):=Letterrot(pt,dir,0,0,str,[]);
+Letterrot(pt,dir,Arg1,Arg2):=(
+  if(islist(Arg2),
+    Letterrot(pt,dir,"t0n0",Arg1,Arg2);
+  ,
+    Letterrot(pt,dir,Arg1,Arg2,[]);
+  );
+);
+Letterrot(pt,dir,movstr,str,options):=(
+  regional(tmov,nmov,tmp,tmp1,tmp2,color);
+  tmp1=indexof(movstr,"t");
+  tmp2=indexof(movstr,"n");
+  if(tmp1>0,
+    if(tmp2>0,tmp=tmp2-1,tmp=length(movstr));
+    tmov=parse(substring(movstr,tmp1,tmp));
+  ,
+    tmov=0;
+  );
+  if(tmp2>0,
+    nmov=parse(substring(movstr,tmp2,length(movstr)));
+  ,
+    nmov=0;
+  );
+  Letterrot(pt,dir,tmov,nmov,str,options);
+);
+Letterrot(pt,dir,tmov,nmov,str,options):=(
+  regional(tmp,color);
+  tmp=Divoptions(options);
+  color=tmp_(length(tmp)-2);
+  Letter([pt,"c",str],append(options,"notex"));
+  tmp=replace(str,"\","\\"); //17.10.18
+  if(color!=KCOLOR, //180904
+    Texcom("{");Com2nd("Setcolor("+color+")");//180722
+  );
+  Com2nd("Letterrot("+pt+","+dir+","+tmov+","+nmov+","+Dqq(tmp)+")");//180805
+  if(color!=KCOLOR, //180904
+    Texcom("}");//180722
+  );
 );
 Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
 Letter(list):=Letter(list,[]);
@@ -1454,6 +1557,221 @@ Removespace(str):=(
     );
   );
   out=substring(out,0,tmp);
+);
+Exprrot(pt,dir,str):=Exprrot(pt,dir,0,0,str,[]);
+Expr(pt,dir,str,options):=Expr([pt,dir,str],options);//181218
+Exprrot(pt,dir,Arg1,Arg2):=(
+  if(islist(Arg2),
+    Exprrot(pt,dir,"t0n0",Arg1,Arg2);
+  ,
+    Exprrot(pt,dir,Arg1,Arg2,[]);
+  );
+);
+Exprrot(pt,dir,movstr,str,options):=(
+  regional(tmov,nmov,tmp,tmp1,tmp2,color);
+  tmp1=indexof(movstr,"t");
+  tmp2=indexof(movstr,"n");
+  if(tmp1>0,
+    if(tmp2>0,tmp=tmp2-1,tmp=length(movstr));
+    tmov=parse(substring(movstr,tmp1,tmp));
+  ,
+    tmov=0;
+  );
+  if(tmp2>0,
+    nmov=parse(substring(movstr,tmp2,length(movstr)));
+  ,
+    nmov=0;
+  );
+  Exprrot(pt,dir,tmov,nmov,str,options);
+);
+Exprrot(pt,dir,tmov,nmov,str,options):=(
+  regional(tmp,color);
+  tmp=Divoptions(options);
+  color=tmp_(length(tmp)-2);
+  Expr([pt,"c",str],append(options,"notex"));
+  tmp=replace(str,"\","\\"); //17.10.18
+  if(color!=KCOLOR, //180904
+    Texcom("{");Com2nd("Setcolor("+color+")");//180722
+  );
+  Com2nd("Exprrot("+pt+","+dir+","+tmov+","+nmov+","+Dqq(tmp)+")");//180802
+  if(color!=KCOLOR, //180904
+    Texcom("}");//180722
+  );
+);
+Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
+Expr(list):=Expr(list,[]);
+Expr(listorg,options):=( //16.10.09
+  regional(list,str,tmp,tmp1,tmp2);
+  list=listorg;
+  forall(1..round(length(list)/3),
+    str=list_(3*#);
+    if(!isstring(str),str=format(str,5));
+    str="$"+str+"$";
+    list_(3*#)=str;
+  );
+  Letter(list,options);
+);
+MakeBowdata(pA,pB,Hgt):=(
+  regional(angle,pB2,pH2,pC2,pC,tmp,Th1,Th2,ra,dMA);
+  angle=arctan2(pB-pA)+0;
+  pB2=Rotatepoint(pB,-angle,pA);
+  tmp=Lcrd(pA);
+  pH2=[(tmp_1+pB2_1)/2,tmp_2-Hgt];
+  dMA=|tmp-pB2|/2;
+  ra=(dMA^2+Hgt^2)/(2*Hgt);
+  pC2=[pH2_1,pB2_2+(ra-Hgt)];
+  pC=Rotatepoint(pC2,angle,pA);
+  Th1=arctan2(pA-pC2)+angle;
+  Th2=arctan2(pB2-pC2)+angle;
+  [pC,ra,Th1,Th2];
+);
+Rotatepoint(point,Theta,ctr):=(
+  regional(X1,X2,Y1,Y2,Cx,Cy,tmp);
+  tmp=Lcrd(point);
+  X1=tmp_1; Y1=tmp_2;
+  tmp=Lcrd(ctr);
+  Cx=tmp_1; Cy=tmp_2;
+  X2=Cx+(X1-Cx)*cos(Theta)-(Y1-Cy)*sin(Theta);
+  Y2=Cy+(X1-Cx)*sin(Theta)+(Y1-Cy)*cos(Theta); 
+  [X2,Y2];
+);
+Norm(v1):=(  // 16.09.01
+  regional(out,tmp,tmp1,tmp2);
+  out=0;
+  forall(1..(length(v1)),
+    out=out+(v1_#)^2;
+  );
+  out=sqrt(out);
+  out;
+);
+Norm(v1,v2):=(
+  Norm(v2-v1);
+);
+LLcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=pt.xy
+  ,
+    tmp=pt;
+  );
+  tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
+  tmp;
+);
+Figpdf():=Figpdf(Texparent,[]);
+Figpdf(Arg1):=(
+  if(isstring(Arg1),
+    Figpdf(Arg1,[]);
+  ,
+    Figpdf(Texparent,Arg1);
+  );
+);
+Figpdf(fnameorg,optionorg):=(
+  regional(options,fname,mar,pos,dp,sc,tmp,tmp1,tmp2,sep);
+  fname=fnameorg;
+  if(indexof(fnameorg,".")==0,
+    fname=fnameorg+".tex";
+  );
+  tmp=apply(optionorg,if(isstring(#),parse("["+#+"]"),#)); // 16.04.07
+  tmp=select(tmp,#!=[]);
+  options=optionorg;//16.11.08from
+  dp=[0,-3];
+  tmp=select(options,islist(#));
+  if(length(tmp)>0,
+    dp=tmp_1;
+    options=remove(options,tmp);
+  );
+  tmp=4-length(options);
+  tmp1=apply(1..tmp,5);
+  mar=concat(options,tmp1);
+  mar=apply(mar,if(length(#)==0,5,#));//16.11.08until
+  pos=[mar_1+dp_1,mar_3+dp_2];
+  sc=10;
+  tmp=indexof(ULEN,"cm");
+  if(tmp>0,
+    tmp1=Removespace(substring(ULEN,0,tmp-1));
+    sc=parse(tmp1)*10;
+  );
+  tmp=indexof(ULEN,"mm");
+  if(tmp>0,
+    tmp1=Removespace(substring(ULEN,0,tmp-1));
+    sc=parse(tmp1);
+  );
+  tmp="\documentclass{article}";
+  if(GPACK=="tikz", //190324from
+    if(indexof(PathT,"pdflatex")+indexof(PathT,"lualatex")==0,
+      tmp="\documentclass[dvipdfmx]{article}";
+    ); //190324to
+  );
+  if(indexof(PathT,"platex")>0,
+    tmp=replace(tmp,"article","jarticle");
+    if(indexof(PathT,"uplatex")>0, //170813from
+      tmp=replace(tmp,"jarticle","ujarticle");
+    );//170813to
+  ); 
+  FigPdfList=append(FigPdfList,tmp); // 16.06.09until
+  tmp1="\special{papersize=W mm,H mm}";
+  tmp=(XMAX-XMIN)*sc+(mar_1+mar_2);
+  tmp1=replace(tmp1,"W",text(tmp));
+  tmp=(YMAX-YMIN)*sc+(mar_3+mar_4);
+  tmp1=replace(tmp1,"H",text(tmp));
+  FigPdfList=append(FigPdfList,tmp1);
+  if(indexof(PathT,"pdflatex")+indexof(PathT,"lualatex")>0, //17.11.05from
+    FigPdfList=append(FigPdfList,
+      "\usepackage{pict2e}");
+    tmp=replace(Dirhead,"\","/");
+    tmp=replace(tmp,"scripts","tex/latex");
+    if(isexists(tmp,""),
+      FigPdfList=append(FigPdfList,
+         "\usepackage{ketpic2e,ketlayer2e}");
+    ,
+      tmp=replace(Dirhead+"/ketpicstyle","\","/");
+      FigPdfList=concat(FigPdfList, 
+        ["\usepackage{"+tmp+"/ketpic2e}",
+         "\usepackage{"+tmp+"/ketlayer2e}"]);
+    );
+  ,
+    tmp=replace(Dirhead,"\","/");
+    tmp=replace(tmp,"scripts","tex/latex");
+    if(isexists(tmp,""),
+      FigPdfList=append(FigPdfList,
+         "\usepackage{ketpic,ketlayer}");
+    ,
+      tmp=replace(Dirhead+"/ketpicstyle","\","/");
+      FigPdfList=concat(FigPdfList,
+        ["\usepackage{"+tmp+"/ketpic}",
+         "\usepackage{"+tmp+"/ketlayer}"]);
+    );
+  );//17.11.05until
+  FigPdfList=append(FigPdfList,
+    "\usepackage{amsmath,amssymb}");
+  FigPdfList=append(FigPdfList,
+    "\usepackage{graphicx,color}");
+  forall(ADDPACK, // 16.05.16from
+    tmp1="\usepackage"+#; //17.07.10
+    FigPdfList=append(FigPdfList,tmp1);  // 16.09.05until
+  );
+  FigPdfList=append(FigPdfList,"");
+  FigPdfList=append(FigPdfList,
+    "\setmargin{0}{0}{0}{0}");
+  FigPdfList=append(FigPdfList,"");
+  FigPdfList=append(FigPdfList,"\begin{document}");
+  FigPdfList=append(FigPdfList,"");
+  FigPdfList=append(FigPdfList,
+    "\begin{layer}{50}{0}");
+  tmp1="\putnotese{X}{Y}{\input{";
+  tmp1=replace(tmp1,"X",text(pos_1));
+  tmp1=replace(tmp1,"Y",text(pos_2));
+  FigPdfList=append(FigPdfList,tmp1+Fhead+".tex}}");
+  FigPdfList=append(FigPdfList,"");
+  FigPdfList=append(FigPdfList,"\end{layer}");
+  FigPdfList=append(FigPdfList,"");
+  FigPdfList=append(FigPdfList,"\end{document}");
+  if(fnameorg!=Texparent,
+    SCEOUTPUT=openfile(fname);
+    forall(FigPdfList,println(SCEOUTPUT,#));
+    closefile(SCEOUTPUT);
+  );
+  FigPdfList;
 );
 Arrowdata(ptlist):=Arrowdata(ptlist,[]); //181110from
 Arrowdata(Arg1,Arg2):=(
@@ -2083,67 +2401,37 @@ Inwindow(point,xrng,yrng):=(
   tmp=(x>xmin-Eps)&(x<xmax+Eps)&(y>ymin-Eps)&(y<ymax+Eps);
   if(tmp,true,false);
 );
-Addax(param):=(
-  ADDAXES=text(param);
-);
-ptsL=[
-[19,[651042,0],[649167,49375],[649167,-49375],[-573921,307359],[-573921,-307359],[-548958,350000],[-548958,-350000],[-520833,390625],[-520833,-390625],[-489708,429000],[-489708,-429000],[274722,590240],[274722,-590240],[229167,609375],[229167,-609375],[182292,625000],[182292,-625000],[134367,637025],[134367,-637025]]
-];
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
 
-Setwindow([-5,10],[-5,5]);
-Slider("S",[-9,YMIN-1],[10,YMIN-1]);
-Findpt(n):=(
-  regional(Eps,k,r,c,b,a,cs,pL,str,tmp);
-  Eps=10^(-10);
-  if(mod(n,2)==0,
-    k=n/2;
-    r=sqrt(5^(k-1)/4);
-    c=[1/2,0];
-  ,
-    k=(n-1)/2;
-    r=sqrt(5^(2*k)/9);
-    c=[1/3,0];
-  );
-    tmp=select(ptsL,#_1==n);
-    if(length(tmp)>0,
-      pL=tmp_1;
-      pL=pL_(2..(length(pL)));
-    ,
-    b=floor(r);
-    pL=[];
-    forall(0..b,y,
-      x=sqrt(r^2-y^2)+c_1;
-      a=round(x);
-      if(abs(x-a)<Eps,
-        pL=append(pL,[x,y]);
-        if(y>0,pL=append(pL,[x,-y]));
-      );
-      x=-sqrt(r^2-y^2)+c_1;
-      a=round(x);
-      if(abs(x-a)<Eps,
-        pL=append(pL,[x,y]);
-        if(y>0,pL=append(pL,[x,-y]));
-      );
-    );
-  );
-  cs=c/r*4;
-  Circledata("1",[cs,cs+[4,0]]);
-  forall(1..(length(pL)),
-    Pointdata(text(#),[pL_#/r*4],["Size=3","Color=red"]);
-  );
-  Expr([cs_1+4,0],"se",Sprintf(r+c_1,3));
-  Expr([cs_1-4,0],"sw",Sprintf(-r+c_1,3));
-  str="n="+n+",\mbox{Number}="+length(pL);
-  Expr([[1,YMAX],"ne",str],["size->24"]);
-  pL;
+Addax(0);
+
+Listplot("1",[A,B,C,A]);
+Circledata([D,E]);
+Bowdata("1",[B,A],[1,0.5,"Expr=c","da"]); 
+Bowdata("2",[C,B],[1,0.5,"Expr=a","da"]);
+Bowdata("3",[A,C],[1,0.5,"Expr=b","da"]); 
+
+Ch=[];
+if(contains(Ch,1),
+  Dotfilldata("1",["i"],[["crDE"]],[""]);
+);
+if(contains(Ch,2),
+  Dotfilldata("2",["oi"],[["crDE"],["sgABCA"]],[""]); 
 );
 
-Findpt(round(S.x+10));
+Pointdata("I",D,["size=4"]);
+Letter([A,"sw","A",B,"ne","B",C,"se","C",D,"se","I"]);
 
+Figpdf();
 Windispg();
+
+
+
+
 ;
 </script>
     <script type="text/javascript">
@@ -2159,19 +2447,33 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0, 1.0, 1.0], labeled: false, size: 1.5},
-    {name: "NE", type: "Free", pos: [4.0, 2.0, 0.4], color: [1.0, 1.0, 1.0], labeled: false, size: 1.5},
-    {name: "S", type: "Free", pos: [4.0, 2.6666666666666665, -0.4444444444444444], color: [1.0, 0.0, 0.0], labeled: true, size: 3.0}
+    {name: "SW", type: "Free", pos: [-3.866028708133971, -4.0, 0.7713753574780617], color: [1.0, 1.0, 1.0], size: 1.5, labeled: false},
+    {name: "NE", type: "Free", pos: [4.0, 3.2, 0.8], color: [1.0, 1.0, 1.0], size: 1.5, labeled: false},
+    {name: "A", type: "Free", pos: [4.0, 3.0, -1.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0},
+    {name: "B", type: "Free", pos: [-1.3333333333333333, -4.0, -1.3333333333333333], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0},
+    {name: "a", type: "Segment", color: [0.0, 0.0, 1.0], args: ["A", "B"], labeled: true, size: 3.0},
+    {name: "C", type: "Free", pos: [4.0, -3.0, 1.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0},
+    {name: "b", type: "Segment", color: [0.0, 0.0, 1.0], args: ["B", "C"], labeled: true, size: 3.0},
+    {name: "c", type: "Segment", color: [0.0, 0.0, 1.0], args: ["A", "C"], labeled: true, size: 3.0},
+    {name: "Collection__1", type: "AngularBisector", args: ["a", "c", "A"]},
+    {name: "", type: "SelectL", pos: [0.7400384116779469, 0.34661545109607084, 4.0], color: [1.0, 1.0, 1.0], args: ["Collection__1"], size: 0},
+    {name: "d", type: "SelectL", pos: [-1.66311533475487, 3.5508204463398263, 4.0], color: [0.0, 0.0, 1.0], args: ["Collection__1"], labeled: true, size: 3.0},
+    {name: "Collection__2", type: "AngularBisector", args: ["b", "c", "C"]},
+    {name: "e", type: "SelectL", pos: [-2.4721359549995796, -4.0, -2.1114561800016824], color: [0.0, 0.0, 1.0], args: ["Collection__2"], labeled: true, size: 3.0},
+    {name: "D", type: "Meet", color: [1.0, 0.0, 0.0], args: ["d", "e"], labeled: false, size: 3.0},
+    {name: "f", type: "Orthogonal", color: [0.0, 0.0, 1.0], args: ["c", "D"], labeled: true, size: 3.0},
+    {name: "E", type: "Meet", color: [1.0, 0.0, 0.0], args: ["c", "f"], labeled: false, size: 3.0},
+    {name: "C0", type: "CircleMP", color: [0.0, 0.0, 1.0], args: ["D", "E"], printname: "$C_{0}$"}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 911,
-    height: 463,
-    transform: [{visibleRect: [-15.198715586907145, 8.013227800744787, 16.889418595415936, -8.295011635496252]}],
+    width: 730,
+    height: 475,
+    transform: [{visibleRect: [-9.021789498139706, 5.602595824054638, 9.418319644604658, -6.396105330470805]}],
     axes: true,
     grid: 1.0,
     snap: true,
-    background: "rgb(168,176,192)"
+    background: "rgb(255,255,255)"
   }],
   csconsole: false,
   cinderella: {build: 1901, version: [2, 9, 1901]}

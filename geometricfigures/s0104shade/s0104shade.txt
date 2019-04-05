@@ -1,0 +1,17 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
+
+Addax(0);
+
+Listplot("1",[A,B,C,A]);
+Circledata("1",[D,E]);
+Shade(["sg1"],["Color=green"]);
+Shade(["cr1"],["Color=[0.4,0.4,0,0]"]);
+
+Pointdata("I",D,["Size=4"]);
+Letter([A,"sw","A",B,"ne","B",C,"se","C",D,"se","I"]);
+
+Figpdf();
+Windispg();

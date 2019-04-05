@@ -1,0 +1,15 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+Addax(0);
+Listplot([A,B,C,A]);
+Listplot([C,D]); 
+Listplot([A,E]); 
+Letter([F,"n-3w5","G"]); 
+//Circledata([F,A]);
+//Pointdata("I",D,["Size=4"]);
+Letter([A,"sw","A",B,"se","B",C,"n2","C"]);
+Letter([D,"s","M",E,"ne","N"]);
+
+Windispg();

@@ -1,0 +1,31 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
+
+Putpoint("A",[0,0],A.xy);
+Putpoint("C",[0,1]);
+
+rad=3;
+Putpoint("C",[0,0]);
+Putpoint("B",C+[rad+1,0]);
+Putpoint("A",B+[1,0],A.xy);
+
+Setpt(4);
+Circledata("0",[C,C+[rad,0]]);
+Circledata("1",[B,B+[1,0]],["nodisp"]);
+Pointdata("1",[A]);
+Addgraph("1",["pt1","cr1"],["nodisp"]);
+
+nn=48;
+forall(1..nn,
+  t=2*pi/nn*#;
+  tmp=rad*[cos(t),sin(t)];
+  nst=text(#);
+  Rotatedata(nst,"ad1",rad*t,[B,"nodisp"]);
+  Translatedata(nst,"rt"+nst,tmp-[rad,0],["nodisp"]);
+  Rotatedata(nst,"tr"+nst,t,[tmp,"dr,0.3"]);
+);
+
+
+Figpdf();
+Windispg();

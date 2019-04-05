@@ -1,0 +1,19 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
+
+Hyperbolaplot("1",[A,B,C],"[-2,2]");
+
+Ch=[1];
+if(contains(Ch,1),
+ Hatchdata("1",["ii"],[["rt1hyp1","w"],["rt1hyp2","e"]],["File=y","Max=100"]);
+);
+if(contains(Ch,2),
+ Hatchdata("1",["ii"],[["rt1hyp1","w"],["rt1hyp2","e"]],["Max=100"]);
+);
+
+Figpdf();
+Windispg();
+
+//Help("Hyp");
+

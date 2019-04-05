@@ -1,0 +1,14 @@
+Ketinit();
+//Setfiles("");
+//Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=white","Nolabel=all"]);
+
+Addax(0);
+Listplot("1",[A,B,C,A]);
+Circledata("1",[A,B,C]); 
+Letter([A,"sw","A",B,"se","B",C,"n2","C"]);
+
+//Figpdf();
+Windispg();
+
+//Help("Setketcindyj");
