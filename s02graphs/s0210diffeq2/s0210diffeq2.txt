@@ -1,0 +1,20 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
+
+Slider("C",[0,YMAX],[0,YMIN]);
+Slider("G",[0,YMIN-1],[XMAX,YMIN-1]);
+Slider("L",[0,YMIN-2],[XMAX,YMIN-2]);
+
+//Deqplot("1","y'=y","x",0,1); 
+Deqplot("2","y''=-L.x*y'-G.x*y","x=[0,XMAX]",0,[C.y,0],["Num=200"]); 
+//Deqplot("3","[x,y]'=[x*(1-y),0.3*y*(x-1)]","t=[0,20]",0,A,["Num=200"]); 
+
+Expr(M,"e","\displaystyle\frac{d^2 y}{dx^2}+"+L.x+"\frac{dy}{dx}+"+G.x+"y=0");
+
+Figpdf();
+Windispg();
+
+//Help("De");
+

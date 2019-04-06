@@ -134,6 +134,10 @@ while(str!="end"){
   }
   path=Plist[thispathno(length(Plist))]
   Flist=dir(path)
+  if(length(Flist)==0){
+    cat("There is no item\n")
+    next
+  }
   for(J in 1:length(Flist)){
     cat(J,Flist[J],"\n")
   }

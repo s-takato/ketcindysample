@@ -1,0 +1,31 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+Setax([7,"se"]);
+Plotdata("1","sin(x)","x");
+Plotdata("2","cos(x)","x");
+tmp1=Intersectcurves("gr1","gr2");
+println(tmp1);
+pt1=tmp1_2;
+pt2=tmp1_3;
+
+Ch=[1];
+if(contains(Ch,1),
+ Partcrv("1",pt1,pt2,"gr1");
+ Partcrv("2",pt1,pt2,"gr2");
+ Joincrvs("1",["part1","part2"],["nodisp"]);
+ Hatchdata("1",["i"],[["join1"]],["File=y"]);
+);
+if(contains(Ch,2),
+ Enclosing("1",["gr2","Invert(gr1)"],[pt1,"nodisp"]);
+ Hatchdata("1",["i"],[["en1"]],["File=y"]);
+);
+if(contains(Ch,3),
+ Setparent(Cdyname()+"figs");
+ Enclosing("1",["gr2","Invert(gr1)"],[pt1,"nodisp"]);
+ Shade("1",["en1"],["Color=[0,0.3,0,0]"]);
+);
+
+Figpdf();
+Windispg();
+

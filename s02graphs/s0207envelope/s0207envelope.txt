@@ -1,0 +1,18 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+Slider("C",[-5,-6],[5,-6]);
+
+n=50;
+forall((-n)..n,
+  t=XMIN+#/n*(XMAX-XMIN);
+  if(t<C.x,
+    tmp=Assign("-t*x+t^2","t",t);
+    Plotdata(text(#+n),tmp,"x",["Num=1"]);
+  );
+);
+
+Figpdf();
+Windispg();
+
+//Help("Plot");

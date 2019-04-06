@@ -1,0 +1,27 @@
+Ketinit();
+Setketcindyjs(["Color=white","Nolabel=all"]);
+
+Ch=[3];
+if(contains(Ch,1),
+ Setparent(Cdyname()+"fig1");
+ Deqplot("1","y'=y","x",0,1); 
+);
+if(contains(Ch,2),
+ Setparent(Cdyname()+"fig2");
+ Deqplot("2","y''=-y'-4*y","x",0, [1,0],["Num=200"]); 
+);
+if(contains(Ch,3),
+ Setparent(Cdyname()+"fig3");
+ Putpoint("A",[0.5,0,5],A.xy);
+ Deqplot("3","[x,y]'=[x*(1-y),0.3*y*(x-1)]","t=[0,20]",0,A,["Num=200"]);
+ Expr([[0,4],"w","(x,y)'=(x (1-y),0.3 y (x-1))"],["size->20"]);
+ Expr([[0,3],"w","(x,y)=\mathrm{A}\ (t=0)"],["size->20"]);
+ Pointdata("1",A,["Size=3"]);
+ Letter([A,"se","A"]);
+);
+
+Figpdf();
+Windispg();
+
+//Help("De");
+
