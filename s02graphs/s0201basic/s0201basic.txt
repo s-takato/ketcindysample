@@ -1,0 +1,19 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+Setax(["l","x","e","y","n","O","se"]); 
+//Setunitlen("4mm");
+
+Plotdata("1","sin(x)","x");
+//Plotdata("2","sin(x)","x=[-pi,pi]");
+//Plotdata("3","sin(5*x)","x",["Num=200"]);
+//Paramplot("1","[cos(5*t),sin(6*t)]","t=[0,2*pi]",["Num=500"]);
+
+Putpoint("D",[0,2],D.xy);
+Letter([D,"s","Graph of $y=\sin x$"]);
+
+Figpdf();
+Windispg();
+
+//Help("Option");

@@ -1,0 +1,29 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
+
+Setax([7,"se"]);
+
+Slider("C",[-6,-3],[6,-3]);
+Slider("F",[-8,-3],[-8,3]);
+Putpoint("G",[0,2]);
+G.xy=[0,2];
+
+Ch=[1,2]; // block(s) to be executed
+
+if(contains(Ch,1),
+ Plotdata("1","sin(x)","x",["Num=200","do"]);
+);
+
+if(contains(Ch,2),
+ Plotdata("2","sin(x-C.x)+F.y","x",["Num=200"]);
+);
+
+Letter([G,"s","Graph of $y=\sin x$"]);
+
+Figpdf();
+Windispg();
+
+//Help("Plot");
+

@@ -1,0 +1,24 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
+
+Setax([7,"se"]);
+
+Plotdata("1","sin(x)","x",["Num=200"]);
+Putoncurve("A","gr1");
+coeff=Derivative("sin(x)","x",A.x);
+funstr=Assign("coeff*(x-A.x)+A.y",["coeff",coeff]);
+Plotdata("2",funstr,"x",["Color=red","Num=1"]);
+Pointdata("1",A,["Size=3"]);
+
+Putpoint("B",[3,0.5],B.xy);
+Putpoint("C",[-6,2],C.xy);
+Letter([A,"n2w","A"]);
+Expr([B,"e","y=\sin x"]);
+Letter([C,"e","\Large The graph of $y=\sin x$"]);
+
+Figpdf();
+Windispg();
+
+//Help("Setax");

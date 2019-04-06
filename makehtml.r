@@ -77,34 +77,34 @@ thisitem <- function(){
   c(str,name)
 }
 
-thispathno <- function(){
-  num=""
-  while(nchar(num)==0){
-    num=readline("No of Path ")
+thispathno <- function(N){
+  str="" ; num=N+1;
+  while((nchar(str)==0)||(num>N)){
+    str=readline("No of Path ")
+    num=as.numeric(str)
   }
-  num=as.numeric(num)
   num
 }
 
-thisimageno <- function(){
-  num=""
-  while(nchar(num)==0){
-    num=readline("No of Image ")
+thisimageno <- function(N){
+  str="" ; num=N+1;
+  while((nchar(str)==0)||(num>N)){
+    str=readline("No of Image ")
+    num=as.numeric(str)
   }
-  num=as.numeric(num)
   num
 }
 
-thisitemno <- function(){
-  str=""
-  while(nchar(str)==0){
+thisitemno <- function(N){
+  str="" ; num=N+1;
+  while((nchar(str)==0)||(num>N)){
     str=readline("No of Item ")
+    tmp=toupper(substring(str,1,1))
+    if(tmp=="N"){return("next")}
+    if(tmp=="E"){return("end")}
+    num=as.numeric(str)
   }
-  tmp=toupper(substring(str,1,1))
-  if(tmp=="N"){return("next")}
-  if(tmp=="E"){return("end")}
-  out=as.numeric(str)
-  out
+  num
 }
 
 wfile=thisfile()
@@ -132,24 +132,21 @@ while(str!="end"){
   for(J in 1:length(Plist)){
     cat(J,Plist[J],"\n")
   }
-  path=Plist[thispathno()]
-#  path=thispathno()
+  path=Plist[thispathno(length(Plist))]
   Flist=dir(path)
   for(J in 1:length(Flist)){
     cat(J,Flist[J],"\n")
   }
   title=path
-#  title=thistitle()
   cmdL=c(paste("<!-- ",title," -->",sep=""))
   cmdL=c(cmdL,'<table border="1" height="30">')
   tmp='    <tr><th colspan="2" align="left"><font size="5">&emsp;'
   tmp=paste(tmp,title,'</font></th></tr>',sep="")
   cmdL=c(cmdL,tmp)
-  image=Flist[thisimageno()]
+  image=Flist[thisimageno(length(Flist))]
   tmp=strsplit(image,".",fixed=T)
   tmp=tmp[[1]]
   name=toupper(tmp[2])
-#  image=thisimage()
   tmp='    <tr><td rowspan="20"><img src="'
   tmp=paste(tmp,path,"/",image,'" alt=',name,' width="240"></td></tr>',sep="")
   cmdL=c(cmdL,tmp)
@@ -157,7 +154,7 @@ while(str!="end"){
   tail='</a></td></tr>'
   str=""
   while((str!="end")&&(str!="next")){
-    str=thisitemno()
+    str=thisitemno(length(Flist))
     if(is.numeric(str)){
       str=Flist[str]
     }
