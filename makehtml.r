@@ -1,5 +1,5 @@
 # To make html
-#    20190405
+#    20190408
 
 thisfile <- function(){
   path <- readline("Main Path ")
@@ -151,8 +151,10 @@ while(str!="end"){
   tmp=strsplit(image,".",fixed=T)
   tmp=tmp[[1]]
   name=toupper(tmp[2])
-  tmp='    <tr><td rowspan="20"><img src="'
-  tmp=paste(tmp,path,"/",image,'" alt=',name,' width="240"></td></tr>',sep="")
+  tmp='    <tr><td rowspan="20"><a href="'
+  tmp=paste(tmp,path,"/",image,'"><img src="',sep="")
+#  tmp='    <tr><td rowspan="20"><img src="'
+  tmp=paste(tmp,path,"/",image,'" alt=',name,' width="240"></a></td></tr>',sep="")
   cmdL=c(cmdL,tmp)
   head='    <tr><td align="center" width="80"><a href="'
   tail='</a></td></tr>'

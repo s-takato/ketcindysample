@@ -1,0 +1,106 @@
+Start3d(["S"]);
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+Putaxes3d(5);
+Xyzax3data("","x=[-5,5]","y=[-4.5,5]","z=[-5,5]");
+
+// アングルを固定する
+//TH.x = -1.68;
+//FI.x = 2.4;
+Setangle(66.4,296);
+
+//
+// 1. UIを2Dで準備する. また, スライダーの位置に応じてposの値を設定する.
+//    (Note. Initializationで S.x の初期値を指定している)
+//
+
+// テキストの配置
+T0 = [5.8,5];
+Letter(T0, "e", "2変数関数 $z=\frac{1}{4}(x^2-y^2)$ の表す図形を考えよう.", ["Size=1.4"]);
+Letter(T0-[0,1.5], "e", "(1) $x$軸上では $z=\frac{1}{4}x^2$ という放物線になるはず.", ["Size=1.4"]);
+Letter(T0-[0,3], "e", "(2) 同様に, $x$の値を$x=a$に固定して$y$のほうだけを", ["Size=1.4"]);
+Letter(T0+[0.8,-4], "e", "動かすと $z=-\frac{1}{4}y^2+\frac{a^2}{4}$ という放物線が現れるはず.", ["Size=1.4"]);
+Letter(T0-[0,6], "e", "↓下のスライダーを左右に移動させて点Pを動かしながら", ["Size=1.4"]);
+Letter(T0-[0,7], "e", "　どんな図形になるか想像してみよう", ["Size=1.4"]);
+//Setcolor([0.4,0.12,0.96]);
+Listplot("ul1", [T0+[3,-2.1],T0+[7.7,-2.1]], ["Color=[0.4,0.12,0.96]","dr,1.3"]);
+//Setcolor([1,0.2,0.2]);
+Listplot("ul2", [T0+[2.9,-4.6],T0+[8.8,-4.6]], ["Color=[1,0.2,0.2]","dr,1.3"]);
+
+// スライダー
+S0 = [6.2,-3.5];
+//Setcolor("black");
+Slider("S", S0, S0+[8,0]);
+ //Listplot("sl",[S0,S0+[8,0]],["Color=blue"]); // to draw slider to pdf
+Setcolor([0, 0, 0.2]);
+Listplot("0", [S0-[0,0.15], S0+[0,0.15]]);
+Listplot("8", [S0+[8,-0.15], S0+[8,0.15]]);
+forall(1..7,
+  Listplot(""+#, [S0+[#,-0.1], S0+[#,0.1]]);
+);
+Setcolor("black");
+Defvar("pos",S.x-10.2);
+Letter(S0+[4,0.4], "c", "0", ["size=1.2"]);
+Letter(S.xy+[0,-0.55], "c", "$a="+pos+"$", ["size=1.2"]);
+
+
+//
+// 2. 図形を3Dで作成する. (見た目のわかりやすさのため実物を少し改変したものを作っている)
+//
+
+// y座標を固定して得られる曲線 (x=-4, x=4の点からx軸に垂線を引く)
+Letter3d([-4,0,0], "s", "-4");
+Letter3d([4,0,0], "s", "4");
+Setcolor([0.4,0.12,0.64]);
+Letter3d([4.5,0,0.2*4.5^2+0.2], "n", "(1)");
+Spacecurve("1a", "[t,0,0.25*t^2]", "t=[-4.1,4.1]", ["Num=200", "dr,1.8"]);
+Spaceline("1a", [[-4,0,0],[-4,0,4]], ["da,0.5"]);
+Spaceline("1b", [[4,0,0],[4,0,4]], ["da,0.5"]);
+
+// 曲面
+Defvar("trick",0.3);
+Defvar("y1",-4.9-abs(pos)*0.07);
+Defvar("y2",4.9);
+fd = ["z=0.25*(x^2-(y+trick)^2)", "x=[0,pos]", "y=[y1,y2]"];
+sf3data("1",fd,["Color=[0.6,0.32,1]"]);
+Setcolor([1,0.2,0.2]);
+if(pos >= 0,
+  Spacecurve("1b", "[t,0,0.25*t^2]", "t=[0,pos]", ["Num=200", "dr,3"])
+);
+if(pos < 0,
+  Spacecurve("1b", "[t,0,0.25*t^2]", "t=[pos,0]", ["Num=200", "dr,3"])
+);
+
+// x座標を固定して得られる曲線 (と動点P)
+Putpoint3d(["P", [pos,0,0.25*pos^2]], "fix");
+Setcolor([1,0.2,0.2]);
+letterpos = max(pos, 0);
+Letter3d([letterpos,y2+0.1,0.25*(letterpos^2-(y2+0.1)^2)-0.05], "e", "(2)");
+if(pos >= 0,
+  Spacecurve("2a", "[0,t,-0.25*(t+trick)^2]","t=[y1,0]",["Num=200", "dr,2.5"]);
+  Spacecurve("2b", "[pos,t,0.25*(pos^2-(t+trick)^2)]","t=[y1,y2]",["Num=200", "dr,2.5"]),
+);
+if(pos < 0,
+  Spacecurve("2a", "[0,t,-0.25*(t+trick)^2]","t=[y1,y2]",["Num=200", "dr,2.5"]);
+  Spacecurve("2b", "[pos,t,0.25*(pos^2-(t+trick)^2)]","t=[y1,1]",["Num=200", "dr,2.5"])
+);
+
+// 一部の線を再描画する
+if(pos > 0,
+  Setcolor([0.4,0.12,0.64]);
+  Spaceline("1b", [[4,0,0],[4,0,4]], ["da,0.5"]);
+  Setcolor("black");
+  Letter3d([4,0,0], "s", "4");
+);
+if(pos <= 0,
+  Setcolor([0.4,0.12,0.64]);
+  Spacecurve("1aa", "[t,0,0.25*t^2]", "t=[0,4.1]", ["Num=200", "dr,1.8"])
+);
+
+Setcolor("black");
+
+Figpdf();
+Windispg();
+
+//Help("Inter");
