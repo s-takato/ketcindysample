@@ -1,0 +1,30 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+xLst=apply(1..50,2);
+yLst=apply(1..50,2);
+rmvL=[];
+
+Tabledatalight("",xLst,yLst,rmvL,[10,"dr,0.5"]);
+Tlistplot("1",["c0r0","c50r0","c50r50","c0r50","c0r0"]);
+
+ctr=5;
+sen=5;
+forall(1..5,
+  tmp1="c0r"+sen;
+  tmp2="c50r"+sen;
+  Tlistplot(text(ctr),[tmp1,tmp2],["dr,0.5"]);
+  ctr=ctr+1;
+  tmp1="c"+sen+"r0";
+  tmp2="c"+sen+"r50";
+  Tlistplot(text(ctr),[tmp1,tmp2],["dr,0.5"]);
+  ctr=ctr+1;
+  sen=sen+10;
+);
+
+Figpdf();
+Windispg();
+
+//Help("Ta");
+

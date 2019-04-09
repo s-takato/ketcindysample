@@ -1,0 +1,23 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+
+xLst=[16,16,16,16,16,16];
+yLst=[10,10];
+rmvL=["c1r1r2","c2r1r2","c3r1r2","c4r1r2","c5r1r2"];
+
+Ch=[1];
+if(contains(Ch,1),
+ rmvL=["c1r1r2","c2r1r2","c3r1r2","c4r1r2","c5r1r2"];
+ Tabledatalight("",xLst,yLst,rmvL);
+ Putcell("c0r0","c6r1","lt","Ans");
+ Putcell("c0r0","c6r1","rb2","cm");
+ ChangeTablestyle(["r1c0c6"],["da"]); 
+);
+
+Figpdf();
+Windispg();
+
+//Help("Putcell");
+

@@ -1,0 +1,29 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+xLst=[10,10,12,10,12,10];
+yLst=[10,10,10];
+//rmvL=[];
+rmvL=["r2c1c2"];
+
+Tabledatalight("",xLst,yLst,rmvL);
+//Tabledata("",xLst,yLst,rmvL);
+
+Ch=[1,2];
+
+if(contains(Ch,1),
+ Tlistplot(["c1r1","c2r3"]);
+ Tlistplot(["c1r3","c2r1"]);
+);
+if(contains(Ch,2),
+ Putrowexpr(1,"c",["x","0","\cdots","1","\cdots","2"]); 
+ Putrowexpr(2,"c",["y`","","+","0","-",""]); 
+ Putrowexpr(3,"c",["y","","\nearrow","","\searrow",""]); 
+);
+
+Figpdf();
+Windispg();
+
+//Help("Table");
+

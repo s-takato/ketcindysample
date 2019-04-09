@@ -1,0 +1,21 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+xLst=[16,16,16,16,16,16];
+yLst=[10,10];
+rmvL=["c1r1r2","c2r1r2","c3r1r2","c4r1r2","c5r1r2"];
+
+Tabledatalight("",xLst,yLst,rmvL);
+
+Ch=[1];
+if(contains(Ch,1),
+ Translatedata("1","sgr1c0c6",[0,0.1]);
+ ChangeTablestyle(["c2r0r1"],["nodisp"]);
+ Translatedata("2a","sgc2r0r1",[0.05,0]);
+ Translatedata("2b","sgc2r0r1",[-0.05,0]);
+);
+
+Figpdf();
+Windispg();
+
