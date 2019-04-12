@@ -1,0 +1,66 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+Addax(0);
+
+p0=[0,0];
+p1=[2,0];
+p2=[1,0];
+p3=Rotatepoint(p2,pi/3,p0);//[cos(pi/3),sin(pi/3)];
+p4=Rotatepoint(p1,pi/3,p0);
+Pointdata("1",[p1,p2,p3,p4]);
+Circledata("1",[p0,p1]);
+Circledata("2",[p0,p2]);
+Circledata("3",[p1,p2,p3]);
+
+forall(1..6,
+	Rotatedata(text(#),"cr3",(#-1)*(pi/3),[p0]);
+);
+
+Partcrv("1",p1,p4,"cr1",["nodisp"]);
+Partcrv("2",p1,p4,"cr3",["nodisp"]);
+Joincrvs("1",["part1","part2"],["nodisp"]);
+Shade("0",["join1"],["Color=gray"]);   
+
+Partcrv("3",p2,p3,"cr2",["nodisp"]);
+Partcrv("4",p3,p2,"cr3",["nodisp"]);
+Joincrvs("2",["part3","part4"],["nodisp"]);
+Shade("1",["join2"],["Color=gray"]);
+
+Partcrv("5",p4,p3,"cr3",["nodisp"]);
+Partcrv("6",p3,p4,"rt2",["nodisp"]);
+Joincrvs("3",["part5","part6"],["nodisp"]);
+Shade("2",["join3"],["Color=gray"]);
+
+Ch=[2];
+
+if(contains(Ch,1),
+ forall(1..6,
+   Rotatedata("a"+text(#),"join1",(#-1)*(pi/3),[p0,"nodisp"]);
+   Shade(text(#),["rta"+text(#)],["Color=gray"]);
+ );
+ forall(1..6,
+   Rotatedata("b"+text(#),"join2",(#-1)*(pi/3),[p0,"nodisp"]);
+   Shade(text(#),["rtb"+text(#)],["Color=gray"]);
+ );
+ forall(1..6,
+   Rotatedata("c"+text(#),"join3",(#-1)*(pi/3),[p0,"nodisp"]);
+   Shade(text(#),["rtc"+text(#)],["Color=gray"]);
+ );
+);
+
+if(contains(Ch,2),
+ forall(1..6,
+   Rotatedata("a"+text(#),"join1",(#-1)*(pi/3),[p0,"nodisp"]);
+   Shade(text(#),["rta"+text(#)],["Color=gray"]);
+   Rotatedata("b"+text(#),"join2",(#-1)*(pi/3),[p0,"nodisp"]);
+   Shade(text(#),["rtb"+text(#)],["Color=gray"]);
+   Rotatedata("c"+text(#),"join3",(#-1)*(pi/3),[p0,"nodisp"]);
+   Shade(text(#),["rtc"+text(#)],["Color=gray"]);
+ );
+);
+
+Figpdf();
+Windispg();
+
+//Help("Rotat");

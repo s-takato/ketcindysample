@@ -1,0 +1,120 @@
+Start3d();
+
+//Ptseg3data();  
+//Putaxes3d(5);
+//Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+Setunitlen("6mm");
+
+tmp1=[[[0,0,0],[2,0,0],[2,2,0],[0,2,0],[0,0,2],[2,0,2],[2,2,2],[0,2,2]],[[1,2,3,4],[1,2,6,5],[2,3,7,6],[3,4,8,7],[4,1,5,8],[5,6,7,8]]];
+//println(tmp1_1_4);
+tmp2=tmp1;
+forall(1..8,tmp2_1_#=tmp2_1_#+[2,0,0]); //println(tmp2);
+tmp3=tmp1;
+forall(1..8,tmp3_1_#=tmp3_1_#+[4,0,0]);
+tmp4=tmp1;
+forall(1..8,tmp4_1_#=tmp4_1_#+[0,2,0]); 
+tmp5=tmp1;
+forall(1..8,tmp5_1_#=tmp5_1_#+[2,2,0]); 
+tmp6=tmp1;
+forall(1..8,tmp6_1_#=tmp6_1_#+[4,2,0]); 
+tmp7=tmp1;
+forall(1..8,tmp7_1_#=tmp7_1_#+[0,4,0]); 
+tmp8=tmp1;
+forall(1..8,tmp8_1_#=tmp8_1_#+[2,4,0]);
+tmp9=tmp1;
+forall(1..8,tmp9_1_#=tmp9_1_#+[4,4,0]); //println(tmp9);
+
+tmp10=tmp1;
+forall(1..8,tmp10_1_#=tmp10_1_#+[0,0,2]);// println(tmp10);
+tmp11=tmp10;forall(1..8,tmp11_1_#=tmp11_1_#+[2,0,0]);
+tmp12=tmp10;forall(1..8,tmp12_1_#=tmp12_1_#+[4,0,0]); 
+tmp13=tmp10;forall(1..8,tmp13_1_#=tmp13_1_#+[0,2,0]); 
+tmp14=tmp10;forall(1..8,tmp14_1_#=tmp14_1_#+[2,2,0]); 
+tmp15=tmp10;forall(1..8,tmp15_1_#=tmp15_1_#+[4,2,0]);
+tmp16=tmp10;forall(1..8,tmp16_1_#=tmp16_1_#+[0,4,0]);
+tmp17=tmp10;forall(1..8,tmp17_1_#=tmp17_1_#+[2,4,0]);
+tmp18=tmp10;forall(1..8,tmp18_1_#=tmp18_1_#+[4,4,0]);
+
+tmp19=tmp1;
+forall(1..8,tmp19_1_#=tmp19_1_#+[0,0,4]);// println(tmp19);
+tmp20=tmp19;forall(1..8,tmp20_1_#=tmp20_1_#+[2,0,0]);
+tmp21=tmp19;forall(1..8,tmp21_1_#=tmp21_1_#+[4,0,0]); 
+tmp22=tmp19;forall(1..8,tmp22_1_#=tmp22_1_#+[0,2,0]); 
+tmp23=tmp19;forall(1..8,tmp23_1_#=tmp23_1_#+[2,2,0]); 
+tmp24=tmp19;forall(1..8,tmp24_1_#=tmp24_1_#+[4,2,0]);
+tmp25=tmp19;forall(1..8,tmp25_1_#=tmp25_1_#+[0,4,0]);
+tmp26=tmp19;forall(1..8,tmp26_1_#=tmp26_1_#+[2,4,0]);
+tmp27=tmp19;forall(1..8,tmp27_1_#=tmp27_1_#+[4,4,0]);
+
+Ch=[8];
+
+if(contains(Ch,0),
+ VertexEdgeFace("0",tmp1);
+ Nohiddenbyfaces("0",["phe3d0"],["phf3d0"],[],["nodisp"]);
+ // Nohiddenbyfaces("0",["phe3d0"],["phf3d0"],[],["da"]);
+);//0
+
+if(contains(Ch,1),
+ tmp=Concatobj([tmp1,tmp2,tmp3]);
+ VertexEdgeFace("1",tmp);
+ Nohiddenbyfaces("1",["phe3d1"],["phf3d1"],[],["nodisp"]);
+ //Skeletonparadata("1",[1.5]);
+);
+if(contains(Ch,2),
+ tmp=Concatobj([tmp1,tmp2,tmp3,tmp4,tmp5,tmp6]);
+ VertexEdgeFace("2",tmp);
+ Nohiddenbyfaces("2",["phe3d2"],["phf3d2"],[],["nodisp"]);
+);
+if(contains(Ch,3),
+ tmp=Concatobj([tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9]);
+ VertexEdgeFace("3",tmp);
+ Nohiddenbyfaces("3",["phe3d3"],["phf3d3"],[],["nodisp"]);
+);
+if(contains(Ch,4),
+ tmp=Concatobj([tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10]);
+ VertexEdgeFace("4",tmp);
+ Nohiddenbyfaces("4",["phe3d4"],["phf3d4"],[],["nodisp"]);
+);
+if(contains(Ch,5),
+ tmp=Concatobj([tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10,tmp11,tmp12,
+        tmp13,tmp14,tmp15, tmp16,tmp17,tmp18]);
+ VertexEdgeFace("5",tmp);
+ Nohiddenbyfaces("5",["phe3d5"],["phf3d5"],[],["nodisp"]);
+);
+
+if(contains(Ch,6),
+ tmp=Concatobj([tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10,tmp11,tmp12,
+        tmp13,tmp14,tmp15,tmp16,tmp17,tmp18,tmp19]);
+ VertexEdgeFace("6",tmp);
+ Nohiddenbyfaces("6",["phe3d6"],["phf3d6"],[],["nodisp"]);
+);
+
+if(contains(Ch,7),
+ tmp=Concatobj([tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10,tmp11,tmp12,
+        tmp13,tmp14,tmp15,tmp16,tmp17,tmp18,tmp19,tmp20,tmp21,tmp22,tmp23,
+        tmp24,tmp25,tmp26,tmp27]);
+ VertexEdgeFace("7",tmp,["Pt=fix","Edg=nogeo"]);
+ Nohiddenbyfaces("7",["phe3d7"],["phf3d7"],[],["nodisp"]);
+);
+
+if(contains(Ch,8),
+ Setparent(Cdyname()+"fig");
+ tmp=Concatobj([tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,tmp9,tmp10,tmp12,tmp14,
+        tmp15,tmp16,tmp17, tmp18,tmp19,tmp20,tmp21,tmp22,tmp24,tmp25,tmp26,tmp27]);
+ if(flg==0, // flg=0 in ketlib
+   VertexEdgeFace("8",tmp);
+   Nohiddenbyfaces("8",["phe3d8"],["phf3d8"],[],["nodisp"]);
+   flg=1;
+ ,
+   forall(1..(length(frn3d8)),
+     Spaceline(text(#),parse(frn3d8_#));
+   );
+ );
+);
+
+Figpdf();
+Windispg();
+
+//Help("Concatob");
+//Help("Skeleton");
+//Help("Inter");

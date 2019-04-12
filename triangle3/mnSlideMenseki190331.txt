@@ -1,0 +1,57 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Sc=1.2","Nolabel=all","Color=[0,0,0,0.2]"]);
+Addax(0);
+
+Menseki(p1,p2,p3):=(
+ regional(v1,v2,S1);
+ v1=p2-p1;v2=p3-p1;
+ S1=(|v1.x*v2.y-v1.y*v2.x|)/2;
+ S1;
+);
+
+Slider("K1-L1-M1",[-4,-2],[5,-2]);
+m=floor(L1.x)+5;Expr([0,5],"w3","m="+m);
+Slider("K2-L2-M2",[-4,-2.4],[5,-2.4]);
+n=floor(L2.x)+5;Expr([0,5],"e3","n="+n);
+
+Putpoint("A",[1,4],[A.x,A.y]);
+Putpoint("B",[-4,0],[B.x,B.y]);
+Putpoint("C",[4,0],[C.x,C.y]);
+
+Listplot("1",[A,B,C,A]);
+Letter([A,"n","A",B,"sw","B",C,"se","C"]);
+S1=Menseki(A,B,C); //println(S1);
+
+//m=2;n=1;
+Letter([0,5.6],"c","点D,E,Fは辺BC,CA,ABをそれぞれ"+text(m)+":"+text(n)+"に内分する点");
+
+pD=(n*B+m*C)/(m+n);pE=(n*C+m*A)/(m+n);pF=(n*A+m*B)/(m+n);
+Pointdata("1",[pD,pE,pF]);
+Letter([pD,"s","D",pE,"ne","E",pF,"nw","F"]);
+Listplot("AD",[A,pD]);Listplot("BE",[B,pE]);Listplot("CF",[C,pF]);
+
+pP=Op(1,Intersectcrvs("sgAD","sgBE"));//println(pP);
+pQ=Op(1,Intersectcrvs("sgBE","sgCF"));//println(pQ);
+pR=Op(1,Intersectcrvs("sgCF","sgAD"));//println(pR);
+//Pointdata("2",[pP,pQ,pR]);
+Letter([pP,"n","P",pQ,"n","Q",pR,"ne","R"]);
+S2=Menseki(pP,pQ,pR); // println(S2);
+
+Listplot("PQR",[pP,pQ,pR,pP]);//
+Shade("1",["sgPQR"],["Color=green"]);
+
+Expr(A+[1.5,0.8],"n","S_1="+Sprintf(S1,3));
+Expr((pP+pQ+pR)/3,"c","S_2="+Sprintf(S2,3));
+HI=S1/S2;//△ABCと△PQRの面積比
+
+Expr([-4,4],"e","HI="+Sprintf(HI,5));
+tmp="\Delta\mathrm{ABC}/\Delta\mathrm{PQR}="+Sprintf(HI,5);
+Expr([7,4],"c",tmp);
+
+Figpdf();
+Windispg();
+
+Help("Slider");
+//Help("Putpoint");
+
