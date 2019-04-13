@@ -1,0 +1,97 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Size=1","No=all","Col=[0,0,0,0.2]"]);
+
+Addax(0);
+
+div=50;
+A.xy=2*[0,2];
+B.xy=2*[-sqrt(3),-1];
+C.xy=2*[sqrt(3),-1];
+
+a=|C-B|; b=|A-C|; c=|B-A|;
+len=a+b+c;
+Delta=(len/2)/div;
+
+Slider("S",[-len/4,YMIN-0.5],[len/4,YMIN-0.5]);
+
+Listplot("P",[A,B,C,A],["dr,2"]);
+Shade(["sgP"],["Color=greenyellow"]);
+
+Triangle(s):=(
+  regional(t,p1,p2,p3);
+  if(s<c,
+    t=s/c; p1=(1-t)*A+t*B;
+    ,
+    if(s<c+a,
+      t=(s-c)/a; p1=(1-t)*B+t*C;
+    ,
+      t=(s-c-a)/b; p1=(1-t)*C+t*A;
+    );
+  );
+  if(s<a,
+    t=s/a; p2=(1-t)*B+t*C;
+    ,
+    if(s<a+b,
+      t=(s-a)/b; p2=(1-t)*C+t*A;
+    ,
+      t=(s-a-b)/c; p2=(1-t)*A+t*B;
+    );
+  );
+  if(s<c,
+    t=s/c; p3=(1-t)*C+t*A;
+    ,
+    if(s<b+c,
+      t=(s-c)/b; p3=(1-t)*A+t*B;
+    ,
+      t=(s-b-c)/a; p3=(1-t)*B+t*C;
+    );
+  );
+  [round(s/Delta),p1,p2,p3];
+);
+
+Ch=[2];
+if(contains(Ch,1),
+ n2=floor(2*(S.x+len/4)/Delta);
+ tL=select(tL,#_1<n2);
+ if(length(tL)==0,
+   n1=0;
+ ,
+   n1=max(apply(tL,#_1));
+ );
+ ctr=1;
+ forall(tL,
+   p1=#_2; p2=#_3; p3=#_4;
+   // Pointdata(text(ctr),[p1,p2,p3],["Size=3","Color=blue"]);
+   Listplot(text(ctr),[p1,p2,p3,p1],["Color=blueviolet"]);
+   ctr=ctr+1;
+ );
+ forall(n1..n2,
+   s=#*Delta;
+   dt=Triangle(s);
+   p1=dt_2; p2=dt_3; p3=dt_4;
+   Pointdata(text(ctr),[p1,p2,p3],["Size=3","Color=blue"]);
+   Listplot(text(ctr),[p1,p2,p3,p1],["Color=blueviolet"]);
+   tL=append(tL,dt);
+   ctr=ctr+1;
+ );
+);
+
+if(contains(Ch,2),
+ mf(n):=(
+  regional(dt,p1,p2,p3);
+  forall(0..n,
+    dt=Triangle(#*Delta);
+    p1=dt_2; p2=dt_3; p3=dt_4;
+    if(#==n,
+      Pointdata(text(#),[p1,p2,p3],["Size=3","Color=blue"]);
+    );
+    Listplot(text(#),[p1,p2,p3,p1],["Color=blueviolet"]);
+  );
+ );
+ rng=Assign("n=[0,div]",["div",div]);
+ Setpara("trianglerotate","mf(n)",rng,["Div="+div]);
+);//1
+
+Figpdf();
+Windispg();
