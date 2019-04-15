@@ -1,7 +1,0 @@
-Ketinit();
-Usegraphics("tikz");
-Setax([7,"se"]);
-Plotdata("1","sin(x)","x");
-Lineplot("1",[[0,0],[1,1]]);
-Expr([A,"e","y=\sin x",B,"e","y=x"]);
-Windispg();
