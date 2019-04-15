@@ -53,16 +53,10 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   YaCut=0; YasenStyle="dr,1"; Yajiristyle="tf";
   KETPICCOUNT=1;
   KCOLOR=[0,0,0];
-  GLIST=[];
   GCLIST=[];
-  GOUTLIST=[];
-  POUTLIST=[];
   VLIST=[];
   FUNLIST=[];
   LETTERlist=[];
-  COM0thlist=[];
-  COM1stlist=[];
-  COM2ndlist=[];
   ADDAXES="1";
   AXSTYLE=["l","x","e","y","n","O","sw","","",""]; //181216
   AXCOUNT=1; //181215
@@ -795,7 +789,7 @@ Listplot(nm,list,options):=(
       ptlist_1=ptlist_1+tmp*cutend_1;
       ptlist_(length(ptlist))=ptlist_(length(ptlist))-tmp*cutend_2;
     );//180719to
-    tmp=name+"="+Textformat(ptlist,5);
+    tmp=name+"="+Textformat(ptlist,5)+";"; //190415
     parse(tmp);
   );
   if(Noflg<2,
@@ -970,9 +964,9 @@ Pointdata(nm,listorg,options):=(
   if(length(tmp)==1, //190301from
     tmp1=Textformat(tmp_1,5);
   ); //190301to
-  tmp=name+"="+tmp1;
+  tmp=name+"="+tmp1+";"; //190415
   parse(tmp);
-  tmp=nameL+"="+tmp3;
+  tmp=nameL+"="+tmp3+";"; //190415
   parse(tmp); //190126to
   if(Noflg<3,
     if(isstring(listorg), //17.10.23
@@ -1054,7 +1048,7 @@ Bowdata(nm,plist,options):=(
   Num=24;
   Bname="";
   Msg="Y";  //190206
-  Tmov=0;//16.11.01from
+  Tmov=0;//161101from
   Nmov=0;
   Bmov="";
   rev=0;//16.11.01until
@@ -1090,9 +1084,8 @@ Bowdata(nm,plist,options):=(
   ra=Ydata_2;
   Th=(Ydata_3+Ydata_4)*0.5;
   BOWMIDDLE=[pC_1+ra*cos(Th),pC_2+ra*sin(Th)];
-  Bpos="md"+name; // 16.10.31from[moved]
-  tmp="Defvar("+Dq+Bpos+"="+Textformat(BOWMIDDLE,5)+Dq+");";
-  parse(tmp);// 16.10.31to[moved]
+  Defvar("md"+name,BOWMIDDLE); //190415
+  Bpos=Textformat(BOWMIDDLE,5); //190415
   if(length(Bname)>0,  //16.11.01from
     tmp=indexof(Bops,",");
     if(tmp>0,
@@ -1116,14 +1109,14 @@ Bowdata(nm,plist,options):=(
         );
       );
     );
-    Bname=Bname+Bpos;//16.11.01
+    Bname=Bname+Bpos; //190415
     if(abs(Tmov)+abs(Nmov)>0,
       tmp=Pcrd(pA)-Pcrd(pB);
       tmp1=1/Norm(tmp)*tmp;
       tmp2=[-tmp1_2,tmp1_1];
       tmp=MARKLEN*(Tmov*tmp1+Nmov*tmp2);
       tmp=LLcrd(tmp);
-      Bname=Bname+"+"+text(tmp);
+      Bname=Bname+"+"+Textformat(tmp,5);
     );
     Bname=Bname+",";
     if(indexof(Bname,"rot")>0,
@@ -1132,9 +1125,9 @@ Bowdata(nm,plist,options):=(
     ,
       Bname=Bname+Dq+"c"+Dq+",";
     );
-    Bname=Bname+Dq+Bops+Dq+")";
+    Bname=Bname+Dqq(Bops)+");"; //190415
     parse(Bname);
-  );//16.11.01until
+  );//161101to
   if(Cut==0,
     Th1=Ydata_3;
     Th2=Ydata_4;
@@ -1170,7 +1163,7 @@ Bowdata(nm,plist,options):=(
       tmp=apply(tmp2,Pcrd(#));
       tmp1=append(tmp1,tmp);
     );
-    tmp=name+"="+Textformat(tmp1,5);
+    tmp=name+"="+Textformat(tmp1,5)+";";
     parse(tmp);
   );
   if(Noflg<2,
@@ -1771,7 +1764,7 @@ Arrowdata(nm,ptlistorg,optionsorg):=(
   );//181018to
   if(Noflg<3,
     println("generate Arrowdata "+name);
-    tmp=name+"="+Textformat([pA,pB],5);
+    tmp=name+"="+Textformat([pA,pB],5)+";";
     parse(tmp);
     if(lineflg==0, // 16.04.09 from
       tmp=pA-0.2*size/2*(pB-pA)/|pB-pA|;   // 15.06.11
@@ -1849,7 +1842,7 @@ Arrowhead(nm,point,direction,optionsorg):=(//181018from
   if(!Inwindow(LLcrd(pP)),Noflg=2);//181018
   if(Noflg<3,
     tmp1=apply(list,LLcrd(#));
-    tmp=name+"="+Textformat(tmp1,5);
+    tmp=name+"="+Textformat(tmp1,5)+";"; //190415
     parse(tmp);
   );
   if(Noflg<2,
@@ -2092,7 +2085,6 @@ Setketcindyjs(["Nolabel=all","Color=[0,0,0,0.2]"]);
 Addax(0);
 Setpt(5);
 
-
 Putpoint("O",[2,3],O.xy);
 Putpoint("A",[-4,-3],A.xy);
 Putpoint("B",[4,-3],B.xy);
@@ -2153,7 +2145,7 @@ var cdy = CindyJS({
     id: "CSCanvas",
     width: 783,
     height: 437,
-    transform: [{visibleRect: [-9.144346944786749, 5.366967704063357, 9.50701827576694, -5.042542642529186]}],
+    transform: [{visibleRect: [-9.135119491803755, 5.3476775121510896, 9.516245728749935, -5.0618328344414545]}],
     axes: true,
     grid: 1.0,
     snap: true,
