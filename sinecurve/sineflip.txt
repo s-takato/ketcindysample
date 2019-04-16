@@ -1,8 +1,10 @@
 Ketinit();
 
+Ch=[1];
+if(contains(Ch,1),
  Slider("X",[0,SW.y-0.5],[pi,SW.y-0.5]);
  Slider("T",[0,SW.y-1],[NE.x+pi/2,SW.y-1]);
- Setunitlen("2cm");
+ Setunitlen("15mm");
  Addax(0);
  Setax([7,"se"]);
  Drwxy();
@@ -16,46 +18,40 @@ Ketinit();
  Anglemark("1",[pA,cntr,pP],[0.6,"E=x"]);
  mf(t):=(
   regional(x,tmp,tmp1,pQ);
-  Defvar("x",X.x);
+  x=X.x;
   pQ=[-1+cos(x-t),sin(x-t)];
   pR=pQ+[-t*sin(x-t),t*cos(x-t)];
-  Setcolor("red");
   if(t<x,
-    tmp=Assign("Rng=[0,x-t]",["t",t]);
-    Circledata("t1",[cntr,pA],[tmp,"color->[1,0,0]","dr,2"]);
-    Listplot("t1",[pQ,pR],["color->[1,0,0]","dr,2"]);
+    tmp=Assign("Rng=[0,x-t]",["x",x,"t",t]);
+    Circledata("t1",[cntr,pA],[tmp,"Color=red","dr,2"]);
+    Listplot("t1",[pQ,pR],["Color=red","dr,2"]);
   ,
     tmp=t-x;
     if(t<=x+pi/2,
       Listplot("t1",[[0,0],x*[sin(tmp),cos(tmp)]],
-         ["color->[1,0,0]","dr,2"]);
+         ["Color=red","dr,2"]);
     ,
-      Listplot("t1",[[0,0],[x,0]],["color->[1,0,0]","dr,2"]);
-      Setcolor("black");
+      Listplot("t1",[[0,0],[x,0]],["Color=red","dr,2"]);
       Expr([[x,0],"s","x"],["size->16"]);
-      Setcolor("green");
       if(t>=4.5,
-        Listplot("t2",[pP,[0,pP_2]],["da","color->[0,0,1]"]);
-        Setcolor("black");
-        Expr([0,pP_2],"e","Y");
+        Listplot("t2",[pP,[0,pP_2]],["da","Color=blue"]);
+        Expr([0,pP_2],"ne","y=\sin x");
       );
       if(t>=5,
-        Setcolor("green");
-        Listplot("t3",[[0,pP_2],[x,pP_2]],["da","color->[0,0,1]"]);
-        Listplot("t4",[[x,pP_2],[x,0]],["da","color->[0,0,1]"]);
-        Pointdata("1",[x,pP_2],["Size=3"]);
-        Setcolor("black");
+        Listplot("t3",[[0,pP_2],[x,pP_2]],["da","Color=blue"]);
+        Listplot("t4",[[x,pP_2],[x,0]],["da","Color=blue"]);
+        Pointdata("1",[x,pP_2],["Color=green","Size=3"]);
         Expr([x,pP_2],"e","(x,\sin x)");
       );
     );
   );
-  Setcolor("black");
  );
  tmp1=apply(0..20,#/20*X.x);
  tmp2=apply(0..20,X.x+#/20*pi/2);
  tlist=concat(tmp1,tmp2);
  tlist=concat(tlist,[4,4.5,5]);
- Setpara("drawsine2","mf(t)",tlist,[]);
+ Setpara("drawsine","mf(t)",tlist,[]);
  mf(T.x);
 
-Windispg();
+ Windispg();
+);//1
