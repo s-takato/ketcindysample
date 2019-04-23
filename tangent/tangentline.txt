@@ -1,0 +1,17 @@
+Ketinit();
+Setketcindyjs([]);
+Slider("X",[XMIN,-2],[XMAX,-2]);
+
+fun="sin(x)*sin(2*x)";
+Mxfun("1","diff",[fun,"x"]);//no ketjs
+Ketcindyjsdata(["mx1",mx1]);
+
+Plotdata("1",fun,"x",["Num=200"]);
+x1=X.x;
+y1=parse(Assign(fun,["x",x1]));
+y2=y1+parse(Assign(mx1,["x",x1]));
+Lineplot("1",[[x1,y1],[x1+1,y2]],["Color=red"]);
+Pointdata("1",[x1,y1],["Size=2"]);
+Expr([0.1,-1],"e","y="+fun,["size->16"]);
+Expr([0.1,-1.3],"e","y'="+mx1,["size->16"]);
+Windispg();
