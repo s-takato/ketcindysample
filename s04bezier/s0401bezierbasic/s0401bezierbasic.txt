@@ -1,0 +1,11 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+Addax(1);
+
+Bezier("1",[A,B,C,D],[E,F,G,H,K,L]); 
+
+Mkbezierptcrv([M,N,O,P]); 
+
+Figpdf();
+Windispg();

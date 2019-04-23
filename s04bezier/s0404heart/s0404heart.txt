@@ -1,0 +1,24 @@
+// ketlib
+Shadeflg=1;
+
+// figure
+
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+Addax(0);
+
+drawimage([0,0],"heart.png",scale->2,alpha->0.5);
+
+Mkbezierptcrv([A,B,C,D,A],["dr,2","Color=[0,0.5,0,0]"]);
+
+if(Shadeflg==1,
+ Shade(["bza"],["Color=[0,0.5,0,0]"]);
+);
+
+Figpdf();
+Windispg();
+
+//Help("Mkbezier");
+
+
