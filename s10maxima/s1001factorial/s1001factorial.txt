@@ -1,0 +1,36 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=0.1*[0,0,0,1]"]);
+Setwindow([-5,5],[-2,5]);
+
+Addax(0);
+
+nL=[10,20,50,100,200,300];
+Slider("N",[1,YMIN-2],[length(nL),YMIN-2]);
+nn=round(N.x);
+
+Ch=[1];
+if(contains(Ch,1),
+ forall(1..(length(nL)), // no ketjs on
+   make="r";
+   Mxfun(text(#),nL_#+"!",[],[make,"Disp=n"]);
+   Ketcindyjsdata(["mx"+#,parse("mx"+#)]);
+ ); // no ketjs off
+ tmp=parse("mx"+nn);
+ n=ceil(length(tmp)/40);
+ pos=[-5,4.5];
+ Expr(pos,"e",nL_nn+"!=");
+ pos_2=pos_2-0.5;
+ forall(1..n,
+   mx=parse("mx"+nn);
+   fr=(#-1)*40+1;
+   str=substring(mx,fr,fr+40);
+   Letter(pos,"e",str);
+   pos_2=pos_2-0.5;
+ );
+);
+
+Figpdf();
+Windispg();
+
+//Help("Mxfun");

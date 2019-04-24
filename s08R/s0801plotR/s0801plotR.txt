@@ -1,0 +1,39 @@
+// ketlib
+Chno=0;
+
+// figure
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=0.1*[0,0,0,1]"]);
+
+Ch=[0,Chno];
+
+if(contains(Ch,0), //no ketjs on
+ tmp=["r","nodisp","Num=100"];
+ PlotdataR("1","dnorm(x)","x",tmp);
+ PlotdataR("2","dt(x,6)","x",tmp);
+ PlotdataR("3","dchisq(x,3)","x=[0,XMAX]",tmp);
+ Ketcindyjsdata(["grR1",grR1,"grR2",grR2,"grR3",grR3]);
+); //no ketjs off
+
+Setscaling(8);
+Htickmark([1,"1"]);
+Vtickmark([0.5,"0.5"]);
+
+if(contains(Ch,1),
+ Listplot("grR1",grR1);
+ Expr([0.5,0.6],"e","N(0,1)",["Size=1.6"]); 
+);
+if(contains(Ch,2),
+ Listplot("grR2",grR2);
+ Expr([0.5,0.6],"e","t_6",["Size=1.6"]); 
+);
+if(contains(Ch,3),
+ Listplot("grR3",grR3);
+ Expr([0.5,0.6],"e","\chi^2_3",["Size=1.6"]); 
+);
+
+Figpdf();
+Windispg();
+
+//Help("Plot");

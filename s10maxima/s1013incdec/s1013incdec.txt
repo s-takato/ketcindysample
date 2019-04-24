@@ -1,0 +1,79 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+fn="4*x^3-15*x^2+18*x+3";
+
+Ch=[1];
+if(contains(Ch,1),
+ cmdL=[
+  "f(x):="+fn,[],
+  "df:diff",["f(x)","x"],
+  "zrdf:solve",["df=0","x"],
+  "nn:length",["zrdf"],
+  "out1:[]",[],
+  "for j from 1 thru nn step 1 do(
+     tmp:ev(x,zrdf[j]),
+     out1:endcons(tmp,out1)
+   )",[],
+  "out1:sort",["out1"],
+  "out2:[]",[],
+  "for j from 1 thru nn-1 step 1 do{
+    tmp:(out1[j]+out1[j+1])/2,
+    tmp:ev(df,x=tmp),
+    out2:append(out2,[0,tmp])
+  }",[],
+  "tmp:ev(df,x=out1[1]-1)",[],
+  "out2:cons(tmp,out2)",[],
+  "tmp:ev(df,x=out1[nn]+1)",[],
+  "out2:append(out2,[0,tmp])",[],
+  "out3:map(f,out1)",[],
+  "nn::out1::out2::out3",[]
+ ];
+ CalcbyM("ans",cmdL,[""]);
+ nn=ans_1;
+ tmp=substring(ans_2,1,length(ans_2)-1);
+ zr=tokenize(tmp,",");
+ zr=apply(1..nn,if(isstring(zr_#),Mxtex("x"+text(#),zr_#,["Disp=n"]),zr_#));
+
+ xL=["\cdots"];
+ forall(1..nn,
+  xL=concat(xL,[zr_#,"\cdots"]);
+ );
+ println(xL);
+ tmp=parse(ans_3);
+ dfL=apply(tmp,if(#>0,"+",if(#<0,"-",0)));
+// println(dfL);
+ tmp=substring(ans_4,1,length(ans_4)-1);
+ tmp=tokenize(tmp,",");
+// println(tmp);
+ vf=apply(1..nn,
+   if(isstring(tmp_#),Mxtex("y"+text(#),tmp_#,["Disp=n"]),tmp_#));
+// println(vf);
+ fL=apply(dfL,if(#=="+","\nearrow",if(#=="-","\searrow","")));
+ tmp=select(1..length(fL),fL_#=="");
+ forall(1..nn,
+  fL_(tmp_#)=vf_#;
+ );
+ println(fL);
+ xL=prepend("x",xL);
+ dfL=prepend("y`",dfL);
+ fL=prepend("y",fL);
+
+ xLst=apply(1..(length(xL)),6);
+ yLst=[6,6,6];
+ rmvL=[];
+ tmp1=sum(xLst);
+ tmp2=sum(yLst);
+ Setwindow([0,tmp1/10],[0,tmp2/10+0.5]);
+ Tabledatalight("",xLst,yLst,rmvL,["Rng=n"]);
+ Putrowexpr(1,"c",xL);
+ Putrowexpr(2,"c",dfL);
+ Putrowexpr(3,"c",fL);
+ Mxtex("f",fn,["Disp=y"]);
+ Expr(Tgrid("c3r0"),"n","y="+txf);
+);
+
+Figpdf();
+Windispg();
+
+//Help("Tabledatalig");

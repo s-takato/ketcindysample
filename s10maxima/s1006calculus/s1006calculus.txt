@@ -1,0 +1,27 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+Ch=[5];
+if(contains(Ch,1),
+  Mxfun("1","laplace",["t*sin(t)","t","s"],[""]);
+);
+if(contains(Ch,2),
+  Mxfun("2","ilt",[mx1,"s","t"],[""]);
+);
+if(contains(Ch,3),
+  Mxfun("3","laplace",["delta(t)","t","s"],[""]);
+);
+if(contains(Ch,4),
+  Mxfun("4","limit",["log(x)/x","x","inf"],[""]);
+);
+if(contains(Ch,5),
+  Mxfun("5","taylor",["sin(x)","x",0,5],[""]);//no ketjs on
+  Ketcindyjsdata(["mx5",mx5]);//no ketjs on
+  Plotdata("1","sin(x)","x",["da"]);
+  Plotdata("2",mx5,"x");
+);
+
+Figpdf();
+Windispg();
+
+//Example("Mxfun","lap");

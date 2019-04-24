@@ -1,0 +1,21 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+Addax(0);
+
+Setscaling(20/200);
+
+Ch=[];
+if(contains(Ch,1),
+ Rfun("1","rt",[200,5],["","disp=n"]);
+ Histplot("1",R1,[""]);
+);
+
+// Put point A,B so that A is at the leftbottom
+Framedata2("1",[A,B]);
+Rulerscale(A,["r",-5,5,1],["r",0,60,10]);
+
+Figpdf();
+Windispg();
+
+//Help("Rulerscale");

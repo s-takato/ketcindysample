@@ -1,0 +1,37 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=0.1*[0,0,0,1]"]);
+nL=[5,10,20,30,40];
+Slider("N",[1,-1],[length(nL),-1]);
+
+Ch=[1];
+if(contains(Ch,1),
+ make="r";
+ option=[make,"nodisp"]; //no ketjs on
+ forall(nL,
+   fun="dbinom(k,"+#+",0.4)";
+   rng="k=[0,"+#+"]";
+   PlotdiscR(text(#),fun,rng,option);
+   Ketcindyjsdata(["grd"+#,parse("grd"+#)]);
+ ); //no ketjs off
+ Setscaling(25);
+ Setwindow([-0.5,25],[-0.01,0.5]);
+ nn=round(N.x);
+ tmp="B("+nL_nn+",0.4)";
+ Expr([0.5,0.45],"e",tmp,["Size=1.6"]); 
+ forall(1..nn,
+   tmp="sggrd"+nL_#;
+   Listplot(tmp,parse(tmp));
+ );
+ tmp=apply(1..20,[#,text(#)]);
+ tmp=flatten(tmp);
+ Htickmark(tmp);
+ tmp=apply(1..5,[0.1*#,text(0.1*#)]);
+ tmp=flatten(tmp);
+ Vtickmark(tmp);
+);
+
+Figpdf();
+Windispg();
+
+//Help("Plot");

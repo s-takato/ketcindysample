@@ -1,0 +1,35 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=0.1*[0,0,0,1]"]);
+Slider("N",[0,YMIN-0.5],[5,YMIN-0.5]);
+
+fun="x*sin(x)";
+rng="x=[XMIN,XMAX]";
+Plotdata("0",fun,rng,["Num=100"]);
+
+Ch=[1];
+if(contains(Ch,1),
+ make="r";
+ ops=[make,"Num=100"];
+ Mxfun("1","integrate",[fun,"x"],ops);//no ketjs on
+ Mxfun("2","integrate",[mx1,"x"],ops);
+ Mxfun("3","integrate",[mx2,"x"],ops);
+ Mxfun("4","integrate",[mx3,"x"],ops);
+ Mxfun("5","integrate",[mx4,"x"],ops);//no ketjs off
+ forall(1..5,
+   tmp="mx"+#;
+   Ketcindyjsdata([tmp,parse(tmp)]);
+ );
+ nn=round(N.x);
+ Expr([0.5,4],"e","0\leqq n \leqq "+nn,["Size=1.5"]);
+ forall(1..nn,
+  tmp=parse("mx"+#);
+  if(#<nn,op=["do"],op=[]);
+  Plotdata(text(#),tmp,rng,concat(op,["Num=100"]));
+ );
+);
+
+Figpdf();
+Windispg();
+
+//example("Mxfun");

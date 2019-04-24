@@ -1,0 +1,36 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=0.1*[0,0,0,1]"]);
+
+tmp=["nodisp","Num=100","r"];
+PlotdataR("1","dnorm(x)","x=[-3,3]",tmp);//no ketjs
+Ketcindyjsdata(["grR1",grR1]);
+
+Setscaling(8);
+Setwindow([-3,3],[-0.05,0.5]);
+
+Putpoint("C",[-2,0],[C.x,0]);//no ketjs
+Putpoint("D",[2,0],[D.x,0]);//no ketjs
+
+Listplot("0",grR1);
+
+Lineplot("1",[C,C+[0,1]],["nodisp"]);
+Lineplot("2",[D,D+[0,1]],["nodisp"]);
+tmp=Intersectcrvs("sg0","ln1");
+p1=tmp_1;
+tmp=Intersectcrvs("sg0","ln2");
+p2=tmp_1;
+Listplot("3",[C,p1],["do"]);
+Listplot("4",[p2,D],["do"]);
+Listplot("5",[D,C],["notex"]);
+Partcrv("1",p1,p2,"sg0",["nodisp"]);
+Shade("1",["sg3","part1","sg4","sg5"],["Color=0.3*[1,0,0,0]"]);
+Letter(C-[0,0.02],"s",Sprintf(C.x,2));
+Letter(D-[0,0.02],"s",Sprintf(D.x,2));
+p3=[1,0.4];
+tmp=Integrate("sg0",[C.x,D.x]);
+Expr(p3,"e","P="+Sprintf(tmp,4),["Size=1.6"]);
+
+Figpdf();
+Windispg();
+

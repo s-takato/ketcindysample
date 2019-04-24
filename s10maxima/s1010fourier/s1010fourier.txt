@@ -1,0 +1,43 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=0.1*[0,0,0,1]"]);
+
+//Setax(["a"]);
+Setwindow([-10,10],[-4,4]);
+Slider("N",[-5,YMIN-0.5],[5,YMIN-0.5]);
+Setscaling(2);
+
+defL=[
+ "0",[-2,-1],1,
+ "x",[-1,0],1,
+ "x^2",[0,1],50,
+ "1",[1,2],1
+];
+
+nn=round(N.x)+6;
+tmp=Periodfun("a",defL,"x=[-6,6]",["Con=da"]);
+f0=tmp_1;
+period=tmp_2;
+Expr([0.1,2],"se","n="+nn,["size->16"]);
+
+Ch=[1];
+if(Contains(Ch,1),
+ cmdL=Concat(Mxbatch("pdefourier.mac"),[
+  "f0(x):="+f0,[],
+  "c:fouriercoeff",["f0(x)","x",period],
+  "c:c[1]",[],
+  "c",[]
+ ]);
+ make="r"; //no ketjs on
+ CalcbyM("ans",cmdL,[make,"Err=n"]);
+ Ketcindyjsdata(["ans",ans]);
+ make="r";
+ Mxtex("1",ans,[make,"Disp=n"]);
+ Ketcindyjsdata(["tx1",tx1]); //no ketjs off
+ Fourierseries("1",ans,period,nn,"x=[-6,6]",["Num=200","Color=red"]);
+ Expr([-10,1.5],"se",tx1,["Size=1.2"]);
+ 
+);
+
+Figpdf();
+Windispg();
