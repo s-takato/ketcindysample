@@ -1,0 +1,46 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=0.1*[0,0,0,1]"]);
+dqL=[
+ ["'diff(x,t)=4*t^2*x^2","t=0","x=1"],
+ ["'diff(x,t)=x^2+1","t=0","x=1"],
+ ["'diff(x,t)+x*sin(t)=exp(cos(t))","t=%pi/2","x=0"]
+];
+txL=[
+ "\frac{dx}{dt}=4t^2x^2\ (t=0,x=1)",
+ "\frac{dx}{dt}=x^2+1\ (t=0,x=1)",
+ "\frac{dx}{dt}+x \sin t=e^{\cos t}\ (t=\frac{\pi}{2},x=0)"
+];
+
+nn=length(dqL);
+Slider("N",[1,YMIN-0.5],[nn,YMIN-0.5]);
+now=round(N.x);
+Expr(N,"s","n="+now,["Size=1.2"]);
+
+Ch=[1];
+if(contains(Ch,1),
+ cmdL=[
+  "out:[]",[],
+  "dqL:"+text(dqL),[],
+  "for j from 1 thru "+nn+" do block(
+     tmp:dqL[j],
+     sol:ode2(tmp[1],x,t),
+     sol2:ic1(sol,tmp[2],tmp[3]),
+     sol3:solve(sol2,x),
+     out:endcons(sol3[1],out)
+   )",[],
+  "out",[]
+ ];
+ make="r";
+ CalcbyM("ans",cmdL,[make]); // no ketjs on
+ ans=Assign(ans,["%pi","pi","%e","exp(1)"]);
+ ans=tokenize(substring(ans,1,length(ans)-1),",");
+ ans=apply(ans,substring(#,indexof(#,"="),length(#)));
+ Ketcindyjsdata(["ans",ans]); // no ketjs off
+// println(ans);
+ Expr([-5,5],"se",text(txL_now),["Size=1.3"]);
+ Plotdata(text(now),ans_now,"t",["Num=200","Dis=10"]);
+);
+
+Figpdf();
+Windispg();
