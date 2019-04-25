@@ -1,0 +1,63 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
+Setwindow([-5,5],[-5,5]);
+Setax(["","","sw","","sw"]);
+
+Slider("S",[0,YMIN-0.5],[2*pi,YMIN-0.5]);
+Current=S.x;
+
+rad=3;
+pC=[0,0];
+pB=pC+[rad+1,0];
+pA=pB+[1,0];
+
+Setpt(3);
+
+Circledata("0",[pC,rad],[]);
+Circledata("1",[pB,1],["nodisp"]);
+Pointdata("1",[pA],["nodisp"]);
+ad1=["pt1","cr1"];
+
+ds=2*pi/50;
+Slist=apply(0..100,#*ds);
+
+mf(s):=(
+  regional(t,nn,tmp,t,sL);
+  pL=select(pL,#_1<s);
+  if(length(pL)==0,pL=[[0,pA]]);
+  se=pL_(length(pL))_1;
+  sL=select(Slist,(se<#)&(#<=s));
+  sL=append(sL,s);
+  forall(1..(length(sL)),
+    t=sL_#;
+    tmp=rad*[cos(t),sin(t)];
+    Rotatedata("2",ad1,rad*t,[pB,"nodisp","Msg=n"]);
+    Translatedata("2","rt2",tmp-[rad,0],["nodisp","Msg=n"]);
+    Rotatedata(3,"tr2",t,[tmp,"","Msg=y"]);
+    pL=select(pL,#_1!=t);
+    pL=append(pL,[t,rt3_1_1]);
+  );
+  if(length(pL)>1,
+    tmp=apply(pL,#_2);
+    Listplot("5",tmp,["do","Msg=n"]);
+    Pointdata("2",tmp_(length(tmp)));
+  );
+);
+
+Setpara("epitrochoid","mf(s)","s=[0,2*pi]",["Div=32"],
+ ["Frate=10","Scale=1","OpA=","Mag=1200"]);
+
+if(isreal(Animeflg),
+  if(Animeflg==1,
+    sstart=Dirflg*seconds()+sorg;
+    mf(sstart);
+  ,
+    mf(sstart);
+  );
+,
+  mf(Current);
+);
+
+Figpdf();
+Windispg();

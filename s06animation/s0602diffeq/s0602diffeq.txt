@@ -1,0 +1,38 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=0.1*[0,0,0,1]"]);
+
+Slider("C",[0,YMIN-1],[XMAX,YMIN-1]);
+Current=C.x;
+Slider("F",[0,YMIN],[0,YMAX]);
+
+Setax(["","","sw","","sw"]);
+Htickmark([1,"1",5,"5"]);
+Vtickmark([1,"1",3,"3"]);
+
+Mf(s0):=(
+  regional(s,deq,rng);
+  s=mod(s0,10);
+  deq="x''=-0.5*x'-x";
+  if(s>0,
+    rng=Assign("t=[0,s]",["s",s]);
+    Deqplot("1",deq,rng,0,[F.y,0]);
+  ,
+    Pointdata("1",[0,F.y]);
+  );
+);
+Setpara("diffeq","Mf(s)","s=[0,10]",["m","Div=25"],
+    ["Frate=10","Scale=1","Mag=1600","OpA="]);
+
+if(isreal(Animeflg),
+  if(Animeflg==1,
+    sstart=Dirflg*seconds()+sorg;
+    mf(sstart);
+  );
+,
+  mf(Current);
+);
+
+Figpdf();
+Windispg();
+

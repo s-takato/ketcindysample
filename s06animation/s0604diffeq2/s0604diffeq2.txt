@@ -1,0 +1,33 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=0.1*[0,0,0,1]"]);
+
+Slider("C",[XMIN,YMIN-1],[XMAX,YMIN-1]);
+Current=C.x-XMIN;
+
+Setax(["","","sw","","sw"]);
+
+Mf(s):=(
+  regional(deq,rng);
+  deq="[x,y]`=[y,(1-x^2)*y-x]";
+  rng=Assign("t=[0,s]",["s",s]);
+  if(s>0,
+    Deqplot("1",deq,rng,0,A,["Num="+text(20*s)]); 
+  ,
+    Pointdata("1",A);
+  );
+  Letter(B,"e","s="+textformat(s,2));
+);
+Setpara("diffeq2","Mf(s)","s=[0,20]",["Div=25"],
+    ["Frate=10","OpA=","Title=Dynamical System",]);
+
+if(isreal(Animeflg),
+  if(Animeflg==1,
+    sstart=Dirflg*2*seconds()+sorg;
+  );
+,
+ sstart=Current;
+);
+mf(sstart);
+
+Windispg();
