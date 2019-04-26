@@ -1,7 +1,7 @@
-// ketlib
+//ketlib
 pL=[];
 
-// figures
+//figures
 Ketinit();
 Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nolabel=all","Color=white"]);
@@ -13,12 +13,12 @@ Current=S.x;
 
 rad=3;
 pC=[0,0];
-pB=pC+[rad+1,0];
+pB=pC+[rad-1,0];
 Putpoint("A",pB+[1,0],[A.x,0]);
 
 Circledata("0",[pC,rad],[]);
 Circledata("1",[pB,1],["nodisp"]);
-Pointdata("1",[A],["nodisp","Size=3"]);
+Pointdata("1",[A],["nodisp"]);
 ad1=["pt1","cr1"];
 
 ds=2*pi/50;
@@ -34,7 +34,7 @@ mf(s):=(
   forall(1..(length(sL)),
     t=sL_#;
     tmp=rad*[cos(t),sin(t)];
-    Rotatedata("2",ad1,rad*t,[pB,"nodisp","Msg=n"]);
+    Rotatedata("2",ad1,-rad*t,[pB,"nodisp","Msg=n"]);
     Translatedata("2","rt2",tmp-[rad,0],["nodisp","Msg=n"]);
     Rotatedata(3,"tr2",t,[tmp,"nodisp","Msg=n"]);
     op1=["Size=3","Color=red","Msg=n"];

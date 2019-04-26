@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>s0606epitrochoid.cdy</title>
+    <title>s0607hypotrochoid.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -1634,12 +1634,12 @@ Current=S.x;
 
 rad=3;
 pC=[0,0];
-pB=pC+[rad+1,0];
+pB=pC+[rad-1,0];
 Putpoint("A",pB+[1,0],[A.x,0]);
 
 Circledata("0",[pC,rad],[]);
 Circledata("1",[pB,1],["nodisp"]);
-Pointdata("1",[A],["nodisp","Size=3"]);
+Pointdata("1",[A],["nodisp"]);
 ad1=["pt1","cr1"];
 
 ds=2*pi/50;
@@ -1655,7 +1655,7 @@ mf(s):=(
   forall(1..(length(sL)),
     t=sL_#;
     tmp=rad*[cos(t),sin(t)];
-    Rotatedata("2",ad1,rad*t,[pB,"nodisp","Msg=n"]);
+    Rotatedata("2",ad1,-rad*t,[pB,"nodisp","Msg=n"]);
     Translatedata("2","rt2",tmp-[rad,0],["nodisp","Msg=n"]);
     Rotatedata(3,"tr2",t,[tmp,"nodisp","Msg=n"]);
     op1=["Size=3","Color=red","Msg=n"];
@@ -1704,17 +1704,17 @@ var cdy = CindyJS({
     {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0, 1.0, 1.0], size: 1.5, labeled: false},
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0, 1.0, 1.0], size: 1.5, labeled: false},
     {name: "S", type: "Free", pos: [0.0, -4.0, 0.7272727272727273], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0},
-    {name: "A", type: "Free", pos: [4.0, 0.0, 0.8], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0},
-    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.741, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Start", textsize: 18.0, dock: {corner: "LL", offset: [310.0, 28.0]}},
-    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.741, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [373.0, 28.0]}},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.741, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [448.0, 28.0]}},
-    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.741, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "End", textsize: 18.0, dock: {corner: "LL", offset: [508.0, 28.0]}}
+    {name: "A", type: "Free", pos: [4.0, 0.0, 1.3333333333333333], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0},
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.741, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Start", textsize: 18.0, dock: {corner: "LL", offset: [310.0, 20.0]}},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.741, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [373.0, 20.0]}},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.741, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [448.0, 20.0]}},
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.741, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "End", textsize: 18.0, dock: {corner: "LL", offset: [508.0, 20.0]}}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 765,
-    height: 608,
-    transform: [{visibleRect: [-8.188318608582039, 6.1169652846719575, 8.317778191326418, -7.001605766758555]}],
+    width: 802,
+    height: 600,
+    transform: [{visibleRect: [-8.188318608582039, 6.1169652846719575, 9.116112284916762, -6.828992989766048]}],
     axes: true,
     grid: 1.0,
     snap: true,
