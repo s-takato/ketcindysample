@@ -28,6 +28,8 @@ if(isreal(Animeflg),
   if(Animeflg==1,
     sstart=Dirflg*seconds()+sorg;
     mf(sstart);
+  ,
+    mf(sstart);
   );
 ,
   mf(Current);
