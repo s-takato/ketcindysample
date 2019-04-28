@@ -1,0 +1,25 @@
+Ketinit();
+
+pLB=[7,0];
+pLR=Tenkeybrd(pLB,["Shade=y"]);
+
+Plotdata("1","2^x","x",["Color=blue"]);
+Lineplot("1",[[0,1],[1,2]],["dr,0.5"]);
+
+
+if(getkeyflg==1,
+  Endflg=Keyaction(Key);
+  drawtext(pLB+[0,0.8*5.2],Tenkeys,size->16);
+  getkeyflg=0;
+);
+
+if(Endflg==1,
+ a=parse(Tenkeys);
+ fun=Assign("a^x",["a",a]);
+ Plotdata("2",fun,"x",["Color=red"]);
+ Tenkeys="";
+ Endflg=0;
+);
+
+
+Windispg();

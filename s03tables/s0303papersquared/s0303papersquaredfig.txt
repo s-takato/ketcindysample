@@ -6,7 +6,7 @@ xLst=apply(1..50,2);
 yLst=apply(1..50,2);
 rmvL=[];
 
-Tabledatalight("",xLst,yLst,rmvL,[10,"dr,0.5"]);
+Tabledata(xLst,yLst,rmvL,[10,"dr,0.5"]);
 Tlistplot("1",["c0r0","c50r0","c50r50","c0r50","c0r0"]);
 
 ctr=5;

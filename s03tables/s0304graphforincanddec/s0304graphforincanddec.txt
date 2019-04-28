@@ -1,0 +1,33 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+Ch=[2];
+if(contains(Ch,1),
+ //To make a figure inserted in the table.
+ Setfiles("graph");
+ Setunitlen("5mm");
+ Setwindow([0,8],[-2,4]);
+ Plotdata("1","10*log(x)/x","x=[0,XMAX]",["Exc=[0]","Num=100"]); 
+);//1
+if(contains(Ch,2),
+ xLst=[15,15,15,15,15,15,15];
+ yLst=[10,10,10,10,40];
+ rmvL=["c1r4r5","c2r4r5","c3r4r5","c4r4r5","c5r4r5","c6r4r5"];
+ Tabledata(xLst,yLst,rmvL);
+ Tlistplot(["c1r1","c2r2"]);
+ Tlistplot(["c2r1","c1r2"]);
+ Tlistplot(["c1r2","c2r3"]);
+ Tlistplot(["c2r2","c1r3"]);
+ Tlistplot(["c1r3","c2r4"]);
+ Tlistplot(["c2r3","c1r4"]);
+ Putrowexpr(1,"c",["x","0","\cdots","e","\cdots","e\sqrt{e}","\cdots"]);
+ Putrowexpr(2,"c",["y`","","+","0","-","-","-"]);
+ Putrowexpr(3,"c",["y``","","-","-","-","0","+"]);
+ Putrowexpr(4,"c",["y","","$\nerarrow$","\dfrac{10}{e}","$\serarrow$","\dfrac{15}{e\sqrt{e}}","$\selarrow$"]);
+ Putcell("c0r4","c7r5","c","\input{graph}");
+);
+
+Figpdf();
+Windispg();
+

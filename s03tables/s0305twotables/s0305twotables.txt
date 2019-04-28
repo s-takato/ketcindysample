@@ -2,34 +2,20 @@ Ketinit();
 //Setfiles("");
 Setparent(Cdyname()+"fig");
 
-Ch=[1];
-if(contains(Ch,1),
- Setfiles("table1");
- xLst=[5,5];
- yLst=[5,5];
- Tabledatalight("",xLst,yLst,[]);
- Putrow(1,"c",["A","B"]);
- Putrow(2,"c",["C","D"]);
-);
-if(contains(Ch,2),
- xLst=[10,10,10];
- yLst=[10,10,10];
- Tabledatalight("",xLst,yLst,[],["Rng=n"]);
-// Setwindow([0,5],[0,3]);
- Letter([4,3],"se","\input{table1}");
-);
-if(contains(Ch,3),
- xLst=[10,10,10];
- yLst=[10,10,10];
- Tabledatalight("",xLst,yLst,[],["Rng=y"]);
-// Setwindow([0,5],[0,3]);
- Putcell("c1r1","c2r2","c","\input{table1}");
- ChangeTablestyle(["c1r1r2","c2r1r2","r1c1c2","r2c1c2"],["notex"])
-);
+xLst=[10,10,10];
+yLst=[10,10,10];
+Tabledata(xLst,yLst,[]);
+Putrow(1,"c",["A","B","C"]);
+Putrow(2,"c",["D","","F"]);
+Putrow(3,"c",["G","H","I"]);
+tmp=Tgrid("c1r2");
 
+xLst=[5,5];
+yLst=[5,5];
+Tabledata(xLst,yLst,[],[0,"Move="+text(tmp),"Setwindow=n"]);
+Putrowexpr(1,"c",["x","y"]);
+Putrowexpr(2,"c",["z","w"]);
+Changetablestyle(["c0r0r2","c2r0r2","r0c0c2","r0c0c2"],["nodisp"]);
 
 Figpdf();
 Windispg();
-
-Help("ChangeTables");
-
