@@ -1,0 +1,21 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+Putpoint("C",[4,0],[C.x,0]);
+xLst=[10,10,10];
+yLst=[10,10,10];
+
+Tabledata(xLst,yLst,[],["Setwindows=n"]);
+ Putrow(1,"c",["","A","B"]);
+ Putrowexpr(2,"c",["x","20","30"]);
+ Putrowexpr(3,"c",["y","60","40"]);
+Tabledata(xLst,yLst,[],["Move=C.xy"]);
+ Putrow(1,"c",["","A","B"]);
+ Putrowexpr(2,"c",["x","30","20"]);
+ Putrowexpr(3,"c",["y","60","50"]);
+ Changetablestyle(["r1c0c3","r2c0c3"],["da"]);
+
+Figpdf();
+Windispg();
+
