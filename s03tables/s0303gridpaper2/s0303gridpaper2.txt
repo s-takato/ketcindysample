@@ -1,0 +1,21 @@
+//ketlib
+wd=0;
+
+//figures
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+NE.xy=[10,10];
+xL0=apply(1..round(NE.x),10);
+yL0=apply(1..round(NE.y),10);
+Tabledata(xL0,yL0,[],[0]);
+
+if(wd>0,
+  ndx=round(10*NE.x/wd);
+  xL=apply(1..ndx,wd);
+  ndy=round(10*NE.y/wd);
+  yL=apply(1..ndy,wd);
+  Tabledata(xL,yL,[],[0,"dr,0.25","Setwin=n"]);
+);
+Figpdf();
+Windispg();
