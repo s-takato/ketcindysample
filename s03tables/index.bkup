@@ -4,7 +4,7 @@
 </head>
 <body>
 <p><font size="10">&emsp;Tables</font>
-<font size="5">&emsp;&emsp;2019/04/30</font></p>
+<font size="5">&emsp;&emsp;2019/04/29</font></p>
 
 <!-- s0301table -->
 <table border="1" height="30">
@@ -41,15 +41,6 @@
     <tr><td align="center" width="80"><a href="zougen/zougengraph.tex">tex Graph</a></td></tr>
     <tr><td align="center" width="80"><a href="zougen/zougenparent.tex">tex Parent</td></tr>
     <tr><td align="center" width="80"><a href="zougen/zougen.cdy">cdy</a></td></tr>
-    <tr><td align="center" width="80"></td></tr>
-</table></br>
-
-<!-- s0303gridpaper -->
-<table border="1" height="30">
-    <tr><th colspan="2" align="left"><font size="5">&emsp;s0303gridpaper</font></th></tr>
-    <tr><td rowspan="20"><a href="s0303gridpaper/s0303gridpaper.jpg"><img src="s0303gridpaper/s0303gridpaper.jpg" alt=JPG width="240"></a></td></tr>
-    <tr><td align="center" width="80"><a href="s0303gridpaper/s0303gridpaper.txt">txt</a></td></tr>
-    <tr><td align="center" width="80"><a href="s0303gridpaper/s0303gridpaper.cdy">cdy</a></td></tr>
     <tr><td align="center" width="80"></td></tr>
 </table></br>
 
