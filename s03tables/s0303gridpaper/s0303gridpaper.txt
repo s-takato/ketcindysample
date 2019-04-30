@@ -1,30 +1,32 @@
+//ketlib
+wd=0;
+
+//figures
 Ketinit();
-//Setfiles("");
 Setparent(Cdyname()+"fig");
 
-xLst=apply(1..50,2);
-yLst=apply(1..50,2);
-rmvL=[];
+thick=[0,"dr","Move=SW.xy"];
+thin=[0,"dr,0.3","Move=SW.xy"];
+ww=round(NE.x-SW.x);
+hh=round(NE.y-SW.y);
+xL0=apply(1..ww,10);
+yL0=apply(1..hh,10);
+tb=Tabledata(xL0,yL0,[],thick);
+xthick=apply(tb_1,#_1);
+ythick=apply(tb_2,#_2);
 
-Tabledata(xLst,yLst,rmvL,[10,"dr,0.5"]);
-Tlistplot("1",["c0r0","c50r0","c50r50","c0r50","c0r0"]);
-
-ctr=5;
-sen=5;
-forall(1..5,
-  tmp1="c0r"+sen;
-  tmp2="c50r"+sen;
-  Tlistplot(text(ctr),[tmp1,tmp2],["dr,0.5"]);
-  ctr=ctr+1;
-  tmp1="c"+sen+"r0";
-  tmp2="c"+sen+"r50";
-  Tlistplot(text(ctr),[tmp1,tmp2],["dr,0.5"]);
-  ctr=ctr+1;
-  sen=sen+10;
+if(wd>0,
+  ndx=round(10*ww/wd);
+  xL=apply(1..ndx,wd);
+  ndy=round(10*hh/wd);
+  yL=apply(1..ndy,wd);
+  tb=Tabledata(xL,yL,[],thin);
+  cL=select(1..(length(tb_1)),contains(xthick,tb_1_#_1));
+  cL=apply(cL,"c"+text(#-1)+"r0r"+text(length(tb_2)-1));
+  rL=select(1..(length(tb_2)),contains(ythick,tb_2_#_2));
+  rL=apply(rL,"r"+text(#-1)+"c0c"+text(length(tb_1)-1));
+  Changetablestyle(concat(cL,rL),["nodisp"]);
 );
 
 Figpdf();
 Windispg();
-
-//Help("Ta");
-
