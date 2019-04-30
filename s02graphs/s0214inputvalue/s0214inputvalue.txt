@@ -1,0 +1,59 @@
+//ketlib
+plotL=[];
+drwgraph=false;
+Opt=["dr,2","Color=red","Msg=n"];
+
+//figures
+
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+Setwindow([-4,4],[-0.5,10]);
+Setketcindyjs(["Grid=0.2","Nolabel=all","Color=lightgray"]);
+
+ctr=11;
+forall(1..10,
+  Listplot(text(ctr),[[-3,#],[3,#]],["dr,0.5","Msg=n"]);
+  Vtickmark([#,text(#)]);
+  ctr=ctr+1;
+);
+
+forall(remove((-3)..3,[0]),
+  Listplot(text(ctr),[[#,0],[#,10]],["dr,0.5","Msg=n"]);
+  Htickmark([#,text(#)]);
+  ctr=ctr+1;
+);
+
+Expr([1,YMAX],"ne","y=x^2",["size->20"]);
+
+ptL=apply((-3)..3,[#,#^2]);
+
+if(length(ptL)>0,
+  Pointdata("0",ptL,["Size=3","Color=blue","Msg=n"]);
+);
+if(!homectr,
+  Bezier("1",kcL_1,kcL_2,["Num=20"]);
+  tmp=apply(bz1,abs(#_2-(#_1)^2));
+  mean=sum(tmp)/length(bz1);
+  tmp="D="+Sprintf(mean*1000,2);//+"($\times 10^{-3}$)";
+   Expr(A,"e",tmp,["notex","size->24"]);
+);
+
+if(drwgraph,
+  Plotdata("qg","x^2","x",["Color=blue"]);
+);
+
+str="x=0"; //no ketjs
+//str=Textedit(0); only ketjs
+parse(str);
+y=x^2;
+drawtext([4.5,1.3],"y="+text(y),size->16);
+plotL=select(plotL,|#-[x,y]|>0.01);
+if(length(plotL)>0,
+  Pointdata("2",plotL,["Size=3","Color=yellow"]);
+);
+Pointdata("1",[x,y],["Size=3","Color=red"]);
+plotL=append(plotL,[x,y]);
+
+Figpdf();
+Windispg();

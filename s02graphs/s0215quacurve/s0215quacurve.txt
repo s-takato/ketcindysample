@@ -1,0 +1,114 @@
+//ketlib
+
+ptL=apply((-3)..3,[#,#^2]);
+kcL=[];
+ctrall=12;
+drwgraph=false;
+Opt=["dr,2","Color=red","Msg=n"];
+homectr=true;
+
+Plotptongraph(x):=(
+  regional(y);
+  y=x^2;
+  ptL=append(ptL,[x,y]);
+  ptL=sort(ptL,[#.x]);
+);
+
+Initbezier(ptL):=(
+  regional(kL,cL,pt1,pt2,tmp,tmp1);
+  kL=ptL;
+  cL="";
+  forall(2..(length(kL)),
+    pt1=kL_(#-1);
+    pt2=kL_#;
+    tmp=unicode(text(64+#-1),base->10);
+    tmp1=tmp+"1.xy="+Textformat((2*pt1+pt2)/3,3)+";";
+    parse(tmp1);
+    tmp1=tmp+"2.xy="+Textformat((pt1+2*pt2)/3,3)+";";
+    parse(tmp1);
+    cL=cL+","+tmp+"1,"+tmp+"2";
+  );
+  cL="["+substring(cL,1,length(cL))+"];";
+  cL=parse(cL);
+  homectr=false;
+  [kL,cL];
+);
+
+Preparectrpt(nn):=( //no ketjs on
+  regional(tmp,tmp1,tmp2,out);
+  out=[];
+  forall(1..nn,
+    tmp=unicode(text(64+#),base->10);
+    tmp1=[4.5,YMAX-#/4];
+    tmp2=[5,YMAX-#/4];
+    Putpoint(tmp+"1",tmp1):Putpoint(tmp+"2",tmp2):
+    inspect(parse(tmp+"1"),"ptsize",3);
+    inspect(parse(tmp+"2"),"ptsize",3);
+    inspect(parse(tmp+"1"),"labeled",false);
+    inspect(parse(tmp+"2"),"labeled",false);
+    out=concat(out,[parse(tmp+"1"),parse(tmp+"2")]);
+  );
+  out;
+); //no ketjs off
+
+Resetctrpt(nn):=(
+  regional(tmp,tmp1,tmp2);
+  forall(1..nn,
+    tmp=unicode(text(64+#),base->10);
+    tmp1=Textformat([4.5,YMAX-#/4],5);
+    tmp2=Textformat([5,YMAX-#/4],5);
+    parse(tmp+"1.xy="+tmp1+";");
+    parse(tmp+"2.xy="+tmp2+";");
+  );
+  homectr=true;
+);
+
+//figure
+Ketinit();
+Setparent(Cdyname()+"fig");
+
+Setwindow([-4,4],[-0.5,10]);
+Setketcindyjs(["Grid=0.2","Nolabel=all","Color=lightgray"]);
+
+//Preparectrpt(12); //only once
+Slider("S",[-3.5,-1],[3.5,-1]);
+
+ctr=11;
+forall(1..10,
+  Listplot(text(ctr),[[-3,#],[3,#]],["dr,0.5","Msg=n"]);
+//  Expr([[0,#],"w",text(#)]);
+  Vtickmark([#,text(#)]);
+  ctr=ctr+1;
+);
+
+forall(remove((-3)..3,[0]),
+  Listplot(text(ctr),[[#,0],[#,10]],["dr,0.5","Msg=n"]);
+//  Expr([[#,0],"s",text(#)]);
+  Htickmark([#,text(#)]);
+  ctr=ctr+1;
+);
+
+Expr([1,YMAX],"ne","y=x^2",["size->20"]);
+
+
+if(length(ptL)>0,
+  Pointdata("0",ptL,["Size=3","Color=blue","Msg=n"]);
+);
+if(length(kcL)==0, //no ketjs on
+  tmp=Preparectrpt(ctrall);
+); //no ketjs off
+if(!homectr,
+  Bezier("1",kcL_1,kcL_2,["Num=20"]);
+  tmp=apply(bz1,abs(#_2-(#_1)^2));
+  mean=sum(tmp)/length(bz1);
+  tmp="D="+Sprintf(mean*1000,2);//+"($\times 10^{-3}$)";
+   Expr(A,"e",tmp,["notex","size->24"]);
+);
+
+if(drwgraph,
+  Plotdata("qg","x^2","x",["Color=blue"]);
+);
+
+
+Figpdf();
+Windispg();
