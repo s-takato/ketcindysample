@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>KeTCindyJS misc.</title>
+</head>
+<body>
+<p><font size="10">&emsp;KeTCindyJS misc.</font>
+<font size="5">&emsp;&emsp;2019/05/02</font></p>
+<!-- s1602diffeq2 -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s1602diffeq2</font></th></tr>
+    <tr><td rowspan="20"><a href="s1602diffeq2/s1602diffeq2fig.jpg"><img src="s1602diffeq2/s1602diffeq2fig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s1602diffeq2/s1602diffeq2json.html">html</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1602diffeq2/s1602diffeq2.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1602diffeq2/s1602diffeq2.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s1603gamow -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s1603gamow</font></th></tr>
+    <tr><td rowspan="20"><a href="s1603gamow/s1603gamowfig.jpg"><img src="s1603gamow/s1603gamowfig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s1603gamow/s1603gamowjson.html">html</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1603gamow/s1603gamow.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1603gamow/s1603gamow.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s1604putoncurve -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s1604putoncurve</font></th></tr>
+    <tr><td rowspan="20"><a href="s1604putoncurve/s1604putoncurvefig.pdf"><img src="s1604putoncurve/s1604putoncurvefig.pdf" alt=PDF width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s1604putoncurve/s1604putoncurvejson.html">html</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1604putoncurve/s1604putoncurve.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1604putoncurve/s1604putoncurve.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s1605triangle -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s1605triangle</font></th></tr>
+    <tr><td rowspan="20"><a href="s1605triangle/s1605trianglefig.jpg"><img src="s1605triangle/s1605trianglefig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s1605triangle/s1605trianglejson.html">html</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1605triangle/s1605triangle.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s1606morley -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s1606morley</font></th></tr>
+    <tr><td rowspan="20"><a href="s1606morley/s1606morleyfig.jpg"><img src="s1606morley/s1606morleyfig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s1606morley/s1606morleyjson.html">html</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1606morley/s1606morley.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s1607inputbox -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s1607inputbox</font></th></tr>
+    <tr><td rowspan="20"><a href="s1607inputbox/s1607inputboxfig.jpg"><img src="s1607inputbox/s1607inputboxfig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s1607inputbox/s1607inputboxjson.html">html</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1607inputbox/s1607inputbox.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s1607inputbox/s1607inputbox.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+</body>
+</html>

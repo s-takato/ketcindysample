@@ -1,0 +1,11 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=lightgray"]);
+
+Ospline("1",[A,B,C,D,E,A]);
+Putoncurve("G","bzo1");
+Letter(G,"nw","P");
+Pointdata("1",G.xy,["Size=3","Color=blue"]);
+
+Figpdf();
+Windispg();
