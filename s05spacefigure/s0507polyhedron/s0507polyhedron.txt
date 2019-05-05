@@ -1,0 +1,34 @@
+// ketlib
+skeleflg=0;
+nohidflg=0;
+
+// figures
+Start3d();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=white"]);
+//Putaxes3d(5);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+//Setdirectory(
+//  Dirhead+"/data/polyhedrons_obj");
+//polydt=Readobj("r02.obj",["size=-3.5"]);
+//Setdirectory(Dirwork);
+
+polydt=[[[2.47,2.47,0],[2.47,-2.47,0],[-2.47,-2.47,0],[-2.47,2.47,0],[0,0,3.5],[0,0,-3.5]],[[1,2,5],[1,5,4],[1,4,6],[1,6,2],[2,3,5],[2,6,3],[3,4,5],[3,6,4]]];
+
+Vertexedgeface("1",polydt,["Label=0"]);
+
+if(nohidflg==1,
+  tmp1=["ax3d","phe3d1"];
+  tmp2=["phf3d1"];
+  Nohiddenbyfaces("1",tmp1,tmp2,[],["do"]);
+  nohidflg=0;
+);
+if(skeleflg==1,
+  tmp1=["ax3d","phe3d1"];
+  Skeletonparadata("1",tmp1,tmp1,[1.5]);
+  skeleflg=0;
+);
+
+Figpdf();
+Windispg();

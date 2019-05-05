@@ -1,0 +1,50 @@
+//ketlib
+nohidflg=0;
+skeleflg==0;
+
+//figures
+Start3d();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Color=white"]);
+
+Putaxes3d(5);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-2,5]");
+
+//no ketjs on
+Putpoint3d("A",2*[-1,-1/sqrt(3),0],"fix");
+Putpoint3d("B",2*[1,-1/sqrt(3),0],"fix");
+Putpoint3d("C",2*[0,sqrt(3)-1/sqrt(3),0],"fix");
+Putpoint3d("D",2*[0,0,sqrt(3)],"fix");
+//no ketjs off
+
+Spaceline("1",[A3d,B3d],["Msg=n"]);
+Spaceline("2",[A3d,C3d],["Msg=n"]);
+Spaceline("3",[B3d,C3d],["Msg=n"]);
+Spaceline("4",[A3d,D3d],["Msg=n"]);
+Spaceline("5",[B3d,D3d],["Msg=n"]);
+Spaceline("6",[C3d,D3d],["Msg=n"]);
+edges=apply(1..6,"sl3d"+text(#));
+
+Changestyle3d(edges,["nodisp"]);
+
+tmp=[[A3d,B3d,C3d],[A3d,B3d,D3d],
+     [A3d,C3d,D3d],[B3d,C3d,D3d]];
+dtp=Concatobj(tmp);
+Vertexedgeface("1",dtp,["Label=0"]);
+
+if(nohidflg==1,
+  tmp1=["ax3d","phe3d1"];
+  tmp2=["phf3d1"];
+  Nohiddenbyfaces("1",tmp1,tmp2);
+  nohidflg=0;
+);
+if(skeleflg==1,
+  tmp=["ax3d","phe3d1"];
+  Skeletonparadata("1",tmp,tmp,[1.5]);
+  skeleflg=0;
+);
+
+//skeleflg=1;
+Figpdf();
+Windispg();
+

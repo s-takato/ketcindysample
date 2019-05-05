@@ -1,0 +1,19 @@
+Start3d([]);
+Setparent(Cdyname()+"fig");
+SetketcindyJS(["Nolabel=all","Rem=[O,X,Y,Z]"]);
+
+Putaxes3d(5);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+Spaceline("1",[A,B]);
+
+Ch=[1];
+if(contains(Ch,1),
+ if(!Isangle(),
+  gdt=["ax3d","sl3d1"];
+  Skeletonparadata("1",gdt,gdt,[1.5]);
+ );
+);
+
+Figpdf();
+Windispg();
