@@ -5,17 +5,16 @@ skeleflg==0;
 //figures
 Start3d();
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=white"]);
+Setketcindyjs(["Nolabel=[]","Color=white",
+ "Remove=[O,X,Y,Z]"]);
 
 Putaxes3d(5);
 Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-2,5]");
 
-//no ketjs on
 Putpoint3d("A",2*[-1,-1/sqrt(3),0],"fix");
 Putpoint3d("B",2*[1,-1/sqrt(3),0],"fix");
 Putpoint3d("C",2*[0,sqrt(3)-1/sqrt(3),0],"fix");
-Putpoint3d("D",2*[0,0,sqrt(3)],"fix");
-//no ketjs off
+Putpoint3d("D",2*[0,0,sqrt(3)],"fix");//no ketjs
 
 Spaceline("1",[A3d,B3d],["Msg=n"]);
 Spaceline("2",[A3d,C3d],["Msg=n"]);
@@ -47,4 +46,3 @@ if(skeleflg==1,
 //skeleflg=1;
 Figpdf();
 Windispg();
-
