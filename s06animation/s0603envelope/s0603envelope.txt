@@ -1,6 +1,6 @@
 Ketinit();
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=0.1*[0,0,0,1]"]);
+Setketcindyjs(["Nolabel=all","Color=lightgray"]);
 
 Slider("C",[XMIN,YMIN-1],[XMAX,YMIN-1]);
 Current=C.x;
