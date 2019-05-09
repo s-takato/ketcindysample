@@ -50,7 +50,7 @@ Triangle(s):=(
   [round(s/Delta),p1,p2,p3];
 );
 
-Ch=[2];
+Ch=[1];
 if(contains(Ch,1),
  n2=floor(2*(S.x+len/4)/Delta);
  tL=select(tL,#_1<n2);
@@ -62,7 +62,6 @@ if(contains(Ch,1),
  ctr=1;
  forall(tL,
    p1=#_2; p2=#_3; p3=#_4;
-   // Pointdata(text(ctr),[p1,p2,p3],["Size=3","Color=blue"]);
    Listplot(text(ctr),[p1,p2,p3,p1],["Color=blueviolet"]);
    ctr=ctr+1;
  );
@@ -70,7 +69,9 @@ if(contains(Ch,1),
    s=#*Delta;
    dt=Triangle(s);
    p1=dt_2; p2=dt_3; p3=dt_4;
-   Pointdata(text(ctr),[p1,p2,p3],["Size=3","Color=blue"]);
+   if(#==n2,
+     Pointdata(text(ctr),[p1,p2,p3],["Size=3","Color=blue"]);
+   );
    Listplot(text(ctr),[p1,p2,p3,p1],["Color=blueviolet"]);
    tL=append(tL,dt);
    ctr=ctr+1;
