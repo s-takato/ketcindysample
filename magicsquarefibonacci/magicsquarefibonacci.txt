@@ -1,0 +1,93 @@
+Ketinit();
+//Setfiles("");
+Setparent(Cdyname()+"fig");
+
+Setunitlen("0.7cm");
+Letter([4,11],"l","Fibonacci Numbers");
+
+Fn=[1,1];//Fibonacci numbers
+forall(3..13,
+       Fn=append(Fn,Fn_(#-1)+Fn_(#-2));
+);
+
+Slider("C",[1,6.3],[6,6.3]);
+forall(0..5,
+	Pointdata(text(#),[#+1,C.y],["Size=3","notex"]);
+);
+k1=floor(C.x)-1;println(k1);
+CList=[[0.2,0,0,0],[0,0.2,0,0],[0,0,0.2,0],[0.2,0.2,0,0],[0.2,0,0.2,0],[0,0.2,0.2,0]];
+
+w1=12;
+Tabledata([w1,w1,w1],[w1,w1,w1],[],[0,"Setwindows=n"]);//三方陣を描く
+Putrowexpr(1,"c",[2,9,4]);
+Putrowexpr(2,"c",[7,5,3]);
+Putrowexpr(3,"c",[6,1,8]);
+Letter([0.6,-0.4],"l","Magic Square");
+
+w2=18;
+xLst=[w2,w2,w2,w2+8];
+yLst=[w2,w2,w2,w2];
+Fontsize("f");
+Tabledata(xLst,yLst,[],[0,"Move=[0.1*w1*3+1,-0.1*w2]"]);
+ Changetablestyle(["r0c3c4","r1c3c4","r2c3c4","r3c3c4","r4c0c4"],["da"]);
+ Changetablestyle(["c0r3r4","c1r3r4","c2r3r4","c3r3r4","c4r0r4"],["da"]);
+ Putrowexpr(1,"c",["a_2","a_9","a_4","a_2"+"\cdot "+"a_9"+"\cdot "+"a_4"]);
+ Putrowexpr(2,"c",["a_7","a_5","a_3","a_7"+"\cdot "+"a_5"+"\cdot "+"a_3"]);
+ Putrowexpr(3,"c",["a_6","a_1","a_8","a_6"+"\cdot "+"a_1"+"\cdot "+"a_8"]);
+ Putrowexpr(4,"c",["a_2"+"\cdot "+"a_7"+"\cdot "+"a_6","a_9"+"\cdot "+"a_5"+"\cdot "+"a_1","a_4"+"\cdot "+"a_3"+"\cdot "+"a_8"]);
+Fontsize("n");
+
+w2=18;
+xLst=[w2,w2,w2,w2+4];
+yLst=[w2,w2,w2,w2];
+Fontsize("f");
+Tabledata(xLst,yLst,[],[0,"Move=[14,-0.1*w2]"]);///
+
+ Changetablestyle(["r0c3c4","r1c3c4","r2c3c4","r3c3c4","r4c0c4"],["da"]);///
+ Changetablestyle(["c0r3r4","c1r3r4","c2r3r4","c3r3r4","c4r0r4"],["da"]);///
+ Listplot("2",[Tgrid("c0r0"),Tgrid("c0r3"),Tgrid("c3r3"),Tgrid("c3r0"),Tgrid("c0r0")]);
+Shade("2",["sg2"],["Color="+text(CList_(k1+1))]);///
+Tabledata(xLst,yLst,[],[0,"Move=[14,-0.1*w2]"]);///
+ Putrowexpr(1,"c",[Fn_(k1+2),Fn_(k1+9),Fn_(k1+4)]);
+ Putrowexpr(2,"c",[Fn_(k1+7),Fn_(k1+5),Fn_(k1+3)]);
+ Putrowexpr(3,"c",[Fn_(k1+6),Fn_(k1+1),Fn_(k1+8)]);
+//Fontsize("t");
+ Putcellexpr("c3r0","c4r1","c",Fn_(k1+2)*Fn_(k1+9)*Fn_(k1+4));
+
+ Putcellexpr("c3r1","c4r2","c",Fn_(k1+7)*Fn_(k1+5)*Fn_(k1+3)); 
+ Putcellexpr("c3r2","c4r3","c",Fn_(k1+6)*Fn_(k1+1)*Fn_(k1+8)); 
+
+ Putcellexpr("c0r3","c1r4","c",Fn_(k1+2)*Fn_(k1+7)*Fn_(k1+6)); // Putcell("c0r3","c1r4","lb","="); 
+ Putcellexpr("c1r3","c2r4","c",Fn_(k1+9)*Fn_(k1+5)*Fn_(k1+1)); //Putcell("c1r3","c2r4","lb","="); 
+ Putcellexpr("c2r3","c3r4","c",Fn_(k1+4)*Fn_(k1+3)*Fn_(k1+8)); //Putcell("c2r3","c3r4","lb","=");
+ Changetablestyle(["r0c3c4","r1c3c4","r2c3c4","r3c3c4","r4c0c4"],["da"]);
+ Changetablestyle(["c0r3r4","c1r3r4","c2r3r4","c3r3r4","c4r0r4"],["da"]);
+
+Fontsize("f");
+w3=10;
+xLst=[w3,w3,w3,w3,w3,w3,w3,w3,w3,w3,w3,w3,w3,w3];//
+yLst=[w3,w3,w3];//
+Tabledata(xLst,yLst,[],[0,"Move=[0,7]"]);
+Listplot("1",[Tgrid("c"+text(k1+1)+"r0"),Tgrid("c"+text(k1+1)+"r3"),Tgrid("c"+text(k1+10)+"r3"),Tgrid("c"+text(k1+10)+"r0"),Tgrid("c"+text(k1+1)+"r0")]);
+Shade("1",["sg1"],["Color="+text(CList_(k1+1))]);
+Tabledata(xLst,yLst,[],[0,"Move=[0,7]"]);
+
+ Putrowexpr(1,"c",["n","1","2","3","4","5","6","7","8","9","10","11","12","13"]);
+ Putrowexpr(2,"c",["F_n",Fn_1,Fn_2,Fn_3,Fn_4,Fn_5,Fn_6,Fn_7,Fn_8,Fn_9,Fn_10,Fn_11,Fn_12,Fn_13]);
+tmp=Op(1,Findcell(k1+2,3));//println(tmp);println(Findcell(k1,3));
+forall(1..9,
+	Expr([tmp_1-1+#*(0.1*w3),tmp_2],"c","a_"+text(#));
+);
+
+Letter([15,11],"e","フィボナッチ数列の連続する９項を");
+Letter([15,10],"e","$a_1,\ a_2,\ \cdots ,a_9$とする.");
+Letter([15,9],"e","三方陣の1〜9の場所に$a_1,\ a_2,\ \cdots ,a_9$を");
+Letter([15,8],"e","$i$の場所に$a_i$が来るように配置する．");
+Letter([15,7],"e","各行3項の積の和と各列3項の積の和は");
+Letter([15,6],"e","一致することを確かめよ．");
+
+Figpdf();
+Windispg();
+
+//Help("Shade");//Help("Tgrid");
+

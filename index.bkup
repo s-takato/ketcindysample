@@ -4,7 +4,7 @@
 </head>
 <body>
 <p><font size="10">&emsp;Samples of KeTCindy</font>
-<font size="5">&emsp;&emsp;2019/05/12</font></p>
+<font size="5">&emsp;&emsp;2019/04/29</font></p>
 
 <ul>
 
@@ -116,16 +116,6 @@
     <tr><td rowspan="20"><a href="20cubes/Rippoutai_TUMIKI_003fig.jpg"><img src="20cubes/Rippoutai_TUMIKI_003fig.jpg" alt=JPG width="240"></a></td></tr>
     <tr><td align="center" width="80"><a href="20cubes/Rippoutai_TUMIKI_003.txt">txt</a></td></tr>
     <tr><td align="center" width="80"><a href="20cubes/Rippoutai_TUMIKI_003.cdy">cdy</a></td></tr>
-    <tr><td align="center" width="80"></td></tr>
-</table></br>
-
-<!-- magicsquarefibonacci -->
-<table border="1" height="30">
-    <tr><th colspan="2" align="left"><font size="5">Magic square and Fibonacci(J)</font><font size="4">Contontei</font></th></tr>
-    <tr><td rowspan="20"><a href="magicsquarefibonacci/magicsquarefibonaccifig.jpg"><img src="magicsquarefibonacci/magicsquarefibonaccifig.jpg" alt=JPG width="240"></a></td></tr>
-    <tr><td align="center" width="80"><a href="magicsquarefibonacci/magicsquarefibonaccijson.html">html</a></td></tr>
-    <tr><td align="center" width="80"><a href="magicsquarefibonacci/magicsquarefibonacci.txt">txt</a></td></tr>
-    <tr><td align="center" width="80"><a href="magicsquarefibonacci/magicsquarefibonacci.cdy">cdy</a></td></tr>
     <tr><td align="center" width="80"></td></tr>
 </table></br>
 
