@@ -5,10 +5,10 @@ pL=[];
 hintflg=0;
 
 //figures
-
 Ketinit();
 Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nolabel=all","Color=lightgray"]);
+Setwindow([-5,5],[-5,5]);
 
 ww=round(NE.x-SW.x);
 hh=round(NE.y-SW.y);
@@ -36,6 +36,7 @@ Plotdata("1",Assign("a^x",["a",a]),"x",["Color=blue"]);// no ketjs
 //opred=["Size=1.6","Color=red"];
 //opblue=["Size=1.6","Color=blue"];
 //opred3=["Size=3","Color=red"];
+//opblue3=["Size=3","Color=blue"];
 //tmp=Strsplit(astr,"=");
 //if(length(tmp_2)>0,
 //  a=parse(tmp_2);
@@ -43,16 +44,20 @@ Plotdata("1",Assign("a^x",["a",a]),"x",["Color=blue"]);// no ketjs
 //  pos=[loga(a,NE.y),NE.y+0.7];
 //  Expr(pos,"w","y="+a+"^x",opblue);
 //  pos=[loga(a,NE.y),NE.y+0.7];
-//  Expr(pos+[1,0],"e","y=\log_"+a+"{"+"x}",opred);
+//  Expr(pos+[1,0],"e","y=\log_{"+a+"}"+"x",opred);
 //  xstr=Textedit(51);
 //  tmp=Strsplit(xstr,"=");
 //  if(length(tmp_2)>0,
 //    x=parse(tmp_2);
-//    Pointdata("1",[0,x],opred3);
+//    Pointdata("1",[0,x],opblue3);
 //    tmp=[NE.x+1,0];
 //    Expr(tmp,"ne","y=\log_{"+a+"}"+x,["Size=1.6"]);
 //    ystr=Textedit(52);
 //    tmp=Strsplit(ystr,"=");
+//    if(hintflg==1,
+//      tmp=[[0,x],[loga(a,x),x],[loga(a,x),0]];
+//      Listplot("1",tmp,["dr,2","Color=red"]);
+//    );
 //    if(length(tmp_2)>0,
 //      y=parse(tmp_2);
 //      tmp=[NE.x+1,-2];
@@ -60,13 +65,9 @@ Plotdata("1",Assign("a^x",["a",a]),"x",["Color=blue"]);// no ketjs
 //        tmp1="Correct! y="+Sprintf(loga(a,x),4);
 //        Letter(tmp,"e",tmp1,opred);
 //        pL=append(pL,[x,y]);
-//        hintflg=0;
+//        Changestyle(["sg1"],["nodisp"]);
 //      ,
 //        Letter(tmp,"e","Not correct",opred);
-//        if(hintflg==1,
-//          tmp=[[0,x],[loga(a,x),x],[loga(a,x),0]];
-//          Listplot("1",tmp,["Color=red"]);
-//        );
 //      );
 //    );
 //  );

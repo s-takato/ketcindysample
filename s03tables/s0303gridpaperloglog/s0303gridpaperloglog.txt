@@ -1,0 +1,66 @@
+//ketlib
+nnx=2;
+tickx=0;
+nny=2;
+ticky=0;
+
+//figures
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=lightgray"]);
+
+Addax(0);
+
+if((nnx>0)&(nny>0),
+ thick=[0,"dr","Move=SW.xy"];
+ thin=[0,"dr,0.3","Move=SW.xy"];
+ hhx=round(NE.x-SW.x);
+ xL0=apply(1..nnx,10*hhx/nnx);
+ hhy=round(NE.y-SW.y);
+ yL0=apply(1..nny,10*hhy/nny);
+ tb1=Tabledata(xL0,yL0,[],thick);
+ xthick=apply(tb1_1,#_1);
+ ythick=apply(tb1_2,#_2);
+
+ xe=exp(hhx/nnx);
+ xL=apply(1..10,10*log(1+(xe-1)/10*#));
+ xL=apply(1..10,if(#==1,xL_#,xL_#-xL_(#-1)));
+ xall=[];
+ forall(1..nnx,
+  xall=concat(xall,xL);
+ );
+ ye=exp(hhy/nny);
+ yL=apply(1..10,10*log(1+(ye-1)/10*#));
+ yL=apply(1..10,if(#==1,yL_#,yL_#-yL_(#-1)));
+ yL=reverse(yL);
+ yall=[];
+ forall(1..nny,
+  yall=concat(yall,yL);
+ );
+ tb2=Tabledata(xall,yall,[],thin);
+ cL=select(1..(length(tb2_1)),contains(xthick,tb2_1_#_1));
+ cL=apply(cL,"c"+text(#-1)+"r0r"+text(length(tb2_2)-1));
+ rL=select(1..(length(tb2_2)),contains(ythick,tb2_2_#_2));
+ rL=apply(rL,"r"+text(#-1)+"c0c"+text(length(tb2_1)-1));
+ Changetablestyle(concat(cL,rL),["nodisp"]);
+
+ if(tickx>0,
+  htick=[];
+  forall(0..nnx,
+    htick=concat(htick,[[SW.x+#*hhx/nnx,SW.y],"s",text(10^{#})]);
+  );
+  Expr(htick,[]);
+ );
+ if(ticky>0,
+  vtick=[];
+  forall(0..nny,
+    vtick=concat(vtick,[[SW.x,SW.y+#*hhy/nny],"w",text(10^{#})]);
+  );
+  Expr(concat(htick,vtick),[]);
+ );
+
+);
+
+//Addax(1);
+Figpdf([10,10,5,5]);
+Windispg();

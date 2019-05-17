@@ -1,0 +1,57 @@
+//ketlib
+nn=0;
+tick=0;
+
+//figures
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Color=lightgray"]);
+
+Addax(0);
+
+if(nn>0,
+ thick=[0,"dr","Move=SW.xy"];
+ thin=[0,"dr,0.3","Move=SW.xy"];
+
+ ww=round(NE.x-SW.x);
+ xL0=apply(1..ww,10);
+ hh=round(NE.y-SW.y);
+ yL0=apply(1..nn,10*hh/nn);
+ tb1=Tabledata(xL0,yL0,[],thick);
+ xthick=apply(tb1_1,#_1);
+ ythick=apply(tb1_2,#_2);
+
+ ndx=round(10*ww/5);
+ xL=apply(1..ndx,5);
+ ye=exp(hh/nn);
+ yL=apply(1..10,10*log(1+(ye-1)/10*#));
+ yL=apply(1..10,if(#==1,yL_#,yL_#-yL_(#-1)));
+ yL=reverse(yL);
+ yall=[];
+ forall(1..nn,
+  yall=concat(yall,yL);
+ );
+ tb2=Tabledata(xL,yall,[],thin);
+ cL=select(1..(length(tb2_1)),contains(xthick,tb2_1_#_1));
+ cL=apply(cL,"c"+text(#-1)+"r0r"+text(length(tb2_2)-1));
+ rL=select(1..(length(tb2_2)),contains(ythick,tb2_2_#_2));
+ rL=apply(rL,"r"+text(#-1)+"c0c"+text(length(tb2_1)-1));
+ Changetablestyle(concat(cL,rL),["nodisp"]);
+
+ if(tick>0,
+  htick=[];
+  forall((round(SW.x))..(round(NE.x)),
+    htick=concat(htick,[[#,SW.y],"s",text(#)]);
+  );
+  vtick=[];
+  forall(0..nn,
+    vtick=concat(vtick,[[SW.x,SW.y+#*hh/nn],"w",text(10^{#})]);
+  );
+  Expr(concat(htick,vtick),[]);
+ );
+
+);
+
+//Addax(1);
+Figpdf([10,5,5,5]);
+Windispg();
