@@ -47,14 +47,14 @@ if((nnx>0)&(nny>0),
  if(tickx>0,
   htick=[];
   forall(0..nnx,
-    htick=concat(htick,[[SW.x+#*hhx/nnx,SW.y],"s",text(10^{#})]);
+    htick=concat(htick,[[SW.x+#*hhx/nnx,SW.y],"s",text(10^#)]);
   );
   Expr(htick,[]);
  );
  if(ticky>0,
   vtick=[];
   forall(0..nny,
-    vtick=concat(vtick,[[SW.x,SW.y+#*hhy/nny],"w",text(10^{#})]);
+    vtick=concat(vtick,[[SW.x,SW.y+#*hhy/nny],"w",text(10^#)]);
   );
   Expr(concat(htick,vtick),[]);
  );

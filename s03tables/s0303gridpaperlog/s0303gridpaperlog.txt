@@ -45,7 +45,7 @@ if(nn>0,
   );
   vtick=[];
   forall(0..nn,
-    vtick=concat(vtick,[[SW.x,SW.y+#*hh/nn],"w",text(10^{#})]);
+    vtick=concat(vtick,[[SW.x,SW.y+#*hh/nn],"w",text(10^#)]);
   );
   Expr(concat(htick,vtick),[]);
  );
