@@ -1,17 +1,25 @@
+//ketlib
+wd=0;
+tick=0;
+
+//figures
 Ketinit();
 Setparent(Cdyname()+"fig");
 
 thick=[0,"dr","Move=SW.xy"];
 thin=[0,"dr,0.3","Move=SW.xy"];
-htick=[];
-forall((round(SW.x))..(round(NE.x)),
- htick=concat(htick,[[#,SW.y],"s",text(#)]);
+
+if(tick==1,
+ htick=[];
+ forall((round(SW.x))..(round(NE.x)),
+   htick=concat(htick,[[#,SW.y],"s",text(#)]);
+ );
+ vtick=[];
+ forall((round(SW.y))..(round(NE.y)),
+   vtick=concat(vtick,[[SW.x,#],"w",text(#)]);
+ );
+ Expr(concat(htick,vtick),[]);
 );
-vtick=[];
-forall((round(SW.y))..(round(NE.y)),
- vtick=concat(vtick,[[SW.x,#],"w",text(#)]);
-);
-Expr(concat(htick,vtick),[]);
 
 ww=round(NE.x-SW.x);
 hh=round(NE.y-SW.y);
@@ -33,6 +41,8 @@ if(wd>0,
   rL=apply(rL,"r"+text(#-1)+"c0c"+text(length(tb2_1)-1));
   Changetablestyle(concat(cL,rL),["nodisp"]);
 );
+
+
 
 Figpdf();
 Windispg();
