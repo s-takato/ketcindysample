@@ -1,0 +1,44 @@
+Ketinit();
+Setketcindyjs(["Nolabel=all","Local=n"]);//no ketjs
+
+Setwindow([0,5],[-0.5,3]);
+Addax(0);
+
+inspect(Text50,"textsize",30);//no ketjs on
+inspect(Text51,"textsize",30);
+inspect(Text52,"textsize",30);
+str="=";
+inspect(Text50,"text.text",str);
+inspect(Text51,"text.text",str);
+inspect(Text52,"text.text",str);//no ketjs off
+
+//pos=1; //only ketjs on
+//pos2=2.75;
+//win=[50,51,52];
+//anst="";
+//ansc="";
+//forall(win,
+//  str=Textedit2value(#,["Form=t"]);
+//  str=Assign(str,["ans",anst]);
+//  anst=str;
+//  if(indexof(str,"?")==0,
+//    Expr([0.1,pos],"e",str,["Size=3"]);
+//    Letter([4.1,pos],"e",str,["Size=2"]);
+//  ,
+//    Letter([0.1,pos],"e",str,["Size=3"]);
+//  ); 
+//  str=Textedit2value(#,["Form=c","Parse=n"]);
+//  str=Assign(str,["ans",ansc]);
+//  ansc=str;
+//  if((length(str)>0)&(indexof(str,"?")==0),
+//    str=parse(str);
+//    str=format(str,8);
+//  );
+//  Letter([4.1,pos2],"e",str,["Size=3"]);
+//  pos=pos-0.6;
+//  pos2=pos2-0.52;
+//); //only ketjs off
+
+Windispg();
+
+
