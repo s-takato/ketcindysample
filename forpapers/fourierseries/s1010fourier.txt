@@ -13,6 +13,9 @@ Setwindow([-2,2],[-0.5,1.5]);
 Setunitlen("20mm");
 //Setscaling(2);
 
+mp=Animationparam(round(4*(N.x+2.5)),2,40);
+nn=round(tmp);
+
 defL=[
  "1",[-2,-1],1,
  "1-x^2",[-1,1],50,
@@ -40,7 +43,6 @@ if(Contains(Ch,1),
  Ketcindyjsdata(["coeffs",coeffs]);
  make="";
  Ketcindyjsdata(["tx1",tx1]); //no ketjs off
- nn=round(4*(N.x+2.5));
 // Fourierseries("1",coeffs,period,nn,"x=[-2,2]",["dr,1.5","Num="+Num,"Color=red"]);
 Fourierseries("1",coeffs,period,nn,"x=[-2,2]",["dr,1.5","Num="+Num,"Table=y","Color=red"]);
  Mxtex("1",ans,[make,"Disp=n"]);
