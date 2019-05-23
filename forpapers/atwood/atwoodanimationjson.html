@@ -169,7 +169,7 @@ Deqdata(deq,rng,initt,initf,Num):=( //17.10.04
   X0=Lcrd(initf);
   pdL=[flatten([tt,X0])];
   flg=0;
-  forall(1..floor((t2-initt)/dt),
+  forall(1..(round((t2-initt)/dt)), //190523
     if(flg==0,
       kl1=dt*funP(tt,X0);
       kl2=dt*funP(tt+dt/2,X0+kl1/2);
@@ -185,7 +185,7 @@ Deqdata(deq,rng,initt,initf,Num):=( //17.10.04
   tt=initt;
   X0=Lcrd(initf);
   flg=0;
-  forall(1..floor((initt-t1)/dt),
+  forall(1..(round((initt-t1)/dt)), //190523
     if(flg==0,
       kl1=dt*funN(tt,X0);
       kl2=dt*funN(tt+dt/2,X0+kl1/2);
@@ -2826,7 +2826,7 @@ if(isreal(Animeflg),
   sstart=Current;
 );
 if(sstart>=600,
- sstart=0;
+ sstart=600;
  stopanimation();
 );
 

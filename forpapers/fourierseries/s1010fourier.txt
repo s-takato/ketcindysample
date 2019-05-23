@@ -1,0 +1,53 @@
+//ketlib
+Num=200;
+Nterm=20;
+Mkcstable(Nterm,Num);
+
+//figures
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Local=y"]);
+
+//Setax(["a"]);
+Setwindow([-2,2],[-0.5,1.5]);
+Setunitlen("20mm");
+//Setscaling(2);
+
+defL=[
+ "1",[-2,-1],1,
+ "1-x^2",[-1,1],50,
+ "2-x",[1,2],1
+];
+
+tmp=Periodfun("a",defL,"x=[-2,2]",["dr,1.5","Con=da"]);
+Htickmark([-1,"-1",1,"1"]);
+Vtickmark([1,"nw","1"]);
+f0=tmp_1;
+period=tmp_2;
+
+
+Ch=[1];
+if(Contains(Ch,1),
+ Slider("N",[-2,YMIN-0.5],[2.5,YMIN-0.5]);
+ cmdL=Concat(Mxbatch("pdefourier.mac"),[ //no ketjs on
+  "f0(x):="+f0,[],
+  "c:fouriercoeff",["f0(x)","x",period],
+  "c:c[1]",[],
+  "c",[]
+ ]);
+ make="";
+ CalcbyM("coeffs",cmdL,[make,"Err=n"]);
+ Ketcindyjsdata(["coeffs",coeffs]);
+ make="";
+ Ketcindyjsdata(["tx1",tx1]); //no ketjs off
+ nn=round(4*(N.x+2.5));
+// Fourierseries("1",coeffs,period,nn,"x=[-2,2]",["dr,1.5","Num="+Num,"Color=red"]);
+Fourierseries("1",coeffs,period,nn,"x=[-2,2]",["dr,1.5","Num="+Num,"Table=y","Color=red"]);
+ Mxtex("1",ans,[make,"Disp=n"]);
+// Expr([-5,1.5],"se",tx1,["Size=1.2"]);
+ Expr([0.1,1.5],"se","n="+nn,["size->20"]); 
+);
+
+Figpdf();
+Windispg();
+
