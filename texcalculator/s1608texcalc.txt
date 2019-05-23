@@ -34,7 +34,7 @@ inspect(Text52,"text.text",str);//no ketjs off
 //    str=parse(str);
 //    str=format(str,8);
 //  );
-//  Letter([4.1,pos2],"e",str,["Size=3"]);
+//  Letter([6.5,pos2],"w",str,["Size=2.5"]);
 //  pos=pos-0.6;
 //  pos2=pos2-0.52;
 //); //only ketjs off

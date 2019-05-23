@@ -1540,6 +1540,8 @@ Setwindow([0,5],[-0.5,3]);
 Addax(0);
 
 
+Letter([0,3.2],"e","Input TeX-like form",["Size=3"]);
+
 pos=1; //
 pos2=2.75;
 win=[50,51,52];
@@ -1562,7 +1564,7 @@ forall(win,
     str=parse(str);
     str=format(str,8);
   );
-  Letter([4.1,pos2],"e",str,["Size=3"]);
+  Letter([6.5,pos2],"w",str,["Size=3"]);
   pos=pos-0.6;
   pos2=pos2-0.52;
 ); //
@@ -1593,9 +1595,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 782,
-    height: 443,
-    transform: [{visibleRect: [-0.8078894303354711, 3.716291379543167, 7.343975531243089, -0.9017088480518485]}],
+    width: 750,
+    height: 446,
+    transform: [{visibleRect: [-0.8078894303354711, 3.716291379543167, 7.010395379362637, -0.9329819872906409]}],
     grid: 1.0,
     background: "rgb(212,212,212)"
   }],
