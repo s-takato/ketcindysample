@@ -1,0 +1,108 @@
+//ketlib
+al=30;
+
+//figures
+Ketinit();
+Setketcindyjs(["No=all","Lo=n"]);//no ketjs
+
+Setwindow([-1,5],[-1,5]);
+Addax(0);
+
+pO=[0,0];
+pos=0;
+
+//tmp=Textedit2value(50); //only ketjs on
+//if(!isstring(tmp),al=tmp);
+//opred=["Size=1.6","Color=red"];
+//cs=Textedit2value(51);
+//if(!isstring(cs),
+//  csans=cos(al*pi/180);
+//  tmp="$\cos"+text(al)+"$";
+//  if(|(cs-csans)/csans|<0.1,
+//    tmp="Correct! "+tmp+"$=$"+Sprintf(csans,4);
+//  ,
+//    tmp=tmp+" is not correct";
+//  );
+//  Letter([5.5,pos],"e",tmp,opred);pos=pos-0.5;
+//);
+//sn=Textedit2value(52);
+//if(!isstring(sn),
+//  snans=sin(al*pi/180);
+//  tmp="$\sin"+text(al)+"$";
+//  if(|(sn-snans)/snans|<0.1,
+//    tmp="Correct! "+tmp+"$=$"+Sprintf(snans,4);
+//  ,
+//    tmp=tmp+" is not correct";
+//  );
+//  Letter([5.5,pos],"e",tmp,opred);pos=pos-0.5;
+//);
+//tn=Textedit2value(53);
+//if(!isstring(tn),
+//  tnans=tan(al*pi/180);
+//  tmp="$\tan"+text(al)+"$";
+//  if(|(tn-tnans)/tnans|<0.1,
+//    tmp="Correct! "+tmp+"$=$"+Sprintf(tnans,4);
+//  ,
+//    tmp=tmp+" is not correct";
+//  );
+//  Letter([5.5,pos],"e",tmp,opred);pos=pos-0.5;
+//);// only ketjs off
+
+pos=2.05;
+r=5;
+nv=[cos(al*pi/180),sin(al*pi/180)];
+pA=r*nv;
+pB=[pA_1,0];
+Listplot("1",[pO,pA,pB,pO],["dr,2"]);
+bop=["Size=3.5","Color=red","Msg=n"];
+sop=["Size=2.5","Color=blue","Msg=n"];
+ctr=1;
+Eps=10^(-3);
+nn=floor(|pA|);
+if(abs(nn-|pA|)<Eps,nn=nn-1);
+forall(1..nn,
+ Pointdata("b"+ctr,#*nv,bop);
+ Pointdata("s"+ctr,(#-0.5)*nv,sop);
+ if(#==nn,
+   if(#+0.5<|pA|,
+     Pointdata("sa"+ctr,(#+0.5)*nv,sop);
+   );
+ );
+ ctr=ctr+1;
+);
+nn=floor(|pB|);
+if(abs(nn-|pB|)<Eps,nn=nn-1);
+forall(1..nn,
+ if(nv_1==0,tmp=[0,1],tmp=[nv_1,0]/|nv_1|);
+ Pointdata("b"+ctr,#*tmp,bop);
+ Pointdata("s"+ctr,(#-0.5)*tmp,sop);
+ if(#==nn,
+   if(#+0.5<|pB|,
+     Pointdata("sa"+ctr,(#+0.5)*tmp,sop);
+   );
+ );
+ ctr=ctr+1;
+);
+nn=floor(|pB-pA|);
+if(abs(nn-|pB-pA|)<Eps,nn=nn-1);
+forall(1..nn,
+ tmp=[0,1];
+ Pointdata("b"+ctr,pB+#*tmp,bop);
+ Pointdata("s"+ctr,pB+(#-0.5)*tmp,sop);
+ if(#==nn,
+   if(#+0.5<|pB-pA|,
+     Pointdata("sa"+ctr,pB+(#+0.5)*tmp,sop);
+   );
+ );
+ ctr=ctr+1;
+);
+Letter([pO,"w","A",pA,"ne","B",pB,"s","C"]);
+Anglemark("1",[pB,pO,pA],[1.3,"E=\alpha,[size->20]"]);
+
+op=["Size=1.5"];
+Expr([5.5,pos],"e","\alpha",op);
+Expr([5,pos-0.5],"e","\cos\alpha",op);
+Expr([5,pos-1.0],"e","\sin\alpha",op);
+Expr([5,pos-1.5],"e","\tan\alpha",op);
+
+Windispg();
