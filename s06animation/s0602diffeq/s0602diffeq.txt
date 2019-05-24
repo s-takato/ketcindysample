@@ -3,7 +3,6 @@ Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nolabel=all","Color=0.1*[0,0,0,1]"]);
 
 Slider("C",[0,YMIN-1],[XMAX,YMIN-1]);
-Current=C.x;
 Slider("F",[0,YMIN],[0,YMAX]);
 
 Setax(["","","sw","","sw"]);
@@ -24,16 +23,8 @@ Mf(s0):=(
 Setpara("diffeq","Mf(s)","s=[0,10]",["m","Div=25"],
     ["Frate=10","Scale=1","Mag=1600","OpA="]);
 
-if(isreal(Animeflg),
-  if(Animeflg==1,
-    sstart=Dirflg*seconds()+sorg;
-    mf(sstart);
-  ,
-    mf(sstart);
-  );
-,
-  mf(Current);
-);
+ss=Animationparam(C.x,1,20);
+mf(ss);
 
 Figpdf();
 Windispg();

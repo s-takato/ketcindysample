@@ -1,9 +1,8 @@
 Ketinit();
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=0.1*[0,0,0,1]"]);
+Setketcindyjs(["Nolabel=all","Color=lightgray"]);
 
 Slider("C",[XMIN,YMIN-1],[XMAX,YMIN-1]);
-Current=C.x-XMIN;
 
 Setax(["","","sw","","sw"]);
 
@@ -16,18 +15,13 @@ Mf(s):=(
   ,
     Pointdata("1",A);
   );
-  Letter(B,"e","s="+textformat(s,2));
+  Letter(B,"e","s="+textformat(s,2),["Size=1.5"]);
 );
 Setpara("diffeq2","Mf(s)","s=[0,20]",["Div=25"],
     ["Frate=10","OpA=","Title=Dynamical System",]);
 
-if(isreal(Animeflg),
-  if(Animeflg==1,
-    sstart=Dirflg*2*seconds()+sorg;
-  );
-,
- sstart=Current;
-);
-mf(sstart);
+ss=Animationparam(C.x-XMIN,2,20);
+mf(ss);
 
+Figpdf();
 Windispg();

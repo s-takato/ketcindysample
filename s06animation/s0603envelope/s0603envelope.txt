@@ -3,8 +3,6 @@ Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nolabel=all","Color=lightgray"]);
 
 Slider("C",[XMIN,YMIN-1],[XMAX,YMIN-1]);
-Current=C.x;
-
 Setax(["","","sw","","sw"]);
 
 Mf(s):=(
@@ -22,14 +20,8 @@ Mf(s):=(
 Setpara("envelope","Mf(s)","s=[-5,5]",["Div=60"],
     ["Frate=10","Scale=0.8","OpA="]);
 
-if(isreal(Animeflg),
-  if(Animeflg==1,
-    sstart=Dirflg*2*seconds()+sorg;
-  );
-  mf(sstart);
-,
-  mf(Current);
-);
+ss=Animationparam(C.x,2,20);
+mf(ss);
 
 Figpdf();
 Windispg();

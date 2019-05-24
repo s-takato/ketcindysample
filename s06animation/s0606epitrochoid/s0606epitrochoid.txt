@@ -1,7 +1,3 @@
-// ketlib
-pL=[];
-
-// figures
 Ketinit();
 Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nolabel=all","Color=white"]);
@@ -9,7 +5,6 @@ Setwindow([-5,5],[-5,5]);
 Setax(["","","sw","","sw"]);
 
 Slider("S",[0,YMIN-0.5],[2*pi,YMIN-0.5]);
-Current=S.x;
 
 rad=3;
 pC=[0,0];
@@ -52,16 +47,8 @@ mf(s):=(
 Setpara("epitrochoid","mf(s)","s=[0,2*pi]",["Div=32"],
  ["Frate=10","Scale=1","OpA=","Mag=1200"]);
 
-if(isreal(Animeflg),
-  if(Animeflg==1,
-    sstart=Dirflg*seconds()+sorg;
-    mf(sstart);
-  ,
-    mf(sstart);
-  );
-,
-  mf(Current);
-);
+ss=Animationparam(S.x,1,40);
+mf(ss);
 
 Figpdf();
 Windispg();

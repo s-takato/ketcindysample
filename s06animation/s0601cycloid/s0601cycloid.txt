@@ -21,14 +21,8 @@ mf(sorg):=(
 Setpara("cycloid","mf(s)","s=[0,10]",["Div=25"],
  ["Frate=10","Scale=1","OpA=","Title=Cycloid"]);
 
-if(isreal(Animeflg),
-  if(Animeflg==1,
-    sstart=Dirflg*2*seconds()+sorg;
-  );
-,
-  sstart=Current;
-);
-mf(sstart);
+ss=Animationparam(C.x-XMIN,2,20);
+mf(ss);
 
 Figpdf();
 Windispg();
