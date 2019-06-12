@@ -77,6 +77,49 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   ErrFlag=0;
   KETJSOP=[]; //190129
   REMOVEPTJS=[]; SLIDEFLG="Y"; //190504
+  KetcindyjsDataList=[];
+  if(!isstring(Fhead),  // 17.10.13from, 17.11.12
+    Fhead=text(curkernel());
+    Fhead=replace(Fhead,".cdy","");
+    Slidename=Fhead; //17.10.24
+  );//17.11.12
+  Dircdy=replace(Dircdy,"%E3%80%80",unicode("3000"));//190416
+  Namecdy=Cindyname();//180608
+  tmp1=Indexall(Dircdy,"%"); //180329from
+  if(length(tmp1)>0,
+    tmp1=append(tmp1,length(Dircdy));
+    tmp2=substring(Dircdy,0,tmp1_1-1);
+    forall(1..(length(tmp1)-1),
+      tmp=substring(Dircdy,tmp1_#,tmp1_#+2);
+      tmp2=tmp2+unicode(tmp);
+      tmp2=tmp2+substring(Dircdy,tmp1_#+2,tmp1_(#+1)-1);
+    );
+    Dircdy=tmp2;
+  ); //180329to
+  if(iswindows(),  //17.12.01
+    Dircdy=replace(Dircdy,"/",pathsep());
+    if(substring(Dircdy,0,1)==pathsep(),
+      Dircdy=substring(Dircdy,1,length(Dircdy));
+    );
+  );
+  Userhome=Homehead+pathsep()+getname(); //190128
+  if(iswindows(),
+    Batparent="\kc.bat";
+  ,
+    if(ismacosx(), //181125from
+      Shellparent="/kc.command"; 
+      Mackc="open"; //190222
+    ,
+      Shellparent="/kc.sh"; 
+      Mackc="bash"; //190222
+    );  //181125to
+  );
+  Changesetting(); //190128
+  Changework(Dircdy+pathsep()+work); //180329to,181001
+  Fnametex=Fhead+".tex";
+  FnameR=Fhead+".r";
+  FnamebodyR=Fhead+"body.r";
+  Fnameout=Fhead+".txt";  // 17.10.13to
   ArrowlineNumber=1;  // 15.01.05
   ArrowheadNumber=1;
   BezierNumber=1; //15.01.03
@@ -649,7 +692,7 @@ Pointdata(nm,listorg,options):=(
       dispflg=Toupper(substring(tmp_2,0,1));
     );
     if(tmp1=="I", //190405from
-      if(Toupper(tmp_2)=="NO",
+      if(Toupper(substring(tmp_2,0,1))=="N",
         inside=[-1,-1,-1];
       ,
         tmp3=["0","1","2","3","4","5","6","7","8","9"];
@@ -867,9 +910,9 @@ Circledata(nm,cenrad,options):=(
     ,
       Ctr=1/2*(pA+pB)+1/2*d2/d1*tmp1;
       ra=|pA-Ctr|;
-      tmp=name+"center="+Ctr+";";
+      tmp=name+"center="+Textformat(Ctr,5)+";";
       parse(tmp);
-      Defvar(name+"center",Ctr);
+      Defvar(name+"center",re(Ctr));
     );
   );
   if(ra>0,
@@ -1161,10 +1204,10 @@ Rotatedata(nm,plist,angle,optionorg):=(
 );
 Drawfigures(nm,figlist):=Drawfigures(nm,figlist,[]);
 Drawfigures(nm,figlist,optionlist):=Drawfigures(nm,figlist,optionlist,[]);
-Drawfigures(nm,figlistorg,optionlistorg,options):=(
+Drawfigures(nm,figlistorg,optionlistorg,commonops):=(
   regional(figlist,name,figL,optionlist,nn,kk,fig,eqL,msg,tmp,tmp1,tmp2);
   name="figs"+nm;
-  tmp=Divoptions(options);
+  tmp=Divoptions(commonops);
   eqL=tmp_5;
   msg="Y";
   forall(eqL,
@@ -1174,30 +1217,44 @@ Drawfigures(nm,figlistorg,optionlistorg,options):=(
       msg=Toupper(substring(tmp_2,0,1));
     );
   );
-  optionlist=optionlistorg;
   figlist=figlistorg;
   if(isstring(figlist),figlist=parse(figlist));
   nn=length(figlist);
-  tmp=optionlist_(length(optionlist));
-  tmp1=apply(1..nn,tmp);
-  optionlist=concat(optionlist,tmp1);
+  optionlist=optionlistorg;
+  if(length(optionlist)==0, //190531from
+    optionlist=apply(1..nn,[]);
+  );
+  if(!islist(optionlist_1),
+    optionlist=apply(1..nn,optionlist);
+  );
+  if(length(optionlist)<nn,
+    tmp=optionlist_(length(optionlist));
+    tmp2=length(optionlist);
+    tmp1=apply(tmp2..nn,tmp);
+    optionlist=concat(optionlist,tmp1);
+  ); //190531to
   figL=[];
   forall(1..nn,kk,
     fig=figlist_kk;
     if(isstring(fig),fig=parse(fig));
     if(length(fig)>0,
-      if(length(fig)==1,
-        if(Measuredepth(fig)==1,fig=fig_1);
-        Pointdata(name+"N"+text(kk),fig,optionlist_kk); //190427
-        figL=append(figL,"pt"+name+"N"+text(kk)); //190427
-      ,
-        Listplot("-"+name+"N"+text(kk),fig,optionlist_kk); //190427
-        figL=append(figL,name+"N"+text(kk)); //190427
-      );
+      if(Measuredepth(fig)==0,fig=[fig]); //190531from
+      if(Measuredepth(fig)==1,fig=[fig]);
+      forall(1..(length(fig)),
+        tmp1=fig_#;
+        tmp2=name+"n"+text(kk)+"p"+text(#);
+        if(length(tmp1)==1,
+          Pointdata(tmp2,tmp1,optionlist_kk); 
+          figL=append(figL,"pt"+tmp2);
+        ,
+          Listplot("-"+tmp2,tmp1,optionlist_kk);
+          figL=append(figL,tmp2); //190427
+        );
+      ); //190531to
     );
   );
   tmp=apply(figL,Dqq(#));
-  tmp=name+"="+text(tmp);
+  tmp=name+"="+text(tmp)+";";
   parse(tmp);
   if(msg=="Y",
     println("generate "+name+"="+text(figL));
@@ -1207,6 +1264,23 @@ Drawfigures(nm,figlistorg,optionlistorg,options):=(
 Dqq(str):=DqDq(str); //18.02.11
 DqDq(str):=(
   unicode("0022")+str+unicode("0022");
+);
+Animationparam(start,ratio,stop):=( //190524
+  regional(rng);
+  if(islist(stop),rng=stop,rng=[start,stop]);
+  if(isreal(Animeflg),
+    if(Animeflg==1,
+      sstart=Dirflg*ratio*seconds()+sorg;
+    );
+  ,
+    Current=start;
+    sstart=start;
+  );
+  if((sstart<=rng_1)%(sstart>=rng_2), //190528
+    if(sstart<=rng_1,sstart=rng_1, sstart=rng_2); //190528
+    stopanimation();
+  );
+  sstart;
 );
 Windispg():=(
   if(ADDAXES=="1", //181215from
@@ -1248,7 +1322,7 @@ Windispg(gcLorg):=( //190125
               parse(tmp);
             ,
               if(tmp1==1,
-                tmp4=Dashlinedata(Nk,2.5,2.5,0);
+                tmp=tokenize(Nj_2_2,",");tmp4=Dashlinedata(Nk,tmp_1,tmp_2,0); //190512
                 forall(tmp4,
                   tmp="connect("+Textformat(#,5)+tmp3+");";
                   parse(tmp);
@@ -1696,7 +1770,6 @@ Setwindow([-5,5],[-5,5]);
 Setax(["","","sw","","sw"]);
 
 Slider("S",[0,YMIN-0.5],[2*pi,YMIN-0.5]);
-Current=S.x;
 
 rad=3;
 pC=[0,0];
@@ -1739,16 +1812,8 @@ mf(s):=(
 Setpara("epitrochoid","mf(s)","s=[0,2*pi]",["Div=32"],
  ["Frate=10","Scale=1","OpA=","Mag=1200"]);
 
-if(isreal(Animeflg),
-  if(Animeflg==1,
-    sstart=Dirflg*seconds()+sorg;
-    mf(sstart);
-  ,
-    mf(sstart);
-  );
-,
-  mf(Current);
-);
+ss=Animationparam(S.x,1,[0,40]);
+mf(ss);
 
 Figpdf();
 Windispg();

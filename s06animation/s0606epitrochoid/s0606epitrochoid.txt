@@ -21,6 +21,7 @@ Slist=apply(0..100,#*ds);
 
 mf(s):=(
   regional(t,nn,tmp,t,sL,op1,op2);
+  if(s<=0,pL=[]);
   pL=select(pL,#_1<s);
   if(length(pL)==0,pL=[[0,A.xy]]);
   se=pL_(length(pL))_1;
@@ -47,7 +48,7 @@ mf(s):=(
 Setpara("epitrochoid","mf(s)","s=[0,2*pi]",["Div=32"],
  ["Frate=10","Scale=1","OpA=","Mag=1200"]);
 
-ss=Animationparam(S.x,1,40);
+ss=Animationparam(S.x,1,[0,40]);
 mf(ss);
 
 Figpdf();

@@ -44,7 +44,7 @@ mf(s):=(
 Setpara("epitrochoid","mf(s)","s=[0,2*pi]",["Div=32"],
  ["Frate=10","Scale=1","OpA=","Mag=1200"]);
 
-ss=Animationparam(S.x,1,10);
+ss=Animationparam(S.x,1,[0,10]);
 mf(ss);
 
 Figpdf();
