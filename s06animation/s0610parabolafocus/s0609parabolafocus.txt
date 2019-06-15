@@ -1,10 +1,9 @@
 //ketlib
-Flatflg=0;
-
 Initglist();
 
 pp=1.5;
 pF=[pp,0];
+
 C.xy=pF;
 fun=Assign("y^2-4*p*x",["p",pp]);
 Implicitplot("1",fun,"x=[-5,5]","y=[-5,5]");
@@ -14,7 +13,7 @@ Setglist();
 //figures
 Ketinit();
 Addglist();
-Setketcindyjs(["Nolabel=all","Locay=n"]);//no ketjs
+Setketcindyjs(["Nolabel=all","Local=n"]);//no ketjs
 Setwindow([-5,5],[-5,5]);
 Slider("T",[-5,-6],[5,-6]);
 
@@ -60,9 +59,6 @@ Drwxy();
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
 Circledata("1",[A,0.5],["nodisp"]);
 Putoncurve("B","cr1");
-if(Flatflg==1,
- B.xy=A.xy+[-0.5,0];
-);
 Arrowdata("1",[A,B],["dr,2","Color=red","border->false"]);
 
 Getvalue(n,rep):=(

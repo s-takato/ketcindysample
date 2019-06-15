@@ -29,6 +29,8 @@ Initglist():=(
   KCOLOR=[0,0,0];
   SCALEX=1;
   SCALEY=1;
+  XMIN=SW.x; XMAX=NE.x; //190603[2lines]
+  YMIN=SW.y; YMAX=NE.y;
 );
 Implicitplot(name1,func,xrng,yrng):=Implicitplot(name1,func,xrng,yrng,[]);
 Implicitplot(name1,func,xrng,yrng,optionsorg):=(
@@ -2470,8 +2472,6 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
   );
   out;
 );
-Flatflg=0;
-
 Initglist();
 
 pp=1.5;
@@ -2498,9 +2498,6 @@ Drwxy();
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
 Circledata("1",[A,0.5],["nodisp"]);
 Putoncurve("B","cr1");
-if(Flatflg==1,
- B.xy=A.xy+[-0.5,0];
-);
 Arrowdata("1",[A,B],["dr,2","Color=red","border->false"]);
 
 Getvalue(n,rep):=(
@@ -2587,11 +2584,11 @@ var cdy = CindyJS({
     {name: "Text0", type: "Free", pos: [4.0, 1.086303229971284, 1.7808249671660397], color: [1.0, 0.0, 0.0], size: 0.0, border: true },
     {name: "C", type: "Free", pos: [4.0, 0.0, 2.6666666666666665], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T", type: "Free", pos: [-3.333333333333334, -4.0, 0.6666666666666666], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "B", type: "Free", pos: [4.0, 2.4678644067796607, 1.1299435028248588], color: [1.0, 0.0, 0.0], size: 2.0, border: true },
+    {name: "B", type: "Free", pos: [4.0, 2.517842696629214, 1.1235955056179776], color: [1.0, 0.0, 0.0], size: 2.0, border: true },
     {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [310.0, 20.0]}},
     {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [373.0, 20.0]}},
     {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [448.0, 20.0]}},
-    {name: "Text61", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "Flatflg=1;", text: "Flat", textsize: 18.0, dock: {corner: "LL", offset: [598.0, 20.0]}},
+    {name: "Text61", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "B.xy=A.xy+[-0.5,0];", text: "Flat", textsize: 18.0, dock: {corner: "LL", offset: [598.0, 20.0]}},
     {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\nFlatflg=0;\n", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [508.0, 20.0]}}
   ],
   ports: [{

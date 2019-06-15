@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>s0608ellipsefocus.cdy</title>
+    <title>s0610parabolafocus.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -20,8 +20,8 @@
             width: 100%;
         }
     </style>
-    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
-    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
+    <link rel="stylesheet" href="file:////Applications/kettex/texlive/texmf-dist/scripts/ketcindy/ketcindyjs/CindyJS.css">
+    <script type="text/javascript" src="file:////Applications/kettex/texlive/texmf-dist/scripts/ketcindy/ketcindyjs/Cindy.js"></script>
 
 <script id="csinit" type="text/x-cindyscript">
 Initglist():=(
@@ -1422,166 +1422,6 @@ Removespace(str):=(
   );
   out=substring(out,0,tmp);
 );
-Paramplot(nm,funstr,variable):=Paramplot(nm,funstr,variable,[]);
-Paramplot(nm,funstr,variable,options):=(
-  regional(name,Out,tmp,tmp1,tmp2,vname,func,str,Rng,Num,Msg,
-        Ec,Exfun,Dc,eqL,Fntmp,Vatmp,t1,t2,dt,tt,pa,ke, pt, //190103
-        Ltype,Noflg,Inflg,Outflg,opstr,opcindy,color);
-  if(substring(nm,0,1)=="-",  // 180928from
-    name=substring(nm,1,length(nm));
-  ,
-    name="gp"+nm;
-  ); //180929to
-  Eps=10^(-4);
-  tmp=Divoptions(options);
-  Ltype=tmp_1;
-  Noflg=tmp_2;
-  Inflg=tmp_3;
-  Outflg=tmp_4;
-  color=tmp_(length(tmp)-2);
-  opstr=tmp_(length(tmp)-1);
-  opcindy=tmp_(length(tmp));
-  eqL=tmp_5;
-  Msg="Y"; //190322
-  Num=50;
-  Ec=[];
-  Exfun="";
-  Dc=1000;
-  forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    if(tmp1=="N",
-      Num=parse(tmp_2);
-      opstr=opstr+","+Dqq(#);
-    );
-    if(tmp1=="E",
-      if(substring(tmp_2,0,1)=="[", //180817from
-        Ec=parse(tmp_2);
-        tmp1=replace(tmp_2,"[","c"+PaO());
-        tmp1=replace(tmp1,",",".0,");
-        tmp1=replace(tmp1,"]",".0)");
-        opstr=opstr+","+Dqq("Exc="+tmp1); //180817to
-      ,
-        Exfun=tmp1;
-        opstr=opstr+","+Dqq(#);
-      );
-    );
-    if(substring(#,0,1)=="D",
-      Dc=parse(tmp_2);
-      opstr=opstr+","+Dqq(#);
-    );
-    if(tmp1=="M", //190206from
-      Msg=Toupper(substring(tmp_2,0,1));
-    ); //190206to
-  );
-  if(Inflg==0 & Outflg==0,
-    tmp=indexof(variable,"=");
-    vname=substring(variable,0,tmp-1);
-    str=substring(variable,tmp,length(variable));
-    Rng=parse(str);
-    t1=Rng_1; t2=Rng_2;
-    dt=(t2-t1)/Num;// differs from Scilab ( / Num-1)
-    func=Assign(funstr,vname,"tt");
-    Out=[];
-    Ec=append(sort(Ec),10000);
-    ke=1;
-    forall(0..Num, 
-      pt=[];
-      tt=Rng_1+#*dt;
-      if(tt-Ec_ke<-Eps,
-        pa=parse(func);
-      );
-      if(abs(tt-Ec_ke)<=Eps,
-        if(length(Out)>0,
-          if(Out_(length(Out))_1!="inf",
-            pa=["inf"];
-          );
-        );
-      );
-      if(tt-Ec_ke>Eps,
-        pa=parse(func);
-        ke=ke+1;
-      );
-      if(length(pa)>0,
-        if(pa_1=="inf",
-          Out=append(Out,pa);
-        ,
-          if(length(Out)==0,
-            Out=[pa];
-          ,
-            tmp=Out_(length(Out));
-            if(tmp_1=="inf",
-              Out=append(Out,pa);
-            ,
-              if(|tmp-pa|<Dc,
-                if(|tmp-pa|>Eps, //180928from
-                  Out=append(Out,pa);
-                );  //180928to
-              ,
-                Out=concat(Out,[["inf"],pa]);
-              );
-            );
-          );
-        );
-      );
-    );
-    tmp1=[];
-    tmp2=select(1..(length(Out)),Out_#==["inf"]);
-    tmp=1;
-    forall(tmp2,
-      if(#>tmp,
-        tmp1=concat(tmp1,[Out_(tmp..(#-1))])
-      );
-      tmp=#+1;
-    );
-    if(tmp<length(Out),
-      tmp1=concat(tmp1,[Out_(tmp..(length(Out)))]);
-    );
-    Out=tmp1;
-    if(length(Out)==1,
-      Out=Out_1;
-    );
-    if(Noflg<3,
-      if(Msg=="Y", //190206
-        println("generate Paramplot "+name);
-      );
-      if(Measuredepth(Out)==1,
-        tmp1=apply(Out,Pcrd(#));
-      ,
-        tmp1=[];
-        forall(Out,tmp2,
-          tmp1=append(tmp1,apply(tmp2,Pcrd(#)));
-        );
-      );
-      tmp=name+"="+Textformat(tmp1,5)+";";
-      parse(tmp);
-    );
-    if(Noflg<2,
-      if(isstring(Ltype),
-        Ltype=Getlinestyle(text(Noflg)+Ltype,name);
-      ,
-        if(Noflg==1,Ltype=0);
-      );
-      GCLIST=append(GCLIST,[name,Ltype,opcindy]);
-    );
-    Out;
-  , 
-    if(Noflg<2,
-      if(isstring(Ltype),
-        Ltype=Getlinestyle(text(Noflg)+Ltype,name);
-      ,
-        if(Noflg==1,Ltype=0);
-      );
-      if(Inflg==1,
-        GCLIST=append(GCLIST,[name,Ltype,opcindy]);
-      );
-    );
-  );
-);
-Dqq(str):=DqDq(str); //18.02.11
-DqDq(str):=(
-  unicode("0022")+str+unicode("0022");
-);
 Circledata(cenrad):=Circledata(cenrad,[]);
 Circledata(para1,para2):=(
   regional(name,cenrad,options,str,n); 
@@ -2470,6 +2310,10 @@ Inwindow(point,xrng,yrng):=(
   tmp=(x>xmin-Eps)&(x<xmax+Eps)&(y>ymin-Eps)&(y<ymax+Eps);
   if(tmp,true,false);
 );
+Dqq(str):=DqDq(str); //18.02.11
+DqDq(str):=(
+  unicode("0022")+str+unicode("0022");
+);
 Animationparam(start,ratio,stop):=( //190524
   regional(rng);
   if(islist(stop),rng=stop,rng=[start,stop]);
@@ -2630,14 +2474,15 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
 );
 Initglist();
 
-aa=4; bb=3;
-pF=[-sqrt(aa^2-bb^2),0];
-fun=Assign("x^2/a^2+y^2/b^2-1",["a",aa,"b",bb]);
+pp=1.5;
+pF=[pp,0];
+C.xy=pF;
+fun=Assign("y^2-4*p*x",["p",pp]);
 Implicitplot("1",fun,"x=[-5,5]","y=[-5,5]");
 
 Setglist();
 ;
-ans=["(a*b*sqrt((-u1^2*y0^2)+2*u1*v1*x0*y0-v1^2*x0^2+a^2*v1^2+b^2*u1^2)-a^2*v1*y0-b^2*u1*x0)/(a^2*v1^2+b^2*u1^2)","x0+t*u1","y0+t*v1","-(a^4*u1*y1^2-2*a^2*b^2*v1*x1*y1-b^4*u1*x1^2)/(a^4*y1^2+b^4*x1^2)","(a^4*v1*y1^2+2*a^2*b^2*u1*x1*y1-b^4*v1*x1^2)/(a^4*y1^2+b^4*x1^2)"];
+ans=["(2*sqrt((-p*u1*v1*y0)+p*v1^2*x0+p^2*u1^2)-v1*y0+2*p*u1)/v1^2","x0+t*u1","y0+t*v1","-(u1*y1^2+4*p*v1*y1-4*p^2*u1)/(y1^2+4*p^2)","(v1*y1^2-4*p*u1*y1-4*p^2*v1)/(y1^2+4*p^2)","(y0^2-4*p*x0)/(4*p*u1)"];
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
@@ -2649,14 +2494,9 @@ Slider("T",[-5,-6],[5,-6]);
 
 Addax(0);
 
-A.y=0;
-C.xy=pF;
-
-fun=Assign("[a*cos(t),b*sin(t)]",["a",aa,"b",bb]);
 Drwxy();
-Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
-Circledata("1",[A,0.75],["nodisp"]);
+Circledata("1",[A,0.5],["nodisp"]);
 Putoncurve("B","cr1");
 Arrowdata("1",[A,B],["dr,2","Color=red","border->false"]);
 
@@ -2667,29 +2507,41 @@ Getvalue(n,rep):=(
 );
 
 mf(tt):=(
- regional(pL,tr,t1,x0,y0,x1,y1,u1,v1,
-   rep0,rep,rep2,flg,tmp);
- x0=A.x; y0=0;
+ regional(Eps,pL,ctr,tr,t1,x0,y0,x1,y1,u1,v1,
+   rep0,rep,rep2,tmp);
+ Eps=10^(-6);
+ x0=A.x; y0=A.y;
  u1=B.x-A.x;v1=B.y-A.y;
  pL=[[x0,y0]];
- rep0=["a",aa,"b",bb];
+ rep0=["p",pp];
+ ctr=1;
  flg=0;
  tr=tt;
- while(tr>0,
-  rep=concat(rep0,["x0",x0,"y0",y0,"u1",u1,"v1",v1]);
-  t1=Getvalue(1,rep);
-  rep2=concat(rep,["t",t1]);
-  x1=Getvalue(2,rep2);
-  y1=Getvalue(3,rep2);
-  rep2=concat(rep2,["x1",x1,"y1",y1]);
-  u2=-Getvalue(4,rep);
-  v2=-Getvalue(5,rep);
-  tr=tr-t1;
-  if(tr>0,
-    pL=append(pL,[x1,y1]);
-    x0=x1; y0=y1;
-    u1=u2; v1=v2;
-  );
+ while((tr>0)&(ctr<5),
+   rep=concat(rep0,["x0",x0,"y0",y0,"u1",u1,"v1",v1]);
+   if(abs(v1)>Eps,
+     t1=Getvalue(1,rep);
+   ,
+     t1=Getvalue(6,rep);
+   );
+   if(t1>-Eps,
+     rep2=concat(rep,["t",t1]);
+     x1=Getvalue(2,rep2);
+     y1=Getvalue(3,rep2);
+     rep2=concat(rep2,["x1",x1,"y1",y1]);
+     u2=-Getvalue(4,rep);
+     v2=-Getvalue(5,rep);
+     tr=tr-t1;
+     if(tr>0,
+       pL=append(pL,[x1,y1]);
+       x0=x1; y0=y1;
+       u1=u2; v1=v2;
+     );
+     ctr=ctr+1;
+   ,
+     t1=0;
+     ctr=10000;
+   );
  );
  tr=tr+t1;
  if(tr>0,
@@ -2705,8 +2557,7 @@ mf(tt):=(
  );
 );
 
-tt=2*(T.x+5);
-tt=Animationparam(0,4,600);
+tt=Animationparam(0,4,30);
 mf(tt);
 
 
@@ -2729,22 +2580,22 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, 0.0, 2.559937096466327], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
+    {name: "A", type: "Free", pos: [4.0, 2.0, 1.0], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
     {name: "Text0", type: "Free", pos: [4.0, 1.086303229971284, 1.7808249671660397], color: [1.0, 0.0, 0.0], size: 0.0, border: true },
-    {name: "C", type: "Free", pos: [4.0, -0.0, -1.5118578920369088], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "C", type: "Free", pos: [4.0, 0.0, 2.6666666666666665], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T", type: "Free", pos: [-3.333333333333334, -4.0, 0.6666666666666666], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "B", type: "Free", pos: [4.0, 2.187902187902188, 3.2175032175032174], color: [1.0, 0.0, 0.0], size: 2.0, border: true },
-    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [310.0, 27.0]}},
-    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [373.0, 27.0]}},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [448.0, 27.0]}},
-    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [508.0, 27.0]}},
-    {name: "Text61", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "A.xy=-pF;", text: "Focus", textsize: 18.0, dock: {corner: "LL", offset: [597.0, 27.0]}}
+    {name: "B", type: "Free", pos: [4.0, 2.517842696629214, 1.1235955056179776], color: [1.0, 0.0, 0.0], size: 2.0, border: true },
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [310.0, 20.0]}},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [373.0, 20.0]}},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [448.0, 20.0]}},
+    {name: "Text61", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "B.xy=A.xy+[-0.5,0];", text: "Flat", textsize: 18.0, dock: {corner: "LL", offset: [598.0, 20.0]}},
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\nFlatflg=0;\n", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [508.0, 20.0]}}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 885,
-    height: 587,
-    transform: [{visibleRect: [-10.559341492145748, 6.897142130707916, 11.04763474033746, -7.4342647037187986]}],
+    width: 727,
+    height: 600,
+    transform: [{visibleRect: [-8.92656849826217, 6.769813693312922, 8.495217537272321, -7.608551673015407]}],
     axes: true,
     grid: 1.0,
     snap: true,

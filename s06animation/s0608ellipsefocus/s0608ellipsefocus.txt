@@ -11,7 +11,7 @@ Setglist();
 //figures
 Ketinit();
 Addglist();
-Setketcindyjs(["Nolabel=all","Locay=n"]);//no ketjs
+Setketcindyjs(["Nolabel=all","Local=n"]);//no ketjs
 Setwindow([-5,5],[-5,5]);
 Slider("T",[-5,-6],[5,-6]);
 
@@ -51,7 +51,7 @@ Ketcindyjsdata(["ans",ans]);//no ketjs
 Addax(0);
 
 A.y=0;
-C.y=0;
+C.xy=pF;
 
 fun=Assign("[a*cos(t),b*sin(t)]",["a",aa,"b",bb]);
 Drwxy();
