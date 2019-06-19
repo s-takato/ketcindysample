@@ -1,10 +1,19 @@
 # To add to index.html
-#    20190429
+#    20190618
+
+Looprange<- function(a,b)
+{
+if(a<=b) return(a:b)
+return(c())
+}
 
 thismainpath <- function(){
   path <- readline("Main Path ")
   if((nchar(path)>0)&&(substring(path,nchar(path))!="/")){
-    path=paste(path,"/",sep="")
+    for(J in rev(1:nchar(path))){  #190618from
+      if(substring(path,J,J)=="/"){break}
+    } #190618to
+    path=substring(path,1,J)
     setwd(path)
   }
 }
@@ -115,6 +124,8 @@ thisitemno <- function(N){
   num
 }
 
+####### main ###########3
+
 wfile="index.html"
 bkup="index.bkup"
 thismainpath()
@@ -134,8 +145,12 @@ if(file.exists(wfile)){
   numberv=1:length(Lines)
   tmp=numberv[Lines[numberv]=="</table></br>"]
   nn=max(tmp)+1
-  Tails=Lines[(nn+1):length(Lines)]
-  Lines=Lines[1:nn]
+  if(nn<=length(Lines)){
+    Tails=Lines[(nn+1):length(Lines)]
+    Lines=Lines[1:nn]
+  }else{
+    Tails=c()
+  }
   for(nn in 1:length(Lines)){
     if(substring(Lines[nn],1,nchar(datehead))==datehead){
       Lines[nn]=paste(datehead,date,"</font></p>",sep="")
@@ -155,8 +170,7 @@ for(nn in 2:length(Lines)){
 }
 cat("Input info/data of each item\n")
 cmdL=c()
-str=""
-while(str!="end"){
+for(Pno in 1:100){ #190618
   Plist=dir()
   for(J in 1:length(Plist)){
     cat(J,Plist[J],"\n")
@@ -175,7 +189,7 @@ while(str!="end"){
     cat(J,Flist[J],"\n")
   }
   title=path
-  cmdL=c(paste("<!-- ",title," -->",sep=""))
+  cmdL=c("", paste("<!-- ",title," -->",sep="")) #190618
   cmdL=c(cmdL,'<table border="1" height="30">')
   tmp='    <tr><th colspan="2" align="left"><font size="5">&emsp;'
   tmp=paste(tmp,title,'</font></th></tr>',sep="")
@@ -191,39 +205,39 @@ while(str!="end"){
   cmdL=c(cmdL,tmp)
   head='    <tr><td align="center" width="80"><a href="'
   tail='</a></td></tr>'
-  str=""
-  while((str!="end")&&(str!="next")){
+  for(Ino in 1:20){
     str=thisitemno(length(Flist))
+    if((str=="end")||(str=="next")){break}
     if(is.numeric(str)){
       str=Flist[str]
-    }
-    tmp=strsplit(str,".",fixed=T)
-    tmp=tmp[[1]]
-    if(length(tmp)>1){
-      name=tmp[2]
-    }else{
-      name=""
-    }
-    cat("File=",str,",Name=",name,"\n",sep="")
-    if(nchar(name)>0){
-      tmp=paste(head,path,"/",str,'">',name,tail,sep="")
-      cmdL=c(cmdL,tmp)
+      tmp=strsplit(str,".",fixed=T)
+      tmp=tmp[[1]]
+      if(length(tmp)>1){
+        name=tmp[2]
+      }else{
+        name=""
+      }
+      cat("File=",str,",Name=",name,"\n",sep="")
+      if(nchar(name)>0){
+        tmp=paste(head,path,"/",str,'">',name,tail,sep="")
+        cmdL=c(cmdL,tmp)
+      }
     }
   }
   tmp=paste('    <tr><td align="center" width="80"></td></tr>',sep="")
   cmdL=c(cmdL,tmp)
   tmp=paste("</table></br>",sep="")
   cmdL=c(cmdL,tmp)
-  for(cmd in cmdL){
-    cat(cmd,file=wfile,append=T)
-    cat('\n',file=wfile,append=T)
-  }
-  cat("\n",file=wfile,append=T)
-  if(str=="next"){str=""}
+  if(str=="end"){break} #190618
+  if(str=="next"){str=""} #190618
 }
-
+for(cmd in cmdL){
+  cat(cmd,file=wfile,append=T)
+  cat('\n',file=wfile,append=T)
+}
+#cat("\n",file=wfile,append=T)
 if(fileflg==1){
-  for(nn in 1:length(Tails)){
+  for(nn in Looprange(1,length(Tails))){
     cat(Tails[nn],"\n",file=wfile,sep="",append=T)
   }
 }else{
