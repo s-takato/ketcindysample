@@ -1,0 +1,28 @@
+Start3d();
+Ptseg3data();
+Putaxes3d(4);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-2,6]");
+
+fd1=[
+ "p",
+ "x=R*cos(T)","y=R*sin(T)","z=2.5*(2-R)",
+ "R=[0,2]","T=[0,2*pi]","e"
+];
+
+Spaceline("1",[[-3,-3,1],[3,3,2]]);
+
+if(Isangle(),
+  Sf3data("1",fd1);
+,
+ Startsurf();
+ Sfbdparadata("1",fd1);
+ Intersectcrvsf("1","sl3d1",fd1);
+ if(Gccexists(),
+   ExeccmdC("1",[""]);
+   println(intercrvsf1);
+    //[[0.95,0.95,1.66],[-1.04,-1.04,1.33]] 
+   Pointdata3d("1",intercrvsf1,["Size=3"]); 
+ );
+);
+
+Windispg();

@@ -1,0 +1,25 @@
+Start3d();
+Ptseg3data();
+Putaxes3d(4);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+fd=[
+"p",
+"x=2*sin(u)*cos(v)",
+"y=2*sin(u)*sin(v)",
+"z=2*cos(u)",
+"u=[0,pi]","v=[0,2*pi]"," "
+];
+
+if(Isangle(),
+ Sf3data("1",fd);
+,
+ Startsurf();
+ Sfbdparadata("1",fd);
+ Crvsfparadata("1","ax3d","sfbd3d1",fd);
+ if(Gccexists(),
+   ExeccmdC("1",[""]);
+ );
+);
+
+Windispg();

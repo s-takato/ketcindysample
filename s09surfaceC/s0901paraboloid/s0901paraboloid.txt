@@ -1,5 +1,9 @@
-Start3d();
+// ketlib
+Ketinit();
+Ketinit3d();
 
+// figures
+Start3d();
 Putaxes3d(4);
 Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
 
@@ -27,3 +31,5 @@ if(Isangle(), //if TH/FI is selected
 );
 
 Windispg();
+
+//Help("Execcmd");

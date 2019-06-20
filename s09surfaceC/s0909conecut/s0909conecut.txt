@@ -1,0 +1,23 @@
+Start3d();
+Putaxes3d(4);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-2,6]");
+
+fd=[
+ "p",
+ "x=R*cos(T)","y=R*sin(T)","z=2.5*(2-R)",
+ "R=[0,2]","T=[0,2*pi]","e"
+];
+
+if(Isangle(),
+ Sf3data("1",fd);
+,
+ Startsurf();
+ Sfbdparadata("1",fd);
+ Crvsfparadata("1","ax3d","sfbd3d1",fd);
+ Sfcutparadata("1",["z=x-y","z=x-y+1"],"sfbd3d1",fd,["Color=blue"]);
+ if(Gccexists(),
+   ExeccmdC("1",[""]);
+ );
+);
+
+Windispg();

@@ -1,0 +1,19 @@
+Start3d();
+Putaxes3d(4);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+fd=["p","x=u","y=v","z=3*(1-(2*u^2+v^2)*exp(-u^2-v^2))",
+"u=[-1.5,1.5]","v=[-1.5,1.5]","nwes"
+];
+
+if(Isangle(),
+ Sf3data("1",fd);
+,
+ Startsurf();
+ Sfbdparadata("1",fd,[],["nodisp"]);
+ Crvsfparadata("1","ax3d","sfbd3d1",fd,[],["nodisp"]);
+ if(Gccexists(),
+   ExeccmdC("1",[]);
+ );
+);
+Windispg();

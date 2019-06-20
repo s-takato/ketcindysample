@@ -1,0 +1,23 @@
+Start3d();
+Putaxes3d(4);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+fd1=[
+ "z=4-(x^2+y^2)",
+ "x=R*cos(T)","y=R*sin(T)",
+ "R=[0,2]","T=[0,2*pi]","e"
+];
+
+if(Isangle(),
+ Sf3data("1",fd1);
+,
+ Startsurf();
+ Sfbdparadata("1",fd1);
+ Crvsfparadata("1","ax3d","sfbd3d1",fd1);
+ Paramplot("1","[1,t]","t=[0,2*pi]",["Num=50","nodisp"]);
+ Crv2onsfparadata("1","gp1","sfbd3d1",fd1,["Color=red"]);
+ if(Gccexists(),
+   ExeccmdC("1",[""]);
+ );
+);
+Windispg();

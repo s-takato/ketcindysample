@@ -1,0 +1,33 @@
+Start3d();
+
+Ptseg3data();
+Putaxes3d(4);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+fd1=[
+"z=sqrt(8-x^2-y^2)",
+"x=R*cos(T)","y=R*sin(T)",
+"R=[0,2]","T=[0,2*pi]","e"
+];
+
+fd2=["p",
+"x=2*cos(T)",
+"y=2*sin(T)","z=H",
+"T=[0,2*pi]","H=[0,2]","s"
+];
+
+if(Isangle(),
+ Sf3data("1",fd1);
+ Sf3data("2",fd2);
+,
+ Startsurf();
+ Sfbdparadata("1",fd1);
+ Sfbdparadata("2",fd2);
+ Crvsfparadata("1","ax3d","sfbd3d1",fd1);
+ Crvsfparadata("2","crvsf3d1","sfbd3d2",fd2);
+ if(Gccexists(),
+   ExeccmdC("1",[""]);
+ );
+);
+
+Windispg();

@@ -9,11 +9,14 @@ return(c())
 
 thismainpath <- function(){
   path <- readline("Main Path ")
-  if((nchar(path)>0)&&(substring(path,nchar(path))!="/")){
-    for(J in rev(1:nchar(path))){  #190618from
-      if(substring(path,J,J)=="/"){break}
-    } #190618to
-    path=substring(path,1,J)
+  if(nchar(path)>0){
+    tmp=grep("index.html",path,fixed=TRUE)
+    if(length(tmp)>0){
+      for(J in rev(1:nchar(path))){  #190618from
+        if(substring(path,J,J)=="/"){break}
+      } #190618to
+      path=substring(path,1,J)
+    }
     setwd(path)
   }
 }
@@ -189,7 +192,7 @@ for(Pno in 1:100){ #190618
     cat(J,Flist[J],"\n")
   }
   title=path
-  cmdL=c("", paste("<!-- ",title," -->",sep="")) #190618
+  cmdL=c(cmdL, paste("<!-- ",title," -->",sep="")) #190618
   cmdL=c(cmdL,'<table border="1" height="30">')
   tmp='    <tr><th colspan="2" align="left"><font size="5">&emsp;'
   tmp=paste(tmp,title,'</font></th></tr>',sep="")
@@ -231,11 +234,12 @@ for(Pno in 1:100){ #190618
   if(str=="end"){break} #190618
   if(str=="next"){str=""} #190618
 }
+
 for(cmd in cmdL){
   cat(cmd,file=wfile,append=T)
   cat('\n',file=wfile,append=T)
 }
-#cat("\n",file=wfile,append=T)
+cat("\n",file=wfile,append=T)
 if(fileflg==1){
   for(nn in Looprange(1,length(Tails))){
     cat(Tails[nn],"\n",file=wfile,sep="",append=T)

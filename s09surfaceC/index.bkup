@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>(s09)Surfaces</title>
+</head>
+<body>
+<p><font size="10">&emsp;(s09)Surfaces</font>
+<font size="5">&emsp;&emsp;2019/06/20</font></p>
+
+<!-- s0901paraboloid -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0901paraboloid</font></th></tr>
+    <tr><td rowspan="20"><a href="s0901paraboloid/s0901paraboloidfig.jpg"><img src="s0901paraboloid/s0901paraboloidfig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0901paraboloid/s0901paraboloid.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0901paraboloid/s0901paraboloid.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s0902cone -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0902cone</font></th></tr>
+    <tr><td rowspan="20"><a href="s0902cone/s0902conefig.jpg"><img src="s0902cone/s0902conefig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0902cone/s0902cone.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0902cone/s0902cone.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s0903saddle -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0903saddle</font></th></tr>
+    <tr><td rowspan="20"><a href="s0903saddle/s0903saddlefig.jpg"><img src="s0903saddle/s0903saddlefig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0903saddle/s0903saddle.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0903saddle/s0903saddle.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s0904mant -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0904mant</font></th></tr>
+    <tr><td rowspan="20"><a href="s0904mant/s0904mantfig.jpg"><img src="s0904mant/s0904mantfig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0904mant/s0904mant.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0904mant/s0904mant.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s0905sphere -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0905sphere</font></th></tr>
+    <tr><td rowspan="20"><a href="s0905sphere/s0905spherefig.jpg"><img src="s0905sphere/s0905spherefig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0905sphere/s0905sphere.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0905sphere/s0905sphere.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s0906curveonsurf -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0906curveonsurf</font></th></tr>
+    <tr><td rowspan="20"><a href="s0906curveonsurf/s0906curveonsurffig.jpg"><img src="s0906curveonsurf/s0906curveonsurffig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0906curveonsurf/s0906curveonsurf.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0906curveonsurf/s0906curveonsurf.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s0906curveonsurf -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0906curveonsurf</font></th></tr>
+    <tr><td rowspan="20"><a href="s0906curveonsurf/s0906curveonsurffig.jpg"><img src="s0906curveonsurf/s0906curveonsurffig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0906curveonsurf/s0906curveonsurf.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0906curveonsurf/s0906curveonsurf.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s0907intersectcrvsf -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0907intersectcrvsf</font></th></tr>
+    <tr><td rowspan="20"><a href="s0907intersectcrvsf/s0907intersectcrvsffig.jpg"><img src="s0907intersectcrvsf/s0907intersectcrvsffig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0907intersectcrvsf/s0907intersectcrvsf.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0907intersectcrvsf/s0907intersectcrvsf.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s0908wiredata -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0908wiredata</font></th></tr>
+    <tr><td rowspan="20"><a href="s0908wiredata/s0908wiredatafig.jpg"><img src="s0908wiredata/s0908wiredatafig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0908wiredata/s0908wiredata.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0908wiredata/s0908wiredata.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+<!-- s0909conecut -->
+<table border="1" height="30">
+    <tr><th colspan="2" align="left"><font size="5">&emsp;s0909conecut</font></th></tr>
+    <tr><td rowspan="20"><a href="s0909conecut/s0909conecutfig.jpg"><img src="s0909conecut/s0909conecutfig.jpg" alt=JPG width="240"></a></td></tr>
+    <tr><td align="center" width="80"><a href="s0909conecut/s0909conecut.txt">txt</a></td></tr>
+    <tr><td align="center" width="80"><a href="s0909conecut/s0909conecut.cdy">cdy</a></td></tr>
+    <tr><td align="center" width="80"></td></tr>
+</table></br>
+
+</body>
+</html>
