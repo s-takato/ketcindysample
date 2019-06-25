@@ -2064,7 +2064,6 @@ mm=2;
 nn=1;
 str="fr(2,1)";
 str=Textedit(50);// 
-texm=Totexform(str);
 tmp=indexof(str,"=");
 if(tmp>0,
   str=substring(str,tmp,length(str));
@@ -2076,6 +2075,14 @@ if(length(str)>0,
   mm=round(tmp_1); nn=1;
   if(length(tmp)==2,
     nn=tmp_2;
+  );
+  texm=Totexform(str);
+  tmp1=NE.xy-[0,1];
+  tmp2=["Size=1.5"];
+  if(nn==1,
+    Expr(tmp1,"nw","m="+text(mm),tmp2);
+  ,
+    Expr(tmp1,"nw","m="+texm,tmp2);
   );
 );
 
@@ -2128,11 +2135,6 @@ if(PP_2<=PQ_2,
 );
 Expr([PP,dP,TGP,PQ,dQ,TGQ],["Size=1.6"]);
 Expr(NE,"nw","y=mx",["Size=1.5"]);
-if(nn==1,
-  Expr(NE.xy-[0,1],"nw","m="+text(mm),["Size=1.5"]);
-,
-  Expr(NE.xy-[0,1],"nw","m="+texm,["Size=1.5"]);
-);
 
 Windispg();
 ;
@@ -2159,7 +2161,7 @@ var cdy = CindyJS({
     id: "CSCanvas",
     width: 867,
     height: 597,
-    transform: [{visibleRect: [-9.102203183253465, 6.535310929167836, 9.415266398263402, -6.215472623502948]}],
+    transform: [{visibleRect: [-9.100324843680738, 6.533840751455853, 9.442522722644055, -6.23441760736295]}],
     axes: true,
     grid: 1.0,
     snap: true,
