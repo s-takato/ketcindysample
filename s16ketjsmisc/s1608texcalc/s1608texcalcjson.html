@@ -286,6 +286,7 @@ Letter(list,options):=(
   Off=-4;
   Dmv=8;
   Nj=1;
+  if(Ketcindyjsfigure>0,sz=round(sz*Ketcindyjsscale) ); // 
   while(Nj+2<=length(list),
     Pos=list_Nj;
     Dir=list_(Nj+1);
@@ -329,6 +330,11 @@ Letter(list,options):=(
         if(Ymv==0,Ymv=-4);//16.10.08
         aln="mid"; // 16.09.30until
       );
+      if(Ketcindyjsfigure>0, // 
+        Off=round(Off*Ketcindyjsscale);
+        Xmv=round(Xmv*Ketcindyjsscale);
+        Ymv=round(Ymv*Ketcindyjsscale);
+      ); // 
       Str=list_(Nj+2);  //17.10.17
       drawtext(Pcrd(Pos),Str,offset->[Off+Xmv,Off+Ymv],
          size->sz,color->color,align->aln,bold->bld,italics->ita);//16.10.09
@@ -1329,7 +1335,7 @@ Pointdata(nm,listorg,options):=(
       dispflg=Toupper(substring(tmp_2,0,1));
     );
     if(tmp1=="I", //190405from
-      if(Toupper(tmp_2)=="NO",
+      if(Toupper(substring(tmp_2,0,1))=="N",
         inside=[-1,-1,-1];
       ,
         tmp3=["0","1","2","3","4","5","6","7","8","9"];
@@ -1532,11 +1538,12 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
   out;
 );
 ;
+Ketcindyjsfigure=0;
+Ketcindyjsscale=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 
-Setwindow([0,5],[-0.5,3]);
 Addax(0);
 
 
@@ -1588,16 +1595,16 @@ var cdy = CindyJS({
   angleUnit: "°",
   geometry: [
     {name: "SW", type: "Free", pos: [0.0, -2.0, 4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [4.0, 2.4, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "Text50", type: "EditableText", pos: [-0.07843137254901962, -4.0, -1.5047681388838046], color: [0.0, 0.0, 0.0], text: "=", textsize: 30.0},
-    {name: "Text51", type: "EditableText", pos: [-0.0970873786407767, -4.0, -1.862698424346457], color: [0.0, 0.0, 0.0], text: "=", textsize: 30.0},
-    {name: "Text52", type: "EditableText", pos: [-0.12820512820512822, -4.0, -2.459717150098527], color: [0.0, 0.0, 0.0], text: "=", textsize: 30.0}
+    {name: "NE", type: "Free", pos: [4.0, 2.7589098532494756, 0.8044357975164991], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "Text50", type: "EditableText", pos: [-0.07843137254901962, -4.0, -1.5047681388838046], color: [0.0, 0.0, 0.0], text: "", textsize: 30.0},
+    {name: "Text51", type: "EditableText", pos: [-0.0970873786407767, -4.0, -1.862698424346457], color: [0.0, 0.0, 0.0], text: "", textsize: 30.0},
+    {name: "Text52", type: "EditableText", pos: [-0.12820512820512822, -4.0, -2.459717150098527], color: [0.0, 0.0, 0.0], text: "", textsize: 30.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 750,
-    height: 446,
-    transform: [{visibleRect: [-0.8078894303354711, 3.716291379543167, 7.010395379362637, -0.9329819872906409]}],
+    width: 729,
+    height: 445,
+    transform: [{visibleRect: [-0.8078894303354711, 3.716291379543167, 6.79148340469109, -0.9225576075443768]}],
     grid: 1.0,
     background: "rgb(212,212,212)"
   }],
