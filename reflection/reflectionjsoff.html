@@ -1424,7 +1424,7 @@ Fracform(x,denorg,deg):=(
     );
   );
   if(flg==0,
-    fL=sort(fL,#_3);
+    fL=sort(fL,[#_3,#_2]); //
     tmp=fL_1;
   );
   mm=tmp_1; nn=tmp_2; err=tmp_3;
@@ -2102,6 +2102,10 @@ if(tmp>0,
   str=substring(str,tmp,length(str));
 );
 if(length(str)>0,
+  if(indexof(str,".")>0,
+    tmp=parse(str);
+    str=Op(1,Fracform(tmp,5));
+  );
   tmp=Tocindyform(str);
   tmp=Strsplit(tmp,"/");
   tmp=apply(tmp,parse(#));

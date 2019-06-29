@@ -24,6 +24,10 @@ if(tmp>0,
   str=substring(str,tmp,length(str));
 );
 if(length(str)>0,
+  if(indexof(str,".")>0,
+    tmp=parse(str);
+    str=Op(1,Fracform(tmp,5));
+  );
   tmp=Tocindyform(str);
   tmp=Strsplit(tmp,"/");
   tmp=apply(tmp,parse(#));
