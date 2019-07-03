@@ -1,13 +1,24 @@
 //ketlib
-
-a=2; //no ketjs
 pL=[];
 hintflg=0;
 
 //figures
+Getvalue(no,default):=(
+  regional(str,out,tmp);
+  out=default;
+  str=Textedit(no);
+  tmp=indexof(str,"=");
+  if(tmp>0,
+    str=substring(str,tmp,length(str));
+    if(length(str)>0,
+      out=parse(str);
+    );
+  );
+  out;
+);
+
 Ketinit();
-Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=lightgray"]);
+Setketcindyjs(["Nolabel=all"]);
 Setwindow([-5,5],[-5,5]);
 
 ww=round(NE.x-SW.x);
@@ -20,61 +31,50 @@ tmp=(round(SW.x))..(round(NE.x));
 forall(remove(tmp,[0]),
   htick=concat(htick,[#,text(#)]);
 );
-Htickmark(htick,["size->15"]);
+Htickmark(htick,["Size=1.5"]);
 vtick=[];
 tmp=(round(SW.y))..(round(NE.y));
 forall(remove(tmp,[0]),
  vtick=concat(vtick,[#,text(#)]);
 );
-Vtickmark(vtick,["size->15"]);
+Vtickmark(vtick,["Size=1.5"]);
 Addax(1);
 
-Plotdata("1",Assign("a^x",["a",a]),"x",["Color=blue"]);// no ketjs
+a=2;
+x=""; y="";
+//a=Getvalue(50,2); //only ketjs on
+//x=Getvalue(51,"");
+//y=Getvalue(52,""); //only ketjs off
+opred=["Size=1.6","Color=red"];
+opblue=["Size=1.6","Color=blue"];
+opred3=["Size=3","Color=red"];
+opblue3=["Size=3","Color=blue"];
+loga(a,x):=log(x)/log(a);
+Plotdata("1",Assign("a^x",["a",a]),"x",["Color=blue"]);
+pos=[loga(a,NE.y),NE.y+0.7];
+Expr(pos,"w","y="+a+"^x",opblue);
+pos=[loga(a,NE.y),NE.y+0.7];
+Expr(pos+[1,0],"e","y=\log_{"+a+"}"+"x",opred);
+if((!isstring(x))&(!isstring(y)),
+  Pointdata("1",[0,x],opblue3);
+  tmp=[NE.x+1,0];
+  Expr(tmp,"ne","y=\log_{"+a+"}"+x,["Size=1.6"]);
+  if(hintflg==1,
+    tmp=[[0,x],[loga(a,x),x],[loga(a,x),0]];
+    Listplot("1",tmp,["dr,2","Color=red"]);
+  );
+  tmp=[NE.x+1,-2];
+  if(|y-loga(a,x)|<0.1,
+    tmp1="Correct! y="+Sprintf(loga(a,x),4);
+    Letter(tmp,"e",tmp1,opred);
+    pL=append(pL,[x,y]);
+    Changestyle(["sg1"],["nodisp"]);
+  ,
+    Letter(tmp,"e","Not correct",opred);
+  );
+);
+if(length(pL)>0,
+  Pointdata("2",pL,opred3);
+);
 
-//loga(a,x):=log(x)/log(a); //only ketjs on
-//astr=Textedit(50);
-//opred=["Size=1.6","Color=red"];
-//opblue=["Size=1.6","Color=blue"];
-//opred3=["Size=3","Color=red"];
-//opblue3=["Size=3","Color=blue"];
-//tmp=Strsplit(astr,"=");
-//if(length(tmp_2)>0,
-//  a=parse(tmp_2);
-//  Plotdata("1",Assign("a^x",["a",a]),"x",["Color=blue"]);
-//  pos=[loga(a,NE.y),NE.y+0.7];
-//  Expr(pos,"w","y="+a+"^x",opblue);
-//  pos=[loga(a,NE.y),NE.y+0.7];
-//  Expr(pos+[1,0],"e","y=\log_{"+a+"}"+"x",opred);
-//  xstr=Textedit(51);
-//  tmp=Strsplit(xstr,"=");
-//  if(length(tmp_2)>0,
-//    x=parse(tmp_2);
-//    Pointdata("1",[0,x],opblue3);
-//    tmp=[NE.x+1,0];
-//    Expr(tmp,"ne","y=\log_{"+a+"}"+x,["Size=1.6"]);
-//    ystr=Textedit(52);
-//    tmp=Strsplit(ystr,"=");
-//    if(hintflg==1,
-//      tmp=[[0,x],[loga(a,x),x],[loga(a,x),0]];
-//      Listplot("1",tmp,["dr,2","Color=red"]);
-//    );
-//    if(length(tmp_2)>0,
-//      y=parse(tmp_2);
-//      tmp=[NE.x+1,-2];
-//      if(|y-loga(a,x)|<0.1,
-//        tmp1="Correct! y="+Sprintf(loga(a,x),4);
-//        Letter(tmp,"e",tmp1,opred);
-//        pL=append(pL,[x,y]);
-//        Changestyle(["sg1"],["nodisp"]);
-//      ,
-//        Letter(tmp,"e","Not correct",opred);
-//      );
-//    );
-//  );
-//  if(length(pL)>0,
-//    Pointdata("2",pL,opred3);
-//  );
-//); //only ketjs off
-
-Figpdf();
 Windispg();
