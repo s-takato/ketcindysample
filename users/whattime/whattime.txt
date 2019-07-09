@@ -1,7 +1,7 @@
 Ketinit();
 Addax(0);
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Equal="]);
+Setketcindyjs(["Nolabel=all","Color=white"]);
 tt=time();
 ans=[];
 funchikisu=[];
@@ -98,13 +98,13 @@ str="10:20:30";
 if(length(str)>0,
   str=replace(str," ","");
   timeL=tokenize(str,":");
-  if(Norm(ans-timeL)==0,
-   Letter(B-[0,1],"e","合っています",["Size=1.5"]);
-  ,
-   Letter(B-[0,1],"e","違います",["Size=1.5"]);
+  if(Norm(timeL)>0,
+    if(Norm(ans-timeL)==0,
+      Letter(B-[0,1],"e","合っています",["Size=1.5"]);
+    ,
+      Letter(B-[0,1],"e","違います",["Size=1.5"]);
+    );
   );
-,
-  timeL=[-1,-1,-1];
 );
 
 if(ansflg==1,

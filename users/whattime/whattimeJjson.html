@@ -1388,7 +1388,7 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
 Ketinit();
 Addax(0);
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Equal="]);
+Setketcindyjs(["Nolabel=all","Color=white"]);
 tt=time();
 ans=[];
 funchikisu=[];
@@ -1479,13 +1479,13 @@ str=Textedit(1); //
 if(length(str)>0,
   str=replace(str," ","");
   timeL=tokenize(str,":");
-  if(Norm(ans-timeL)==0,
-   Letter(B-[0,1],"e","合っています",["Size=1.5"]);
-  ,
-   Letter(B-[0,1],"e","違います",["Size=1.5"]);
+  if(Norm(timeL)>0,
+    if(Norm(ans-timeL)==0,
+      Letter(B-[0,1],"e","合っています",["Size=1.5"]);
+    ,
+      Letter(B-[0,1],"e","違います",["Size=1.5"]);
+    );
   );
-,
-  timeL=[-1,-1,-1];
 );
 
 if(ansflg==1,
@@ -1516,7 +1516,7 @@ var cdy = CindyJS({
     {name: "H", type: "Free", pos: [4.0, 0.7684729064039408, 0.625282689732047], color: [1.0, 0.0, 0.0], visible: false, pinned: true, labeled: false, size: 3.0, border: true },
     {name: "A", type: "Free", pos: [4.0, -0.0, 0.6153846153846154], color: [1.0, 0.0, 0.0], visible: false, pinned: true, labeled: false, size: 3.0, border: true },
     {name: "B", type: "Free", pos: [4.0, -1.5384615384615385, 0.6153846153846154], color: [1.0, 0.0, 0.0], visible: false, pinned: true, labeled: false, size: 3.0, border: true },
-    {name: "Text1", type: "EditableText", pos: [4.0, -0.9074074074074073, 0.5876499352574331], color: [0.0, 0.0, 0.0], text: "", textsize: 20.0},
+    {name: "Text1", type: "EditableText", pos: [4.0, -0.9074074074074073, 0.5876499352574331], color: [0.0, 0.0, 0.0], text: "00:00:00", textsize: 20.0},
     {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.784, 0.0], fillalpha: 0.27272728085517883, pinned: true, script: "ansflg=0;\nresetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "はじめ", textsize: 16.0, dock: {corner: "LL", offset: [84.0, 23.0]}},
     {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.784, 0.0], fillalpha: 0.27272728085517883, pinned: true, script: "ansflg=0;\nstopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "とめる", textsize: 16.0, dock: {corner: "LL", offset: [334.0, 23.0]}},
     {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.784, 0.0], fillalpha: 0.27272728085517883, pinned: true, script: "ansflg=0;\nsorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "はんたいまわり", textsize: 16.0, dock: {corner: "LL", offset: [207.0, 23.0]}},
@@ -1530,7 +1530,7 @@ var cdy = CindyJS({
     transform: [{visibleRect: [-7.137658311162708, 7.578838074325083, 17.22176718344556, -7.641863754776851]}],
     grid: 0.5,
     snap: true,
-    background: "rgb(212,212,212)"
+    background: "rgb(255,255,255)"
   }],
   csconsole: false,
   cinderella: {build: 1901, version: [2, 9, 1901]}
