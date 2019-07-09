@@ -1,0 +1,114 @@
+Ketinit();
+Addax(0);
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Nolabel=all","Equal="]);
+tt=time();
+ans=[];
+funchikisu=[];
+
+dispjikan(jikan,ichi,size,iro,dx):=(
+  regional(tmp,sf1,sf2,sf3,idex1,idex2,idex3);
+  funchikisu=[jikan,ichi,size,iro,dx];
+  tmp=mod(jikan_1,12);
+  if(tmp==0,tmp=12);
+  sf1="000"+text(tmp);
+  sf1=substring(sf1,length(sf1)-2,length(sf1));
+  sf2="000"+text(jikan_2);
+  sf2=substring(sf2,length(sf2)-2,length(sf2));
+  sf3="000"+text(jikan_3);
+  sf3=substring(sf3,length(sf3)-2,length(sf3));
+  kotae=sf1+"時"+sf2+"分"+sf3+"秒";
+  idex1=indexof(kotae,"時");
+  idex2=indexof(kotae,"分");
+  idex3=indexof(kotae,"秒");
+  //こたえ表示
+  Letter([ichi+[0,0],"e",substring(kotae,0,idex1)],["Size="+text(size),"Color="+text(iro_1)]);
+  Letter([ichi+[dx,0],"e",substring(kotae,idex1,idex2)],["Size="+text(size),"Color="+text(iro_2)]);
+  Letter([ichi+[2*dx,0],"e",substring(kotae,idex2,idex3)],["Size="+text(size),"Color="+text(iro_3)]);
+ );
+
+Setcolor([58,91,82]/255);
+
+Letter([M+[0,0],"e","いまの時刻"],["Size=1.5"]);
+iro=[[25,68,142],[25,68,142],[25,68,142]]/255;
+dispjikan(tt,L,2,iro,1.8);
+
+sA=[7,2.5];sB=[15,2.5];
+//Slider("D",[7,2.5],[15,2.5]);
+Slider("D",sA,sB);
+Letter([H,"e","スライダーで針の表示ステップをかえる"],["Size=1.5"]);
+
+velrot=abs(D.x-sA.x)/abs(sB.x-sA.x)*4*3600;//針の回転の最大値を設定4hourに設定
+Letter(D+[0.4,0.4],"e"," 表示ステップ "+(velrot/60/60)+"h");
+Letter([A+[0,0],"e","[やすむ]を押したときの時こくをよもう"],["Size=1.5"]);
+
+Setcolor([0,0,0]/255);
+
+//時計の針位置関数
+p(x):=[sin(2*pi*x),cos(2*pi*x)];
+apply(1..12,Letter([p(#/12)*4.3,"c",#],["Size=1.6"]));//数字1-12 
+apply(1..12,Letter([p(#/12)*5.7,"c",#*5],["Size=1.4","Color=[31,49,52]/255"]));//数字5-60
+oppt=["Size=3","Color=green","Msg=n"];
+apply(1..12,Pointdata("numH"+#,p(#/12)*5,oppt));//目盛り
+oppt=["Size=1","Color=[100,100,100]/255","Msg=n"];
+apply(1..60,Pointdata("numM"+#,p(#/60)*5,oppt));
+
+mf(ss):=(
+  regional(O,S,M,H,hour,min,sec,tmp,ans);
+  //経過時間の取得と表示
+  hour=floor(ss/3600);
+  tmp=mod(ss,3600);
+  min=floor(tmp/60);
+  sec=floor(mod(ss,60));
+  O=[0,0];
+  S=p(sec/60)*4.9;
+  M=p((min+sec/60)/60)*4.7;
+  H=p((hour*60+min)/(12*60))*3.3;
+
+  Listplot("s",[O,S],["dr,1","Color=[180, 75, 151]/255"]);
+  Listplot("m",[O,M],["dr,10","Color=[150, 100, 255]/255"]);
+  Listplot("h",[O,H],["dr,12","Color=[50, 255, 100]/255"]);
+  ans=[hour,min,sec];
+);//mf()
+
+//sliderのステップに変化を付加
+if(mod(ss,5)==0,
+  velrot=floor(velrot/2);
+);
+if(mod(ss,10)==0,
+  velrot=floor(velrot/3);
+,
+  velrot=floor(velrot);
+);
+  
+ss=Animationparam(0,velrot,3600*24*10);//240時間までanimationを行う
+ans=mf(ss);
+
+//こたえ表示
+ansTime():=(
+  iro=[[50,255,100],[150,100,255],[180,75,151]]/255;
+  dispjikan(ans,B-[0,2],2,iro,2);
+  tmp=funchikisu;
+  Letter([tmp_2+[3*tmp_5,0],"e","です"],["Size="+text(tmp_3),"Color=[0.5,0.5,0.5]"]);
+);
+
+
+str="10:20:30";
+//str=Textedit(1); // only ketjs
+if(length(str)>0,
+  str=replace(str," ","");
+  timeL=tokenize(str,":");
+  if(Norm(ans-timeL)==0,
+   Letter(B-[0,1],"e","合っています",["Size=1.5"]);
+  ,
+   Letter(B-[0,1],"e","違います",["Size=1.5"]);
+  );
+,
+  timeL=[-1,-1,-1];
+);
+
+if(ansflg==1,
+  ansTime();//こたえ表示
+);
+
+Windispg();
