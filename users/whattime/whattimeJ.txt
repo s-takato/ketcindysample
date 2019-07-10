@@ -2,13 +2,12 @@ Ketinit();
 Addax(0);
 Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nolabel=all","Color=white"]);
-tt=time();
-ans=[];
-funchikisu=[];
+TT=time();
+FUNChikisu=[];
 
 dispjikan(jikan,ichi,size,iro,dx):=(
   regional(tmp,sf1,sf2,sf3,idex1,idex2,idex3);
-  funchikisu=[jikan,ichi,size,iro,dx];
+  FUNChikisu=[jikan,ichi,size,iro,dx];
   tmp=mod(jikan_1,12);
   if(tmp==0,tmp=12);
   sf1="000"+text(tmp);
@@ -31,7 +30,7 @@ Setcolor([58,91,82]/255);
 
 Letter([M+[0,0],"e","いまの時刻"],["Size=1.5"]);
 iro=[[25,68,142],[25,68,142],[25,68,142]]/255;
-dispjikan(tt,L,2,iro,1.8);
+dispjikan(TT,L,2,iro,1.8);
 
 sA=[7,2.5];sB=[15,2.5];
 //Slider("D",[7,2.5],[15,2.5]);
@@ -82,13 +81,13 @@ if(mod(ss,10)==0,
 );
   
 ss=Animationparam(0,velrot,3600*24*10);//240時間までanimationを行う
-ans=mf(ss);
+Ans=mf(ss);
 
 //こたえ表示
 ansTime():=(
   iro=[[50,255,100],[150,100,255],[180,75,151]]/255;
-  dispjikan(ans,B-[0,2],2,iro,2);
-  tmp=funchikisu;
+  dispjikan(Ans,B-[0,2],2,iro,2);
+  tmp=FUNChikisu;
   Letter([tmp_2+[3*tmp_5,0],"e","です"],["Size="+text(tmp_3),"Color=[0.5,0.5,0.5]"]);
 );
 
@@ -98,8 +97,8 @@ str="10:20:30";
 if(length(str)>0,
   str=replace(str," ","");
   timeL=tokenize(str,":");
-  if(Norm(timeL)>0,
-    if(Norm(ans-timeL)==0,
+  if((length(timeL)==3)&(Norm(timeL)>0),
+    if(Norm(Ans-timeL)==0,
       Letter(B-[0,1],"e","合っています",["Size=1.5"]);
     ,
       Letter(B-[0,1],"e","違います",["Size=1.5"]);
