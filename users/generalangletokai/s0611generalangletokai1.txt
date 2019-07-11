@@ -1,0 +1,33 @@
+Ketinit();
+Setparent(Cdyname()+"fig");
+Setketcindyjs(["Scale=2.0","Nolabel=all","Lo=n","Color=white","Grid=false","Axes=false","Figure=y"]);//no ketjs
+Setwindow([-3,3],[-4,3]);
+Fontsize("n");
+
+y=-3.8; // no ketjs on
+x=-2.5;
+space=6/4;
+Movetojs(Text71,[x,y],12); 
+Movetojs(Text73,[x+space,y],12);
+Movetojs(Text74,[x+space*2,y],12);
+Movetojs(Text72,[x+space*3,y],12); //no ketjs off
+
+p0=[0,0];
+r=2.5;
+Circledata("1",[p0,r],["dr,1.5","Num=100"]);
+
+an=Animationparam(0,60,[-100000,100000]);
+
+th=an*pi/180;
+p1=r*[cos(th),sin(th)];
+Listplot("1",[p0,p1],["dr,1.5","Color=red"]);
+fun="(0.5+0.1*abs(t)/(2*pi))*[cos(t),sin(t)]";
+rng=Assign("t=[0,th]",["th",th]);
+if(abs(th)>0,
+  Paramplot("1",fun,rng);
+  Arrowhead("1",Ptend(gp1),"gp1",[0.5]);
+);
+Expr([-r,r],"e","\theta="+Sprintf(an,2)+"^{\circ}",["Size=1"]);
+
+Figpdf();
+Windispg();
