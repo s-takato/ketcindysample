@@ -1,17 +1,19 @@
-Start3d(["S"]);
-Setparent(Cdyname()+"fig");
-Slider("S",[0,SW.y-1.5],[2*pi,SW.y-1.5]);
+//ketlib
+Ketinit();
 
-Putaxes3d(5);
-Xyzax3data("","x=[-4.5,4.5]"," =[-0.5,0.5]","z=[-4.5,4.5]");
+Ketinit3d(0);
 
 ptL=[[2,2,-2],[2,-2,-2],[-2,-2,-2],[-2,2,-2],
      [2,2,2],[2,-2,2],[-2,-2,2],[-2,2,2]];
 fL=[[1,2,6,5],[1,5,8,4],[1,4,3,2],
     [2,3,7,6],[3,4,8,7],[5,6,7,8]];
 
-Putpoint3d(["A",1/sqrt(3)*[1,1,1]],["fix"]);
-Perpplane("B-C","O",[1,1,1],["P"]);
+Putaxes3d(5);// no ketjs on
+Xyzax3data("","x=[-4.5,4.5]"," =[-0.5,0.5]","z=[-4.5,4.5]");
+
+Pointdata3d("A",1/sqrt(3)*[1,1,1],["Size=3","Color=red"]);
+Perpplane("B-C","O",[1,1,1],["Size=3","Color=red"]);
+Setglist();
 
 mf(s):=(
   regional(Ps3d,Qs3d,matT,stL,polyheds);
@@ -20,32 +22,52 @@ mf(s):=(
   matT=[A3d,Ps3d,Qs3d];
   stL=apply(ptL,matT*#);
   polyheds=[stL,fL];
-  VertexEdgeFace("",polyheds);
-  Nohiddenbyfaces("",["ax3d","phe3d"],["phf3d"],[],["nodisp"]);
+  Vertexedgeface("",polyheds,["Label=0"]);
+  Nohiddenbyfaces("",["ax3d","phe3d"],["phf3d"],
+    ["nodisp"],["nodisp"]);
   frn3d;
 );
 
-Ch=[];
-if(contains(Ch,1),
- mf(2*pi/24*S.x);
- Figpdf();
-);//1
+ctr=1;
+sL=[];
+ndiv=48;
+forall(0..ndiv,nn,
+  s=2*pi/ndiv*nn;
+  tmp=mf(s);
+  dt=apply(tmp,parse(#));
+  Defvar("dt"+ctr,dt);
+  sL=append(sL,s);
+  ctr=ctr+1;
+);
+// no ketjs off
 
-if(contains(Ch,2),
- Setpara("rotcube","mf(s)","s=[0,2*pi]",["Div=24"]);
-);//2
+//figures
+Start3d("S");
+Addglist();// no ketjs
+Slider("S",[0,SW.y-1.5],[5,SW.y-1.5]);
 
-if(contains(Ch,3),
- fd=openfile("data2d.txt");
- println(fd,"data2d=[");
- forall(0..24,jj,
-   dt=mf(2*pi/24*jj);
-   dt2=apply(dt,Projpara(#));
-   println(fd,Textformat(dt2,6));
-   if(jj<24,tmp=",",tmp="];");
-   println(fd,tmp);
- );
- closefile(fd);
-);//3
+tmp=["O","Oz","X","Xz","Y","Yz","Z","Zz"];//no ketjs on
+Setketcindyjs(["No=all","Rm="+text(tmp)]);
+Ketcindyjsdata(["A3d",A3d,"B3d",B3d,"C3d",C3d,"O3d",O3d]);
+Ketcindyjsdata(["sL",sL]);
+forall(0..ndiv,
+  tmp="dt"+text(#+1);
+  Ketcindyjsdata([tmp,parse(tmp)]);
+);//no ketjs off
+
+mf2(s):=(
+  regional(tmp,tmp1,tmp2);
+  tmp=min(apply(1..(length(sL)),|sL_#-s|));
+  tmp1=select(1..(length(sL)),|sL_#-s|==tmp);
+  tmp=parse("dt"+text(tmp1_1));
+  forall(1..(length(tmp)),
+    Spaceline(text(#),tmp_#,["Msg=n"]);
+  );
+);
+
+ss=Animationparam(0,2*S.x,[0,20*2*pi]);
+mf2(mod(ss,2*pi));
 
 Windispg();
+
+//Help("Pointdata");
