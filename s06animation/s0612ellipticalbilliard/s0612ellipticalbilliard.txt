@@ -1,0 +1,118 @@
+//ketlib
+Initglist();
+
+aa=4; bb=3;
+pF=[-sqrt(aa^2-bb^2),0];
+fun=Assign("x^2/a^2+y^2/b^2-1",["a",aa,"b",bb]);
+Implicitplot("1",fun,"x=[-5,5]","y=[-5,5]");
+
+Setglist();
+
+//figures
+Ketinit();
+Addglist();
+Setketcindyjs(["Nolabel=all","Figure=y","Axes=false"]);//no ketjs
+Setwindow([-5,5],[-5.5,5]);
+Slider("T",[0.1,-4],[5,-4]);
+
+Movetojs(Text71,[-3,-5],16);//no ketjs on
+Movetojs(Text73,[-1.7,-5],16);
+Movetojs(Text74,[0,-5],16);
+Movetojs(Text72,[1.2,-5],16);
+Movetojs(Text61,[3,-5],16);//no ketjs off
+
+cmdL=[ //no ketjs on
+ "line:[x0+u1*t,y0+v1*t]",[],
+ "f:x^2/a^2+y^2/b^2-1",[],
+ "fl:ev(f,[x=line[1],y=line[2]])",[],
+ "ans:solve(fl=0,t)",[],
+ "t1:ev(t,ans[1])",[],
+ "t2:ev(t,ans[2])",[],
+ "d:[diff(f,x),diff(f,y)]",[],
+ "d:ev(-d,[x=x1,y=y1])",[],
+ "eq1:d[1]*u1+d[2]*v1=d[1]*u2+d[2]*v2",[],
+ "eq2:u2^2+v2^2=u1^2+v1^2",[],
+ "res:solve([eq1,eq2],[u2,v2])",[],
+ "u2:ev(u2,res[2])",[],
+ "v2:ev(v2,res[2])",[],
+ "x1:line[1]",[],
+ "y1:line[2]",[],
+ "t0:t2",[],
+ "t0::x1::y1::u2::v2",[]
+];
+CalcbyM("ans",cmdL,[""]);
+if(1==0,
+ Mxtex("1",ans_1,["Disp=n"]);
+ Expr([-5,4],"e",tx1,["Size=1.5"]);
+ Mxtex("2",ans_2,["Disp=n"]);
+ Expr([-5,2],"e",tx2,["Size=1.5"]);
+ Mxtex("3",ans_5,["Disp=n"]);
+ Expr([-5,0],"e",tx3,["Size=1.5"]);
+ Mxtex("4",ans_6,["Disp=n"]);
+ Expr([-5,-2],"e",tx4,["Size=1.5"]);
+); //no ketjs off
+
+Ketcindyjsdata(["ans",ans]);//no ketjs
+
+Addax(0);
+
+A.y=0;
+C.xy=pF;
+
+fun=Assign("[a*cos(t),b*sin(t)]",["a",aa,"b",bb]);
+Drwxy();
+Paramplot("1",fun,"t=[0,2*pi]");
+Pointdata("1",C,["Size=3","Color=red","border->false"]);
+Circledata("1",[A,0.75],["nodisp"]);
+Putoncurve("B","cr1");
+Arrowdata("1",[A,B],["dr,2","Color=red","border->false"]);
+
+Getvalue(n,rep):=(
+  regional(tmp);
+  tmp=Assign(ans_n,rep);
+  parse(tmp);
+);
+
+mf(tt):=(
+ regional(pL,tr,t1,x0,y0,x1,y1,u1,v1,
+   rep0,rep,rep2,flg,tmp);
+ x0=A.x; y0=0;
+ u1=B.x-A.x;v1=B.y-A.y;
+ pL=[[x0,y0]];
+ rep0=["a",aa,"b",bb];
+ flg=0;
+ tr=tt;
+ while(tr>0,
+  rep=concat(rep0,["x0",x0,"y0",y0,"u1",u1,"v1",v1]);
+  t1=Getvalue(1,rep);
+  rep2=concat(rep,["t",t1]);
+  x1=Getvalue(2,rep2);
+  y1=Getvalue(3,rep2);
+  rep2=concat(rep2,["x1",x1,"y1",y1]);
+  u2=-Getvalue(4,rep);
+  v2=-Getvalue(5,rep);
+  tr=tr-t1;
+  if(tr>0,
+    pL=append(pL,[x1,y1]);
+    x0=x1; y0=y1;
+    u1=u2; v1=v2;
+  );
+ );
+ tr=tr+t1;
+ if(tr>0,
+   if(flg==0,
+     pL=append(pL,[x0+u1*tr,y0+v1*tr]);
+     flg=1;
+   ,
+     pL_(length(pL))=[x0+u1*tr,y0+v1*tr];
+   );
+ );
+ if(length(pL)>1,
+   Listplot("1",pL);
+ );
+);
+
+tt=Animationparam(0,4*T.x,[0,600]);
+mf(tt);
+
+Windispg();
