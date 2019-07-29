@@ -1,0 +1,65 @@
+//Figures : Text1
+Viewtex();
+kc();
+
+//Parents : Text2
+if(length(Shellparent)>0,
+  Makeshell(),Makebat();
+);
+if(indexof(Libname,"sci")>0,
+  writetosci(2),writetoRS(2)
+);
+kc();
+
+//KeTJS : Text21
+Mkketcindyjs();
+
+//KeTJSoff : Text22
+Mkketcindyjs(append(Ketjsoption(),"Web=n"));
+
+//ParaF : Text3
+Parafolder();
+
+//Anime : Text4
+Mkanimation();
+
+//Flip : Text5
+Mkflipanime();
+
+//Title : Text11
+Maketitle();
+
+//Slide : Text12
+Mkslides();
+
+//Digest : Text13
+Mkslidesummary();
+
+//Play : Text71
+resetclock();
+playanimation();
+Animeflg=1;
+Dirflg=1;
+sorg=Current;
+
+//Pause : Text72
+Animeflg=1-Animeflg;
+if(Animeflg==0,
+  pauseanimation();
+  sorg=sstart;
+,
+  resetclock();
+  playanimation();
+);
+
+//Rev : Text73
+sorg=sstart;
+Dirflg=-Dirflg;
+Animeflg=1;
+resetclock();
+playanimation();
+
+//Stop : Text74
+stopanimation();
+Animeflg="";
+sstart=Current;

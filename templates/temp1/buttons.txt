@@ -1,0 +1,27 @@
+//Figures : Text1
+Viewtex();
+kc();
+
+//Parents : Text2
+if(length(Shellparent)>0,
+  Makeshell(),Makebat();
+);
+if(indexof(Libname,"sci")>0,
+  writetosci(2),writetoRS(2)
+);
+kc();
+
+//KeTJS : Text21
+Mkketcindyjs();
+
+//KeTJSoff : Text22
+Mkketcindyjs(append(Ketjsoption(),"Web=n"));
+
+//ParaF : Text3
+Parafolder();
+
+//Anime : Text4
+Mkanimation();
+
+//Flip : Text5
+Mkflipanime();

@@ -1,0 +1,97 @@
+//ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+Ch=[0];
+Ctr=0;
+resetflg=0;
+
+//figures
+Ketinit();
+Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n"]);//no ketjs on
+Putpoint("A",[0,0]);
+Putpoint("B",[5,-5]);
+if(resetflg==1,
+ Putpoint("C",[5/3,-5/3]);
+ Putpoint("D",[10/3,-10/3]);
+);
+Movetojs(30,[2,0.5],16);
+Movetojs(0,[3.5,0.5],16);
+Movetojs(71,[0,-8],16);
+Movetojs(72,[1.5,-8],16);
+Movetojs(73,[4,-8],16);
+Movetojs(74,[5.5,-8],16);// no ketjs off
+
+//A.xy=[0,0]; B.xy=[5,-5]; //only ketjs on
+//if(resetflg==1,
+//  C.xy=[5/3,-5/3]; D.xy=[10/3,-10/3];
+//); //only ketjs off
+
+Sliding(nm,fxy,eqr,te,us,ue):=(
+  regional(pt,a,b,sotu,out,ts,t0,p1,p2,tmp,tmp1,tmp2);
+  pt=parse(Assign(fxy,["u",us]));
+  a=pt_1; b=-pt_2;
+  tmp="(sqrt(2)*sqrt(5)*sqrt(b^2+a^2)*sqrt(b*u))/(7*b)";
+  ts=parse(Assign(tmp,["a",a,"b",b,"u",1]));
+  tmp1="u`="+eqr;
+  tmp2="t="+textformat([ts,te],6);
+  Deqplot(nm,tmp1,tmp2,ts,us,["Num=250","nodisp"]);
+  sotu=parse("de"+nm);
+  tmp=Ptend(sotu);
+  if(tmp_2<ue,
+    println("te is too small");
+  ,
+    tmp=select(1..(length(sotu)),sotu_#_2<ue);
+    tmp=max(tmp);
+    p1=sotu_(tmp);
+    p2=sotu_(tmp+1);
+    t0=p1_1+(ue-p1_2)*(p2_1-p1_1)/(p2_2-p1_2);
+    println("tend may be set to "+format(t0,6));
+    sotu=append(sotu_(1..tmp),[t0,ue]);
+    sotu=prepend([0,0],sotu);
+  );
+  tmp1=nm+"="+textformat(sotu,6);
+  parse(tmp1);
+);
+
+//if(contains(Ch,0),
+ Bezier("1",[A,B],[C,D]);
+ xu="3*u*(1-u)^2*p1+3*u^2*(1-u)*q1+u^3*5";
+ yu="3*u*(1-u)^2*p2+3*u^2*(1-u)*q2+u^3*(-5)";
+ fxy=Assign("[x,y]",["x",xu,"y",yu]);
+ cmdL=[ //no ketjs on
+   "assume(g>0)",[],
+   "fxy:"+fxy,[],
+   "d2:diff(fxy[1],u)^2+diff(fxy[2],u)^2",[],
+   "n2:2*g*(-fxy[2])",[],
+   "eq:ratsimp(sqrt(n2/d2))",[],
+   "tt:ratsimp(1/eq)",[],
+   "eq::tt",[]
+ ];
+ CalcbyM("eqb",cmdL,[""]);
+ Ketcindyjsdata(["eqb",eqb]);//no ketjs off
+
+ repdata=["g",9.8,"p1",C.x,"p2",C.y,"q1",D.x,"q2",D.y];
+ tmp1=Assign(fxy,repdata);
+ tmp2=Assign(eqb_1,repdata);
+ us=1/100;ue=1;
+ Sliding("bez4",tmp1,tmp2,2,us,ue);
+ tmp=Ptend(bez4);
+ if(tmp_2<ue,
+   te=2;
+   ue=tmp_2;
+ ,
+   te=tmp_1;
+ );
+ Letter([[6,-2],"w",Sprintf(te*1000,2)+"ms"],["Size=2"]);
+//);
+
+if(contains(Ch,1),
+ fun="2.864585*[u-sin(u),-(1-cos(u))]";
+ Paramplot("1",fun,"u=[0,2.412011]",["Color=red"]);
+ Letter([[6,-1],"w","1304.06ms"],["Size=2","Color=red"]);
+);
+
+Windispg();

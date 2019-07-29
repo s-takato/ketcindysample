@@ -1,0 +1,21 @@
+//Initialization/ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+Ketinit();
+Ketinit3d();
+
+//Draw/figures
+Start3d();
+
+Putaxes3d(5);
+Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+Ch=[];
+if(contains(Ch,2),
+  Skeletonparadata("1");
+);
+
+Windispg();

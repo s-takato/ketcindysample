@@ -1,0 +1,32 @@
+//Initialization/ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+//Draw/figures
+Ketinit();
+
+//Slidework(Dircdy);
+//Addpackage(["pict2e"]);
+//Addpackage(["[dvipdfmx]{media9}","[dvipdfmx]{animate}","ketmedia"]);
+
+// How to produce
+// 1) Edit Settitle, and push the gear.
+// 2) Push the button "Title".
+// 3) Push the buttona "Slide".
+
+Setslidebody("black");
+Setslidehyper("");
+
+Texcom("\Large\bf\boldmath");
+Fontsize("s");
+
+Settitle([
+"s{60}{20}{Main Title}",
+"s{60}{50}{Name}",
+"s{60}{60}{Affliation}",
+"s{60}{70}{Info}"
+],["Color=[1,1,0,0]"]);
+
+Windispg();

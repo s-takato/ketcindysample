@@ -1,0 +1,30 @@
+//Initialization/ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+//Draw/figures
+Ketinit();
+
+//Addpackage(["pict2e"]);
+//Addpackage(["[dvipdfmx]{media9}","[dvipdfmx]{animate}","ketmedia"]);
+
+// 作り方
+// 1) Settitleを編集，ギヤを押して，Titleボタンを押す．
+// 2) Slideボタンを押す．
+
+Setslidebody("black");
+Setslidehyper("");
+
+Texcom("\Large\bf\boldmath");
+Fontsize("s");
+
+Settitle([
+"s{60}{20}{メインタイトル}",
+"s{60}{50}{名前}",
+"s{60}{60}{所属}",
+"s{60}{70}{情報}"
+],["Color=[1,1,0,0]"]);
+
+Windispg();

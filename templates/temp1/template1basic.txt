@@ -1,0 +1,23 @@
+//Initialization/ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+//Draw/figures
+Ketinit();
+//Setfiles("");
+//Setparent("");
+//  Dircdy : path of this file
+//  Cdyname : name of this file
+//Usegraphics("tikz");
+
+Setax(["a"]);
+//Addax(0);
+
+Listplot([A,B,C,A]);
+
+//Figpdf();
+Windispg();
+
+//Help("List");

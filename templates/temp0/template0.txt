@@ -1,0 +1,10 @@
+//Initialization/ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+//Draw/figures
+Ketinit();
+
+Windispg();

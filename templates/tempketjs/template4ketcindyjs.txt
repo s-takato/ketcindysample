@@ -1,0 +1,15 @@
+//Initialization/ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+//Draw/figures
+Ketinit();
+Setketcindyjs(["Nolabel=all","Color=lightgray"]);//no ketjs
+
+ss=Animationparam(pi/6,2,[0,2*pi+pi/6]);
+
+Arrowdata("1",[[0,0],3*[cos(ss),sin(ss)]]);
+
+Windispg();
