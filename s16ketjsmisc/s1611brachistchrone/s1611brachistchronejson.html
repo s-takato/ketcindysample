@@ -982,6 +982,29 @@ Ptend(Fig):=(
   if(isstring(Fig),tmp=parse(Fig),tmp=Fig);
   tmp_(length(tmp)); // 15.04.12
 );
+Textedit(no):=(
+  regional(tmp,tmp1,tmp2);
+  tmp="Text"+text(no)+".currenttext";
+  tmp1=parse(tmp);
+  tmp1;
+);
+Animationparam(start,ratio,stop):=( //190524
+  regional(rng);
+  if(islist(stop),rng=stop,rng=[start,stop]);
+  if(isreal(Animeflg),
+    if(Animeflg==1,
+      sstart=Dirflg*ratio*seconds()+sorg;
+    );
+  ,
+    Current=start;
+    sstart=start;
+  );
+  if((sstart<=rng_1)%(sstart>=rng_2), //190528
+    if(sstart<=rng_1,sstart=rng_1, sstart=rng_2); //190528
+    stopanimation();
+  );
+  sstart;
+);
 Sprintf(value,dig):=(
   regional(vv,tmp,tmp1);
   if(!islist(value),  // 17.03.12from
@@ -1743,7 +1766,7 @@ Sliding(nm,fxy,eqr,te,us,ue):=(
   a=pt_1; b=-pt_2;
   tmp="(sqrt(2)*sqrt(5)*sqrt(b^2+a^2)*sqrt(b*u))/(7*b)";
   ts=parse(Assign(tmp,["a",a,"b",b,"u",1]));
-  tmp1="u`="+eqr;
+  tmp1="u'="+eqr;
   tmp2="t="+textformat([ts,te],6);
   Deqplot(nm,tmp1,tmp2,ts,us,["Num=250","nodisp"]);
   sotu=parse("de"+nm);
@@ -1764,34 +1787,49 @@ Sliding(nm,fxy,eqr,te,us,ue):=(
   parse(tmp1);
 );
 
- Bezier("1",[A,B],[C,D]);
- xu="3*u*(1-u)^2*p1+3*u^2*(1-u)*q1+u^3*5";
- yu="3*u*(1-u)^2*p2+3*u^2*(1-u)*q2+u^3*(-5)";
- fxy=Assign("[x,y]",["x",xu,"y",yu]);
+Bezier("1",[A,B],[C,D],["Num=50"]);
+xu="3*u*(1-u)^2*p1+3*u^2*(1-u)*q1+u^3*5";
+yu="3*u*(1-u)^2*p2+3*u^2*(1-u)*q2+u^3*(-5)";
+fxy=Assign("[x,y]",["x",xu,"y",yu]);
 
- repdata=["g",9.8,"p1",C.x,"p2",C.y,"q1",D.x,"q2",D.y];
- tmp1=Assign(fxy,repdata);
- tmp2=Assign(eqb_1,repdata);
- us=1/100;ue=1;
- Sliding("bez4",tmp1,tmp2,2,us,ue);
- tmp=Ptend(bez4);
- if(tmp_2<ue,
-   te=2;
-   ue=tmp_2;
- ,
-   te=tmp_1;
- );
- Letter([[6,-2],"w",Sprintf(te*1000,2)+"ms"],["Size=2"]);
+repdata=["g",9.8,"p1",C.x,"p2",C.y,"q1",D.x,"q2",D.y];
+tmp1=Assign(fxy,repdata);
+tmp2=Assign(eqb_1,repdata);
+us=1/500;ue=1;
+Sliding("bez4",tmp1,tmp2,2,us,ue);
+tmp=Ptend(bez4);
+if(tmp_2<ue,
+  te=2;
+  ue=tmp_2;
+,
+  te=tmp_1;
+);
+
+str=Textedit(80); 
+tmp=Strsplit(str,"=");
+sp=tmp_2;
+sp=if(isstring(sp),sp=parse(sp));
+tt=Animationparam(0,sp,[0,te]);
+de=prepend([0,0],debez4);
+tmp=select(1..(length(de)),tt<de_#_1);
+tmp=tmp_1;
+tmp1=de_(tmp-1);
+tmp2=de_(tmp);
+tmp=tmp1_2+(tmp2_2-tmp1_2)/(tmp2_1-tmp1_1)*(tt-tmp1_1);
+tmp1=Assign(fxy,repdata);
+tmp2=Assign(tmp1,["u",tmp]);
+Pointdata("t",tmp2,["Color=blue","Size=4"]);
+Letter([[6,-3.1],"w",Sprintf(tt*1000,2)+"ms"],["Size=1.6"]);
+
+Letter([[6,-2.1],"w",Sprintf(te*1000,2)+"ms"],["Size=1.6"]);
 
 if(contains(Ch,1),
  fun="2.864585*[u-sin(u),-(1-cos(u))]";
  Paramplot("1",fun,"u=[0,2.412011]",["Color=red"]);
- Letter([[6,-1],"w","1304.06ms"],["Size=2","Color=red"]);
+ Letter([[6,-1.1],"w","1304.06ms"],["Size=1.6","Color=red"]);
 );
 
 Windispg();
-
-
 ;
 </script>
     <script type="text/javascript">
@@ -1809,16 +1847,17 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [-0.6666666666666666, -4.0, 0.6666666666666666], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 0.6666666666666666, 0.6666666666666666], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "B", type: "Free", pos: [4.0, -4.0, 0.8], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "A", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 2.0, border: true },
+    {name: "B", type: "Free", pos: [4.0, -4.0, 0.8], color: [1.0, 0.0, 0.0], labeled: false, size: 2.0, border: true },
     {name: "C", type: "Free", pos: [4.0, -4.0, 2.3999952000095996], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "D", type: "Free", pos: [4.0, -4.0, 1.2000012000012], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "Text80", type: "EditableText", pos: [2,-0.5,1], color: [0.0, 0.0, 0.0], text: "Sp=1", textsize: 18},
     {name: "Text0", type: "Button", pos: [3.5,0.5,1], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(Ctr==0,\n  Ch=[0,1];\n  Ctr=1;\n,\n  Ch=[0];\n  Ctr=0;\n);", text: "Cyc", textsize: 24},
     {name: "Text30", type: "Button", pos: [2,0.5,1], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(resetflg==0,\n  resetflg=1;\n,\n  resetglg=0;\n);", text: "Reset", textsize: 24},
-    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 24, pos: [0,-8,1]},
-    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 24, pos: [1.5,-8,1]},
-    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 24, pos: [4,-8,1]},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 24, pos: [5.5,-8,1]}
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 24, pos: [0,-6,1]},
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 24, pos: [1.2,-6,1]},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 24, pos: [3,-6,1]},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 24, pos: [4.2,-6,1]}
   ],
   ports: [{
     id: "CSCanvas",
