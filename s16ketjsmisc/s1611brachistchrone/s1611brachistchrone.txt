@@ -7,9 +7,12 @@ import("ketcindy.ini");
 Ch=[0];
 Ctr=0;
 resetflg=0;
+pC=[0,0];
+pD=[0,0];
 
 //figures
 Ketinit();
+Setwindow([-1,6],[-6,1]);
 Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n"]);//no ketjs on
 Putpoint("A",[0,0]);
 Putpoint("B",[5,-5]);
@@ -32,33 +35,6 @@ Movetojs(74,[4.2,-6],16);// no ketjs off
 //  C.xy=[5/3,-5/3]; D.xy=[10/3,-10/3];
 //); //only ketjs off
 
-Sliding(nm,fxy,eqr,te,us,ue):=(
-  regional(pt,a,b,sotu,out,ts,t0,p1,p2,tmp,tmp1,tmp2);
-  pt=parse(Assign(fxy,["u",us]));
-  a=pt_1; b=-pt_2;
-  tmp="(sqrt(2)*sqrt(5)*sqrt(b^2+a^2)*sqrt(b*u))/(7*b)";
-  ts=parse(Assign(tmp,["a",a,"b",b,"u",1]));
-  tmp1="u'="+eqr;
-  tmp2="t="+textformat([ts,te],6);
-  Deqplot(nm,tmp1,tmp2,ts,us,["Num=250","nodisp"]);
-  sotu=parse("de"+nm);
-  tmp=Ptend(sotu);
-  if(tmp_2<ue,
-    println("te is too small");
-  ,
-    tmp=select(1..(length(sotu)),sotu_#_2<ue);
-    tmp=max(tmp);
-    p1=sotu_(tmp);
-    p2=sotu_(tmp+1);
-    t0=p1_1+(ue-p1_2)*(p2_1-p1_1)/(p2_2-p1_2);
-    println("tend may be set to "+format(t0,6));
-    sotu=append(sotu_(1..tmp),[t0,ue]);
-    sotu=prepend([0,0],sotu);
-  );
-  tmp1=nm+"="+textformat(sotu,6);
-  parse(tmp1);
-);
-
 Bezier("1",[A,B],[C,D],["Num=50"]);
 xu="3*u*(1-u)^2*p1+3*u^2*(1-u)*q1+u^3*5";
 yu="3*u*(1-u)^2*p2+3*u^2*(1-u)*q2+u^3*(-5)";
@@ -76,35 +52,45 @@ CalcbyM("eqb",cmdL,[""]);
 Ketcindyjsdata(["eqb",eqb]);//no ketjs off
 
 repdata=["g",9.8,"p1",C.x,"p2",C.y,"q1",D.x,"q2",D.y];
-tmp1=Assign(fxy,repdata);
-tmp2=Assign(eqb_1,repdata);
-us=1/500;ue=1;
-Sliding("bez4",tmp1,tmp2,2,us,ue);
-tmp=Ptend(bez4);
-if(tmp_2<ue,
-  te=2;
-  ue=tmp_2;
-,
-  te=tmp_1;
+fxyr=Assign(fxy,repdata);
+eqr=Assign(eqb_1,repdata);
+
+Eps=10^(-2);
+if(|pC-C.xy|+|pD-D.xy|>Eps,
+  us=1/500;
+  p1=parse(Assign(fxyr,["u",us]));
+  tmp="sqrt(2*(a^2+b^2)/(b*g))";
+  ts=parse(Assign(tmp,["a",p1_1,"b",-p1_2,"g",9.8]));
+  tmp1="u'="+eqr;
+  tmp2="t="+textformat([ts,2.5],6);
+  Deqplot("1",tmp1,tmp2,ts,us,["Num=250","nodisp"]);
+  pL=apply(de1,parse(Assign(fxyr,["u",#_2])));
+  tmp1=apply(1..(length(de1)),[pL_#_1,de1_#_1]);
+  Listplot("d",[[B.x,0],[B.x,3]],["nodisp"]);
+  tmp=Intersectcrvs(tmp1,sgd);
+  te=tmp_1_2;
+  pC=C.xy; pD=D.xy;
 );
 
+//Slider("T",[0,-5.5],[2,-5.5]);
+//tt=T.x;
 str="sp=1"; //no ketjs
 //str=Textedit(80); only ketjs
 tmp=Strsplit(str,"=");
 sp=tmp_2;
 sp=if(isstring(sp),sp=parse(sp));
 tt=Animationparam(0,sp,[0,te]);
-de=prepend([0,0],debez4);
-tmp=select(1..(length(de)),tt<de_#_1);
-tmp=tmp_1;
-tmp1=de_(tmp-1);
-tmp2=de_(tmp);
-tmp=tmp1_2+(tmp2_2-tmp1_2)/(tmp2_1-tmp1_1)*(tt-tmp1_1);
-tmp1=Assign(fxy,repdata);
-tmp2=Assign(tmp1,["u",tmp]);
-Pointdata("t",tmp2,["Color=blue","Size=4"]);
-Letter([[6,-3.1],"w",Sprintf(tt*1000,2)+"ms"],["Size=1.6"]);
 
+if(tt<=ts,
+  Pointdata("t",[0,0],["Color=blue","Size=4"]);
+,
+  Listplot("2",[[tt,0],[tt,1]],["nodisp"]);
+  tmp=Intersectcrvs(de1,sg2);
+  ut=tmp_1_2;
+  p2=parse(Assign(fxyr,["u",ut]));
+  Pointdata("t",p2,["Color=blue","Size=4"]);
+);
+Letter([[6,-3.1],"w",Sprintf(tt*1000,2)+"ms"],["Size=1.6"]);
 Letter([[6,-2.1],"w",Sprintf(te*1000,2)+"ms"],["Size=1.6"]);
 
 if(contains(Ch,1),
