@@ -1,0 +1,70 @@
+//ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+// P:Psi, Q:d/dt(Psi), F:Phi, G:d/dt(Phi)
+eqP="Q";
+eqQorg="fr(R,I0+(m1+m2)*R^2)*(g*(m2-m1*cos(F))-m1*(L0+R*(F-P))*G^2)";
+eqF="G";
+eqGorg="fr(1,L0+R*(F-P))*(2*R*Q*G-g*sin(F)-R*G^2)";
+
+eqQ=Tocindyform(eqQorg);
+eqG=Tocindyform(eqGorg);
+//eqQ="R/(I0+(m1+m2)*R^2)*(g*(m2-m1*cos(F))-m1*(L0+R*(F-P))*G^2)";
+//eqG="1/(L0+R*(F-P))*(2*R*Q*G-g*sin(F)-R*G^2)";
+
+eq="[P,Q,F,G]'="+text([eqP,eqQ,eqF,eqG]);
+
+repnm=["R","I0","m1","m2","g","L0"];
+repva=[1,0.05,1,1.05,9.8,4];
+rep=apply(1..(length(repnm)),[repnm_#,repva_#]);
+rep=flatten(rep);
+eqn=Assign(eq,rep);
+vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,0.6],600);
+
+//figures
+Ketinit();
+
+Setketcindyjs(["Size=1.5","No=all","Fig=y"]);//no ketjs
+Setax(["a"]);
+Setwindow([-4,4],[-7,2]);
+
+Setplaybuttons(-1.5,-6.5,14);//no ketjs
+
+pt0=[0,0];
+R=1;
+L0=4;
+
+Circledata("1",[pt0,R]);
+Shade("1",["cr1"],["Color=[0,0,0,0.2]"]);
+
+mf(s):=(
+ regional(tmp,phi,psi,p1,p2,q1,q2);
+ tmp=min(apply(1..(length(vL)),|vL_#_1-s|));
+ tmp=select(1..(length(vL)),|vL_#_1-s|==tmp);
+ tmp=tmp_1;
+ psi=vL_tmp_2;
+ phi=vL_tmp_4;
+ p1=R*[cos(phi),sin(phi)];
+ p2=p1+(L0+R*phi)*[sin(phi),-cos(phi)];
+ p3=R*[cos(psi),sin(psi)];
+ q1=R*[-1,0];
+ q2=q1+[0,-L0-R*psi];
+ Listplot("1",[p1,p2],["dr,2"]);
+ Listplot("2",[q1,q2],["dr,2"]);
+ Listplot("3",[pt0,p3],["dr,2","Color=blue"]);
+ Partcrv("1",p1,q1,"cr1",["dr,2"]);
+ Pointdata("1",[p2,q2],["Size=8","Color=red"]);
+ Expr([1,1.5],"e","t="+Sprintf(s,2),["Size=1.5"]);
+);
+
+ss=Animationparam(0,1,[0,600]);
+
+mf(ss);
+
+//Expr([-7,-3],"e",Totexform(eqQorg),["Size=1.4"]);
+//Expr([-7,-4],"e",Totexform(eqGorg),["Size=1.4"]);
+
+Windispg();
