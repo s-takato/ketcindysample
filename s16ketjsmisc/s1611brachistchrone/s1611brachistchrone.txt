@@ -21,6 +21,7 @@ inspect(B,"ptsize",2);
 if(resetflg==1,
  Putpoint("C",[5/3,-5/3]);
  Putpoint("D",[10/3,-10/3]);
+ resegflg=0;
 );
 Movetojs(30,[2,0.5],16);
 Movetojs(0,[3.5,0.5],16);
@@ -30,6 +31,7 @@ Setplaybuttons(0,-6,16);// no ketjs off
 //A.xy=[0,0]; B.xy=[5,-5]; //only ketjs on
 //if(resetflg==1,
 //  C.xy=[5/3,-5/3]; D.xy=[10/3,-10/3];
+//  resetflg=0;
 //); //only ketjs off
 
 Bezier("1",[A,B],[C,D],["Num=50"]);
@@ -67,6 +69,8 @@ if(|pC-C.xy|+|pD-D.xy|>Eps,
   tmp=Intersectcrvs(tmp1,sgd);
   te=tmp_1_2;
   pC=C.xy; pD=D.xy;
+  Animeflg="";
+  sstart=Current;
 );
 
 //Slider("T",[0,-5.5],[2,-5.5]);

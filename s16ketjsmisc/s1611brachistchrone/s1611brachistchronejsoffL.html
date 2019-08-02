@@ -1280,7 +1280,8 @@ Koutenseg(pA,pB,pC,pD,options):=(
     Tmp1=pA+rT*pV;
     Out=[Tmp1,rT,1];
   );
- Out;
+  if(!isstring(Out_1),Out=apply(Out,re(#))); //190802
+  Out;
 );
 Sprintf(value,dig):=(
   regional(vv,tmp,tmp1);
@@ -1957,6 +1958,7 @@ Setwindow([-1,6],[-6,1]);
 A.xy=[0,0]; B.xy=[5,-5]; //
 if(resetflg==1,
   C.xy=[5/3,-5/3]; D.xy=[10/3,-10/3];
+  resetflg=0;
 ); //
 
 Bezier("1",[A,B],[C,D],["Num=50"]);
@@ -1983,6 +1985,8 @@ if(|pC-C.xy|+|pD-D.xy|>Eps,
   tmp=Intersectcrvs(tmp1,sgd);
   te=tmp_1_2;
   pC=C.xy; pD=D.xy;
+  Animeflg="";
+  sstart=Current;
 );
 
 str=Textedit(80); 
