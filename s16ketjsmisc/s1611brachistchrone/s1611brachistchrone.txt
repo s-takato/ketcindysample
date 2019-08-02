@@ -25,10 +25,7 @@ if(resetflg==1,
 Movetojs(30,[2,0.5],16);
 Movetojs(0,[3.5,0.5],16);
 Movetojs(80,[2,-0.5],12);
-Movetojs(71,[0,-6],16);
-Movetojs(72,[1.2,-6],16);
-Movetojs(73,[3,-6],16);
-Movetojs(74,[4.2,-6],16);// no ketjs off
+Setplaybuttons(0,-6,16);// no ketjs off
 
 //A.xy=[0,0]; B.xy=[5,-5]; //only ketjs on
 //if(resetflg==1,

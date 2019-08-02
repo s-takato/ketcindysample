@@ -65,61 +65,7 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   LFmark=unicode("000a");
   CRmark=unicode("000d");//16.12.13
   Dq=unicode("0022");
-  CommonMake=0;//180610
-  WaitUnit=10;
-  CONTINUED=0;
-  OutComList=[];
-  OutFileLIst=[];   // 15.10.22
-  FigPdfList=[];  // 16.04.08
   Fillstore(); //181212
-  ADDPACK=[]; // 16.05.16
-  GPACK="tpic"; //180817
-  ErrFlag=0;
-  KETJSOP=[]; //190129
-  REMOVEPTJS=[]; SLIDEFLG="Y"; //190504
-  MOVETOJSLIST=[];
-  if(!isstring(Fhead),  // 17.10.13from, 17.11.12
-    Fhead=text(curkernel());
-    Fhead=replace(Fhead,".cdy","");
-    Slidename=Fhead; //17.10.24
-  );//17.11.12
-  Dircdy=replace(Dircdy,"%E3%80%80",unicode("3000"));//190416
-  Namecdy=Cindyname();//180608
-  tmp1=Indexall(Dircdy,"%"); //180329from
-  if(length(tmp1)>0,
-    tmp1=append(tmp1,length(Dircdy));
-    tmp2=substring(Dircdy,0,tmp1_1-1);
-    forall(1..(length(tmp1)-1),
-      tmp=substring(Dircdy,tmp1_#,tmp1_#+2);
-      tmp2=tmp2+unicode(tmp);
-      tmp2=tmp2+substring(Dircdy,tmp1_#+2,tmp1_(#+1)-1);
-    );
-    Dircdy=tmp2;
-  ); //180329to
-  if(iswindows(),  //17.12.01
-    Dircdy=replace(Dircdy,"/",pathsep());
-    if(substring(Dircdy,0,1)==pathsep(),
-      Dircdy=substring(Dircdy,1,length(Dircdy));
-    );
-  );
-  Userhome=Homehead+pathsep()+getname(); //190128
-  if(iswindows(),
-    Batparent="\kc.bat";
-  ,
-    if(ismacosx(), //181125from
-      Shellparent="/kc.command"; 
-      Mackc="open"; //190222
-    ,
-      Shellparent="/kc.sh"; 
-      Mackc="bash"; //190222
-    );  //181125to
-  );
-  Changesetting(); //190128
-  Changework(Dircdy+pathsep()+work); //180329to,181001
-  Fnametex=Fhead+".tex";
-  FnameR=Fhead+".r";
-  FnamebodyR=Fhead+"body.r";
-  Fnameout=Fhead+".txt";  // 17.10.13to
   ArrowlineNumber=1;  // 15.01.05
   ArrowheadNumber=1;
   BezierNumber=1; //15.01.03
@@ -1994,20 +1940,9 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
   );
   out;
 );
-eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
-eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
-eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
-eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
-eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
-eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
-eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
-eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
 Ketcindyjsfigure=1;
 Ketcindyjsscale=1.5;
 eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
-eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
-Ketcindyjsfigure=1;
-Ketcindyjsscale=1.5;
 Ch=[0];
 Ctr=0;
 resetflg=0;
@@ -2090,7 +2025,6 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "T", type: "Free", pos: [0.0, -4.0, 0.7272727272727273], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "NE", type: "Free", pos: [4.0, 0.6666666666666666, 0.6666666666666666], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "A", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 2.0, border: true },
     {name: "B", type: "Free", pos: [4.0, -4.0, 0.8], color: [1.0, 0.0, 0.0], labeled: false, size: 2.0, border: true },
@@ -2101,9 +2035,9 @@ var cdy = CindyJS({
     {name: "Text0", type: "Button", pos: [3.5,0.5,1], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(Ctr==0,\n  Ch=[0,1];\n  Ctr=1;\n,\n  Ch=[0];\n  Ctr=0;\n);", text: "Cyc", textsize: 24},
     {name: "Text30", type: "Button", pos: [2,0.5,1], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(resetflg==0,\n  resetflg=1;\n,\n  resetglg=0;\n);", text: "Reset", textsize: 24},
     {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 24, pos: [0,-6,1]},
-    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 24, pos: [1.2,-6,1]},
-    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 24, pos: [3,-6,1]},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 24, pos: [4.2,-6,1]}
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 24, pos: [1.34,-6,1]},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 24, pos: [3.04,-6,1]},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 24, pos: [4.26,-6,1]}
   ],
   ports: [{
     id: "CSCanvas",
