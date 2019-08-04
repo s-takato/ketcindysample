@@ -207,61 +207,7 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   LFmark=unicode("000a");
   CRmark=unicode("000d");//16.12.13
   Dq=unicode("0022");
-  CommonMake=0;//180610
-  WaitUnit=10;
-  CONTINUED=0;
-  OutComList=[];
-  OutFileLIst=[];   // 15.10.22
-  FigPdfList=[];  // 16.04.08
   Fillstore(); //181212
-  ADDPACK=[]; // 16.05.16
-  GPACK="tpic"; //180817
-  ErrFlag=0;
-  KETJSOP=[]; //190129
-  REMOVEPTJS=[]; SLIDEFLG="Y"; //190504
-  MOVETOJSLIST=[];
-  if(!isstring(Fhead),  // 17.10.13from, 17.11.12
-    Fhead=text(curkernel());
-    Fhead=replace(Fhead,".cdy","");
-    Slidename=Fhead; //17.10.24
-  );//17.11.12
-  Dircdy=replace(Dircdy,"%E3%80%80",unicode("3000"));//190416
-  Namecdy=Cindyname();//180608
-  tmp1=Indexall(Dircdy,"%"); //180329from
-  if(length(tmp1)>0,
-    tmp1=append(tmp1,length(Dircdy));
-    tmp2=substring(Dircdy,0,tmp1_1-1);
-    forall(1..(length(tmp1)-1),
-      tmp=substring(Dircdy,tmp1_#,tmp1_#+2);
-      tmp2=tmp2+unicode(tmp);
-      tmp2=tmp2+substring(Dircdy,tmp1_#+2,tmp1_(#+1)-1);
-    );
-    Dircdy=tmp2;
-  ); //180329to
-  if(iswindows(),  //17.12.01
-    Dircdy=replace(Dircdy,"/",pathsep());
-    if(substring(Dircdy,0,1)==pathsep(),
-      Dircdy=substring(Dircdy,1,length(Dircdy));
-    );
-  );
-  Userhome=Homehead+pathsep()+getname(); //190128
-  if(iswindows(),
-    Batparent="\kc.bat";
-  ,
-    if(ismacosx(), //181125from
-      Shellparent="/kc.command"; 
-      Mackc="open"; //190222
-    ,
-      Shellparent="/kc.sh"; 
-      Mackc="bash"; //190222
-    );  //181125to
-  );
-  Changesetting(); //190128
-  Changework(Dircdy+pathsep()+work); //180329to,181001
-  Fnametex=Fhead+".tex";
-  FnameR=Fhead+".r";
-  FnamebodyR=Fhead+"body.r";
-  Fnameout=Fhead+".txt";  // 17.10.13to
   ArrowlineNumber=1;  // 15.01.05
   ArrowheadNumber=1;
   BezierNumber=1; //15.01.03
@@ -2812,10 +2758,10 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
   );
   out;
 );
-eqQ="((m1*G^2*P-m1*F*G^2)*R^2+((-g*m1*cos(F))-L0*m1*G^2+g*m2)*R)/((m2+m1)*R^2+I0)";
-eqG="-((2*G*Q-2*G*G+G^2)*R-g*sin(F))/((P-F)*R-L0)";
 Ketcindyjsfigure=1;
 Ketcindyjsscale=1.5;
+eqG="-((2*G*Q-2*G*G+G^2)*R-g*sin(F))/((P-F)*R-L0)";
+eqQ="((m1*G^2*P-m1*F*G^2)*R^2+((-g*m1*cos(F))-L0*m1*G^2+g*m2)*R)/((m2+m1)*R^2+I0)";
 
 eqP="Q";
 eqF="G";
@@ -2850,7 +2796,7 @@ mf(s):=(
  psi=vL_tmp_2;
  phi=vL_tmp_4;
  p1=R*[cos(phi),sin(phi)];
- p2=p1+(L0+R*phi)*[sin(phi),-cos(phi)];
+ p2=p1+(L0+R*(phi-psi))*[sin(phi),-cos(phi)];
  p3=R*[cos(psi),sin(psi)];
  q1=R*[-1,0];
  q2=q1+[0,-L0-R*psi];
