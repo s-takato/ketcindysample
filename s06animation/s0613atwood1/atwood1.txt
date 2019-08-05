@@ -1,69 +1,3 @@
-//ketlib
-use("KetCindyPlugin");
-Dircdy=loaddirectory;
-setdirectory(plugindirectory);
-import("ketcindy.ini");
-
-// P:Psi, Q:d/dt(Psi), F:Phi, G:d/dt(Phi)
-Ketinit(); //no ketjs on
-lg="1/2*m1*(L0+R*(F-P))^2*G^2+1/2*(I0+(m1+m2)*R^2)*Q^2";
-lg=lg+"-m1*g*(R*sin(F)-(L0+R*(F-P))*cos(F))+m2*g*R*P";
-cmdL=[
- "Lg:"+lg,[],
- "dLdQ:diff(Lg,Q)",[],
- "dLdP:diff(Lg,P)",[],
- "dLdG:diff(Lg,G)",[],
- "dLdF:diff(Lg,F)",[],
- "dLdQ::dLdP::dLdG::dLdF",[]
-];
-CalcbyM("out",cmdL);
-
-rep=["P","P(t)","Q","Q(t)","F","F(t)","G","G(t)"];
-tmp=["'diff(P(t),t,1)","Q","'diff(F(t),t,1)","G"];
-repr=concat(tmp,reverse(rep));
-lP=Assign(out_1,rep);
-rP=Assign(out_2,rep);
-cmdL=[
- "leq:diff",[lP,"t"],
- "req:"+rP,[],
- "ans:solve(leq=req,diff(Q(t),t))",[],
- "ans:rat(ans,R)",[],
- "eqQ:rat(rhs(ans[1]),R)",[],
- "eqQ",[]
-];
-CalcbyM("eqQ",cmdL);
-eqQ=Assign(eqQ,repr);
-//eqQ="R/(I0+(m1+m2)*R^2)*(g*(m2-m1*cos(F))-m1*(L0+R*(F-P))*G^2)";
-
-lF=Assign(out_3,rep);
-rF=Assign(out_4,rep);
-cmdL=[
- "leq:diff",[lF,"t"],
- "req:"+rF,[],
- "ans:solve(leq=req,diff(G(t),t))",[],
- "eqG:rat(rhs(ans[1]),R)",[],
- "eqG",[]
-];
-CalcbyM("eqG",cmdL);
-eqG=Assign(eqG,repr);
-//eqG="1/(L0+R*(F-P))*(2*R*Q*G-g*sin(F)-R*G^2)";
-
-Ketcindyjsdata(["eqQ",eqQ,"eqG",eqG]);
-//no ketjs off
-
-eqP="Q";
-eqF="G";
-
-eq="[P,Q,F,G]'="+text([eqP,eqQ,eqF,eqG]);
-repnm=["R","I0","m1","m2","g","L0"];
-repva=[1,0.05,1,1.05,9.8,4];
-rep=apply(1..(length(repnm)),[repnm_#,repva_#]);
-rep=flatten(rep);
-eqn=Assign(eq,rep);
-vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,0.6],600);
-
-
-//figures
 Ketinit();
 
 Setketcindyjs(["Size=1.5","No=all","Fig=y"]);//no ketjs
@@ -71,6 +5,64 @@ Setax(["a"]);
 Setwindow([-4,4],[-7,2]);
 
 Setplaybuttons(-1.5,-6.5,14);//no ketjs
+
+if(!islist(vL), // no ketjs on
+ // P:Psi, Q:d/dt(Psi), F:Phi, G:d/dt(Phi)
+ //Ketinit(); //no ketjs on
+ lg="1/2*m1*(L0+R*(F-P))^2*G^2+1/2*(I0+(m1+m2)*R^2)*Q^2";
+ lg=lg+"-m1*g*(R*sin(F)-(L0+R*(F-P))*cos(F))+m2*g*R*P";
+ cmdL=[
+  "Lg:"+lg,[],
+  "dLdQ:diff(Lg,Q)",[],
+  "dLdP:diff(Lg,P)",[],
+  "dLdG:diff(Lg,G)",[],
+  "dLdF:diff(Lg,F)",[],
+  "dLdQ::dLdP::dLdG::dLdF",[]
+ ];
+ CalcbyM("out",cmdL);
+
+ rep=["P","P(t)","Q","Q(t)","F","F(t)","G","G(t)"];
+ tmp=["'diff(P(t),t,1)","Q","'diff(F(t),t,1)","G"];
+ repr=concat(tmp,reverse(rep));
+ lP=Assign(out_1,rep);
+ rP=Assign(out_2,rep);
+ cmdL=[
+  "leq:diff",[lP,"t"],
+  "req:"+rP,[],
+  "ans:solve(leq=req,diff(Q(t),t))",[],
+  "ans:rat(ans,R)",[],
+  "eqQ:rat(rhs(ans[1]),R)",[],
+  "eqQ",[]
+ ];
+ CalcbyM("eqQ",cmdL);
+ eqQ=Assign(eqQ,repr);
+ //eqQ="R/(I0+(m1+m2)*R^2)*(g*(m2-m1*cos(F))-m1*(L0+R*(F-P))*G^2)";
+
+ lF=Assign(out_3,rep);
+ rF=Assign(out_4,rep);
+ cmdL=[
+  "leq:diff",[lF,"t"],
+  "req:"+rF,[],
+  "ans:solve(leq=req,diff(G(t),t))",[],
+  "eqG:rat(rhs(ans[1]),R)",[],
+  "eqG",[]
+ ];
+ CalcbyM("eqG",cmdL);
+ eqG=Assign(eqG,repr);
+ //eqG="1/(L0+R*(F-P))*(2*R*Q*G-g*sin(F)-R*G^2)";
+ Ketcindyjsdata(["eqQ",eqQ,"eqG",eqG]);
+
+ eqP="Q";
+ eqF="G";
+ eq="[P,Q,F,G]'="+text([eqP,eqQ,eqF,eqG]);
+ repnm=["R","I0","m1","m2","g","L0"];
+ repva=[1,0.05,1,1.05,9.8,4];
+ rep=apply(1..(length(repnm)),[repnm_#,repva_#]);
+ rep=flatten(rep);
+ eqn=Assign(eq,rep);
+ vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,0.6],600);
+);// no ketjs off
+Ketcindyjsdata(["vL",vL]);//no ketjs
 
 pt0=[0,0];
 R=1;
