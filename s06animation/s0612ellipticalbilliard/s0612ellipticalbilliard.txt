@@ -1,4 +1,9 @@
 //ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
 Initglist();
 
 aa=4; bb=3;
@@ -8,18 +13,10 @@ Implicitplot("1",fun,"x=[-5,5]","y=[-5,5]");
 
 Setglist();
 
-//figures
-Ketinit();
-Addglist();
-Setketcindyjs(["Nolabel=all","Figure=y","Axes=false"]);//no ketjs
-Setwindow([-5,5],[-5.5,5]);
-Slider("T",[0.1,-4],[5,-4]);
-
-Movetojs(Text71,[-3,-5],16);//no ketjs on
-Movetojs(Text73,[-1.7,-5],16);
-Movetojs(Text74,[0,-5],16);
-Movetojs(Text72,[1.2,-5],16);
-Movetojs(Text61,[3,-5],16);//no ketjs off
+Setplaybuttons(-3,-5,16);//no ketjs on
+Movetojs(Text60,[3,-5],16);
+Movetojs(Text61,[0.2,4.5],15);
+Movetojs(Text62,[0.2,3.6],15);//no ketjs off
 
 cmdL=[ //no ketjs on
  "line:[x0+u1*t,y0+v1*t]",[],
@@ -54,6 +51,13 @@ if(1==0,
 
 Ketcindyjsdata(["ans",ans]);//no ketjs
 
+//figures
+Ketinit();
+Addglist();
+Setketcindyjs(["Size=1.5","Nolabel=all","Figure=y","Axes=n"]);//no ketjs
+Setwindow([-5,5],[-5.5,5]);
+Slider("T",[0.1,-4],[5,-4]);
+
 Addax(0);
 
 A.y=0;
@@ -63,9 +67,19 @@ fun=Assign("[a*cos(t),b*sin(t)]",["a",aa,"b",bb]);
 Drwxy();
 Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
-Circledata("1",[A,0.75],["nodisp"]);
-Putoncurve("B","cr1");
-Arrowdata("1",[A,B],["dr,2","Color=red","border->false"]);
+
+str1="vx=-1"; //no ketjs
+str2="vy=1";
+//str1=Textedit(61);// only ketjs
+//str2=Textedit(62);// only ketjs
+tmp=Strsplit(str1,"=");
+if(length(tmp_2)==0,str1=str1+"-1");
+tmp=Strsplit(str2,"=");
+if(length(tmp_2)==0,str2=str2+"-1");
+parse(str1+";"+str2+";");
+vec=[vx,vy];
+vec=vec/|vec|;
+Arrowdata("1",[A,A+vec],["dr,2","Color=red","border->false"]);
 
 Getvalue(n,rep):=(
   regional(tmp);
@@ -77,7 +91,7 @@ mf(tt):=(
  regional(pL,tr,t1,x0,y0,x1,y1,u1,v1,
    rep0,rep,rep2,flg,tmp);
  x0=A.x; y0=0;
- u1=B.x-A.x;v1=B.y-A.y;
+ u1=vec_1;v1=vec_2;
  pL=[[x0,y0]];
  rep0=["a",aa,"b",bb];
  flg=0;
@@ -112,7 +126,7 @@ mf(tt):=(
  );
 );
 
-tt=Animationparam(0,4*T.x,[0,600]);
+tt=Animationparam(0,4*T.x,[0,6000]);
 mf(tt);
 
 Windispg();
