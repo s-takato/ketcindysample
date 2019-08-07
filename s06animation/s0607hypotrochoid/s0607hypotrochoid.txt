@@ -12,11 +12,29 @@ Setwindow([-6,6],[-6,6]);
 Slider("S",[0,YMIN-0.2],[2*pi,YMIN-0.2]);
 Movetojs(60,[0.2,6.5],16);//no ketjs
 
+Move(pdata,t):=(
+ regional(Kj,Nj,pt,qt,out,outj,tmp,tmp1);
+ out=[];
+ forall(pdata,Kj,
+   Nj=parse(Kj);
+   outj=[];
+   forall(Nj,pt,
+    qt=Rotatepoint(pt,-rad*t/rs,pB);
+    tmp=(rad-rs)*[cos(t),sin(t)];
+    qt=Translatepoint(qt,tmp-pB);
+    qt=Rotatepoint(qt,t,tmp);
+    outj=append(outj,qt);
+   );
+   out=append(out,outj);
+ );
+ out;
+);
+
 str="rs="+text(rsorg);
 //str=Textedit(60);//only ketjs
 tmp=Strsplit(str,"=");
 if(length(tmp_2)>0,
-  rs=parse(tmp_2+";");
+  parse(str+";");
 ,
   rs=rsorg;
 );
@@ -33,7 +51,6 @@ Circledata("0",[pC,rad],[]);
 Circledata("1",[pB,rs],["nodisp"]);
 Pointdata("1",[A],["nodisp","Size=3"]);
 ad1=["pt1","cr1"];
-
 ds=2*pi/50;
 Slist=apply(0..100,#*ds);
 
@@ -46,10 +63,7 @@ mf(s):=(
   sL=append(sL,s);
   forall(1..(length(sL)),
     t=sL_#;
-    tmp=rad*[cos(t),sin(t)];
-    Rotatedata("2",ad1,-rad*t,[pB,"nodisp","Msg=n"]);
-    Translatedata("2","rt2",tmp-[rad,0],["nodisp","Msg=n"]);
-    Rotatedata(3,"tr2",t,[tmp,"nodisp","Msg=n"]);
+    rt3=Move(ad1);
     op1=["Size=3","Color=red","Msg=n"];
     op2=["Msg=n"];
     Drawfigures("1",rt3,[op1,op2],["Msg=n"]);
