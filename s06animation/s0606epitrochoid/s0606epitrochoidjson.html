@@ -180,19 +180,6 @@ Textformat(value,dig):=(
   );
   tmp1;
 );
-Setax(arglist):=(
-  regional(st,nn,tmp); //181215from
-  st=1; nn=1;
-  if(isreal(arglist_1),
-    st=2;
-    nn=arglist_1;
-  );
-  forall(st..(length(arglist)),
-    tmp=arglist_#;
-    if(length(tmp)>0,AXSTYLE_nn=tmp);
-    nn=nn+1;
-  ); //181215from
-);
 Slider(ptstr,p1,p2):=Slider(ptstr,p1,p2,[]);
 Slider(ptstr,p1,p2,options):=(//190120
   regional(pA,pB,pC,seg,sname,Alpha,color,size,tmp,tmp1);
@@ -806,6 +793,26 @@ LLcrd(pt):=(
   tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
   tmp;
 );
+Translatepoint(point,mov):=(
+  regional(X1,X2,Y1,Y2,Cx,Cy,tmp);
+  tmp=Lcrd(point);
+  X1=tmp_1; Y1=tmp_2;
+  tmp=Lcrd(mov);
+  Cx=tmp_1; Cy=tmp_2;
+  X2=X1+Cx;
+  Y2=Y1+Cy; 
+  [X2,Y2];
+);
+Rotatepoint(point,Theta,ctr):=(
+  regional(X1,X2,Y1,Y2,Cx,Cy,tmp);
+  tmp=Lcrd(point);
+  X1=tmp_1; Y1=tmp_2;
+  tmp=Lcrd(ctr);
+  Cx=tmp_1; Cy=tmp_2;
+  X2=Cx+(X1-Cx)*cos(Theta)-(Y1-Cy)*sin(Theta);
+  Y2=Cy+(X1-Cx)*sin(Theta)+(Y1-Cy)*cos(Theta); 
+  [X2,Y2];
+);
 Textedit(no):=(
   regional(tmp,tmp1,tmp2);
   tmp="Text"+text(no)+".currenttext";
@@ -1032,148 +1039,6 @@ Lineplot(Arg1,Arg2):=(
   );
 );
 Lineplot(list):=Lineplot(list,[]);
-Translatedata(nm,plist,mov):=Translatedata(nm,plist,mov,[]);
-Translatedata(nm,plist,mov,optionorg):=(
-  regional(options,tmp,tmp1,tmp2,pdata,Cx,Cy,PdL,Nj,Njj,Kj,eqL,
-           opcindy,X2,Y2,Ltype,Noflg,name,color,leveL,msgflg);
-  name="tr"+nm;
-  options=optionorg; //190425
-  tmp=Divoptions(options);
-  Ltype=tmp_1;
-  Noflg=tmp_2;
-  eqL=tmp_5; //190424
-  color=tmp_(length(tmp)-2);
-  opcindy=tmp_(length(tmp));
-  msgflg="Y"; //190425from
-  forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    if(tmp1=="M",
-      msgflg=Toupper(substring(tmp_2,0,1));
-      options=remove(options,[#]);
-    );
-  ); //190425to
-  pdata=plist;
-  if(isstring(pdata),pdata=[pdata]);
-  if(!isstring(pdata_1) & Measuredepth(pdata)==1,
-      pdata=[pdata];
-  );
-  tmp=Lcrd(mov);
-  Cx=tmp_1; Cy=tmp_2;
-  PdL=[];
-  forall(pdata,Njj,
-    if(isstring(Njj),Kj=parse(Njj),Kj=Njj);
-    if(Measuredepth(Kj)==1,Kj=[Kj]);
-    tmp2=[];
-    forall(Kj,Nj,
-      tmp1=[];
-      forall(Nj,
-        tmp=LLcrd(#);
-        X2=tmp_1+Cx;         
-        Y2=tmp_2+Cy;    
-        tmp1=concat(tmp1,[[X2,Y2]]);
-      );
-      tmp2=concat(tmp2,[tmp1]);
-    );
-    PdL=concat(PdL,tmp2);
-  );
-  if(Noflg<3,
-    if(msgflg=="Y", //190425
-      println("generate Translatedata "+name);
-    );
-    tmp1=[];
-    forall(PdL,tmp2,
-      tmp=apply(tmp2,Pcrd(#));
-      tmp1=append(tmp1,tmp);
-    );
-    if(length(tmp1)==1,tmp1=tmp1_1);
-    tmp=name+"="+Textformat(tmp1,5)+";"; //190415
-    parse(tmp);
-  );
-  if(Noflg<2,
-    if(isstring(Ltype),
-      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
-    ,
-      if(Noflg==1,Ltype=0);
-    );
-    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
-  );
-  PdL;
-);
-Rotatedata(nm,plist,Theta):=Rotatedata(nm,plist,Theta,[]);
-Rotatedata(nm,plist,angle,optionorg):=(
-  regional(tmp,tmp1,tmp2,pdata,Theta,Pt,Cx,Cy,PdLL,PdL,options,
-    opcindy,eqL,msgflg,Nj,Njj,Kj,Mj,X1,Y1,X2,Y2,Ltype,Noflg,name,color);
-  name="rt"+nm;
-  options=optionorg;
-  Pt=[0,0];
-  tmp=Divoptions(options);
-  Ltype=tmp_1;
-  Noflg=tmp_2;
-  eqL=tmp_5;
-  color=tmp_(length(tmp)-2);
-  opcindy=tmp_(length(tmp));
-  tmp1=tmp_6;
-  if(length(tmp1)>0,Pt=Lcrd(tmp1_1));
-  msgflg="Y"; //190425from
-  forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    if(tmp1=="M",
-      msgflg=Toupper(substring(tmp_2,0,1));
-      options=remove(options,[#]);
-    );
-  ); //190425to
-  pdata=plist;
-  if(isstring(pdata),pdata=[pdata]);
-  if(!isstring(pdata_1) & Measuredepth(pdata)==1,
-      pdata=[pdata];
-  );
-  if(isstring(angle),Theta=parse(angle),Theta=angle);
-  Cx=Pt_1; Cy=Pt_2;
-  PdL=[];
-  forall(pdata,Njj,
-    if(isstring(Njj),Kj=parse(Njj),Kj=Njj);
-    if(Measuredepth(Kj)==0,Kj=[Kj]); //17.11.24
-    if(Measuredepth(Kj)==1,Kj=[Kj]);
-    tmp2=[];
-    forall(Kj,Nj,
-      tmp1=[];
-      forall(Nj,
-        tmp=LLcrd(#);
-        X1=tmp_1;         
-        Y1=tmp_2;    
-        X2=Cx+(X1-Cx)*cos(Theta)-(Y1-Cy)*sin(Theta);
-        Y2=Cy+(X1-Cx)*sin(Theta)+(Y1-Cy)*cos(Theta); 
-        tmp1=concat(tmp1,[[X2,Y2]]);
-      );
-      tmp2=concat(tmp2,[tmp1]);
-    );
-    PdL=concat(PdL,tmp2);
-  );
-  if(Noflg<3,
-    if(msgflg=="Y",
-      println("generate Rotatedata "+name);
-    );
-    tmp1=[];
-    forall(PdL,tmp2,
-      tmp=apply(tmp2,Pcrd(#));
-      tmp1=append(tmp1,tmp);
-    );
-    if(length(tmp1)==1,tmp1=tmp1_1);
-    tmp=name+"="+Textformat(tmp1,5)+";"; //190415
-    parse(tmp);
-  );
-  if(Noflg<2,
-    if(isstring(Ltype),
-      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
-    ,
-      if(Noflg==1,Ltype=0);
-    );
-    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
-  );
-  PdL;
-);
 Drawfigures(nm,figlist):=Drawfigures(nm,figlist,[]);
 Drawfigures(nm,figlist,optionlist):=Drawfigures(nm,figlist,optionlist,[]);
 Drawfigures(nm,figlistorg,optionlistorg,commonops):=(
@@ -1746,15 +1611,32 @@ Ketinit();
 Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nolabel=all","Color=white"]);
 Setwindow([-6,6],[-6,6]);
-Setax(["","","sw","","sw"]);
 
 Slider("S",[0,YMIN-0.2],[2*pi,YMIN-0.2]);
+
+Move(pdata,t):=(
+ regional(Kj,Nj,pt,qt,out,outj,tmp,tmp1);
+ out=[];
+ forall(pdata,Kj,
+   Nj=parse(Kj);
+   outj=[];
+   forall(Nj,pt,
+    qt=Rotatepoint(pt,rad*t/rs,pB);
+    tmp=(rad+rs)*[cos(t),sin(t)];
+    qt=Translatepoint(qt,tmp-pB);
+    qt=Rotatepoint(qt,t,tmp);
+    outj=append(outj,qt);
+   );
+   out=append(out,outj);
+ );
+ out;
+);
 
 str="rs="+text(rsorg);
 str=Textedit(60);//
 tmp=Strsplit(str,"=");
 if(length(tmp_2)>0,
-  rs=parse(tmp_2+";");
+  parse(str+";");
 ,
   rs=rsorg;
 );
@@ -1784,10 +1666,7 @@ mf(s):=(
   sL=append(sL,s);
   forall(1..(length(sL)),
     t=sL_#;
-    tmp=rad*[cos(t),sin(t)];
-    Rotatedata("2",ad1,rad*t,[pB,"nodisp","Msg=n"]);
-    Translatedata("2","rt2",tmp-[rad,0],["nodisp","Msg=n"]);
-    Rotatedata(3,"tr2",t,[tmp,"nodisp","Msg=n"]);
+    rt3=Move(ad1,t);
     op1=["Size=3","Color=red","Msg=n"];
     op2=["Msg=n"];
     Drawfigures("1",rt3,[op1,op2],["Msg=n"]);
@@ -1800,8 +1679,6 @@ mf(s):=(
   );
 );
 
-Setpara("epitrochoid","mf(s)","s=[0,2*pi]",["Div=32"],
- ["Frate=10","Scale=1","OpA=","Mag=1200"]);
 
 ss=Animationparam(S.x,1,[0,40]);
 mf(ss);
@@ -1837,7 +1714,7 @@ var cdy = CindyJS({
     id: "CSCanvas",
     width: 765,
     height: 608,
-    transform: [{visibleRect: [-9.871356630968553, 7.9810137479188805, 10.308771830118559, -8.057572009389569]}],
+    transform: [{visibleRect: [-9.223719678969829, 7.234702360978507, 9.201506636819644, -7.409137639021493]}],
     axes: true,
     grid: 1.0,
     snap: true,

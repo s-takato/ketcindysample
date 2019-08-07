@@ -63,7 +63,7 @@ mf(s):=(
   sL=append(sL,s);
   forall(1..(length(sL)),
     t=sL_#;
-    rt3=Move(ad1);
+    rt3=Move(ad1,t);
     op1=["Size=3","Color=red","Msg=n"];
     op2=["Msg=n"];
     Drawfigures("1",rt3,[op1,op2],["Msg=n"]);
@@ -76,7 +76,7 @@ mf(s):=(
   );
 );
 
-Setpara("epitrochoid","mf(s)","s=[0,2*pi]",["Div=32"], //no ketjs
+Setpara("hypotrochoid","mf(s)","s=[0,2*pi]",["Div=32"], //no ketjs
  ["Frate=10","Scale=1","OpA=","Mag=1200"]); //no ketjs
 
 ss=Animationparam(S.x,1,[0,40]);
