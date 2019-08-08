@@ -2710,7 +2710,7 @@ vL=[[0,0,0,0,0.6],[0.1,-0.00222,-0.04387,0.05929,0.5834],[0.2,-0.00858,-0.08181,
 Ketinit();
 
 Setax(["a"]);
-Setwindow([-4,4],[-7,2]);
+Setwindow([-6,6],[-7,2]);
 
 
 
@@ -2762,8 +2762,8 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "SW", type: "Free", pos: [-2.2857142857142856, -4.0, 0.5714285714285714], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [4.0, 2.0, 1.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "SW", type: "Free", pos: [-3.4285714285714284, -4.0, 0.5714285714285714], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "NE", type: "Free", pos: [4.0, 1.3333333333333333, 0.6666666666666666], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 21, pos: [-1.5,-6.5,1]},
     {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 21, pos: [-0.32,-6.5,1]},
     {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 21, pos: [1.16,-6.5,1]},
@@ -2771,9 +2771,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 459,
+    width: 663,
     height: 510,
-    transform: [{visibleRect: [-4.5,2.5,4.5,-7.5]}],
+    transform: [{visibleRect: [-6.5,2.5,6.5,-7.5]}],
     grid: 1.0,
     snap: true,
     background: "rgb(212,212,212)"
