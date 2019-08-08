@@ -1,0 +1,11 @@
+writefile("/ketcindysample.git/s06animation/s0613atwood1/fig/atwood1beqG.txt")$/*##*/
+powerdisp:false$/*##*/
+display2d:false$/*##*/
+linel:1000$/*##*/
+leq:diff(G(t)*((F(t)-P(t))*R+L0)^2*m1,t)$/*##*/
+req:G(t)^2*R*((F(t)-P(t))*R+L0)*m1-sin(F(t))*((F(t)-P(t))*R+L0)*g*m1$/*##*/
+ans:solve(leq=req,diff(G(t),t))$/*##*/
+eqG:rat(rhs(ans[1]),R)$/*##*/
+disp(eqG)$/*##*/
+closefile()$/*##*/
+quit()$/*##*/

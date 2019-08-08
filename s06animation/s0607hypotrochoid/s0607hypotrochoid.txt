@@ -1,16 +1,16 @@
 //ketlib
-pL=[];
 rsorg=1;
 
 //figures
 Ketinit();
 //Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=white"]);
+Setketcindyjs(["No=all","Col=white","Fig=y","Ax=n"]);
 Setwindow([-6,6],[-6,6]);
 //Setax(["","","sw","","sw"]);
 
-Slider("S",[0,YMIN-0.2],[2*pi,YMIN-0.2]);
-Movetojs(60,[0.2,6.5],16);//no ketjs
+//Slider("S",[0,YMIN-0.2],[2*pi,YMIN-0.2]);
+Movetojs(60,[0.2,5.5],16);//no ketjs
+Setplaybuttons([-3,-5.5],15,[1]);// no ketjs
 
 Move(pdata,t):=(
  regional(Kj,Nj,pt,qt,out,outj,tmp,tmp1);
@@ -52,26 +52,22 @@ Circledata("1",[pB,rs],["nodisp"]);
 Pointdata("1",[A],["nodisp","Size=3"]);
 ad1=["pt1","cr1"];
 ds=2*pi/50;
-Slist=apply(0..100,#*ds);
+Slist=apply(0..150,#*ds);
+pL=[];
+forall(Slist,
+  tmp=Move(["pt1"],#);
+  pL=append(pL,[#,tmp_1_1]);
+);
 
 mf(s):=(
-  regional(t,nn,tmp,t,sL,op1,op2);
-  pL=select(pL,#_1<s);
-  if(length(pL)==0,pL=[[0,A.xy]]);
-  se=pL_(length(pL))_1;
-  sL=select(Slist,(se<#)&(#<=s));
-  sL=append(sL,s);
-  forall(1..(length(sL)),
-    t=sL_#;
-    rt3=Move(ad1,t);
-    op1=["Size=3","Color=red","Msg=n"];
-    op2=["Msg=n"];
-    Drawfigures("1",rt3,[op1,op2],["Msg=n"]);
-    pL=select(pL,#_1!=t);
-    pL=append(pL,[t,rt3_1_1]);
-  );
-  if(length(pL)>1,
-    tmp=apply(pL,#_2);
+  regional(dts,tmp,op1,op2);
+  dts=Move(ad1,s);
+  op1=["Size=3","Color=red","Msg=n"];
+  op2=["Msg=n"];
+  Drawfigures("1",dts,[op1,op2],["Msg=n"]);
+  tmp=select(pL,#_1<=s);
+  tmp=apply(tmp,#_2);
+  if(length(tmp)>0,
     Listplot("5",tmp,["do","Msg=n"]);
   );
 );
@@ -79,7 +75,7 @@ mf(s):=(
 Setpara("hypotrochoid","mf(s)","s=[0,2*pi]",["Div=32"], //no ketjs
  ["Frate=10","Scale=1","OpA=","Mag=1200"]); //no ketjs
 
-ss=Animationparam(S.x,1,[0,40]);
+ss=Animationparam(0,1,[0,6*pi]);
 mf(ss);
 
 Windispg();
