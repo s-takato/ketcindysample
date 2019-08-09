@@ -571,9 +571,9 @@ Colorname2rgb(name):=( //181212
     ["olivegreen",[0.64,0,0.95,0.4]],["rawsienna",[0,0.72,1,0.45]],
     ["sepia",[0,0.83,1,0.7]],["brown",[0,0.81,1,0.6]],
     ["tan",[0.14,0.42,0.56,0]],["gray",[0,0,0,0.5]],
-    ["lightgray",[0,0,0,0.17]], //190429
+    ["lightgray",[0,0,0,0.15]], //190429,0809
     ["cindycolor",[0.66,0,69,0.71]], //190504
-    ["black",[0,0,0,1]],["white",[0,0,0,0]]
+    ["black",[0,0,0,1]],["white",[0,0,0,0]],["offwhite",[0,0,0,0.03]] //190809
   ];
   tmp=select(dL,#_1==name);
   if(length(tmp)>0,
@@ -2789,17 +2789,23 @@ forall(tmp1,
     );
   );
 );
+str="dphi=0.6";
+str=Textedit(61);//
+tmp=Strsplit(str,"=");
+if(length(tmp_2)>0,
+  parse(str+";");
+);
 
 
  eqP="Q";
  eqF="G";
  eq="[P,Q,F,G]'="+text([eqP,eqQ,eqF,eqG]);
  repnm=["R","I0","m1","m2","g","L0"];
- repva=[1,I0,m1,m2,9.8,L0];
+ repva=[R,I0,m1,m2,9.8,L0];
  rep=apply(1..(length(repnm)),[repnm_#,repva_#]);
  rep=flatten(rep);
  eqn=Assign(eq,rep);
- vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,0.6],600);
+ vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,dphi],600);
 
 
 pt0=[0,0];
@@ -2826,7 +2832,7 @@ mf(s):=(
  Listplot("3",[pt0,p3],["dr,2","Color=blue"]);
  Partcrv("1",p1,q1,"cr1",["dr,2"]);
  Pointdata("1",[p2,q2],["Size=8","Color=red"]);
- Expr([-5,1.5],"e","t="+Sprintf(s,2),["Size=1.5"]);
+ Expr([0.5,1.5],"e","t="+Sprintf(s,2),["Size=1.5"]);
 );
 
 ss=Animationparam(0,1,[0,60]);
@@ -2850,11 +2856,12 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [-3.4285714285714284, -4.0, 0.5714285714285714], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 1.3333333333333333, 0.6666666666666666], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "Text60", type: "EditableText", pos: [0.2,1.5,1], color: [0.0, 0.0, 0.0], text: "L0=4;m1=1;m2=1.05", textsize: 23},
-    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 21, pos: [-1.5,-6.5,1]},
-    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 21, pos: [-0.22,-6.5,1]},
-    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 21, pos: [1.36,-6.5,1]},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 21, pos: [2.52,-6.5,1]}
+    {name: "Text61", type: "EditableText", pos: [-6,-6.3,1], color: [0.0, 0.0, 0.0], text: "dphi=0.6", textsize: 23},
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 21, pos: [0.2,-6.5,1]},
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 21, pos: [1.48,-6.5,1]},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 21, pos: [3.06,-6.5,1]},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 21, pos: [4.22,-6.5,1]},
+    {name: "Text60", type: "EditableText", pos: [-6,-5.5,1], color: [0.0, 0.0, 0.0], text: "L0=4;m1=1;m2=1.05", textsize: 23}
   ],
   ports: [{
     id: "CSCanvas",
@@ -2863,7 +2870,7 @@ var cdy = CindyJS({
     transform: [{visibleRect: [-6.5,2.5,6.5,-7.5]}],
     grid: 1.0,
     snap: true,
-    background: "rgb(212,212,212)"
+    background: "rgb(247,247,247)"
   }],
   csconsole: false,
   cinderella: {build: 1901, version: [2, 9, 1901]}

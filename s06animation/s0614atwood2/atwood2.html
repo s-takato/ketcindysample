@@ -33,12 +33,13 @@ import("ketcindy.ini");
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 
-Setketcindyjs(["Siz=1.5","No=all","Fig=y","Ax=n"]);//no ketjs
+Setketcindyjs(["Siz=1.5","No=all","Fig=y","Ax=n","Col=offwhite"]);//no ketjs
 Setax(["a"]);
 Setwindow([-6,6],[-7,2]);
 
-Setplaybuttons([-1.5,-6.5],14,[1]);//no ketjs
-Movetojs(60,[0.2,1.5],15);// no ketjs
+Setplaybuttons([0.2,-6.5],14,[1]);//no ketjs on
+Movetojs(60,[-6,-5.5],15);
+Movetojs(61,[-6,-6.3],15);// no ketjs off
 
 R=1; I0=0.05; m1=1; m2=1.05; L0=4;
 str="L0=4;m1=1;m2=1.05";
@@ -51,6 +52,12 @@ forall(tmp1,
       parse(#+";");
     );
   );
+);
+str="dphi=0.6";
+//str=Textedit(61);//only ketjs
+tmp=Strsplit(str,"=");
+if(length(tmp_2)>0,
+  parse(str+";");
 );
 
 if(!islist(vL),//no ketjs on
@@ -101,11 +108,11 @@ if(!islist(vL),//no ketjs on
  eqF="G";
  eq="[P,Q,F,G]'="+text([eqP,eqQ,eqF,eqG]);
  repnm=["R","I0","m1","m2","g","L0"];
- repva=[1,I0,m1,m2,9.8,L0];
+ repva=[R,I0,m1,m2,9.8,L0];
  rep=apply(1..(length(repnm)),[repnm_#,repva_#]);
  rep=flatten(rep);
  eqn=Assign(eq,rep);
- vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,0.6],600);
+ vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,dphi],600);
 );// no ketjs off
 
 Ketcindyjsdata(["vL",vL]);//no ketjs
@@ -134,7 +141,7 @@ mf(s):=(
  Listplot("3",[pt0,p3],["dr,2","Color=blue"]);
  Partcrv("1",p1,q1,"cr1",["dr,2"]);
  Pointdata("1",[p2,q2],["Size=8","Color=red"]);
- Expr([-5,1.5],"e","t="+Sprintf(s,2),["Size=1.5"]);
+ Expr([0.5,1.5],"e","t="+Sprintf(s,2),["Size=1.5"]);
 );
 
 ss=Animationparam(0,1,[0,60]);
@@ -157,7 +164,7 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [-3.4285714285714284, -4.0, 0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: true},
     {name: "NE", type: "Free", pos: [4.0, 1.3333333333333333, 0.6666666666666666], color: [1.0, 0.0, 0.0], labeled: true},
-    {name: "Text60", type: "Evaluate", pos: [-0.7878787878787878, -4.0, -2.6690380266262514], color: [0.0, 0.0, 0.0], text: "L0=4;m1=1;m2=1.05", textsize: 15.0},
+    {name: "Text61", type: "Evaluate", pos: [-3.532075471698113, -4.0, 0.6469221341750132], color: [0.0, 0.0, 0.0], text: "dphi=0.6", textsize: 15.0},
     {name: "Text1", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.286, 0.286], fillalpha: 0.27272728085517883, script: "Viewtex();\nkc();", text: "Figure", textsize: 18.0, dock: {corner: "UL", offset: [10.0, -20.0]}},
     {name: "Text2", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "if(length(Shellparent)>0,\n  Makeshell(),Makebat();\n);\nif(indexof(Libname,\"sci\")>0,\n  writetosci(2),writetoRS(2)\n);\nkc();", text: "Parent", textsize: 18.0, dock: {corner: "UL", offset: [77.0, -20.0]}},
     {name: "Text3", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.929, 0.6], fillalpha: 0.48717948717948717, script: "Parafolder();", text: "ParaF", textsize: 18.0, dock: {corner: "UL", offset: [291.0, -20.0]}},
@@ -168,7 +175,8 @@ var cdy = CindyJS({
     {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 14.0, dock: {corner: "LL", offset: [310.0, 21.0]}},
     {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 14.0, dock: {corner: "LL", offset: [373.0, 21.0]}},
     {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 14.0, dock: {corner: "LL", offset: [448.0, 21.0]}},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 14.0, dock: {corner: "LL", offset: [508.0, 21.0]}}
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 14.0, dock: {corner: "LL", offset: [508.0, 21.0]}},
+    {name: "Text60", type: "Evaluate", pos: [4.0, 3.882352941176471, -0.7203124603209181], color: [0.0, 0.0, 0.0], text: "L0=4;m1=1;m2=1.05", textsize: 15.0}
   ],
   ports: [{
     id: "CSCanvas",
