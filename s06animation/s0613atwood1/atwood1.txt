@@ -1,6 +1,6 @@
 Ketinit();
 
-Setketcindyjs(["Size=1.5","No=all","Fig=y"]);//no ketjs
+Setketcindyjs(["Size=1.5","No=all","Fig=y","Col=offwhite"]);//no ketjs
 Setax(["a"]);
 Setwindow([-6,6],[-7,2]);
 

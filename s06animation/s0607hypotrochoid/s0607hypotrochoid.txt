@@ -4,7 +4,7 @@ rsorg=1;
 //figures
 Ketinit();
 //Setparent(Cdyname()+"fig");
-Setketcindyjs(["No=all","Col=white","Fig=y","Ax=n"]);
+Setketcindyjs(["No=all","Col=offwhite","Fig=y","Ax=n"]);
 Setwindow([-6,6],[-6,6]);
 //Setax(["","","sw","","sw"]);
 

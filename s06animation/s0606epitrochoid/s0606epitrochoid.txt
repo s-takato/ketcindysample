@@ -4,7 +4,7 @@ rsorg=1;
 
 //figures
 Ketinit();
-Setketcindyjs(["Nolabel=all","Color=white","Fig=y"]);// no ketjs
+Setketcindyjs(["Nolabel=all","Color=offwhite","Fig=y"]);// no ketjs
 Setwindow([-7,7],[-7,7]);
 //Setax(["","","sw","","sw"]);
 

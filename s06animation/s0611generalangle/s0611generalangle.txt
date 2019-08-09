@@ -1,6 +1,6 @@
 Ketinit();
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all"]);//no ketjs
+Setketcindyjs(["No=all","Col=offwhite"]);//no ketjs
 Setwindow([-2.5,2.5],[-2.5,2.5]);
 Fontsize("n");
 
