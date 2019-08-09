@@ -50,13 +50,14 @@ if(1==0,
 ); //no ketjs off
 
 Ketcindyjsdata(["ans",ans]);//no ketjs
+pflg=-1;
 
 //figures
 Ketinit();
 Addglist();
-Setketcindyjs(["Siz=1.5","No=all","Fig=y","Ax=n","Col=offwhite"]);//no ketjs
-Setwindow([-5,5],[-5.5,5]);
-Slider("T",[0.1,-4],[5,-4]);
+Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Color=offwhite"]);//no ketjs
+Setwindow([-6,6],[-5.5,5]);
+Slider("T",[0,-4],[6,-4]);
 
 Addax(0);
 
@@ -68,10 +69,10 @@ Drwxy();
 Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
 
-str1="vx=-1"; //no ketjs
+str1="vx=-1";
 str2="vy=1";
-//str1=Textedit(61);// only ketjs
-//str2=Textedit(62);// only ketjs
+//str1=Textedit(66);// only ketjs
+//str2=Textedit(67);// only ketjs
 tmp=Strsplit(str1,"=");
 if(length(tmp_2)==0,str1=str1+"-1");
 tmp=Strsplit(str2,"=");
@@ -87,12 +88,17 @@ Getvalue(n,rep):=(
   parse(tmp);
 );
 
-mf(tt):=(
- regional(pL,tr,t1,x0,y0,x1,y1,u1,v1,
-   rep0,rep,rep2,flg,tmp);
+if(pflg==-1,
+  Letter([2.5,-5.5],"s","Make",["Size=1.2","Color=red"]);
+);
+
+if(pflg==1,
+ Letter([2.5,-5.5],"s","Make",["Size=1.2","Color=offwhite"]);
+ Letter([2.5,-5.5],"s","Wait",["Size=1.2","Color=red"]);
+ tt=6000;
  x0=A.x; y0=0;
  u1=vec_1;v1=vec_2;
- pL=[[x0,y0]];
+ pL=[[0,[x0,y0]]];
  rep0=["a",aa,"b",bb];
  flg=0;
  tr=tt;
@@ -107,7 +113,9 @@ mf(tt):=(
   v2=-Getvalue(5,rep);
   tr=tr-t1;
   if(tr>0,
-    pL=append(pL,[x1,y1]);
+    tmp=pL_(length(pL));
+    tmp=tmp_1;
+    pL=append(pL,[tmp+t1,[x1,y1]]);
     x0=x1; y0=y1;
     u1=u2; v1=v2;
   );
@@ -115,18 +123,36 @@ mf(tt):=(
  tr=tr+t1;
  if(tr>0,
    if(flg==0,
-     pL=append(pL,[x0+u1*tr,y0+v1*tr]);
+     pL=append(pL,[tt,[x0+u1*tr,y0+v1*tr]]);
      flg=1;
    ,
-     pL_(length(pL))=[x0+u1*tr,y0+v1*tr];
+     pL_(length(pL))=[tt,[x0+u1*tr,y0+v1*tr]];
    );
  );
- if(length(pL)>1,
-   Listplot("1",pL);
+ Letter([2.5,-5.5],"s","Wait",["Size=1.2","Color=offwhite"]);
+ pflg=0;
+);
+
+
+mf(ss):=(
+ regional(plist,tmp,tmp1,tmp2);
+ if(pflg==0,
+  plist=select(pL,#_1<=ss);
+  tmp=length(plist);
+  tmp1=plist_tmp;
+  if(tmp1_1<ss,
+    tmp2=pL_(tmp+1);
+    tmp=tmp1_2+(tmp2_2-tmp1_2)/(tmp2_1-tmp1_1)*(ss-tmp1_1);
+    plist=append(plist,[ss,tmp]);
+  );
+  plist=apply(plist,#_2);
+  if(length(plist)>1,
+    Listplot("1",plist);
+  );
  );
 );
 
-tt=Animationparam(0,4*T.x,[0,6000]);
-mf(tt);
+ss=Animationparam(0,2^(T.x+1),[0,6000]);
+mf(ss);
 
 Windispg();
