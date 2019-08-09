@@ -13,7 +13,7 @@ pD=[0,0];
 //figures
 Ketinit();
 Setwindow([-1,6],[-6,1]);
-Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n"]);//no ketjs on
+Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Col=offwhite"]);//no ketjs on
 Putpoint("A",[0,0]);
 Putpoint("B",[5,-5]);
 inspect(A,"ptsize",2);
