@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>s0612ellipticalbilliard.cdy</title>
+    <title>s0612ellipticalbilliard2.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -20,8 +20,8 @@
             width: 100%;
         }
     </style>
-    <link rel="stylesheet" href="ketcindyjs/CindyJS.css">
-   <script type="text/javascript" src="ketcindyjs/Cindy.js"></script>
+    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
 
 <script id="csinit" type="text/x-cindyscript">
 Initglist():=(
@@ -535,18 +535,19 @@ Assign(str):=( //190125from
   forall(VLIST,tmp=concat(tmp,[#_1,#_2]));
   Assign(str,tmp);
 ); //190125to
-Assign(funstr,vrL):=(
+Assign(funstr,vrL):=Assign(funstr,vrL,6);
+Assign(funstr,vrL,precise):=( //190811from
   regional(nn,out);
   nn=length(vrL)/2;
   out=funstr;
   forall(1..nn,
-    out=Assign(out,vrL_(2*#-1),vrL_(2*#));
+    out=Assign(out,vrL_(2*#-1),vrL_(2*#),precise);
   );
   out;
 );
-Assign(funstr,varname,rep):=(
+Assign(funstr,varname,rep,precise):=(
   regional(repstr,ii,jj,tmp,tmp1,tmp2,Notvar,Flg);
-  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,6)+")");
+  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,precise)+")"); //190811to
   tmp=[46];  // 12.20
   tmp=concat(tmp,48..57);
   tmp=concat(tmp,65..90);
@@ -1552,6 +1553,148 @@ Paramplot(nm,funstr,variable,options):=(
     );
   );
 );
+Tocindyform(str):=( //190521
+  regional(out,plv,flg,nn,tmp,tmp1);
+  out=str;
+  out=replace(out,"\",""); //190712[4lines]
+  out=replace(out,"   "," ");
+  out=replace(out,"  "," "); 
+  out=replace(out," ","*"); 
+  plv=Bracket(out,"()");
+  flg=0;
+  if(length(plv)==0,
+    flg=4; //190522
+  );
+  if(flg==0,
+    tmp=Indexall(out,"("); //190522from
+    tmp1=Indexall(out,")");
+    if(length(tmp)>length(tmp1),
+      flg=2;
+      out=out+"?+)?";
+    );
+    if(length(tmp)<length(tmp1),
+      flg=3;
+      out=out+"?)-?";
+    );  //190522to
+    forall(1..20,
+      if(flg==0,
+        tmp=Tocindyformpart(out);
+        if(length(tmp)==0,
+          flg=1;
+        ,
+          out=tmp;
+        );
+      );
+    );
+  );
+  if(flg<=1,
+    tmp1=Indexall(out,"^");
+    forall(tmp1,nn,
+      if(substring(out,nn,nn+1)=="(",
+        tmp2=Bracket(substring(out,nn,length(out)),"()");
+        tmp2=select(tmp2,#_2==-1);
+        tmp2=tmp2_1_1+nn;
+        tmp=substring(out,nn+1,tmp2-1);
+        out=substring(out,0,nn)+"{"+tmp+"}";
+        out=out+substring(out,tmp2,length(out));
+      );
+    );
+  );
+  out=replace(out,"{","(");
+  out=replace(out,"}",")");
+  out;
+);
+Tocindyformpart(str):=( //190521
+  regional(plv,funL,repL,flg,flgf,nall,nn,fun,funf,
+      frL,fr,out,tmp,tmp1,tmp2,tmp3,tmp4);
+  repL=[ //190515from
+    ["frac",["","{xx}/{yy}"]],
+    ["log",["log{xx}","log{yy}/log{xx}"]],
+    ["sqrt",["sqrt{xx}","{yy}^(1/{xx})"]], //190522
+    ["pow",["","{xx}^{yy}"]],
+    ["sin",["sin{xx}","{sin{yy}}^{xx}"]], //190522from
+    ["cos",["cos{xx}","{cos{yy}}^{xx}"]],
+    ["tan",["tan{xx}","{tan{yy}}^{xx}"]] //190522to
+  ];
+  funL=apply(repL,substring(#_1,0,2)); //190515to
+  out="";
+  plv=Bracket(str,"()");
+  nall=length(plv);
+  if(nall>0,
+    frL=[];
+    forall(1..nall,nn,
+      tmp1=plv_nn;
+      if(tmp1_2>0,
+        fun="";
+        flgf=0;
+        forall(1..20,
+          if(flgf==0,
+            tmp2=tmp1_1;
+            tmp=substring(str,tmp2-#-1,tmp2-#);
+            if((tmp>="a")&(tmp<="z"),
+              fun=tmp+fun;
+            ,
+              flgf=1;
+            );       
+          );
+        );
+        tmp=substring(fun,0,2); //190515from
+        if(contains(funL,tmp), 
+          tmp=select(repL,substring(#_1,0,2)==tmp);
+          funf=tmp_1_1; //190515to
+          tmp=select(plv,(#_1>tmp1_1)&(#_2==-tmp1_2));
+          tmp=tmp_1_1-1;
+          frL=append(frL,[fun,funf,tmp1_1,tmp,tmp1_2]);
+        );
+      );
+    );
+    if(length(frL)>0,
+      frL=sort(frL,[-#_5]);
+      fr=frL_1;
+      fun=fr_1; funf=fr_2;
+      tmp1=substring(str,fr_3,fr_4);
+      tmp=select(repL,#_1==funf);
+      tmp=tmp_1;
+      tmp2=tmp_2;
+      tmp=Strsplit(tmp1,","); //190515from
+      nn=length(tmp); 
+      if(nn==1,
+        tmp2=Assign(tmp2_1,["xx",tmp_1]);
+      );
+      if(nn==2,
+        tmp2=Assign(tmp2_2,["xx",tmp_1,"yy",tmp_2]);
+      ); //190515to
+      nn=fr_3-length(fun);
+      tmp=substring(str,0,nn-1);
+      out=tmp+tmp2+substring(str,fr_4+1,length(str));
+    ,
+      out="";
+    );
+  );
+  out;
+);
+Bracket(str):=Bracket(str,"()");
+Bracket(str,br):=(
+  regional(ph,pt,out,noL,ncL,nall,level,tmp);
+  ph=substring(br,0,1);
+  pt=substring(br,1,2);
+  noL=Indexall(str,ph);
+  ncL=Indexall(str,pt); // 16.05.22until
+  nall=sort(concat(noL,ncL));
+  level=0;
+  out=[];
+  forall(nall,
+    if(contains(noL,#),
+      level=level+1;
+      tmp=[#,level];
+    ,
+      tmp=[#,-level];
+      level=level-1;
+    );
+    out=append(out,tmp);
+  );
+  out;
+);
 Textedit(no):=(
   regional(tmp,tmp1,tmp2);
   tmp="Text"+text(no)+".currenttext";
@@ -1721,7 +1864,8 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
 );
 Ketcindyjsfigure=1;
 Ketcindyjsscale=1.5;
-ans=["(a*b*sqrt((-u1^2*y0^2)+2*u1*v1*x0*y0-v1^2*x0^2+a^2*v1^2+b^2*u1^2)-a^2*v1*y0-b^2*u1*x0)/(a^2*v1^2+b^2*u1^2)","x0+t*u1","y0+t*v1","-(a^4*u1*y1^2-2*a^2*b^2*v1*x1*y1-b^4*u1*x1^2)/(a^4*y1^2+b^4*x1^2)","(a^4*v1*y1^2+2*a^2*b^2*u1*x1*y1-b^4*v1*x1^2)/(a^4*y1^2+b^4*x1^2)"];
+ans0=["(a*b*sqrt((-u1^2*y1^2)+2*u1*v1*x1*y1-v1^2*x1^2+a^2*v1^2+b^2*u1^2)-a^2*v1*y1-b^2*u1*x1)/(a^2*v1^2+b^2*u1^2)","(u1*(a*b*sqrt((-u1^2*y1^2)+2*u1*v1*x1*y1-v1^2*x1^2+a^2*v1^2+b^2*u1^2)-a^2*v1*y1-b^2*u1*x1))/(a^2*v1^2+b^2*u1^2)+x1","(v1*(a*b*sqrt((-u1^2*y1^2)+2*u1*v1*x1*y1-v1^2*x1^2+a^2*v1^2+b^2*u1^2)-a^2*v1*y1-b^2*u1*x1))/(a^2*v1^2+b^2*u1^2)+y1"];
+ans=["(a^4*u1*y1^2-2*a^2*b^2*v1*x1*y1-b^4*u1*x1^2)/(a^4*y1^2+b^4*x1^2)","-(a^4*v1*y1^2+2*a^2*b^2*u1*x1*y1-b^4*v1*x1^2)/(a^4*y1^2+b^4*x1^2)","((a^5*b*y1^2+a*b^5*x1^2)*sqrt((-a^8*u1^2*y1^6)+(4*a^6*b^2-2*a^8)*u1*v1*x1*y1^5+((((-4*a^4*b^4)+4*a^6*b^2-a^8)*v1^2+(2*a^4*b^4-4*a^6*b^2)*u1^2)*x1^2+a^10*v1^2+a^8*b^2*u1^2)*y1^4+(((-4*a^2*b^6)+12*a^4*b^4-4*a^6*b^2)*u1*v1*x1^3+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1)*y1^3+(((2*a^4*b^4-4*a^2*b^6)*v1^2+((-b^8)+4*a^2*b^6-4*a^4*b^4)*u1^2)*x1^4+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2)*y1^2+((4*a^2*b^6-2*b^8)*u1*v1*x1^5+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3)*y1-b^8*v1^2*x1^6+(a^2*b^8*v1^2+b^10*u1^2)*x1^4)+a^10*v1*y1^5+a^8*b^2*u1*x1*y1^4+2*a^6*b^4*v1*x1^2*y1^3+2*a^4*b^6*u1*x1^3*y1^2+a^2*b^8*v1*x1^4*y1+b^10*u1*x1^5)/((a^10*v1^2+a^8*b^2*u1^2)*y1^4+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1*y1^3+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2*y1^2+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3*y1+(a^2*b^8*v1^2+b^10*u1^2)*x1^4)","((a^4*u1*y1^2-2*a^2*b^2*v1*x1*y1-b^4*u1*x1^2)*((a^5*b*y1^2+a*b^5*x1^2)*sqrt((-a^8*u1^2*y1^6)+(4*a^6*b^2-2*a^8)*u1*v1*x1*y1^5+((((-4*a^4*b^4)+4*a^6*b^2-a^8)*v1^2+(2*a^4*b^4-4*a^6*b^2)*u1^2)*x1^2+a^10*v1^2+a^8*b^2*u1^2)*y1^4+(((-4*a^2*b^6)+12*a^4*b^4-4*a^6*b^2)*u1*v1*x1^3+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1)*y1^3+(((2*a^4*b^4-4*a^2*b^6)*v1^2+((-b^8)+4*a^2*b^6-4*a^4*b^4)*u1^2)*x1^4+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2)*y1^2+((4*a^2*b^6-2*b^8)*u1*v1*x1^5+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3)*y1-b^8*v1^2*x1^6+(a^2*b^8*v1^2+b^10*u1^2)*x1^4)+a^10*v1*y1^5+a^8*b^2*u1*x1*y1^4+2*a^6*b^4*v1*x1^2*y1^3+2*a^4*b^6*u1*x1^3*y1^2+a^2*b^8*v1*x1^4*y1+b^10*u1*x1^5))/((a^4*y1^2+b^4*x1^2)*((a^10*v1^2+a^8*b^2*u1^2)*y1^4+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1*y1^3+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2*y1^2+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3*y1+(a^2*b^8*v1^2+b^10*u1^2)*x1^4))+x1","y1-((a^4*v1*y1^2+2*a^2*b^2*u1*x1*y1-b^4*v1*x1^2)*((a^5*b*y1^2+a*b^5*x1^2)*sqrt((-a^8*u1^2*y1^6)+(4*a^6*b^2-2*a^8)*u1*v1*x1*y1^5+((((-4*a^4*b^4)+4*a^6*b^2-a^8)*v1^2+(2*a^4*b^4-4*a^6*b^2)*u1^2)*x1^2+a^10*v1^2+a^8*b^2*u1^2)*y1^4+(((-4*a^2*b^6)+12*a^4*b^4-4*a^6*b^2)*u1*v1*x1^3+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1)*y1^3+(((2*a^4*b^4-4*a^2*b^6)*v1^2+((-b^8)+4*a^2*b^6-4*a^4*b^4)*u1^2)*x1^4+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2)*y1^2+((4*a^2*b^6-2*b^8)*u1*v1*x1^5+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3)*y1-b^8*v1^2*x1^6+(a^2*b^8*v1^2+b^10*u1^2)*x1^4)+a^10*v1*y1^5+a^8*b^2*u1*x1*y1^4+2*a^6*b^4*v1*x1^2*y1^3+2*a^4*b^6*u1*x1^3*y1^2+a^2*b^8*v1*x1^4*y1+b^10*u1*x1^5))/((a^4*y1^2+b^4*x1^2)*((a^10*v1^2+a^8*b^2*u1^2)*y1^4+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1*y1^3+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2*y1^2+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3*y1+(a^2*b^8*v1^2+b^10*u1^2)*x1^4))","-((a^5*b*y1^2+a*b^5*x1^2)*sqrt((-a^8*u1^2*y1^6)+(4*a^6*b^2-2*a^8)*u1*v1*x1*y1^5+((((-4*a^4*b^4)+4*a^6*b^2-a^8)*v1^2+(2*a^4*b^4-4*a^6*b^2)*u1^2)*x1^2+a^10*v1^2+a^8*b^2*u1^2)*y1^4+(((-4*a^2*b^6)+12*a^4*b^4-4*a^6*b^2)*u1*v1*x1^3+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1)*y1^3+(((2*a^4*b^4-4*a^2*b^6)*v1^2+((-b^8)+4*a^2*b^6-4*a^4*b^4)*u1^2)*x1^4+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2)*y1^2+((4*a^2*b^6-2*b^8)*u1*v1*x1^5+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3)*y1-b^8*v1^2*x1^6+(a^2*b^8*v1^2+b^10*u1^2)*x1^4)-a^10*v1*y1^5-a^8*b^2*u1*x1*y1^4-2*a^6*b^4*v1*x1^2*y1^3-2*a^4*b^6*u1*x1^3*y1^2-a^2*b^8*v1*x1^4*y1-b^10*u1*x1^5)/((a^10*v1^2+a^8*b^2*u1^2)*y1^4+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1*y1^3+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2*y1^2+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3*y1+(a^2*b^8*v1^2+b^10*u1^2)*x1^4)","x1-((a^4*u1*y1^2-2*a^2*b^2*v1*x1*y1-b^4*u1*x1^2)*((a^5*b*y1^2+a*b^5*x1^2)*sqrt((-a^8*u1^2*y1^6)+(4*a^6*b^2-2*a^8)*u1*v1*x1*y1^5+((((-4*a^4*b^4)+4*a^6*b^2-a^8)*v1^2+(2*a^4*b^4-4*a^6*b^2)*u1^2)*x1^2+a^10*v1^2+a^8*b^2*u1^2)*y1^4+(((-4*a^2*b^6)+12*a^4*b^4-4*a^6*b^2)*u1*v1*x1^3+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1)*y1^3+(((2*a^4*b^4-4*a^2*b^6)*v1^2+((-b^8)+4*a^2*b^6-4*a^4*b^4)*u1^2)*x1^4+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2)*y1^2+((4*a^2*b^6-2*b^8)*u1*v1*x1^5+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3)*y1-b^8*v1^2*x1^6+(a^2*b^8*v1^2+b^10*u1^2)*x1^4)-a^10*v1*y1^5-a^8*b^2*u1*x1*y1^4-2*a^6*b^4*v1*x1^2*y1^3-2*a^4*b^6*u1*x1^3*y1^2-a^2*b^8*v1*x1^4*y1-b^10*u1*x1^5))/((a^4*y1^2+b^4*x1^2)*((a^10*v1^2+a^8*b^2*u1^2)*y1^4+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1*y1^3+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2*y1^2+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3*y1+(a^2*b^8*v1^2+b^10*u1^2)*x1^4))","((a^4*v1*y1^2+2*a^2*b^2*u1*x1*y1-b^4*v1*x1^2)*((a^5*b*y1^2+a*b^5*x1^2)*sqrt((-a^8*u1^2*y1^6)+(4*a^6*b^2-2*a^8)*u1*v1*x1*y1^5+((((-4*a^4*b^4)+4*a^6*b^2-a^8)*v1^2+(2*a^4*b^4-4*a^6*b^2)*u1^2)*x1^2+a^10*v1^2+a^8*b^2*u1^2)*y1^4+(((-4*a^2*b^6)+12*a^4*b^4-4*a^6*b^2)*u1*v1*x1^3+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1)*y1^3+(((2*a^4*b^4-4*a^2*b^6)*v1^2+((-b^8)+4*a^2*b^6-4*a^4*b^4)*u1^2)*x1^4+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2)*y1^2+((4*a^2*b^6-2*b^8)*u1*v1*x1^5+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3)*y1-b^8*v1^2*x1^6+(a^2*b^8*v1^2+b^10*u1^2)*x1^4)-a^10*v1*y1^5-a^8*b^2*u1*x1*y1^4-2*a^6*b^4*v1*x1^2*y1^3-2*a^4*b^6*u1*x1^3*y1^2-a^2*b^8*v1*x1^4*y1-b^10*u1*x1^5))/((a^4*y1^2+b^4*x1^2)*((a^10*v1^2+a^8*b^2*u1^2)*y1^4+(4*a^8*b^2-4*a^6*b^4)*u1*v1*x1*y1^3+((4*a^4*b^6-2*a^6*b^4)*v1^2+(4*a^6*b^4-2*a^4*b^6)*u1^2)*x1^2*y1^2+(4*a^2*b^8-4*a^4*b^6)*u1*v1*x1^3*y1+(a^2*b^8*v1^2+b^10*u1^2)*x1^4))+y1"];
 Initglist();
 
 aa=4; bb=3;
@@ -1733,19 +1877,20 @@ Setglist();
 
 
 
-
 Axorg=3;
 A.x=Axorg;
 vorg=[-1,1];
-pflg=-1;
-mflg=0;
+initflg=1;
+pflg=0;
+pL=[];
+
 ;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 Addglist();
 Setwindow([-6,6],[-5.5,5]);
-Slider("T",[0,-4],[6,-4]);
+Slider("T",[-6,-4],[6,-4]);
 
 Addax(0);
 
@@ -1757,80 +1902,95 @@ Drwxy();
 Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
 
+Cindyparse(str,value):=(
+  regional(tmp,tmp1);
+  tmp=Strsplit(str,"=");
+  if(length(tmp_2)==0,
+    tmp1=str+format(value,6);
+  ,
+    tmp1=tmp_1+"="+Tocindyform(tmp_2);
+  );
+  parse(tmp1+";");
+);
+
+str0="A,x=3";
 str1="vx=-1";
 str2="vy=1";
-str1=Textedit(66);// 
+str0=Textedit(65);// 
+str1=Textedit(66);
 str2=Textedit(67);// 
-tmp=Strsplit(str1,"=");
-if(length(tmp_2)==0,str1=str1+"-1");
-tmp=Strsplit(str2,"=");
-if(length(tmp_2)==0,str2=str2+"-1");
-parse(str1+";"+str2+";");
+Cindyparse(str0,A.x);
+Cindyparse(str1,-1);
+Cindyparse(str2,1);
+
 vec=[vx,vy];
 vec=vec/|vec|;
 Arrowdata("1",[A,A+vec],["dr,2","Color=red","border->false"]);
 
-Getvalue(n,rep):=(
-  regional(tmp);
-  tmp=Assign(ans_n,rep);
-  parse(tmp);
+Getvalue(slist,rep):=(
+  regional(tmp,out);
+  out=[];
+  forall(slist,
+    tmp=Assign(#,rep,12);
+    out=append(out,parse(tmp));
+  );
+  out;
 );
 
-Eps=10^(-2);
+Eps=10^(-4);
 if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps),
-  mflg=1;
+  vorg=vec;
+  Axorg=A.x;
+  initflg=1;
 );
 
-if((pflg==-1)%(mflg==1),
-  Letter([2.5,-5.5],"s","Make",["Size=1.2","Color=red"]);
+if(initflg==1,
+  tt=30;
+  u1=vec_1; v1=vec_2; x1=A.x; y1=0;
+  rep=["a",aa,"b",bb,"u1",u1,"v1",v1,"x1",x1,"y1",y1];
+  tmp=getvalue(ans0,rep);
+  t0=tmp_1; x2=tmp_2; y2=tmp_3;
+  pL=[[0,[x1,y1],[u1,v1]],[t0,[x2,y2],[u1,v1]]];
+  ts=0;
+  while(ts<tt,
+    x1=x2; y1=y2;
+    rep=["a",aa,"b",bb,"u1",u1,"v1",v1,"x1",x1,"y1",y1];
+    tmp=getvalue(ans,rep);
+    u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
+    if(abs(t2)<Eps,
+      t2=tmp_6; x2=tmp_7; y2=tmp_8;
+    );
+    ts=ts+t2;
+    pL=append(pL,[ts,[x2,y2],[u2,v2]]);
+    u1=u2; v1=v2;
+  );
+  initflg=0;
 );
 
 if(pflg==1,
-  tt=6000;
-  x0=A.x; y0=0;
-  u1=vec_1;v1=vec_2;
-  pL=[[0,[x0,y0]]];
-  rep0=["a",aa,"b",bb];
-  flg=0;
-  tr=tt;
-  while(tr>0,
-    rep=concat(rep0,["x0",x0,"y0",y0,"u1",u1,"v1",v1]);
-    t1=Getvalue(1,rep);
-    rep2=concat(rep,["t",t1]);
-    x1=Getvalue(2,rep2);
-    y1=Getvalue(3,rep2);
-    rep2=concat(rep2,["x1",x1,"y1",y1]);
-    u2=-Getvalue(4,rep);
-    v2=-Getvalue(5,rep);
-    tr=tr-t1;
-    if(tr>0,
-      tmp=pL_(length(pL));
-      tmp=tmp_1;
-      pL=append(pL,[tmp+t1,[x1,y1]]);
-      x0=x1; y0=y1;
-      u1=u2; v1=v2;
-    );
-  );
-  tr=tr+t1;
-  if(tr>0,
-    if(flg==0,
-      pL=append(pL,[tt,[x0+u1*tr,y0+v1*tr]]);
-      flg=1;
-    ,
-      pL_(length(pL))=[tt,[x0+u1*tr,y0+v1*tr]];
+  tt=ts+300;
+  tmp=pL_(length(pL));
+  ts=tmp_1;
+  x1=tmp_2_1;y1=tmp_2_2;u1=tmp_3_1;v1=tmp_3_2;
+  forall(1..100,
+    if(ts>tt,pflg=0);
+    if(pflg==1,
+      rep=["a",aa,"b",bb,"u1",u1,"v1",v1,"x1",x1,"y1",y1];
+      tmp=getvalue(ans,rep);
+      u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
+      if(abs(t2)<Eps,
+        t2=tmp_6; x2=tmp_7; y2=tmp_8;
+      );
+      ts=ts+t2;
+      pL=append(pL,[ts,[x2,y2],[u2,v2]]);
+      u1=u2; v1=v2; x1=x2; y1=y2;
     );
   );
   pflg=0;
-  vorg=vec;
-  Axorg=A.x;
-  mflg=0;
-  Letter([2.5,-5.5],"s","Make",["Size=1.2","Color=offwhite"]);
-  Letter([2.5,-5.5],"s","Ready",["Size=1.2","Color=blue"]);
 );
 
 mf(ss):=(
- regional(plist,tmp,tmp1,tmp2);
- if(pflg==0,
+  regional(plist,tmp,tmp1,tmp2);
   plist=select(pL,#_1<=ss);
   tmp=length(plist);
   tmp1=plist_tmp;
@@ -1843,11 +2003,14 @@ mf(ss):=(
   if(length(plist)>1,
     Listplot("1",plist);
   );
- );
 );
 
-ss=Animationparam(0,2^(T.x+1),[0,6000]);
+ss=Animationparam(0,2^(T.x+6),[0,tmp_1]);
 mf(ss);
+
+Letter([-4.5,3],"w",format(re(ss),1),["Size=1.2"]);
+tmp=pL_(length(pL));
+Letter([-4.5,2],"w",text(re(floor(tmp_1))),["Size=1.2"]);
 
 Windispg();
 ;
@@ -1870,9 +2033,10 @@ var cdy = CindyJS({
     {name: "A", type: "Free", pos: [4.0, 0.0, 1.3333333333333333], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
     {name: "Text0", type: "Free", pos: [4.0, 1.086303229971284, 1.7808249671660397], color: [1.0, 0.0, 0.0], size: 0.0, border: true },
     {name: "C", type: "Free", pos: [4.0, -0.0, -1.5118578920369088], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T", type: "Free", pos: [0.0, -4.0, 1.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T", type: "Free", pos: [-0.68333, -4.0, 1.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "Text66", type: "EditableText", pos: [0.2,4.5,1], color: [0.0, 0.0, 0.0], text: "vx=-1", textsize: 23},
     {name: "Text67", type: "EditableText", pos: [0.2,3.6,1], color: [0.0, 0.0, 0.0], text: "vy=1", textsize: 23},
+    {name: "Text65", type: "EditableText", pos: [-5.8,4.5,1], color: [0.0, 0.0, 0.0], text: "A.x=", textsize: 23},
     {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 24, pos: [-5,-5,1]},
     {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 24, pos: [-3.56,-5,1]},
     {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 24, pos: [-1.76,-5,1]},

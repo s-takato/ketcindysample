@@ -75,14 +75,19 @@ Drwxy();
 Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
 
+str0="A,x=3";
 str1="vx=-1";
 str2="vy=1";
-//str1=Textedit(66);// only ketjs
-//str2=Textedit(67);// only ketjs
+//str0=Textedit(65);// only ketjs on
+//str1=Textedit(66);
+//str2=Textedit(67);// only ketjs off
+tmp=Strsplit(str0,"=");
+if(length(tmp_2)==0,str0=str0+text(A.x));
+parse(str0+";");
 tmp=Strsplit(str1,"=");
 if(length(tmp_2)==0,str1=str1+"-1");
 tmp=Strsplit(str2,"=");
-if(length(tmp_2)==0,str2=str2+"-1");
+if(length(tmp_2)==0,str2=str2+"1");
 parse(str1+";"+str2+";");
 vec=[vx,vy];
 vec=vec/|vec|;
@@ -94,7 +99,7 @@ Getvalue(n,rep):=(
   parse(tmp);
 );
 
-Eps=10^(-2);
+Eps=10^(-4);ß
 if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps),
   mflg=1;
 );
