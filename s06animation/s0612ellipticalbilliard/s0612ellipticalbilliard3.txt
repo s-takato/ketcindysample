@@ -77,6 +77,29 @@ initflg=1;
 pflg=0;
 pL=[];
 
+defans(name,fnL):=(
+  regional(funstr);
+  funstr=name+":=(";
+  forall(fnL,
+    funstr=funstr+#+";";
+  );
+  funstr=funstr+");";
+  parse(funstr);
+);
+
+defans("fans0(u1,v1,x1,y1)",[
+  "regional(t0,x2,y2)",
+  "t0="+ans0_1,"x2="+ans0_2,"y2="+ans0_3,
+  "[t0,x2,y2]"
+]);
+defans("fans(u1,v1,x1,y1)",[
+  "regional(u2,v2,t,x2,y2,ta,x2a,y2a)",
+  "u2="+ans_1,"v2="+ans_2,
+  "t="+ans_3,"x2="+ans_4,"y2="+ans_5,
+  "ta="+ans_6,"x2a="+ans_7,"y2a="+ans_8,
+  "[u2,v2,t,x2,y2,ta,x2a,y2a]"
+]);
+
 //figures
 Ketinit();
 Addglist();
@@ -139,18 +162,16 @@ if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps),
 if(initflg==1,
   tt=30;
   u1=vec_1; v1=vec_2; x1=A.x; y1=0;
-  rep=["a",aa,"b",bb,"u1",u1,"v1",v1,"x1",x1,"y1",y1];
-  tmp=getvalue(ans0,rep);
+  tmp=fans0(u1,v1,x1,y1);
   t0=tmp_1; x2=tmp_2; y2=tmp_3;
   pL=[[0,[x1,y1],[u1,v1]],[t0,[x2,y2],[u1,v1]]];
   ts=0;
   while(ts<tt,
     x1=x2; y1=y2;
-    rep=["u1",u1,"v1",v1,"x1",x1,"y1",y1];
-    tmp=getvalue(ans,rep);
+    tmp=fans(u1,v1,x1,y1);
     u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
     if(abs(t2)<Eps,
-      t2=tmp_6; x2=tmp_7; y2=tmp_8;
+      t2=t2a; x2=x2a; y2=y2a;
     );
     ts=ts+t2;
     pL=append(pL,[ts,[x2,y2],[u2,v2]]);
@@ -160,14 +181,14 @@ if(initflg==1,
 );
 
 if(pflg==1,
-  tt=ts+300;
+  tt=ts+500;
   tmp=pL_(length(pL));
   ts=tmp_1;
   x1=tmp_2_1;y1=tmp_2_2;u1=tmp_3_1;v1=tmp_3_2;
   forall(1..100,
     if(ts>tt,pflg=0);
     if(pflg==1,
-      rep=["u1",u1,"v1",v1,"x1",x1,"y1",y1];
+      rep=["a",aa,"b",bb,"u1",u1,"v1",v1,"x1",x1,"y1",y1];
       tmp=getvalue(ans,rep);
       u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
       if(abs(t2)<Eps,

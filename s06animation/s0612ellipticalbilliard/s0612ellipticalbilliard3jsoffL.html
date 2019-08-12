@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>s0612ellipticalbilliard2.cdy</title>
+    <title>s0612ellipticalbilliard3.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -20,8 +20,8 @@
             width: 100%;
         }
     </style>
-    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
-    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
+    <link rel="stylesheet" href="ketcindyjs/CindyJS.css">
+   <script type="text/javascript" src="ketcindyjs/Cindy.js"></script>
 
 <script id="csinit" type="text/x-cindyscript">
 Initglist():=(
@@ -1877,6 +1877,9 @@ Setglist();
 
 
 
+ans0=apply(ans0,Assign(#,["a",aa,"b",bb]));
+ans=apply(ans,Assign(#,["a",aa,"b",bb]));
+
 Axorg=3;
 A.x=Axorg;
 vorg=[-1,1];
@@ -1884,6 +1887,28 @@ initflg=1;
 pflg=0;
 pL=[];
 
+defans(name,fnL):=(
+  regional(funstr);
+  funstr=name+":=(";
+  forall(fnL,
+    funstr=funstr+#+";";
+  );
+  funstr=funstr+");";
+  parse(funstr);
+);
+
+defans("fans0(u1,v1,x1,y1)",[
+  "regional(t0,x2,y2)",
+  "t0="+ans0_1,"x2="+ans0_2,"y2="+ans0_3,
+  "[t0,x2,y2]"
+]);
+defans("fans(u1,v1,x1,y1)",[
+  "regional(u2,v2,t,x2,y2,ta,x2a,y2a)",
+  "u2="+ans_1,"v2="+ans_2,
+  "t="+ans_3,"x2="+ans_4,"y2="+ans_5,
+  "ta="+ans_6,"x2a="+ans_7,"y2a="+ans_8,
+  "[u2,v2,t,x2,y2,ta,x2a,y2a]"
+]);
 ;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
@@ -1903,14 +1928,17 @@ Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
 
 Cindyparse(str,value):=(
-  regional(tmp,tmp1);
-  tmp=Strsplit(str,"=");
-  if(length(tmp_2)==0,
-    tmp1=str+format(value,6);
-  ,
-    tmp1=tmp_1+"="+Tocindyform(tmp_2);
+  regional(semi,tmp,tmp1);
+  semi=Strsplit(str,";");
+  forall(semi,
+    tmp=Strsplit(#,"=");
+    if(length(tmp_2)==0,
+      tmp1=str+format(value,6);
+    ,
+      tmp1=tmp_1+"="+Tocindyform(tmp_2);
+    );
+    parse(tmp1+";");
   );
-  parse(tmp1+";");
 );
 
 str0="A,x=3";
@@ -1947,18 +1975,16 @@ if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps),
 if(initflg==1,
   tt=30;
   u1=vec_1; v1=vec_2; x1=A.x; y1=0;
-  rep=["a",aa,"b",bb,"u1",u1,"v1",v1,"x1",x1,"y1",y1];
-  tmp=getvalue(ans0,rep);
+  tmp=fans0(u1,v1,x1,y1);
   t0=tmp_1; x2=tmp_2; y2=tmp_3;
   pL=[[0,[x1,y1],[u1,v1]],[t0,[x2,y2],[u1,v1]]];
   ts=0;
   while(ts<tt,
     x1=x2; y1=y2;
-    rep=["a",aa,"b",bb,"u1",u1,"v1",v1,"x1",x1,"y1",y1];
-    tmp=getvalue(ans,rep);
+    tmp=fans(u1,v1,x1,y1);
     u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
     if(abs(t2)<Eps,
-      t2=tmp_6; x2=tmp_7; y2=tmp_8;
+      t2=t2a; x2=x2a; y2=y2a;
     );
     ts=ts+t2;
     pL=append(pL,[ts,[x2,y2],[u2,v2]]);
@@ -1968,7 +1994,7 @@ if(initflg==1,
 );
 
 if(pflg==1,
-  tt=ts+300;
+  tt=ts+500;
   tmp=pL_(length(pL));
   ts=tmp_1;
   x1=tmp_2_1;y1=tmp_2_2;u1=tmp_3_1;v1=tmp_3_2;
@@ -2008,9 +2034,9 @@ mf(ss):=(
 ss=Animationparam(0,2^(T.x+6),[0,tmp_1]);
 mf(ss);
 
-Letter([-4.5,3],"w",format(re(ss),1),["Size=1.2"]);
+Letter([-4.5,3.3],"nw",format(re(ss),1),["Size=1.2"]);
 tmp=pL_(length(pL));
-Letter([-4.5,2],"w",text(re(floor(tmp_1))),["Size=1.2"]);
+Letter([-4.5,2.5],"nw",text(re(floor(tmp_1))),["Size=1.2"]);
 
 Windispg();
 ;
@@ -2033,9 +2059,9 @@ var cdy = CindyJS({
     {name: "A", type: "Free", pos: [4.0, 0.0, 1.3333333333333333], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
     {name: "Text0", type: "Free", pos: [4.0, 1.086303229971284, 1.7808249671660397], color: [1.0, 0.0, 0.0], size: 0.0, border: true },
     {name: "C", type: "Free", pos: [4.0, -0.0, -1.5118578920369088], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T", type: "Free", pos: [-0.68333, -4.0, 1.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "Text66", type: "EditableText", pos: [0.2,4.5,1], color: [0.0, 0.0, 0.0], text: "vx=-1", textsize: 23},
-    {name: "Text67", type: "EditableText", pos: [0.2,3.6,1], color: [0.0, 0.0, 0.0], text: "vy=1", textsize: 23},
+    {name: "T", type: "Free", pos: [4.0, 2.6666666666666665, -0.6666666666666666], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "Text66", type: "EditableText", pos: [1.2,4.5,1], color: [0.0, 0.0, 0.0], text: "vx=-1", textsize: 23},
+    {name: "Text67", type: "EditableText", pos: [1.2,3.6,1], color: [0.0, 0.0, 0.0], text: "vy=1", textsize: 23},
     {name: "Text65", type: "EditableText", pos: [-5.8,4.5,1], color: [0.0, 0.0, 0.0], text: "A.x=", textsize: 23},
     {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 24, pos: [-5,-5,1]},
     {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 24, pos: [-3.56,-5,1]},
