@@ -1,0 +1,106 @@
+//ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+Ch=[0];
+Ctr=0;
+resetflg=0;
+pC=[0,0];
+pD=[0,0];
+
+//figures
+Ketinit();
+Setwindow([-1,6],[-6,1]);
+Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n"]);//no ketjs on
+Putpoint("A",[0,0]);
+Putpoint("B",[5,-5]);
+inspect(A,"ptsize",2);
+inspect(B,"ptsize",2);
+if(resetflg==1,
+ Putpoint("C",[5/3,-5/3]);
+ Putpoint("D",[10/3,-10/3]);
+ resetflg=0;
+);
+Movetojs(30,[2,0.5],16);
+Movetojs(0,[3.5,0.5],16);
+Movetojs(80,[2,-0.5],12);
+Setplaybuttons(0,-6,16); //no ketjs off
+
+//A.xy=[0,0]; B.xy=[5,-5]; //only ketjs on
+//if(resetflg==1,
+//  C.xy=[5/3,-5/3]; D.xy=[10/3,-10/3];
+//  resetflg=0;
+//); //only ketjs off
+
+Bezier("1",[A,B],[C,D],["Num=50"]);
+xu="3*u*(1-u)^2*p1+3*u^2*(1-u)*q1+u^3*5";
+yu="3*u*(1-u)^2*p2+3*u^2*(1-u)*q2+u^3*(-5)";
+fxy=Assign("[x,y]",["x",xu,"y",yu]);
+cmdL=[ //no ketjs on
+ "assume(g>0)",[],
+ "fxy:"+fxy,[],
+ "d2:diff(fxy[1],u)^2+diff(fxy[2],u)^2",[],
+ "n2:2*g*(-fxy[2])",[],
+ "eq:ratsimp(sqrt(n2/d2))",[],
+ "tt:ratsimp(1/eq)",[],
+ "eq::tt",[]
+];
+CalcbyM("eqb",cmdL,[""]);
+Ketcindyjsdata(["eqb",eqb]);//no ketjs off
+
+repdata=["g",9.8,"p1",C.x,"p2",C.y,"q1",D.x,"q2",D.y];
+tmp="fxyr(u):="+Assign(fxy,repdata)+";";
+parse(tmp);
+tmp="eqr(u):="+Assign(eqb_1,repdata)+";";
+parse(tmp);
+
+Eps=10^(-2);
+if(|pC-C.xy|+|pD-D.xy|>Eps,
+  us=1/500;
+  p1=fxyr(us);
+  tmp="sqrt(2*(a^2+b^2)/(b*g))";
+  ts=Reparse(Assign(tmp,["a",p1_1,"b",-p1_2,"g",9.8]));
+  tmp1="u'=eqr(u)";
+  tmp2="t="+textformat([ts,2.5],6);
+  Deqplot("1",tmp1,tmp2,ts,us,["Num=250","nodisp"]);
+  pL=apply(de1,fxyr(#_2));
+  tmp1=apply(1..(length(de1)),[pL_#_1,de1_#_1]);
+  Listplot("d",[[B.x,0],[B.x,3]],["nodisp"]);
+  tmp=Intersectcrvs(tmp1,sgd);
+  te=tmp_1_2;
+  pC=C.xy; pD=D.xy;
+  Animeflg="";
+  sstart=Current;
+);
+
+//Slider("T",[0,-5.5],[2,-5.5]);
+//tt=T.x;
+
+str="sp=1"; //no ketjs
+//str=Textedit(80); only ketjs
+tmp=Strsplit(str,"=");
+sp=tmp_2;
+sp=if(isstring(sp),sp=Reparse(sp));
+tt=Animationparam(0,sp,[0,te]);
+
+if(tt<=ts,
+  Pointdata("t",[0,0],["Color=blue","Size=4"]);
+,
+  Listplot("2",[[tt,0],[tt,1]],["nodisp"]);
+  tmp=Intersectcrvs(de1,sg2);
+  ut=tmp_1_2;
+  p2=fxyr(ut);
+  Pointdata("t",p2,["Color=blue","Size=4"]);
+);
+Letter([[6,-3.1],"w",Sprintf(tt*1000,2)+"ms"],["Size=1.6"]);
+Letter([[6,-2.1],"w",Sprintf(te*1000,2)+"ms"],["Size=1.6"]);
+
+if(contains(Ch,1),
+ fun="2.864585*[u-sin(u),-(1-cos(u))]";
+ Paramplot("1",fun,"u=[0,2.412011]",["Color=red"]);
+ Letter([[6,-1.1],"w","1304.06ms"],["Size=1.6","Color=red"]);
+);
+
+Windispg();
