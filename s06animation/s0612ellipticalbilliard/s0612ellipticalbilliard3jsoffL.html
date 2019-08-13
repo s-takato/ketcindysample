@@ -1638,10 +1638,23 @@ defans(name,fnL):=(
   parse(funstr);
 );
 
+defans("fans0(a,b,u1,v1,x1,y1)",[
+  "regional(t0,x2,y2)",
+  "t0="+ans0_1,"x2="+ans0_2,"y2="+ans0_3,
+  "[t0,x2,y2]"
+]);
+defans("fans(a,b,u1,v1,x1,y1)",[
+  "regional(u2,v2,t,x2,y2,ta,x2a,y2a)",
+  "u2="+ans_1,"v2="+ans_2,
+  "t="+ans_3,"x2="+ans_4,"y2="+ans_5,
+  "ta="+ans_6,"x2a="+ans_7,"y2a="+ans_8,
+  "[u2,v2,t,x2,y2,ta,x2a,y2a]"
+]);
+
 aborg=[4,3];
 Axorg=3;
 A.x=Axorg;
-vorg=[-1,1];
+vorg=[-1,1]/sqrt(2);
 initflg=1;
 pflg=0;
 pL=[];
@@ -1716,29 +1729,15 @@ Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
 
 if(initflg==1,
-  ans0c=apply(ans0,Assign(#,["a",a,"b",b]));
-  ansc=apply(ans,Assign(#,["a",a,"b",b]));
-  defans("fans0(u1,v1,x1,y1)",[
-   "regional(t0,x2,y2)",
-   "t0="+ans0c_1,"x2="+ans0c_2,"y2="+ans0c_3,
-   "[t0,x2,y2]"
-  ]);
-  defans("fans(u1,v1,x1,y1)",[
-   "regional(u2,v2,t,x2,y2,ta,x2a,y2a)",
-   "u2="+ansc_1,"v2="+ansc_2,
-   "t="+ansc_3,"x2="+ansc_4,"y2="+ansc_5,
-   "ta="+ansc_6,"x2a="+ansc_7,"y2a="+ansc_8,
-   "[u2,v2,t,x2,y2,ta,x2a,y2a]"
-  ]);
-  tt=30;
+  tt=200;
   u1=vec_1; v1=vec_2; x1=A.x; y1=0;
-  tmp=fans0(u1,v1,x1,y1);
+  tmp=fans0(a,b,u1,v1,x1,y1);
   t0=tmp_1; x2=tmp_2; y2=tmp_3;
   pL=[[0,[x1,y1],[u1,v1]],[t0,[x2,y2],[u1,v1]]];
-  ts=0;
+  ts=t0;
   while(ts<tt,
     x1=x2; y1=y2;
-    tmp=fans(u1,v1,x1,y1);
+    tmp=fans(a,b,u1,v1,x1,y1);
     u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
     if(abs(t2)<Eps,
       t2=t2a; x2=x2a; y2=y2a;
@@ -1758,7 +1757,7 @@ if(pflg==1,
   forall(1..1000,
     if(ts>tt,pflg=0);
     if(pflg==1,
-      tmp=fans(u1,v1,x1,y1);
+      tmp=fans(a,b,u1,v1,x1,y1);
       u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
       if(abs(t2)<Eps,
         t2=tmp_6; x2=tmp_7; y2=tmp_8;
@@ -1824,7 +1823,7 @@ var cdy = CindyJS({
     {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 24, pos: [-1.76,-5,1]},
     {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 24, pos: [-0.44,-5,1]},
     {name: "Text60", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "A.xy=-pF;", text: "Focus", textsize: 24, pos: [3.5,-5,1]},
-    {name: "Text61", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "pflg=1;", text: "Data", textsize: 24, pos: [2,-5,1]}
+    {name: "Text61", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "pflg=1;", text: "Add", textsize: 24, pos: [2,-5,1]}
   ],
   ports: [{
     id: "CSCanvas",
