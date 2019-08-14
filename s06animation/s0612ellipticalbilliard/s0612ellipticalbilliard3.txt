@@ -62,22 +62,12 @@ CalcbyM("ans",cmdL,[""]);
 
 Ketcindyjsdata(["ans0",ans0,"ans",ans]);//no ketjs off
 
-defans(name,fnL):=(
-  regional(funstr);
-  funstr=name+":=(";
-  forall(fnL,
-    funstr=funstr+#+";";
-  );
-  funstr=funstr+");";
-  parse(funstr);
-);
-
-defans("fans0(a,b,u1,v1,x1,y1)",[
+Deffun("fans0(a,b,u1,v1,x1,y1)",[
   "regional(t0,x2,y2)",
   "t0="+ans0_1,"x2="+ans0_2,"y2="+ans0_3,
   "[t0,x2,y2]"
 ]);
-defans("fans(a,b,u1,v1,x1,y1)",[
+Deffun("fans(a,b,u1,v1,x1,y1)",[
   "regional(u2,v2,t,x2,y2,ta,x2a,y2a)",
   "u2="+ans_1,"v2="+ans_2,
   "t="+ans_3,"x2="+ans_4,"y2="+ans_5,
@@ -135,16 +125,6 @@ A.y=0;
 vec=[vx,vy];
 vec=vec/|vec|;
 Arrowdata("1",[A,A+vec],["dr,2","Color=red","border->false"]);
-
-Getvalue(slist,rep):=(
-  regional(tmp,out);
-  out=[];
-  forall(slist,
-    tmp=Assign(#,rep,12);
-    out=append(out,parse(tmp));
-  );
-  out;
-);
 
 Eps=10^(-4);
 if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps)%(|[a,b]-aborg|>Eps),

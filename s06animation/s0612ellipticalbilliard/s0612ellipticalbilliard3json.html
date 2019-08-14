@@ -187,6 +187,120 @@ Textformat(value,dig):=(
 Setglist():=(
   GCLISTadd=GCLIST;
 );
+Deffun(name,bodylist):=(
+  regional(funstr,str,Pos,nbody,bdy,ppL,bpL,excma,tmp,tmp1,tmp2);
+  funstr=name+":=(";
+  forall(bodylist,
+    funstr=funstr+#+";";
+  );
+  funstr=funstr+");";
+  parse(funstr);
+);
+Bracket(str):=Bracket(str,"()");
+Bracket(str,br):=(
+  regional(ph,pt,out,noL,ncL,nall,level,tmp);
+  ph=substring(br,0,1);
+  pt=substring(br,1,2);
+  noL=Indexall(str,ph);
+  ncL=Indexall(str,pt); // 16.05.22until
+  nall=sort(concat(noL,ncL));
+  level=0;
+  out=[];
+  forall(nall,
+    if(contains(noL,#),
+      level=level+1;
+      tmp=[#,level];
+    ,
+      tmp=[#,-level];
+      level=level-1;
+    );
+    out=append(out,tmp);
+  );
+  out;
+);
+FortoR(strorg):=(
+  regional(str,pre,post,sub,ppL,forstr,out,tmp,tmp1,tmp2);
+  str=strorg;
+  forstr=indexof(str,"forall(");
+  if(forstr==0,
+    out=str;
+  ,
+    pre=substring(str,0,forstr-1)+"for"+PaO();
+    ppL=Bracket(str,"()");
+    tmp1=forstr+6;
+    tmp=select(ppL,#_1==tmp1);
+    tmp=select(ppL,#_2==-tmp_1_2);
+    tmp2=tmp_1_1;
+    sub=substring(str,tmp1,tmp2-1);
+    post="}"+substring(str,tmp2,length(str));
+    tmp=indexof(sub,",");
+    tmp1=substring(sub,0,tmp-1);
+    tmp2=substring(sub,tmp,length(sub));
+    sub=tmp1+"){"+tmp2;
+    tmp1=indexof(sub,"{");
+    tmp2=indexof(sub,",");
+    tmp=substring(sub,tmp1,tmp2-1);
+    pre=pre+tmp+" in "+substring(sub,0,tmp1-1)+"{";
+    sub=substring(sub,tmp2,length(sub));
+    tmp=FortoR(sub);
+    out=pre+tmp+"}";
+  );
+  out=replace(out,"..",":");
+  out;
+);
+PaO():=PaO("");
+PaO(Arg):=(
+  regional(out);
+  if(isstring(Arg),
+    out="("+Arg;
+  ,
+    out="";
+    repeat(Arg,
+      out=out+"(";
+    );
+  );
+  out;
+);
+IftoR(strorg):=( //180802
+  regional(str,ifL,ppL,cpL,kk,sL,out,
+    tmp,tmp1,tmp2,tmp3,tmp4);
+  str=replace(strorg,LFmark,"");
+  ifL=Indexall(str,"if"+PaO());
+  ppL=Bracket(str,"()");
+  cpL=Indexall(str,",");
+  tmp1=Bracket(str,"[]");
+  forall(1..(length(tmp1)/2),kk,
+    cpL=select(cpL,#<tmp1_(2*kk-1)_1%#_1>tmp1_(2*kk)_1);
+  );
+  forall(1..length(ifL),kk,
+    tmp=select(ppL,#_1>ifL_kk);
+    tmp1=tmp_1;
+    tmp2=select(tmp,#_2==-tmp1_2);
+    tmp2=tmp2_1;
+    tmp3=select(cpL,#>tmp1_1 & #<tmp2_1);
+    ifL_kk=[tmp1_1,tmp2_1,tmp1_2,tmp3];
+  );
+  forall(1..length(cpL),kk,
+    tmp=select(1..length(ifL),contains(ifL_#_4,cpL_kk));
+    tmp1=tmp_(length(tmp));
+    cpL_kk=[cpL_kk,tmp1];
+  );
+  sL=apply(1..length(str),substring(str,#-1,#));
+  forall(1..length(ifL),kk,
+    tmp1=ifL_kk_1;
+    tmp2=ifL_kk_2;
+    tmp=select(cpL,#_2==kk);
+    tmp3=apply(tmp,#_1);
+    sL_tmp1="(";
+    sL_tmp2="}";
+    sL_(tmp3_1)="){";
+    if(length(tmp3)>1,
+      sL_(tmp3_2)="}else{";
+    );
+  );
+  out=sum(sL);
+  out;
+);
 Addglist():=(
   GCLIST=GCLISTadd;
 );
@@ -752,19 +866,6 @@ Measuredepth(list):=( //190423
   );
   nn;
 );
-PaO():=PaO("");
-PaO(Arg):=(
-  regional(out);
-  if(isstring(Arg),
-    out="("+Arg;
-  ,
-    out="";
-    repeat(Arg,
-      out=out+"(";
-    );
-  );
-  out;
-);
 Putonseg(name,sgstr):=(
   regional(seg,p1,p2);
   if(isstring(sgstr),seg=parse(sgstr),seg=sgstr);
@@ -929,28 +1030,6 @@ Tocindyformpart(str):=( //190521
     ,
       out="";
     );
-  );
-  out;
-);
-Bracket(str):=Bracket(str,"()");
-Bracket(str,br):=(
-  regional(ph,pt,out,noL,ncL,nall,level,tmp);
-  ph=substring(br,0,1);
-  pt=substring(br,1,2);
-  noL=Indexall(str,ph);
-  ncL=Indexall(str,pt); // 16.05.22until
-  nall=sort(concat(noL,ncL));
-  level=0;
-  out=[];
-  forall(nall,
-    if(contains(noL,#),
-      level=level+1;
-      tmp=[#,level];
-    ,
-      tmp=[#,-level];
-      level=level-1;
-    );
-    out=append(out,tmp);
   );
   out;
 );
@@ -1628,22 +1707,12 @@ Setglist();
 
 
 
-defans(name,fnL):=(
-  regional(funstr);
-  funstr=name+":=(";
-  forall(fnL,
-    funstr=funstr+#+";";
-  );
-  funstr=funstr+");";
-  parse(funstr);
-);
-
-defans("fans0(a,b,u1,v1,x1,y1)",[
+Deffun("fans0(a,b,u1,v1,x1,y1)",[
   "regional(t0,x2,y2)",
   "t0="+ans0_1,"x2="+ans0_2,"y2="+ans0_3,
   "[t0,x2,y2]"
 ]);
-defans("fans(a,b,u1,v1,x1,y1)",[
+Deffun("fans(a,b,u1,v1,x1,y1)",[
   "regional(u2,v2,t,x2,y2,ta,x2a,y2a)",
   "u2="+ans_1,"v2="+ans_2,
   "t="+ans_3,"x2="+ans_4,"y2="+ans_5,
@@ -1702,16 +1771,6 @@ A.y=0;
 vec=[vx,vy];
 vec=vec/|vec|;
 Arrowdata("1",[A,A+vec],["dr,2","Color=red","border->false"]);
-
-Getvalue(slist,rep):=(
-  regional(tmp,out);
-  out=[];
-  forall(slist,
-    tmp=Assign(#,rep,12);
-    out=append(out,parse(tmp));
-  );
-  out;
-);
 
 Eps=10^(-4);
 if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps)%(|[a,b]-aborg|>Eps),
