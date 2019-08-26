@@ -152,6 +152,7 @@ if(initflg==1,
     x1=x2; y1=y2;
     tmp=fans(a,b,u1,v1,x1,y1);
     u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
+    u2a=tmp_6; x2a=tmp_7; y2a=tmp_8;
     if(abs(t2)<Eps,
       t2=t2a; x2=x2a; y2=y2a;
     );

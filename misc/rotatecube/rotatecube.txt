@@ -43,9 +43,9 @@ forall(0..ndiv,nn,
 
 //figures
 Start3d("S");
+Setangle(90,270);
 Addglist();// no ketjs
-Slider("S",[0,SW.y-1.5],[5,SW.y-1.5]);
-
+Slider("S",[0,SW.y-2],[5,SW.y-2]);
 tmp=["O","Oz","X","Xz","Y","Yz","Z","Zz"];//no ketjs on
 Setketcindyjs(["No=all","Rm="+text(tmp)]);
 Ketcindyjsdata(["A3d",A3d,"B3d",B3d,"C3d",C3d,"O3d",O3d]);
@@ -69,5 +69,3 @@ ss=Animationparam(0,2*S.x,[0,20*2*pi]);
 mf2(mod(ss,2*pi));
 
 Windispg();
-
-//Help("Pointdata");
