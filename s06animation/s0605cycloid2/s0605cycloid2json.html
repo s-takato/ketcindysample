@@ -292,7 +292,7 @@ Circledata(nm,cenrad,options):=(
     tmp=name+"="+Textformat(tmp1,5)+";"; //190415
     parse(tmp);
   );
-  if(Noflg<2,
+  if(Noflg<3, //190818
     if(isstring(Ltype),
       Ltype=Getlinestyle(text(Noflg)+Ltype,name);
     ,
@@ -459,9 +459,9 @@ Colorname2rgb(name):=( //181212
     ["olivegreen",[0.64,0,0.95,0.4]],["rawsienna",[0,0.72,1,0.45]],
     ["sepia",[0,0.83,1,0.7]],["brown",[0,0.81,1,0.6]],
     ["tan",[0.14,0.42,0.56,0]],["gray",[0,0,0,0.5]],
-    ["lightgray",[0,0,0,0.17]], //190429
+    ["lightgray",[0,0,0,0.15]], //190429,0809
     ["cindycolor",[0.66,0,69,0.71]], //190504
-    ["black",[0,0,0,1]],["white",[0,0,0,0]]
+    ["black",[0,0,0,1]],["white",[0,0,0,0]],["offwhite",[0,0,0,0.03]] //190809
   ];
   tmp=select(dL,#_1==name);
   if(length(tmp)>0,
@@ -479,18 +479,24 @@ Assign(str):=( //190125from
   forall(VLIST,tmp=concat(tmp,[#_1,#_2]));
   Assign(str,tmp);
 ); //190125to
-Assign(funstr,vrL):=(
-  regional(nn,out);
-  nn=length(vrL)/2;
-  out=funstr;
-  forall(1..nn,
-    out=Assign(out,vrL_(2*#-1),vrL_(2*#));
+Assign(funstr,vrL):=Assign(funstr,vrL,6);
+Assign(funstr,Arg1,Arg2):=( //190813from
+  regional(vrL,precise,nn,out,tmp);
+  if(islist(Arg1),
+    vrL=Arg1; precise=Arg2;
+    nn=length(vrL)/2;
+    out=funstr;
+    forall(1..nn,
+      out=Assign(out,vrL_(2*#-1),vrL_(2*#),precise);
+    );
+  , 
+    out=Assign(funstr,Arg1,Arg2,6);
   );
   out;
-);
-Assign(funstr,varname,rep):=(
+); //190813to
+Assign(funstr,varname,rep,precise):=(
   regional(repstr,ii,jj,tmp,tmp1,tmp2,Notvar,Flg);
-  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,6)+")");
+  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,precise)+")"); //190811to
   tmp=[46];  // 12.20
   tmp=concat(tmp,48..57);
   tmp=concat(tmp,65..90);
@@ -619,7 +625,7 @@ Lineplot(nm,list,optionorg):=(
     tmp=name+"="+Textformat(tmp1,5)+";"; //190415
     parse(tmp);
   );
-  if(Noflg<2,
+  if(Noflg<3, //190818
     if(isstring(Ltype),
       Ltype=Getlinestyle(text(Noflg)+Ltype,name);
     ,
@@ -656,41 +662,45 @@ Getlinestyle(str,name):=(
   );
   noflg=parse(substring(str,0,1));
   if(substring(name,0,3)=="sub",subflg=1,subflg=0);  // 16.02.29
-  tmp1=substring(str,1,3);
+  if(noflg<=1, //1900818from
+    tmp1=Toupper(substring(str,1,3));
+  ,
+    tmp1="NO";
+  ); //1900818to
   tmp2=""; //190119from
   tmp=indexof(str,",");
   if(tmp>0,
     tmp2=substring(str,tmp,length(str));
   ); //190119to
-  if(tmp1=="dr" % tmp1=="Dr",
+  if(tmp1=="DR",
     if(length(tmp2)==0,tmp2="1"); //190125
     Ltype=[0,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
       Drwline(name+Dop);
     );
   );
-  if(tmp1=="da" % tmp1=="Da",
+  if(tmp1=="DA",
     if(length(tmp2)==0,tmp2="1,1"); //190125
     Ltype=[1,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
       Dashline(name+Dop);
     );
   );
-  if(tmp1=="id" % tmp1=="Id",
-     if(length(tmp2)==0,tmp2="1,1"); //190125
-   Ltype=[2,tmp2];  //190119
+  if(tmp1=="ID",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    Ltype=[2,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
       Invdashline(name+Dop);
     );
   );
-  if(tmp1=="do" % tmp1=="Do",
+  if(tmp1=="DO",
     if(length(tmp2)==0,tmp2="1,1"); //190125
     Ltype=[3,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
       Dottedline(name+Dop);
     );
   );
-  if(tmp1=="dp" % tmp1=="Dp",
+  if(tmp1=="DP",
     if(length(tmp2)==0,tmp2="1"); //190125
     Ltype=[0,tmp2];  //190119
     tmp1=parse(name);
@@ -703,9 +713,9 @@ Getlinestyle(str,name):=(
       Drwpt(tmp2+Dop);
     );
   );
-  if(tmp1=="no" % tmp1=="No",
-    Ltype=10;
-  );
+  if(tmp1=="NO", //190818from
+    Ltype=[-1,"0"];
+  );  //190818to
   Ltype;
 );
 Dashline(gstr):=(
@@ -832,8 +842,9 @@ Pointdata(nm,listorg,options):=(
       tmp2=substring(tmp2,0,length(tmp2)-1)+")";
     );
   );
-  if(Noflg<2,
-    tmp=[nameL,[0,1],opcindy];  //190126
+  if(Noflg<3, //190818
+    if(Noflg<2,tmp=[0,1],tmp=[-1,1]); //190819
+    tmp=[nameL,tmp,opcindy];  //190126
     GCLIST=append(GCLIST,tmp);
     if(Noflg==0,
       if(length(size)>0,
@@ -877,7 +888,6 @@ Drawfigures(nm,figlist):=Drawfigures(nm,figlist,[]);
 Drawfigures(nm,figlist,optionlist):=Drawfigures(nm,figlist,optionlist,[]);
 Drawfigures(nm,figlistorg,optionlistorg,commonops):=(
   regional(figlist,name,figL,optionlist,nn,kk,fig,eqL,msg,tmp,tmp1,tmp2);
-  name="figs"+nm;
   tmp=Divoptions(commonops);
   eqL=tmp_5;
   msg="Y";
@@ -889,7 +899,12 @@ Drawfigures(nm,figlistorg,optionlistorg,commonops):=(
     );
   );
   figlist=figlistorg;
-  if(isstring(figlist),figlist=parse(figlist));
+  if(isstring(figlist), //190818from
+    name=figlist+nm;
+    figlist=parse(figlist);
+  ,
+    name="figs"+nm;
+  ); //190818to
   nn=length(figlist);
   optionlist=optionlistorg;
   if(length(optionlist)==0, //190531from
@@ -909,26 +924,40 @@ Drawfigures(nm,figlistorg,optionlistorg,commonops):=(
     fig=figlist_kk;
     if(isstring(fig),fig=parse(fig));
     if(length(fig)>0,
-      if(Measuredepth(fig)==0,fig=[fig]); //190531from
-      if(Measuredepth(fig)==1,fig=[fig]);
-      forall(1..(length(fig)),
-        tmp1=fig_#;
-        tmp2=name+"n"+text(kk)+"p"+text(#);
-        if(length(tmp1)==1,
-          Pointdata(tmp2,tmp1,optionlist_kk); 
-          figL=append(figL,"pt"+tmp2);
+      if(isstring(figlistorg),
+        tmp1=Measuredepth(fig);
+        tmp2=append(optionlist_kk,"Msg=n");
+        tmp=fig;
+        if(tmp1==2,tmp=tmp_1);
+        if(length(tmp)>1,
+          Listplot("-"+name+"n"+text(kk),fig,tmp2);
         ,
-          Listplot("-"+tmp2,tmp1,optionlist_kk);
-          figL=append(figL,tmp2); //190427
+          if(tmp1==2,fig=apply(fig,#_1));
+          Pointdata("-"+name+"n"+text(kk),fig,tmp2);
         );
-      ); //190531to
+        figL=append(figL,name+"n"+text(kk));
+     ,
+        if(Measuredepth(fig)==0,fig=[fig]); //190531from
+        if(Measuredepth(fig)==1,fig=[fig]);
+        forall(1..(length(fig)),
+          tmp1=fig_#;
+          tmp2=name+"n"+text(kk)+"p"+text(#);
+          if(length(tmp1)==1,
+            Pointdata(tmp2,tmp1,optionlist_kk); 
+            figL=append(figL,"pt"+tmp2);
+          ,
+            Listplot("-"+tmp2,tmp1,optionlist_kk);
+            figL=append(figL,tmp2); //190427
+          );
+        ); //190531to
+        tmp=apply(figL,Dqq(#));
+        tmp=name+"="+text(tmp)+";";
+        parse(tmp);
+      );
     );
-  );
-  tmp=apply(figL,Dqq(#));
-  tmp=name+"="+text(tmp)+";";
-  parse(tmp);
-  if(msg=="Y",
-    println("generate "+name+"="+text(figL));
+    if(msg=="Y",
+      println("generate "+name+"="+text(figL));
+    );
   );
   figL;
 );
@@ -992,7 +1021,7 @@ Listplot(nm,list,options):=(
     tmp=name+"="+Textformat(ptlist,5)+";"; //190415
     parse(tmp);
   );
-  if(Noflg<2,
+  if(Noflg<3, //190818
     if(isstring(Ltype),
       Ltype=Getlinestyle(text(Noflg)+Ltype,name);
     ,
@@ -1037,6 +1066,7 @@ Windispg(gcLorg):=( //190125
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
   ); //190125to
+  gcL=select(gcL,#_2_1>=0); //190818
   gsave();
   layer(KETPIClayer);
   forall(gcL,Nj,
@@ -1258,7 +1288,7 @@ Lightarrowdata(nm,ptlist,optionsorg):=(
     tmp="ar"+nm+"="+Textformat([pA,pB],5)+";";
     parse(tmp);
   );
-  if(Noflg<2,
+  if(Noflg<3, //190818
     if(isstring(Ltype),
       if(lineflg==1, //190504from
         Listplot("-ar"+nm,[LLcrd(pA),LLcrd(pB)],append(options,"Msg=n"));
@@ -1567,8 +1597,6 @@ mf(s):=(
   );
 );
 
-Setpara("epitrochoid","mf(s)","s=[0,2*pi]",["Div=32"],
- ["Frate=10","Scale=1","OpA=","Mag=1200"]);
 
 ss=Animationparam(0,1,[0,4*pi]);
 mf(ss);
