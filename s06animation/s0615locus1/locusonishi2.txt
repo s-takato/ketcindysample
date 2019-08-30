@@ -9,7 +9,7 @@ pB=A.x*[cos(pi/3),sin(pi/3)];
 B.xy=pB;
 
 //figures
-Ketinit();
+Ketinit(0.5);
 Setketcindyjs(["No=all"]);//no ketjs
 Setwindow([0,10],[0,10]);
 Addax(0);
@@ -19,16 +19,20 @@ Slider("T",pO,A.xy);
 
 Meet(tt,pB):=(
  regional(pS,tmp);
- ra=tt/A.x;
- pS=ra*A.xy;
- pB1=ra*pB;
- Listplot("2",[pO,pB1,pS,pO],["nodisp"]);
- Reflectdata("1","sg2",[pS,pS+[0,1]],["nodisp"]);
- Scaledata("1","re1",(1-ra)/ra,[pS,"nodisp"]);
- pB2=sc1_2;
- Listplot("3",[pO,pB2],["nodisp"]);
- Listplot("4",[A.xy,pB1],["nodisp"]);
- tmp=Intersectcrvs("sg3","sg4");
+ if(tt>0,
+  ra=tt/A.x;
+  pS=ra*A.xy;
+  pB1=ra*pB;
+  Listplot("2",[pO,pB1,pS,pO],["nodisp"]);
+  Reflectdata("1","sg2",[pS,pS+[0,1]],["nodisp"]);
+  Scaledata("1","re1",(1-ra)/ra,[pS,"nodisp"]);
+  pB2=sc1_2;
+  Listplot("3",[pO,pB2],["nodisp"]);
+  Listplot("4",[A.xy,pB1],["nodisp"]);
+  tmp=Intersectcrvs("sg3","sg4");
+ ,
+  tmp="";
+ );
  if(length(tmp)>0,
    pP=tmp_1;
  ,
@@ -37,11 +41,21 @@ Meet(tt,pB):=(
  pP;
 );
 
-str="B=";
+str="B=10,pi/3";
 //str=Textedit(60);// only ketjs
 tmp=Strsplit(str,"=");
 if(length(tmp_2)>0,
-  B.xy=parse(tmp_2);
+  tmp=Strsplit(tmp_2,",");
+  rr=A.x; arg=pi/3;
+  if(length(tmp)>1,
+    rr=parse(tmp_1);
+    arg=parse(tmp_2);
+  ,
+    arg=parse(tmp_1);
+  );
+  B.xy=rr*[cos(arg),sin(arg)];
+,
+  B.xy=B.xy;
 );
 if(|B.xy-pB|>10^(-3),
   pB=B.xy;
@@ -50,8 +64,8 @@ if(|B.xy-pB|>10^(-3),
 Listplot("1",[pO,pB,A,pO],["da"]);
 
 if(Mkflg==1,
- sL=apply(0..100,#/100*A.x);
- pL=[];
+ sL=apply(1..100,#/100*A.x);
+ pL=[[0,pO]];
  forall(sL,
    tmp=Meet(#,pB);
    if(tmp_2>0,

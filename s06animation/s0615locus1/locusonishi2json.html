@@ -24,15 +24,16 @@
     <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
 
 <script id="csinit" type="text/x-cindyscript">
-Ketinit():=Ketinit("fig",1,[-5,5],[-5,5]); //181001
+Ketinit():=Ketinit("fig",1,[-5,5],[-5,5],0.3); //190831from
 Ketinit(Arg):=(//181001from
   if(isstring(Arg),
-     Ketinit(Arg,1,[-5,5],[-5,5]);
+    Ketinit(Arg,1,[-5,5],[-5,5],0.3);
   ,
-    Ketinit("fig",Arg,[-5,5],[-5,5]);
+    Ketinit("fig",1,[-5,5],[-5,5],Arg);
   );
 );
-Ketinit(work,sy,rangex,rangey):=(//181001to
+Ketinit(Arg1,Arg2):=Ketinit(Arg1,1,[-5,5],[-5,5],Arg2);
+Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
  regional(pt,tmp,tmp1,tmp2,letterc,boxc,shadowc,mboxc);
   PenThickInit=8;
   ULEN="1cm";
@@ -75,6 +76,7 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   XMAX=rangex_2/SCALEX;
   YMIN=rangey_1/SCALEY;
   YMAX=rangey_2/SCALEY;
+  StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
 );
 Indexall(str,key):=(
@@ -120,6 +122,7 @@ Setwindow(xrange,yrange):=(
   YMAX=yrange_2;
   Putpoint("SW",[XMIN,YMIN]);//181016
   Putpoint("NE",[XMAX,YMAX]);//181016
+  Strictmove("SW"); Strictmove("NE"); //
 );
 Toupper(str):=(
   regional(alphabet,out,tmp,tmp1);
@@ -179,6 +182,27 @@ Textformat(value,dig):=(
     );
   );
   tmp1;
+);
+Strictmove(pC):=Strictmove(pC,StrictSep); //190831
+Strictmove(pCorg,sep):=(
+  regional(pC,tmp,tmp1,tmp2);
+  pC=pCorg;
+  if(ispoint(pC),pC=pC.name);
+  tmp1=pC+"position";
+  if(!islist(parse(tmp1)),
+    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
+    parse(tmp);
+  ,
+    tmp=parse(pC).xy;
+    tmp2=mouse().xy;
+    if(|tmp-tmp2|>sep,
+      tmp=pC+".xy="+pC+"position";
+      parse(pC).xy=parse(pC+"position");
+    ,
+      tmp=tmp1+"="+Textformat(parse(pC).xy,6)+";";
+      parse(tmp);
+    );
+  );
 );
 Addax(param):=(
   ADDAXES=text(param);
@@ -1293,7 +1317,6 @@ Windispg():=(
 );
 Windispg(gcLorg):=( //190125
   regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,opcindy);
-  forall(remove(allpoints(),[SW,NE]),Strictmove(#,0.2));  //190827,29
   gcL=gcLorg; //190125from
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
@@ -1694,27 +1717,6 @@ Removespace(str):=(
   );
   out=substring(out,0,tmp);
 );
-Strictmove(pC):=Strictmove(pC,0.1);
-Strictmove(pCorg,sep):=(
-  regional(pC,tmp,tmp1,tmp2);
-  pC=pCorg;
-  if(ispoint(pC),pC=pC.name);
-  tmp1=pC+"position";
-  if(!islist(parse(tmp1)),
-    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
-    parse(tmp);
-  ,
-    tmp=parse(pC).xy;
-    tmp2=mouse().xy;
-    if(|tmp-tmp2|>sep,
-      tmp=pC+".xy="+pC+"position";
-      parse(pC).xy=parse(pC+"position");
-    ,
-      tmp=tmp1+"="+Textformat(parse(pC).xy,6)+";";
-      parse(tmp);
-    );
-  );
-);
 Dashlinedata(dataorg,sen,gap,ptn):=(
   regional(data,eps,dtall,len,lenlist,ii,lenall,kari,
       naga,tobi,nsen,seglist,segunit,hajime,owari,jj,
@@ -1796,7 +1798,7 @@ pB=A.x*[cos(pi/3),sin(pi/3)];
 B.xy=pB;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
-Ketinit();
+Ketinit(0.5);
 Setwindow([0,10],[0,10]);
 Addax(0);
 A.xy=[10,0];
@@ -1805,16 +1807,20 @@ Slider("T",pO,A.xy);
 
 Meet(tt,pB):=(
  regional(pS,tmp);
- ra=tt/A.x;
- pS=ra*A.xy;
- pB1=ra*pB;
- Listplot("2",[pO,pB1,pS,pO],["nodisp"]);
- Reflectdata("1","sg2",[pS,pS+[0,1]],["nodisp"]);
- Scaledata("1","re1",(1-ra)/ra,[pS,"nodisp"]);
- pB2=sc1_2;
- Listplot("3",[pO,pB2],["nodisp"]);
- Listplot("4",[A.xy,pB1],["nodisp"]);
- tmp=Intersectcrvs("sg3","sg4");
+ if(tt>0,
+  ra=tt/A.x;
+  pS=ra*A.xy;
+  pB1=ra*pB;
+  Listplot("2",[pO,pB1,pS,pO],["nodisp"]);
+  Reflectdata("1","sg2",[pS,pS+[0,1]],["nodisp"]);
+  Scaledata("1","re1",(1-ra)/ra,[pS,"nodisp"]);
+  pB2=sc1_2;
+  Listplot("3",[pO,pB2],["nodisp"]);
+  Listplot("4",[A.xy,pB1],["nodisp"]);
+  tmp=Intersectcrvs("sg3","sg4");
+ ,
+  tmp="";
+ );
  if(length(tmp)>0,
    pP=tmp_1;
  ,
@@ -1823,11 +1829,21 @@ Meet(tt,pB):=(
  pP;
 );
 
-str="B=";
+str="B=10,pi/3";
 str=Textedit(60);// 
 tmp=Strsplit(str,"=");
 if(length(tmp_2)>0,
-  B.xy=parse(tmp_2);
+  tmp=Strsplit(tmp_2,",");
+  rr=A.x; arg=pi/3;
+  if(length(tmp)>1,
+    rr=parse(tmp_1);
+    arg=parse(tmp_2);
+  ,
+    arg=parse(tmp_1);
+  );
+  B.xy=rr*[cos(arg),sin(arg)];
+,
+  B.xy=B.xy;
 );
 if(|B.xy-pB|>10^(-3),
   pB=B.xy;
@@ -1835,10 +1851,9 @@ if(|B.xy-pB|>10^(-3),
 
 Listplot("1",[pO,pB,A,pO],["da"]);
 
-
 if(Mkflg==1,
- sL=apply(0..100,#/100*A.x);
- pL=[];
+ sL=apply(1..100,#/100*A.x);
+ pL=[[0,pO]];
  forall(sL,
    tmp=Meet(#,pB);
    if(tmp_2>0,
@@ -1884,8 +1899,8 @@ var cdy = CindyJS({
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.4], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "T", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "A", type: "Free", pos: [4.0, 0.0, 0.4], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "B", type: "Free", pos: [-2.3094010868503396, -4.0, -0.4618802173700679], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "Text60", type: "EditableText", pos: [-0.4043715846994536, -4.0, -0.42733645429840333], color: [0.0, 0.0, 0.0], text: "B=", textsize: 18.0},
+    {name: "B", type: "Free", pos: [-2.309401076758504, -4.0, -0.46188021535170065], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "Text60", type: "EditableText", pos: [-0.4043715846994536, -4.0, -0.42733645429840333], color: [0.0, 0.0, 0.0], text: "B=10,pi/3", textsize: 18.0},
     {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n\nMkflg=1;\n", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [285.0, 10.0]}},
     {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [348.0, 10.0]}},
     {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [425.0, 10.0]}},
@@ -1895,7 +1910,7 @@ var cdy = CindyJS({
     id: "CSCanvas",
     width: 1084,
     height: 550,
-    transform: [{visibleRect: [-10.16331198630694, 11.55316661691302, 16.740302648996416, -2.097191362253813]}],
+    transform: [{visibleRect: [-10.140928942576421, 11.743882430887435, 15.513730649643234, -1.2727806463457851]}],
     axes: true,
     grid: 1.0,
     snap: true,
