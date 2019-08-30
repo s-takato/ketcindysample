@@ -358,12 +358,15 @@ Slider(ptstr,p1,p2,options):=(//190120
     pB=substring(ptstr,tmp_2,length(ptstr));
     parse(pA).xy=p1;
     parse(pB).xy=p2; //190824to
-    tmp1=pC+"position"; //190826from
+    tmp1=pC+"position"; //190827from
     if(!islist(parse(tmp1)),
-      tmp=tmp1+"="+textformat((p1+p2)/2,6)+";";
+      tmp2=parse(pC).xy;
+      if(|tmp2-p1|<0.1,tmp2=p1+0.1*(p2-p1)/|p2-p1|);
+      if(|tmp2-p2|<0.1,tmp2=p2+0.1*(p1-p2)/|p1-p2|);
+      tmp=tmp1+"="+textformat(tmp2,6)+";";
       parse(tmp);
-      parse(pC).xy=(p1+p2)/2;
-    ); //190826to
+      parse(pC).xy=tmp2;
+    ); //190827to
     PTEXCEPTION=concat(TEXCEPTION,[pA,pC,pB]);
   ,
     pC=ptstr; pA=pC+"l"; pB=pC+"r"; 
@@ -371,21 +374,6 @@ Slider(ptstr,p1,p2,options):=(//190120
   );
   Listplot(pA+pB,[p1,p2],["Msg=n","notex",color,thick]);
   Putonseg(pC,parse("sg"+pA+pB));
-  tmp1=pC+"position"; //190824fro
-  if(!islist(parse(tmp1)),
-    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
-    parse(tmp);
-  ,
-    tmp=parse(pC).xy;
-    tmp2=mouse().xy;
-    if(|tmp-tmp2|>sep,
-      tmp=pC+".xy="+pC+"position";
-      parse(pC).xy=parse(pC+"position");
-    ,
-      tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
-      parse(tmp);
-    );
-  ); //190824to
 );
 Strsplit(str,key):=( //180505
   regional(start,out,tmp1,tmp2);
@@ -1583,6 +1571,7 @@ Windispg():=(
 );
 Windispg(gcLorg):=( //190125
   regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,opcindy);
+  forall(allpoints(),Strictmove(#));  //190827
   gcL=gcLorg; //190125from
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
@@ -1641,6 +1630,27 @@ Windispg(gcLorg):=( //190125
   );
   grestore(); 
   layer(0);
+);
+Strictmove(pC):=Strictmove(pC,0.1);
+Strictmove(pCorg,sep):=(
+  regional(pC,tmp,tmp1,tmp2);
+  pC=pCorg;
+  if(ispoint(pC),pC=pC.name);
+  tmp1=pC+"position";
+  if(!islist(parse(tmp1)),
+    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
+    parse(tmp);
+  ,
+    tmp=parse(pC).xy;
+    tmp2=mouse().xy;
+    if(|tmp-tmp2|>sep,
+      tmp=pC+".xy="+pC+"position";
+      parse(pC).xy=parse(pC+"position");
+    ,
+      tmp=tmp1+"="+Textformat(parse(pC).xy,6)+";";
+      parse(tmp);
+    );
+  );
 );
 Dashlinedata(dataorg,sen,gap,ptn):=(
   regional(data,eps,dtall,len,lenlist,ii,lenall,kari,
@@ -1828,7 +1838,7 @@ if(initflg==1,
 );
 
 if(pflg==1,
-  tt=ts+1000;
+  tt=ts+3000;
   tmp=pL_(length(pL));
   ts=tmp_1;
   x1=tmp_2_1;y1=tmp_2_2;u1=tmp_3_1;v1=tmp_3_2;
@@ -1867,10 +1877,11 @@ mf(ss):=(
 ss=Animationparam(0,2^(T.x+6),[0,tmp_1]);
 mf(ss);
 
-Letter([-4.5,3.3],"nw",format(re(ss),1),["Size=1.2"]);
+Letter([-4.5,3.3],"nw",text(re(floor(ss))),["Size=1.2"]);
 tmp=pL_(length(pL));
 Letter([-4.5,2.5],"nw",text(re(floor(tmp_1))),["Size=1.2"]);
 
+println(allpoints());
 Windispg();
 ;
 </script>
@@ -1890,8 +1901,7 @@ var cdy = CindyJS({
     {name: "SW", type: "Free", pos: [4.0, 3.6666666666666665, -0.6666666666666666], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 3.3333333333333335, 0.6666666666666666], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "A", type: "Free", pos: [4.0, 0.0, 1.3333333333333333], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
-    {name: "Text0", type: "Free", pos: [4.0, 1.086303229971284, 1.7808249671660397], color: [1.0, 0.0, 0.0], size: 0.0, border: true },
-    {name: "C", type: "Free", pos: [4.0, -0.0, -1.5118578920369088], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "C", type: "Free", pos: [4.0, -0.0, -1.5118580697881243], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T", type: "Free", pos: [4.0, 2.6666666666666665, -0.6666666666666666], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "Text66", type: "EditableText", pos: [1.2,4.5,1], color: [0.0, 0.0, 0.0], text: "vx=-1", textsize: 23},
     {name: "Text67", type: "EditableText", pos: [1.2,3.6,1], color: [0.0, 0.0, 0.0], text: "vy=1", textsize: 23},

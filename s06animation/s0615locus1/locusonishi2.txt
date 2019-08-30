@@ -1,0 +1,81 @@
+//ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+Mkflg=1;
+pB=A.x*[cos(pi/3),sin(pi/3)];
+B.xy=pB;
+
+//figures
+Ketinit();
+Setketcindyjs(["No=all"]);//no ketjs
+Setwindow([0,10],[0,10]);
+Addax(0);
+A.xy=[10,0];
+pO=[0,0];
+Slider("T",pO,A.xy);
+
+Meet(tt,pB):=(
+ regional(pS,tmp);
+ ra=tt/A.x;
+ pS=ra*A.xy;
+ pB1=ra*pB;
+ Listplot("2",[pO,pB1,pS,pO],["nodisp"]);
+ Reflectdata("1","sg2",[pS,pS+[0,1]],["nodisp"]);
+ Scaledata("1","re1",(1-ra)/ra,[pS,"nodisp"]);
+ pB2=sc1_2;
+ Listplot("3",[pO,pB2],["nodisp"]);
+ Listplot("4",[A.xy,pB1],["nodisp"]);
+ tmp=Intersectcrvs("sg3","sg4");
+ if(length(tmp)>0,
+   pP=tmp_1;
+ ,
+   pP=[tt,-1];
+ );
+ pP;
+);
+
+str="B=";
+//str=Textedit(60);// only ketjs
+tmp=Strsplit(str,"=");
+if(length(tmp_2)>0,
+  B.xy=parse(tmp_2);
+);
+if(|B.xy-pB|>10^(-3),
+  pB=B.xy;
+);
+
+Listplot("1",[pO,pB,A,pO],["da"]);
+
+if(Mkflg==1,
+ sL=apply(0..100,#/100*A.x);
+ pL=[];
+ forall(sL,
+   tmp=Meet(#,pB);
+   if(tmp_2>0,
+     pL=append(pL,[#,tmp]);
+   );
+ );
+ Mkflg=0;
+);
+
+mf(s):=(
+ tmp1=select(pL,#_1<=s);
+ if(length(tmp1)>0,
+  tmp2=apply(tmp1,#_2);
+  Listplot("m",tmp2);
+ );
+ if(s>0,
+  Meet(s,pB);
+  Changestyle(["sg2","sc1"],["Color=blue"]);
+  Changestyle(["sg3","sg4"],["Color=red"]);
+ );
+);
+
+ss=Animationparam(T.x,1,[0,10]);
+//mf(T.x);
+mf(ss);
+
+Windispg();
