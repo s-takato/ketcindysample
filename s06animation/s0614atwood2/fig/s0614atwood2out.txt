@@ -1,0 +1,22 @@
+NIL
+(%i3) powerdisp:false
+(%i4) display2d:false
+(%i5) linel:1000
+(%i6) Lg:(1/2)*m1*(L0+R*(F-P))^2*G^2+(1/2)*(I0+(m1+m2)*R^2)*Q^2+(-m1)*g*(R*sin(F)-(L0+R*(F-P))*cos(F))+m2*g*R*P
+(%i7) dLdQ:diff(Lg,Q)
+(%i8) dLdP:diff(Lg,P)
+(%i9) dLdG:diff(Lg,G)
+(%i10) dLdF:diff(Lg,F)
+(%i11) disp(dLdQ)
+Q*(R^2*(m2+m1)+I0)
+
+(%i12) disp(dLdP)
+R*g*m2-cos(F)*R*g*m1-G^2*R*((F-P)*R+L0)*m1
+
+(%i13) disp(dLdG)
+G*((F-P)*R+L0)^2*m1
+
+(%i14) disp(dLdF)
+G^2*R*((F-P)*R+L0)*m1-sin(F)*((F-P)*R+L0)*g*m1
+
+(%i15) closefile()
