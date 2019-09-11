@@ -13,7 +13,8 @@ Divisor(n):=(
 
 //figures
 Ketinit();
-Setketcindyjs(["Nolbl=all","Loc=n"]);//no ketjs
+Setketcindyjs(["Nolbl=all","Axe=n"]);//no ketjs
+Ketcindyjsbody(["<p,f10>Reflection"],[]);
 
 mm=2;
 nn=1;

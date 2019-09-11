@@ -1,4 +1,9 @@
 // ketlb
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
 X.x=pi;
 pC=[-1,0];
 pO=[0,0];
@@ -6,7 +11,7 @@ Lastx=0;
 ptL=[[0,0],[pi,0]];
 kcL=[];
 ctrall=12;
-drwsin=false;
+drwsin=0;
 Opt=["dr,2","Color=red","Msg=n"];
 Findpointongraph(x,tt):=(
   regional(xmx,//tt,
@@ -82,8 +87,10 @@ Initbezier(ptL):=(
     tmp=unicode(text(64+#-1),base->10);
     tmp1=tmp+"1.xy="+Textformat((2*pt1+pt2)/3,3)+";";
     parse(tmp1);
+    Ptpos(tmp+"1",(2*pt1+pt2)/3);
     tmp1=tmp+"2.xy="+Textformat((pt1+2*pt2)/3,3)+";";
     parse(tmp1);
+    Ptpos(tmp+"2",(pt1+2*pt2)/3);
     cL=cL+","+tmp+"1,"+tmp+"2";
   );
   cL="["+substring(cL,1,length(cL))+"];";
@@ -116,7 +123,9 @@ Resetctrpt(nn):=(
     tmp1=Textformat([7,YMAX-#/4],5);
     tmp2=Textformat([7.5,YMAX-#/4],5);
     parse(tmp+"1.xy="+tmp1+";");
+    Ptpos(tmp+"1",[7,YMAX-#/4]);
     parse(tmp+"2.xy="+tmp2+";");
+    Ptpos(tmp+"2",[7.5,YMAX-#/4]);
   );
   homectr=true;
 );

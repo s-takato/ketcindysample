@@ -114,6 +114,7 @@ Setwindow(str):=(
     Putpoint("SW",Pcrd([XMIN,YMIN]));
     Putpoint("NE", Pcrd([XMAX,YMAX])); 
   );
+  Strictmove("SW"); Strictmove("NE"); //
 );
 Setwindow(xrange,yrange):=(
   XMIN=xrange_1;
@@ -1692,6 +1693,7 @@ Ketcindyjsscale=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
+Ketcindyjsbody(["<p,f10>_Napier`s Constant"],[]);
 Setwindow([-2,2],[-0.5,3.5]);
 Setax(["Size=2","a0.5"]);
 Slider("A",[-2+0.1,-1],[2,-1]);
@@ -1745,7 +1747,7 @@ var cdy = CindyJS({
     id: "CSCanvas",
     width: 647,
     height: 506,
-    transform: [{visibleRect: [-4.240008880995141, 4.752315200479451, 4.482680295487709, -2.069447895811619]}],
+    transform: [{visibleRect: [-3.6478360699418366, 4.277754591504412, 3.8419816854162585, -1.5798153995484405]}],
     axes: false,
     grid: 1.0,
     snap: true,
@@ -1757,6 +1759,6 @@ var cdy = CindyJS({
     </script>
 </head>
 <body>
+    <p><font size="10">&emsp;Napier's Constant</font></p>
     <div id="CSCanvas"></div>
-</body>
 </html>
