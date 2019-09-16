@@ -682,15 +682,35 @@ PaO(Arg):=(
   );
   out;
 );
-Ketinit():=Ketinit("fig",1,[-5,5],[-5,5]); //181001
+Ptpos(pt):=Ptpos(pt,[]);
+Ptpos(ptorg,pos):=(
+  regional(pt,out,tmp);
+  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
+  if(length(pos)==0,
+    tmp=pt.name+"position";
+    out=parse(tmp);
+    if(!islist(out),
+      tmp=tmp+"="+Textformat(pt.xy,6)+";";
+      parse(tmp);
+    );
+  ,
+    pt.xy=pos;
+    tmp=pt.name+"position="+Textformat(pt.xy,6)+";";
+    parse(tmp);
+    out=pt.xy;
+  );
+  out;
+);
+Ketinit():=Ketinit("fig",1,[-5,5],[-5,5],0.3); //190831from
 Ketinit(Arg):=(//181001from
   if(isstring(Arg),
-     Ketinit(Arg,1,[-5,5],[-5,5]);
+    Ketinit(Arg,1,[-5,5],[-5,5],0.3);
   ,
-    Ketinit("fig",Arg,[-5,5],[-5,5]);
+    Ketinit("fig",1,[-5,5],[-5,5],Arg);
   );
 );
-Ketinit(work,sy,rangex,rangey):=(//181001to
+Ketinit(Arg1,Arg2):=Ketinit(Arg1,1,[-5,5],[-5,5],Arg2);
+Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
  regional(pt,tmp,tmp1,tmp2,letterc,boxc,shadowc,mboxc);
   PenThickInit=8;
   ULEN="1cm";
@@ -717,7 +737,7 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   FUNLIST=[];
   LETTERlist=[];
   ADDAXES="1";
-  AXSTYLE=["l","x","e","y","n","O","sw","","",""]; //181216
+  AXSTYLE=[["l","x","e","y","n","O","sw","","",""],[]]; //190901
   AXCOUNT=1; //181215
   SHADECTR=1; //190222
   LFmark=unicode("000a");
@@ -733,6 +753,7 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   XMAX=rangex_2/SCALEX;
   YMIN=rangey_1/SCALEY;
   YMAX=rangey_2/SCALEY;
+  StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
 );
 Setwindow():=Setwindow("Msg=yes");
@@ -751,6 +772,7 @@ Setwindow(str):=(
     Putpoint("SW",Pcrd([XMIN,YMIN]));
     Putpoint("NE", Pcrd([XMAX,YMAX])); 
   );
+  Strictmove("SW"); Strictmove("NE"); //
 );
 Setwindow(xrange,yrange):=(
   XMIN=xrange_1;
@@ -759,12 +781,34 @@ Setwindow(xrange,yrange):=(
   YMAX=yrange_2;
   Putpoint("SW",[XMIN,YMIN]);//181016
   Putpoint("NE",[XMAX,YMAX]);//181016
+  Strictmove("SW"); Strictmove("NE"); //
 );
 Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
 Putpoint(name,Ptinit,Pt):=(
   regional(ptstr);
     ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
     parse(ptstr);
+);
+Strictmove(pC):=Strictmove(pC,StrictSep); //190831
+Strictmove(pCorg,sep):=(
+  regional(pC,tmp,tmp1,tmp2);
+  pC=pCorg;
+  if(ispoint(pC),pC=pC.name);
+  tmp1=pC+"position";
+  if(!islist(parse(tmp1)),
+    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
+    parse(tmp);
+  ,
+    tmp=parse(pC).xy;
+    tmp2=mouse().xy;
+    if(|tmp-tmp2|>sep,
+      tmp=pC+".xy="+pC+"position";
+      parse(pC).xy=parse(pC+"position");
+    ,
+      tmp=tmp1+"="+Textformat(parse(pC).xy,6)+";";
+      parse(tmp);
+    );
+  );
 );
 Slider(ptstr,p1,p2):=Slider(ptstr,p1,p2,[]);
 Slider(ptstr,p1,p2,options):=(//190120
@@ -809,6 +853,7 @@ Slider(ptstr,p1,p2,options):=(//190120
   );
   Listplot(pA+pB,[p1,p2],["Msg=n","notex",color,thick]);
   Putonseg(pC,parse("sg"+pA+pB));
+  Strictmove(pC);
 );
 Listplot(list):=Listplot(list,[]);
 Listplot(Arg1,Arg2):=(
@@ -928,18 +973,25 @@ LLcrd(pt):=(
 Addax(param):=(
   ADDAXES=text(param);
 );
-Setax(arglist):=(
-  regional(st,nn,tmp); //181215from
-  st=1; nn=1;
+Setax(arglistorg):=(
+  regional(arglist,st,nn,tmp,eqL); 
+  tmp=Divoptions(arglistorg); //190901from
+  eqL=tmp_5;
+  arglist=remove(arglistorg,eqL);
+  if(length(arglist)==0,
+    arglist=["l","x","e","y","n","O","sw"];
+  ); //190901to
+  st=1; nn=1; 
   if(isreal(arglist_1),
     st=2;
     nn=arglist_1;
   );
   forall(st..(length(arglist)),
     tmp=arglist_#;
-    if(length(tmp)>0,AXSTYLE_nn=tmp);
+    if(length(tmp)>0,AXSTYLE_1_nn=tmp);
     nn=nn+1;
-  ); //181215from
+  ); 
+  AXSTYLE=[AXSTYLE_1,eqL]; //190901,02
 );
 Circledata(cenrad):=Circledata(cenrad,[]);
 Circledata(para1,para2):=(
@@ -1843,7 +1895,7 @@ Windispg():=(
 );
 Windispg(gcLorg):=( //190125
   regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,opcindy);
-  forall(allpoints(),Strictmove(#)); // 
+  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name));  //
   gcL=gcLorg; //190125from
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
@@ -1903,13 +1955,16 @@ Windispg(gcLorg):=( //190125
   grestore(); 
   layer(0);
 );
-Drwxy():=Drwxy(0,[]); //190103from
-Drwxy(Arg):=(
-  if(islist(Arg),Drwxy(0,Arg); Drwxy(Arg,[]));
+Drwxy():=Drwxy(0,[]);
+Drwxy(Arg):=( //190901from
+  if(islist(Arg),
+    Drwxy(0,Arg);
+  ,
+    Drwxy(Arg,[]);
+  ); //190901to
 );
-Drwxy(add):=Drwxy(add,[]);
-Drwxy(add,optionsorg):=( //190103to
-  regional(options,color,eqL,strL,org,xrng,yrng,ax,st,nn,size,
+Drwxy(add,optionsorg):=(
+  regional(options,color,eqL,strL,org,xrng,yrng,ax,st,nn,size,labelsize,
   linesty,colorax,colorla,tmp,tmp1,tmp2);
   options=optionsorg;
   tmp=Divoptions(options);
@@ -1918,7 +1973,16 @@ Drwxy(add,optionsorg):=( //190103to
   org=GENTEN; 
   xrng=[XMIN,XMAX];  //190103
   yrng=[YMIN,YMAX];  //190103
-  ax=AXSTYLE;
+  ax=AXSTYLE_1; //190901from
+  labelsize="Size=1";
+  forall(AXSTYLE_2,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(contains(["S","L"],tmp1), 
+      labelsize="Size="+tmp_2;
+      options=remove(options,[#]);
+    );
+  );  //190901to
   linesty=ax_8;
   if(length(ax_9)>0, //190427
     if(isstring(ax_9),colorax=ax_9,colorax=text(ax_9));
@@ -1935,8 +1999,6 @@ Drwxy(add,optionsorg):=( //190103to
     );
   ); //181217to
   forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
     if(tmp1=="O", //190103from
       org=parse(tmp_2);
       options=remove(options,[#]);
@@ -1984,9 +2046,10 @@ Drwxy(add,optionsorg):=( //190103to
     Listplot("-axy"+text(AXCOUNT),tmp,tmp1); 
   );
   AXCOUNT=AXCOUNT+1;
-  Expr([[xrng_2,org_2],ax_3,ax_2],[colorla]);//181216[3lines]
-  Expr([[org_1,yrng_2],ax_5,ax_4],[colorla]);
-  Letter([org,ax_7,ax_6],[colorla]);
+  tmp=[colorla,labelsize]; //190901from
+  Expr([[xrng_2,org_2],ax_3,ax_2],tmp);
+  Expr([[org_1,yrng_2],ax_5,ax_4],tmp);
+  Letter([org,ax_7,ax_6],tmp); //190901to
   if(add==0, //190103
     Addax(0);
   );
@@ -2110,27 +2173,6 @@ Setscaling(sc):=(
   );
   Setwindow("Msg=no");
 );
-Strictmove(pC):=Strictmove(pC,0.1);
-Strictmove(pCorg,sep):=(
-  regional(pC,tmp,tmp1,tmp2);
-  pC=pCorg;
-  if(ispoint(pC),pC=pC.name);
-  tmp1=pC+"position";
-  if(!islist(parse(tmp1)),
-    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
-    parse(tmp);
-  ,
-    tmp=parse(pC).xy;
-    tmp2=mouse().xy;
-    if(|tmp-tmp2|>sep,
-      tmp=pC+".xy="+pC+"position";
-      parse(pC).xy=parse(pC+"position");
-    ,
-      tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
-      parse(tmp);
-    );
-  );
-);
 Dashlinedata(dataorg,sen,gap,ptn):=(
   regional(data,eps,dtall,len,lenlist,ii,lenall,kari,
       naga,tobi,nsen,seglist,segunit,hajime,owari,jj,
@@ -2207,6 +2249,7 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
 );
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1.2;
+
 X.x=pi;
 pC=[-1,0];
 pO=[0,0];
@@ -2214,7 +2257,7 @@ Lastx=0;
 ptL=[[0,0],[pi,0]];
 kcL=[];
 ctrall=12;
-drwsin=false;
+drwsin=0;
 Opt=["dr,2","Color=red","Msg=n"];
 Findpointongraph(x,tt):=(
   regional(xmx,//tt,
@@ -2290,8 +2333,10 @@ Initbezier(ptL):=(
     tmp=unicode(text(64+#-1),base->10);
     tmp1=tmp+"1.xy="+Textformat((2*pt1+pt2)/3,3)+";";
     parse(tmp1);
+    Ptpos(tmp+"1",(2*pt1+pt2)/3);
     tmp1=tmp+"2.xy="+Textformat((pt1+2*pt2)/3,3)+";";
     parse(tmp1);
+    Ptpos(tmp+"2",(pt1+2*pt2)/3);
     cL=cL+","+tmp+"1,"+tmp+"2";
   );
   cL="["+substring(cL,1,length(cL))+"];";
@@ -2308,7 +2353,9 @@ Resetctrpt(nn):=(
     tmp1=Textformat([7,YMAX-#/4],5);
     tmp2=Textformat([7.5,YMAX-#/4],5);
     parse(tmp+"1.xy="+tmp1+";");
+    Ptpos(tmp+"1",[7,YMAX-#/4]);
     parse(tmp+"2.xy="+tmp2+";");
+    Ptpos(tmp+"2",[7.5,YMAX-#/4]);
   );
   homectr=true;
 );
@@ -2320,18 +2367,16 @@ Resetctrpt(ctrall);
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
-Setparent(Cdyname()+"fig");
 Setwindow([-2.5,6.5],[-1.5,pi]);
 Slider("X",[0,0],[2*pi,0]);
-
-Setketcindyjs(["Scale=1.2","Nolabel="+pts,"Grid=0.2"]);
+Setketcindyjs(["Scale=1.2","Nolabel=all","Grid=0.2"]);
+Ketcindyjsbody(["<p,f10>__Graph of sin(x)"],[]);
 
 Addax(1);
 
 Setax([7,"se"]);
 Circledata("0",[pC,pO],["dr,1.5","Msg=y"]);
 Bowdata("0",[pC,pO],[1.4,0.3,"E=1","do,1,1.2","Msg=n"]);
-Letter([[2,YMAX],"n1","Graph of $y=\sin x$"],["size->30"]);
 Listplot("0",[pO,[x,0]],Opt);
 x=X.x;
 x=round(x*100)/100;
@@ -2362,13 +2407,11 @@ if(!homectr,
   Letter(A,"e",tmp,["size->24"]);
 );
 
-if(drwsin,
+if(drwsin==1,
   Plotdata("sin","sin(x)","x=[0,XMAX]",["Color=blue"]);
 );
 
-figpdf();
 Windispg();
-
 
 ;
 </script>
@@ -2413,18 +2456,17 @@ var cdy = CindyJS({
     {name: "L1", type: "Free", pos: [4.0, 0.08090857142857143, 0.5714285714285714], color: [1.0, 0.0, 0.0], size: 2.0, border: true },
     {name: "L2", type: "Free", pos: [4.0, 0.07551466666666666, 0.5333333333333333], color: [1.0, 0.0, 0.0], size: 2.0, border: true },
     {name: "A", type: "Free", pos: [4.0, 1.3957446808510638, 1.205533097042943], color: [1.0, 0.0, 0.0], size: 2.0, border: true },
-    {name: "Text43", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "kcL=Initbezier(ptL);", text: "Draw", textsize: 18.0, dock: {corner: "LL", offset: [422.0, 29.0]}},
-    {name: "Text41", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "resetclock();playanimation();", text: "Plot", textsize: 18.0, dock: {corner: "LL", offset: [271.0, 29.0]}},
-    {name: "Text42'", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ptL=ptL_(1..(length(ptL)-1));", text: "Undo", textsize: 18.0, dock: {corner: "LL", offset: [340.0, 29.0]}},
-    {name: "Text44", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ptL=[];\nkcL=[];\nbz1=[];\nX.x=@i;\nx=X.x;\ndrwsin=false;\nResetctrpt(ctrall);", text: "New", textsize: 18.0, dock: {corner: "LL", offset: [635.0, 29.0]}},
-    {name: "Text45", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "drwsin=!drwsin;\n", text: "Sin", textsize: 18.0, dock: {corner: "LL", offset: [568.0, 29.0]}},
-    {name: "Text44'", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "bz1=[];\nResetctrpt(ctrall);", text: "Add", textsize: 18.0, dock: {corner: "LL", offset: [499.0, 29.0]}}
+    {name: "Text43", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "kcL=Initbezier(ptL);", text: "Draw", textsize: 18.0, dock: {corner: "LL", offset: [422.0, 21.0]}},
+    {name: "Text41", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "resetclock();playanimation();", text: "Plot", textsize: 18.0, dock: {corner: "LL", offset: [271.0, 21.0]}},
+    {name: "Text42'", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ptL=ptL_(1..(length(ptL)-1));", text: "Undo", textsize: 18.0, dock: {corner: "LL", offset: [340.0, 21.0]}},
+    {name: "Text45", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "drwsin=1-drwsin;\n", text: "Sin", textsize: 18.0, dock: {corner: "LL", offset: [568.0, 21.0]}},
+    {name: "Text44'", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "bz1=[];\nResetctrpt(ctrall);", text: "Add", textsize: 18.0, dock: {corner: "LL", offset: [499.0, 21.0]}}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1092,
-    height: 563,
-    transform: [{visibleRect: [-3.591265019370656, 4.128920818815783, 8.954036967682308, -2.3367348206653595]}],
+    width: 1073,
+    height: 601,
+    transform: [{visibleRect: [-3.64701749419326, 3.8378894378145896, 8.541519477054495, -2.9925994017772735]}],
     axes: true,
     grid: 0.2,
     background: "rgb(217,217,217)"
@@ -2435,6 +2477,7 @@ var cdy = CindyJS({
     </script>
 </head>
 <body>
+    <p><font size="10">&emsp;&emsp;Graph of sin(x)</font></p>
     <div id="CSCanvas"></div>
 </body>
 </html>

@@ -1,7 +1,12 @@
 Ketinit();
-Setketcindyjs(["Nolabel=all","Local=n"]);//no ketjs
+Setketcindyjs(["Nol=all","Equal="]);//no ketjs
+prelist=[
+ "<p,f10>_;Input TeX-like form",
+ "<p,f5>_;_;_;fr(2,3),sq(3),sq(3,2),log(2,3),sin(pi/4)"
+];
+Ketcindyjsbody(prelist,[]);
 
-Setwindow([0,5],[-0.5,3]);
+//Setwindow([0,5],[-0.5,3]);
 Addax(0);
 
 inspect(Text50,"textsize",30);//no ketjs on
@@ -12,33 +17,35 @@ inspect(Text50,"text.text",str);
 inspect(Text51,"text.text",str);
 inspect(Text52,"text.text",str);//no ketjs off
 
-//pos=1; //only ketjs on
-//pos2=2.75;
-//win=[50,51,52];
-//anst="";
-//ansc="";
-//forall(win,
-//  str=Textedit2value(#,["Form=t"]);
-//  str=Assign(str,["ans",anst]);
-//  anst=str;
-//  if(indexof(str,"?")==0,
-//    Expr([0.1,pos],"e",str,["Size=3"]);
-//    Letter([4.1,pos],"e",str,["Size=2"]);
-//  ,
-//    Letter([0.1,pos],"e",str,["Size=3"]);
-//  ); 
-//  str=Textedit2value(#,["Form=c","Parse=n"]);
-//  str=Assign(str,["ans",ansc]);
-//  ansc=str;
-//  if((length(str)>0)&(indexof(str,"?")==0),
-//    str=parse(str);
-//    str=format(str,8);
-//  );
-//  Letter([6.5,pos2],"w",str,["Size=2.5"]);
-//  pos=pos-0.6;
-//  pos2=pos2-0.52;
-//); //only ketjs off
+//Letter([0,3.2],"e","Input TeX-like form",["Size=3"]);
+
+pos=1;
+pos2=2.75;
+win=[50,51,52];
+forall(1..(length(win)),
+  str="sin(pi)";
+//  str=Textedit(win_#); //only ketjs
+  tstr=Totexform(str);
+  Expr([0.1,pos],"e",tstr,["Size=3"]);
+  Letter([4.1,pos],"e",tstr,["Size=2"]);
+  if(length(str)>0,
+    cstr=Tocindyform(str);
+    if(indexof(cstr,"?")==0,
+      tmp=Strsplit(cstr,"=");
+      if(length(tmp)==1,
+        name="a"+text(#);
+        val=parse(tmp_1);
+      ,
+        name=tmp_1;
+        val=parse(tmp_2);
+      );
+      tmp=name+"="+Textformat(val,8);
+      Letter([6.5,pos2],"w",tmp,["Size=3"]);
+      parse(tmp+";");
+    );
+  );
+  pos=pos-0.6;
+  pos2=pos2-0.52;
+);
 
 Windispg();
-
-

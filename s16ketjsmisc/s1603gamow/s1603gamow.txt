@@ -1,6 +1,27 @@
+//Ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+rotate(points,th):=(
+  regional(pa,pb,za,zb,zr,deg);
+  pa=points_1; pb=points_2;
+  za=pa.x+pa.y*i; zb=pb.x+pb.y*i;
+  deg=pi/180*th;
+  zr=za+(zb-za)*(cos(deg)+i*sin(deg));
+  [re(zr),im(zr)];
+);
+
+Ds=0.5;
+
+ptsL=[];
+pc=C.xy;
+
+//Figures
 Ketinit();
-Setparent(Cdyname()+"fig");
-Setketcindyjs(["Sc=1","Nolabe=all","Color=lightgray"]);
+Setketcindyjs(["Sc=1","Nol=all","Axe=n"]);
+Ketcindyjsbody(["<p,f10>Gamow"],[]);
 
 A.xy=[-2,0];
 B.xy=[2,0];
@@ -18,6 +39,5 @@ forall(1..(length(ptsL)),
   Listplot(text(#),ptsL_#,["dr,0.3","Color=red"]);
 );
 
-Figpdf();
 Windispg();
 
