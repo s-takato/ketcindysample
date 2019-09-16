@@ -63,97 +63,104 @@ Ketinit();
 Addglist();
 Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Color=offwhite"]);//no ketjs
 Setwindow([-6,6],[-5.5,5]);
-Slider("T",[0,-4],[6,-4]);
+A.y=0;
+Strictmove(A);
+Slider("T",[-6,-4],[6,-4]);
 
 Addax(0);
 
-A.y=0;
-C.xy=pF;
-
-fun=Assign("[a*cos(t),b*sin(t)]",["a",aa,"b",bb]);
-Drwxy();
-Paramplot("1",fun,"t=[0,2*pi]");
-Pointdata("1",C,["Size=3","Color=red","border->false"]);
+Cindyparse(str,value):=(
+  regional(semi,tmp,tmp1);
+  semi=Strsplit(str,";");
+  forall(semi,
+    if(length(#)>0,
+      if(length(#)>0,
+        tmp=Strsplit(#,"=");
+        if(length(tmp_2)==0,
+          tmp1=str+format(value,6);
+        ,
+          tmp1=tmp_1+"="+Tocindyform(tmp_2);
+        );
+        parse(tmp1+";");
+      );
+    );
+  );
+);
 
 str0="A,x=3";
+a=4;b=3;
 str1="vx=-1";
 str2="vy=1";
 //str0=Textedit(65);// only ketjs on
 //str1=Textedit(66);
 //str2=Textedit(67);// only ketjs off
-tmp=Strsplit(str0,"=");
-if(length(tmp_2)==0,str0=str0+text(A.x));
-parse(str0+";");
-tmp=Strsplit(str1,"=");
-if(length(tmp_2)==0,str1=str1+"-1");
-tmp=Strsplit(str2,"=");
-if(length(tmp_2)==0,str2=str2+"1");
-parse(str1+";"+str2+";");
+Cindyparse(str0,Ptpos(A)_1);
+Cindyparse(str1,-1);
+Cindyparse(str2,1);
+
 vec=[vx,vy];
 vec=vec/|vec|;
-Arrowdata("1",[A,A+vec],["dr,2","Color=red","border->false"]);
+Arrowdata("1",[Ptpos(A),Ptpos(A)+vec],["dr,2","Color=red","border->false"]);
 
-Getvalue(n,rep):=(
-  regional(tmp);
-  tmp=Assign(ans_n,rep);
-  parse(tmp);
+Eps=10^(-4);
+if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps)%(|[a,b]-aborg|>Eps),
+  vorg=vec;
+  Axorg=A.x;
+  aborg=[a,b];
+  initflg=1;
 );
 
-Eps=10^(-4);ß
-if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps),
-  mflg=1;
-);
+pF=[-sqrt(a^2-b^2),0];
+C.xy=pF;
+Drwxy();
+fun=Assign("[a*cos(t),b*sin(t)]",["a",a,"b",b]);
+Paramplot("1",fun,"t=[0,2*pi]");
+Pointdata("1",C,["Size=3","Color=red","border->false"]);
 
-if((pflg==-1)%(mflg==1),
-  Letter([2.5,-5.5],"s","Make",["Size=1.2","Color=red"]);
+if(initflg==1,
+  tt=200;
+  u1=vec_1; v1=vec_2; x1=A.x; y1=0;
+  tmp=fans0(a,b,u1,v1,x1,y1);
+  t0=tmp_1; x2=tmp_2; y2=tmp_3;
+  pL=[[0,[x1,y1],[u1,v1]],[t0,[x2,y2],[u1,v1]]];
+  ts=t0;
+  while(ts<tt,
+    x1=x2; y1=y2;
+    tmp=fans(a,b,u1,v1,x1,y1);
+    u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
+    if(abs(t2)<Eps,
+      t2=t2a; x2=x2a; y2=y2a;
+    );
+    ts=ts+t2;
+    pL=append(pL,[ts,[x2,y2],[u2,v2]]);
+    u1=u2; v1=v2;
+  );
+  initflg=0;
 );
 
 if(pflg==1,
-  tt=6000;
-  x0=A.x; y0=0;
-  u1=vec_1;v1=vec_2;
-  pL=[[0,[x0,y0]]];
-  rep0=["a",aa,"b",bb];
-  flg=0;
-  tr=tt;
-  while(tr>0,
-    rep=concat(rep0,["x0",x0,"y0",y0,"u1",u1,"v1",v1]);
-    t1=Getvalue(1,rep);
-    rep2=concat(rep,["t",t1]);
-    x1=Getvalue(2,rep2);
-    y1=Getvalue(3,rep2);
-    rep2=concat(rep2,["x1",x1,"y1",y1]);
-    u2=-Getvalue(4,rep);
-    v2=-Getvalue(5,rep);
-    tr=tr-t1;
-    if(tr>0,
-      tmp=pL_(length(pL));
-      tmp=tmp_1;
-      pL=append(pL,[tmp+t1,[x1,y1]]);
-      x0=x1; y0=y1;
-      u1=u2; v1=v2;
-    );
-  );
-  tr=tr+t1;
-  if(tr>0,
-    if(flg==0,
-      pL=append(pL,[tt,[x0+u1*tr,y0+v1*tr]]);
-      flg=1;
-    ,
-      pL_(length(pL))=[tt,[x0+u1*tr,y0+v1*tr]];
+  tt=ts+3000;
+  tmp=pL_(length(pL));
+  ts=tmp_1;
+  x1=tmp_2_1;y1=tmp_2_2;u1=tmp_3_1;v1=tmp_3_2;
+  forall(1..1000,
+    if(ts>tt,pflg=0);
+    if(pflg==1,
+      tmp=fans(a,b,u1,v1,x1,y1);
+      u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
+      if(abs(t2)<Eps,
+        t2=tmp_6; x2=tmp_7; y2=tmp_8;
+      );
+      ts=ts+t2;
+      pL=append(pL,[ts,[x2,y2],[u2,v2]]);
+      u1=u2; v1=v2; x1=x2; y1=y2;
     );
   );
   pflg=0;
-  vorg=vec;
-  Axorg=A.x;
-  mflg=0;
-  Letter([2.5,-5.5],"s","Make",["Size=1.2","Color=offwhite"]);
-  Letter([2.5,-5.5],"s","Ready",["Size=1.2","Color=blue"]);
 );
 
 mf(ss):=(
- regional(plist,tmp,tmp1,tmp2);
- if(pflg==0,
+  regional(plist,tmp,tmp1,tmp2);
   plist=select(pL,#_1<=ss);
   tmp=length(plist);
   tmp1=plist_tmp;
@@ -166,10 +173,13 @@ mf(ss):=(
   if(length(plist)>1,
     Listplot("1",plist);
   );
- );
 );
 
-ss=Animationparam(0,2^(T.x+1),[0,6000]);
+ss=Animationparam(0,2^(T.x+6),[0,tmp_1]);
 mf(ss);
+
+Letter([-4.5,3.3],"nw",text(re(floor(ss))),["Size=1.2"]);
+tmp=pL_(length(pL));
+Letter([-4.5,2.5],"nw",text(re(floor(tmp_1))),["Size=1.2"]);
 
 Windispg();

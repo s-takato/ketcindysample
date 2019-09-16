@@ -78,6 +78,8 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   YMAX=rangey_2/SCALEY;
   StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
+  KETJSOP=[]; //190916
+  JSBODY=[[],[]]; //190916
 );
 Indexall(str,key):=(
   regional(rest,out,flg,tmp,tmp1,);
@@ -189,15 +191,6 @@ Textformat(value,dig):=(
   );
   tmp1;
 );
-Lcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=[pt.x/SCALEX,pt.y/SCALEY];
-  ,
-    tmp=pt;
-  );
-  tmp;
-);
 Pcrd(pt):=(
   regional(tmp);
   if(ispoint(pt),
@@ -294,6 +287,15 @@ Dotprod(vec1,vec2):=(
   if(ispoint(vec1),v1=vec1.xy,v1=vec1);
   if(ispoint(vec2),v2=vec2.xy,v2=vec2);
   v1*v2;
+);
+Lcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=[pt.x/SCALEX,pt.y/SCALEY];
+  ,
+    tmp=pt;
+  );
+  tmp;
 );
 Bezier(ptctrlist):=Beziercurve(ptctrlist_3,ptctrlist_1,ptctrlist_2,[]);
 Bezier(Arg1,Arg2):=( //190202from
@@ -1579,10 +1581,11 @@ Ketcindyjsscale=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
-Setketcindyjs(["Nol=all"]);
-Ketcindyjsbody(["<p,f10>Oshima spline/Movable point"],[]);
-Ospline("1",[A,B,C,D,E,A]);
+apply([A,B,C,D,E,A],Strictmove(text(#)));//
+pL=apply([A,B,C,D,E,A],Ptpos(#));//
+Ospline("1",pL);
 Putoncurve("G","bzo1");
+Strictmove("G");//
 Letter(G,"nw","P");
 Pointdata("1",G.xy,["Size=3","Color=blue"]);
 

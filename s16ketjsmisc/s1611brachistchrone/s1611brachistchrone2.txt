@@ -33,8 +33,10 @@ Setplaybuttons(0,-6,16); //no ketjs off
 //  C.xy=[5/3,-5/3]; D.xy=[10/3,-10/3];
 //  resetflg=0;
 //); //only ketjs off
-
-Bezier("1",[A,B],[C,D],["Num=50"]);
+pL=[C,D]; //no ketjs
+//apply([C,D],Strictmove(#)); //only ketjs on
+//pL=apply([C,D],Ptpos(#));//only ketjs off
+Bezier("1",[A,B],pL,["Num=50"]);
 xu="3*u*(1-u)^2*p1+3*u^2*(1-u)*q1+u^3*5";
 yu="3*u*(1-u)^2*p2+3*u^2*(1-u)*q2+u^3*(-5)";
 fxy=Assign("[x,y]",["x",xu,"y",yu]);

@@ -88,6 +88,8 @@ Ketinit();
 Addglist();
 Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Color=offwhite"]);//no ketjs
 Setwindow([-6,6],[-5.5,5]);
+A.y=0;
+Strictmove(A);
 Slider("T",[-6,-4],[6,-4]);
 
 Addax(0);
@@ -117,14 +119,13 @@ str2="vy=1";
 //str0=Textedit(65);// only ketjs on
 //str1=Textedit(66);
 //str2=Textedit(67);// only ketjs off
-Cindyparse(str0,A.x);
+Cindyparse(str0,Ptpos(A)_1);
 Cindyparse(str1,-1);
 Cindyparse(str2,1);
-A.y=0;
 
 vec=[vx,vy];
 vec=vec/|vec|;
-Arrowdata("1",[A,A+vec],["dr,2","Color=red","border->false"]);
+Arrowdata("1",[Ptpos(A),Ptpos(A)+vec],["dr,2","Color=red","border->false"]);
 
 Eps=10^(-4);
 if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps)%(|[a,b]-aborg|>Eps),
@@ -152,7 +153,6 @@ if(initflg==1,
     x1=x2; y1=y2;
     tmp=fans(a,b,u1,v1,x1,y1);
     u2=tmp_1; v2=tmp_2; t2=tmp_3; x2=tmp_4; y2=tmp_5;
-    u2a=tmp_6; x2a=tmp_7; y2a=tmp_8;
     if(abs(t2)<Eps,
       t2=t2a; x2=x2a; y2=y2a;
     );
@@ -164,7 +164,7 @@ if(initflg==1,
 );
 
 if(pflg==1,
-  tt=ts+1000;
+  tt=ts+3000;
   tmp=pL_(length(pL));
   ts=tmp_1;
   x1=tmp_2_1;y1=tmp_2_2;u1=tmp_3_1;v1=tmp_3_2;
@@ -203,7 +203,7 @@ mf(ss):=(
 ss=Animationparam(0,2^(T.x+6),[0,tmp_1]);
 mf(ss);
 
-Letter([-4.5,3.3],"nw",format(re(ss),1),["Size=1.2"]);
+Letter([-4.5,3.3],"nw",text(re(floor(ss))),["Size=1.2"]);
 tmp=pL_(length(pL));
 Letter([-4.5,2.5],"nw",text(re(floor(tmp_1))),["Size=1.2"]);
 

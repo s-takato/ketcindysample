@@ -24,15 +24,16 @@
    <script type="text/javascript" src="ketcindyjs/Cindy.js"></script>
 
 <script id="csinit" type="text/x-cindyscript">
-Ketinit():=Ketinit("fig",1,[-5,5],[-5,5]); //181001
+Ketinit():=Ketinit("fig",1,[-5,5],[-5,5],0.3); //190831from
 Ketinit(Arg):=(//181001from
   if(isstring(Arg),
-     Ketinit(Arg,1,[-5,5],[-5,5]);
+    Ketinit(Arg,1,[-5,5],[-5,5],0.3);
   ,
-    Ketinit("fig",Arg,[-5,5],[-5,5]);
+    Ketinit("fig",1,[-5,5],[-5,5],Arg);
   );
 );
-Ketinit(work,sy,rangex,rangey):=(//181001to
+Ketinit(Arg1,Arg2):=Ketinit(Arg1,1,[-5,5],[-5,5],Arg2);
+Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
  regional(pt,tmp,tmp1,tmp2,letterc,boxc,shadowc,mboxc);
   PenThickInit=8;
   ULEN="1cm";
@@ -59,7 +60,7 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   FUNLIST=[];
   LETTERlist=[];
   ADDAXES="1";
-  AXSTYLE=["l","x","e","y","n","O","sw","","",""]; //181216
+  AXSTYLE=[["l","x","e","y","n","O","sw","","",""],[]]; //190901
   AXCOUNT=1; //181215
   SHADECTR=1; //190222
   LFmark=unicode("000a");
@@ -75,7 +76,10 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   XMAX=rangex_2/SCALEX;
   YMIN=rangey_1/SCALEY;
   YMAX=rangey_2/SCALEY;
+  StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
+  KETJSOP=[]; //190916
+  JSBODY=[[],[]]; //190916
 );
 Indexall(str,key):=(
   regional(rest,out,flg,tmp,tmp1,);
@@ -103,14 +107,15 @@ Setwindow(str):=(
   tmp=indexof(str,"="); // 16.02.10
   tmp1=Toupper(substring(str,tmp,tmp+1));
   if(tmp1=="N",msg="n");
+  Strictmove("SW"); Strictmove("NE"); // ketjs //190909
   if((ispoint(SW) & ispoint(NE)),
-    tmp1=Lcrd(SW);
-    tmp2=Lcrd(NE);
+    tmp1=LLcrd(Ptpos(SW));//190912[2lines]
+    tmp2=LLcrd(Ptpos(NE));
     XMIN=tmp1_1; XMAX=tmp2_1;
     YMIN=tmp1_2; YMAX=tmp2_2;
   ,
     Putpoint("SW",Pcrd([XMIN,YMIN]));
-    Putpoint("NE", Pcrd([XMAX,YMAX])); 
+    Putpoint("NE", Pcrd([XMAX,YMAX]));
   );
 );
 Setwindow(xrange,yrange):=(
@@ -120,6 +125,7 @@ Setwindow(xrange,yrange):=(
   YMAX=yrange_2;
   Putpoint("SW",[XMIN,YMIN]);//181016
   Putpoint("NE",[XMAX,YMAX]);//181016
+  Strictmove("SW"); Strictmove("NE"); //
 );
 Toupper(str):=(
   regional(alphabet,out,tmp,tmp1);
@@ -136,29 +142,34 @@ Toupper(str):=(
   );
   out;
 );
-Lcrd(pt):=(
+LLcrd(pt):=(
   regional(tmp);
   if(ispoint(pt),
-    tmp=[pt.x/SCALEX,pt.y/SCALEY];
+    tmp=pt.xy
   ,
     tmp=pt;
   );
+  tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
   tmp;
 );
-Pcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=re(pt.xy); // 15.07.24
+Ptpos(pt):=Ptpos(pt,[]);
+Ptpos(ptorg,pos):=(
+  regional(pt,out,tmp);
+  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
+  if(length(pos)==0,
+    tmp=pt.name+"position";
+    out=parse(tmp);
+    if(!islist(out),
+      tmp=tmp+"="+Textformat(pt.xy,6)+";";
+      parse(tmp);
+    );
   ,
-    tmp=[pt_1*SCALEX,pt_2*SCALEY];
+    pt.xy=pos;
+    tmp=pt.name+"position="+Textformat(pt.xy,6)+";";
+    parse(tmp);
+    out=pt.xy;
   );
- tmp;
-);
-Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
-Putpoint(name,Ptinit,Pt):=(
-  regional(ptstr);
-    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
-    parse(ptstr);
+  out;
 );
 Textformat(value,dig):=(
   regional(vv,tmp,tmp1);
@@ -180,6 +191,42 @@ Textformat(value,dig):=(
   );
   tmp1;
 );
+Pcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=re(pt.xy); // 15.07.24
+  ,
+    tmp=[pt_1*SCALEX,pt_2*SCALEY];
+  );
+ tmp;
+);
+Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
+Putpoint(name,Ptinit,Pt):=(
+  regional(ptstr);
+    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
+    parse(ptstr);
+);
+Strictmove(pC):=Strictmove(pC,StrictSep); //190831
+Strictmove(pCorg,sep):=(
+  regional(pC,tmp,tmp1,tmp2);
+  pC=pCorg;
+  if(ispoint(pC),pC=pC.name);
+  tmp1=pC+"position";
+  if(!islist(parse(tmp1)),
+    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
+    parse(tmp);
+  ,
+    tmp=parse(pC).xy;
+    tmp2=mouse().xy;
+    if(|tmp-tmp2|>sep,
+      tmp=pC+".xy="+pC+"position";
+      parse(pC).xy=parse(pC+"position");
+    ,
+      tmp=tmp1+"="+Textformat(parse(pC).xy,6)+";";
+      parse(tmp);
+    );
+  );
+);
 Rotatepoint(point,Theta,ctr):=(
   regional(X1,X2,Y1,Y2,Cx,Cy,tmp);
   tmp=Lcrd(point);
@@ -189,6 +236,15 @@ Rotatepoint(point,Theta,ctr):=(
   X2=Cx+(X1-Cx)*cos(Theta)-(Y1-Cy)*sin(Theta);
   Y2=Cy+(X1-Cx)*sin(Theta)+(Y1-Cy)*cos(Theta); 
   [X2,Y2];
+);
+Lcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=[pt.x/SCALEX,pt.y/SCALEY];
+  ,
+    tmp=pt;
+  );
+  tmp;
 );
 Translatepoint(point,mov):=(
   regional(X1,X2,Y1,Y2,Cx,Cy,tmp);
@@ -1062,7 +1118,7 @@ Windispg():=(
 );
 Windispg(gcLorg):=( //190125
   regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,opcindy);
-  forall(allpoints(),Strictmove(#));  //
+  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name));  //
   gcL=gcLorg; //190125from
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
@@ -1122,13 +1178,16 @@ Windispg(gcLorg):=( //190125
   grestore(); 
   layer(0);
 );
-Drwxy():=Drwxy(0,[]); //190103from
-Drwxy(Arg):=(
-  if(islist(Arg),Drwxy(0,Arg); Drwxy(Arg,[]));
+Drwxy():=Drwxy(0,[]);
+Drwxy(Arg):=( //190901from
+  if(islist(Arg),
+    Drwxy(0,Arg);
+  ,
+    Drwxy(Arg,[]);
+  ); //190901to
 );
-Drwxy(add):=Drwxy(add,[]);
-Drwxy(add,optionsorg):=( //190103to
-  regional(options,color,eqL,strL,org,xrng,yrng,ax,st,nn,size,
+Drwxy(add,optionsorg):=(
+  regional(options,color,eqL,strL,org,xrng,yrng,ax,st,nn,size,labelsize,
   linesty,colorax,colorla,tmp,tmp1,tmp2);
   options=optionsorg;
   tmp=Divoptions(options);
@@ -1137,7 +1196,16 @@ Drwxy(add,optionsorg):=( //190103to
   org=GENTEN; 
   xrng=[XMIN,XMAX];  //190103
   yrng=[YMIN,YMAX];  //190103
-  ax=AXSTYLE;
+  ax=AXSTYLE_1; //190901from
+  labelsize="Size=1";
+  forall(AXSTYLE_2,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(contains(["S","L"],tmp1), 
+      labelsize="Size="+tmp_2;
+      options=remove(options,[#]);
+    );
+  );  //190901to
   linesty=ax_8;
   if(length(ax_9)>0, //190427
     if(isstring(ax_9),colorax=ax_9,colorax=text(ax_9));
@@ -1154,8 +1222,6 @@ Drwxy(add,optionsorg):=( //190103to
     );
   ); //181217to
   forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
     if(tmp1=="O", //190103from
       org=parse(tmp_2);
       options=remove(options,[#]);
@@ -1203,9 +1269,10 @@ Drwxy(add,optionsorg):=( //190103to
     Listplot("-axy"+text(AXCOUNT),tmp,tmp1); 
   );
   AXCOUNT=AXCOUNT+1;
-  Expr([[xrng_2,org_2],ax_3,ax_2],[colorla]);//181216[3lines]
-  Expr([[org_1,yrng_2],ax_5,ax_4],[colorla]);
-  Letter([org,ax_7,ax_6],[colorla]);
+  tmp=[colorla,labelsize]; //190901from
+  Expr([[xrng_2,org_2],ax_3,ax_2],tmp);
+  Expr([[org_1,yrng_2],ax_5,ax_4],tmp);
+  Letter([org,ax_7,ax_6],tmp); //190901to
   if(add==0, //190103
     Addax(0);
   );
@@ -1314,16 +1381,6 @@ Lightarrowdata(nm,ptlist,optionsorg):=(
   );
   Setscaling(scaley); //190412
   [Lcrd(pA),Lcrd(pB)];
-);
-LLcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=pt.xy
-  ,
-    tmp=pt;
-  );
-  tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
-  tmp;
 );
 Setscaling(sc):=(
   regional(tmp);
@@ -1472,27 +1529,6 @@ Removespace(str):=(
 Addax(param):=(
   ADDAXES=text(param);
 );
-Strictmove(pC):=Strictmove(pC,0.1);
-Strictmove(pCorg,sep):=(
-  regional(pC,tmp,tmp1,tmp2);
-  pC=pCorg;
-  if(ispoint(pC),pC=pC.name);
-  tmp1=pC+"position";
-  if(!islist(parse(tmp1)),
-    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
-    parse(tmp);
-  ,
-    tmp=parse(pC).xy;
-    tmp2=mouse().xy;
-    if(|tmp-tmp2|>sep,
-      tmp=pC+".xy="+pC+"position";
-      parse(pC).xy=parse(pC+"position");
-    ,
-      tmp=tmp1+"="+Textformat(parse(pC).xy,6)+";";
-      parse(tmp);
-    );
-  );
-);
 Dashlinedata(dataorg,sen,gap,ptn):=(
   regional(data,eps,dtall,len,lenlist,ii,lenall,kari,
       naga,tobi,nsen,seglist,segunit,hajime,owari,jj,
@@ -1569,6 +1605,7 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
 );
 Ketcindyjsfigure=1;
 Ketcindyjsscale=1.5;
+
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
@@ -1593,9 +1630,10 @@ Move(pdata,t):=(
 
 rad=3;
 pC=[0,1];
+Strictmove(A);
 
 Circledata("1",[pC,1]);
-Pointdata("1",[A]);
+Pointdata("1",[Ptpos(A)]);
 ad1=["pt1","cr1"];
 
 ds=2*pi/50;
@@ -1664,5 +1702,4 @@ var cdy = CindyJS({
 </head>
 <body>
     <div id="CSCanvas"></div>
-</body>
 </html>

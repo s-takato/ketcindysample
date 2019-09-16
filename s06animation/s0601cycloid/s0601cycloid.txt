@@ -21,7 +21,7 @@ mf(sorg):=(
 Setpara("cycloid","mf(s)","s=[0,10]",["Div=25"],
  ["Frate=10","Scale=1","OpA=","Title=Cycloid"]);
 
-ss=Animationparam(C.x-XMIN,2,20);
+ss=Animationparam(Ptpos(C)_1,2,20);
 mf(ss);
 
 Figpdf();

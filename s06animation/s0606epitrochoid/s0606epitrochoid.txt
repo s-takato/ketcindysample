@@ -7,10 +7,11 @@ Ketinit();
 Setketcindyjs(["Nolabel=all","Color=offwhite","Fig=y"]);// no ketjs
 Setwindow([-7,7],[-7,7]);
 //Setax(["","","sw","","sw"]);
+Strictmove(A);
 
 //Slider("S",[0,YMIN-0.2],[2*pi,YMIN-0.2]);
 Movetojs(60,[0.2,6.5],16);//no ketjs
-Setplaybuttons(-3,-6.5,15);// no ketjs
+Setplaybuttons([-3,-6.5],15,[1]);// no ketjs
 
 Move(pdata,t):=(
  regional(Kj,Nj,pt,qt,out,outj,tmp,tmp1);
@@ -42,14 +43,14 @@ if(length(tmp_2)>0,
 rad=3;
 pC=[0,0];
 pB=pC+[rad+rs,0];
-Putpoint("A",pB+[rs,0],[A.x,0]);// no ketjs
+Putpoint("A",pB+[rs,0],[Ptpos(A)_1,0]);// no ketjs
 if(rs!=rsorg,
-  A.xy=pB+[rs,0];
+  Ptpos(A,pB+[rs,0]);
   rsorg=rs;
 );
 Circledata("0",[pC,rad],[]);
 Circledata("1",[pB,rs],["nodisp"]);
-Pointdata("1",[A],["nodisp","Size=3"]);
+Pointdata("1",[Ptpos(A)],["nodisp","Size=3"]);
 ad1=["pt1","cr1"];
 
 ds=2*pi/50;

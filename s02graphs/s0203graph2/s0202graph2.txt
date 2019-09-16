@@ -1,19 +1,21 @@
 Ketinit();
 //Setfiles("");
+apply([B,C],Strictmove(#));
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=white"]);
+Setketcindyjs(["Nolabel=all"]);
 
 Setax([7,"se"]);
 
 Plotdata("1","sin(x)","x",["Num=200"]);
 Putoncurve("A","gr1");
-coeff=Derivative("sin(x)","x",A.x);
-funstr=Assign("coeff*(x-A.x)+A.y",["coeff",coeff]);
+Strictmove(A);
+cc=Derivative("sin(x)","x",Ptpos(A)_1);
+funstr=Assign("c*(x-a)+b",["c",cc,"a",Ptpos(A)_1,"b",Ptpos(A)_2]);
 Plotdata("2",funstr,"x",["Color=red","Num=1"]);
 Pointdata("1",A,["Size=3"]);
 
-Putpoint("B",[3,0.5],B.xy);
-Putpoint("C",[-6,2],C.xy);
+Putpoint("B",[3,0.5],Ptpos(B));
+Putpoint("C",[-6,2],Ptpos(C));
 Letter([A,"n2w","A"]);
 Expr([B,"e","y=\sin x"]);
 Letter([C,"e","\Large The graph of $y=\sin x$"]);

@@ -11,8 +11,10 @@ Setglist();
 //figures
 Ketinit();
 Addglist();
-Setketcindyjs(["Nolabel=all","Local=n"]);//no ketjs
+Setketcindyjs(["Nolabel=all"]);//no ketjs
 Setwindow([-5,5],[-5,5]);
+A.y=0;
+Strictmove(A);
 Slider("T",[-5,-6],[5,-6]);
 
 cmdL=[ //no ketjs on
@@ -50,16 +52,19 @@ Ketcindyjsdata(["ans",ans]);//no ketjs
 
 Addax(0);
 
-A.y=0;
 C.xy=pF;
 
 fun=Assign("[a*cos(t),b*sin(t)]",["a",aa,"b",bb]);
 Drwxy();
 Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
-Circledata("1",[A,0.75],["nodisp"]);
+uctr=[8,0];
+Circledata("1",[uctr,1],[]);
 Putoncurve("B","cr1");
-Arrowdata("1",[A,B],["dr,2","Color=red","border->false"]);
+Strictmove(B);
+Listplot("0",[uctr,Ptpos(B)],["dr,2","Color=red"]);
+pB2=Ptpos(A)+Ptpos(B)-uctr;
+Arrowdata("1",[Ptpos(A),pB2],["dr,2","Color=red","border->false"]);
 
 Getvalue(n,rep):=(
   regional(tmp);
@@ -68,10 +73,11 @@ Getvalue(n,rep):=(
 );
 
 mf(tt):=(
- regional(pL,tr,t1,x0,y0,x1,y1,u1,v1,
+ regional(pL,tr,t1,x0,y0,x1,y1,vec,u1,v1,
    rep0,rep,rep2,flg,tmp);
- x0=A.x; y0=0;
- u1=B.x-A.x;v1=B.y-A.y;
+ x0=Ptpos(A)_1; y0=0;
+ vec=pB2-Ptpos(A);
+ u1=vec_1; v1=vec_2;
  pL=[[x0,y0]];
  rep0=["a",aa,"b",bb];
  flg=0;
@@ -109,7 +115,5 @@ mf(tt):=(
 tt=2*(T.x+5);
 tt=Animationparam(0,4,600);
 mf(tt);
-
-
 
 Windispg();

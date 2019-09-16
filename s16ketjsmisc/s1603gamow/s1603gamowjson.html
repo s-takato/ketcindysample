@@ -78,6 +78,8 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   YMAX=rangey_2/SCALEY;
   StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
+  KETJSOP=[]; //190916
+  JSBODY=[[],[]]; //190916
 );
 Indexall(str,key):=(
   regional(rest,out,flg,tmp,tmp1,);
@@ -188,15 +190,6 @@ Textformat(value,dig):=(
     );
   );
   tmp1;
-);
-Lcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=[pt.x/SCALEX,pt.y/SCALEY];
-  ,
-    tmp=pt;
-  );
-  tmp;
 );
 Pcrd(pt):=(
   regional(tmp);
@@ -593,6 +586,15 @@ Assign(funstr,varname,rep,precise):=(
   );
   funstr=tmp2+funstr;
   funstr;
+);
+Lcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=[pt.x/SCALEX,pt.y/SCALEY];
+  ,
+    tmp=pt;
+  );
+  tmp;
 );
 Measuredepth(list):=( //190423
   regional(str,nn,tmp,tmp1,tmp2);
@@ -1287,11 +1289,11 @@ pc=C.xy;
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 Setketcindyjs(["Sc=1","Nol=all","Axe=n"]);
-Ketcindyjsbody(["<p,f10>Gamow"],[]);
+Ketcindyjsbody(["<p,f10>_;Gamow"],[]);
 
+Strictmove("C");//
 A.xy=[-2,0];
 B.xy=[2,0];
-
 p1=rotate([A,C],90);
 p2=rotate([B,C],-90);
 
@@ -1346,6 +1348,6 @@ var cdy = CindyJS({
     </script>
 </head>
 <body>
-    <p><font size="10">Gamow</font></p>
+    <p><font size="10">&emsp;Gamow</font></p>
     <div id="CSCanvas"></div>
 </html>

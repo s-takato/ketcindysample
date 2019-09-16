@@ -1,5 +1,5 @@
 Ketinit();
-Setketcindyjs(["Size=1.5","No=all","Col=offwhite","Fig=y","Ax=n"]);//no ketjs
+Setketcindyjs(["Size=1.5","No=all","Color=offwhite","Fig=y","Ax=n"]);//no ketjs
 Setwindow([-1.5,4*pi],[-3,3]);
 //Setax(["","","sw","","sw"]);
 
@@ -25,9 +25,10 @@ Move(pdata,t):=(
 rad=3;
 pC=[0,1];
 Putpoint("A",[0,0],A.xy);// no ketjs
+Strictmove(A);
 
 Circledata("1",[pC,1]);
-Pointdata("1",[A]);
+Pointdata("1",[Ptpos(A)]);
 ad1=["pt1","cr1"];
 
 ds=2*pi/50;

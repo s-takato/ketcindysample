@@ -21,11 +21,11 @@ pc=C.xy;
 //Figures
 Ketinit();
 Setketcindyjs(["Sc=1","Nol=all","Axe=n"]);
-Ketcindyjsbody(["<p,f10>Gamow"],[]);
+Ketcindyjsbody(["<p,f10>_;Gamow"],[]);
 
+//Strictmove("C");//only ketjs
 A.xy=[-2,0];
 B.xy=[2,0];
-
 p1=rotate([A,C],90);
 p2=rotate([B,C],-90);
 
@@ -40,4 +40,3 @@ forall(1..(length(ptsL)),
 );
 
 Windispg();
-

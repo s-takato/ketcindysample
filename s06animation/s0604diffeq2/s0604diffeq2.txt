@@ -1,8 +1,8 @@
 Ketinit();
-Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=lightgray"]);
-
+Setketcindyjs(["Nolabel=all"]);
+Setwindow([-5,5],[-5,5]);
 Slider("C",[XMIN,YMIN-1],[XMAX,YMIN-1]);
+Strictmove(A);
 
 Setax(["","","sw","","sw"]);
 
@@ -11,17 +11,16 @@ Mf(s):=(
   deq="[x,y]`=[y,(1-x^2)*y-x]";
   rng=Assign("t=[0,s]",["s",s]);
   if(s>0,
-    Deqplot("1",deq,rng,0,A,["Num="+text(20*s)]); 
+    Deqplot("1",deq,rng,0,Ptpos(A),["Num="+text(20*s)]); 
   ,
-    Pointdata("1",A);
+    Pointdata("1",Ptpos(A));
   );
   Letter(B,"e","s="+textformat(s,2),["Size=1.5"]);
 );
 Setpara("diffeq2","Mf(s)","s=[0,20]",["Div=25"],
     ["Frate=10","OpA=","Title=Dynamical System",]);
 
-ss=Animationparam(C.x-XMIN,2,20);
+ss=Animationparam(Ptpos(C)_1-XMIN,2,20);
 mf(ss);
 
-Figpdf();
 Windispg();

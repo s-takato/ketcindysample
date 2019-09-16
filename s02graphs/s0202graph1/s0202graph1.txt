@@ -13,7 +13,7 @@ if(contains(Ch,1),
  Plotdata("1","sin(x)","x",["Num=200","do"]);
 );
 if(contains(Ch,2),
- Plotdata("2","sin(x-C.x)","x",["Num=200"]);
+ Plotdata("2",Assign("sin(x-Cx)",["Cx",Ptpos(C)_1]),"x",["Num=200"]);
 );
 
 Putpoint("D",[1,2],D.xy);
