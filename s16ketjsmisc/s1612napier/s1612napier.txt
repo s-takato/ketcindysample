@@ -14,7 +14,7 @@ if(length(str)>0,
 ,
   aa=Ptpos(A)_1+2;
 );
-Defvar("aa",aa);
+Defvar("aa",aa); only ketjs
 
 Expr([-3,3.1],"w","a=",["Size=1.4","notex"]);
 Movetojs(60,[-3,3],14);//no ketjs
