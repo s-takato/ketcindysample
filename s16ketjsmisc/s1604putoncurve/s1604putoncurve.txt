@@ -2,12 +2,10 @@ Ketinit();
 //Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nol=all"]);//no ketjs on
 Ketcindyjsbody(["<p,f10>Oshima spline and Movable point"],[]);
-pL=[A,B,C,D,E,A]; //no ketjs off
-//apply([A,B,C,D,E,A],Strictmove(text(#)));//only ketjs on
-//pL=apply([A,B,C,D,E,A],Ptpos(#));//only ketjs off
+//no ketjs off
+pL=apply([A,B,C,D,E,A],Ptpos(#));
 Ospline("1",pL);
 Putoncurve("G","bzo1");
-//Strictmove("G");//only ketjs
 Letter(G,"nw","P");
 Pointdata("1",G.xy,["Size=3","Color=blue"]);
 

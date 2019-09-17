@@ -1,45 +1,45 @@
 Ketinit();
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Sc=1","Nolabel=all","Color=lightgray"]);
+Setketcindyjs(["Nolabel=all"]);
 
 Addax(0);
-
-a=|C-B|; b=|A-C|; c=|B-A|;
+pA=Ptpos(A); pB=Ptpos(B); pC=Ptpos(C);
+a=|pC-pB|; b=|pA-pC|; c=|pB-pA|;
 Slider("S",[0,-6],[(a+b+c)/2,-6]);
-s=2*S.x;
+s=2*Ptpos(S)_1;
 if(s<c,
-  t=s/c; p1=(1-t)*A+t*B;
+  t=s/c; p1=(1-t)*pA+t*pB;
 ,
   if(s<c+a,
-    t=(s-c)/a; p1=(1-t)*B+t*C;
+    t=(s-c)/a; p1=(1-t)*pB+t*pC;
   ,
-    t=(s-c-a)/b; p1=(1-t)*C+t*A;
+    t=(s-c-a)/b; p1=(1-t)*pC+t*pA;
   );
 );
 Pointdata("2",p1,["Size=3","Color=blue"]);
 if(s<a,
-  t=s/a; p2=(1-t)*B+t*C;
+  t=s/a; p2=(1-t)*pB+t*pC;
 ,
   if(s<a+b,
-    t=(s-a)/b; p2=(1-t)*C+t*A;
+    t=(s-a)/b; p2=(1-t)*pC+t*pA;
   ,
-    t=(s-a-b)/c; p2=(1-t)*A+t*B;
+    t=(s-a-b)/c; p2=(1-t)*pA+t*pB;
   );
 );
 Pointdata("3",p2,["Size=3","Color=green"]);
 if(s<c,
-  t=s/c; p3=(1-t)*C+t*A;
+  t=s/c; p3=(1-t)*pC+t*pA;
 ,
   if(s<b+c,
-    t=(s-c)/b; p3=(1-t)*A+t*B;
+    t=(s-c)/b; p3=(1-t)*pA+t*pB;
   ,
-    t=(s-b-c)/a; p3=(1-t)*B+t*C;
+    t=(s-b-c)/a; p3=(1-t)*pB+t*pC;
   );
 );
 Pointdata("4",p3,["Size=3","Color=red"]);
 Listplot("2",[p1,p2,p3,p1],["Color=blue"]);
-Listplot("1",[A,B,C,A],["dr,2"]);
-a1=|B-C|; b1=|C-A|; c1=|A-B|;
+Listplot("1",[pA,pB,pC,pA],["dr,2"]);
+a1=|pB-pC|; b1=|pC-pA|; c1=|pA-pB|;
 s1=(a1+b1+c1)/2;
 S1=sqrt(s1*(s1-a1)*(s1-b1)*(s1-c1));
 a2=|p2-p3|; b2=|p3-p1|; c2=|p1-p2|;

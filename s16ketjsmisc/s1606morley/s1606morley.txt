@@ -12,20 +12,20 @@ Trisection(pB,pA,pC):=(
 
 Ketinit();
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolable=all","Color=lightgray"]);
+Setketcindyjs(["Nolable=all"]);
 Addax(0);
+pA=Ptpos(A); pB=Ptpos(B); pC=Ptpos(C);
+Listplot("0",[pA,pB,pC,pA],["dr,1.5"]);
 
-Listplot([A,B,C,A],["dr,1.5"]);
-
-pta=Trisection(B,A,C);
-ptb=Trisection(C,B,A);
-ptc=Trisection(A,C,B);
-Lineplot("a1",[A,pta_1],["dr,0.5","Color=blue"]);
-Lineplot("a2",[A,pta_2],["dr,0.5","Color=yellow"]);
-Lineplot("b1",[B,ptb_1],["dr,0.5","Color=red"]);
-Lineplot("b2",[B,ptb_2],["dr,0.5","Color=blue"]);
-Lineplot("c1",[C,ptc_1],["dr,0.5","Color=yellow"]);
-Lineplot("c2",[C,ptc_2],["dr,0.5","Color=red"]);
+pta=Trisection(pB,pA,pC);
+ptb=Trisection(pC,pB,pA);
+ptc=Trisection(pA,pC,pB);
+Lineplot("a1",[pA,pta_1],["dr,0.5","Color=blue"]);
+Lineplot("a2",[pA,pta_2],["dr,0.5","Color=green"]);
+Lineplot("b1",[pB,ptb_1],["dr,0.5","Color=red"]);
+Lineplot("b2",[pB,ptb_2],["dr,0.5","Color=blue"]);
+Lineplot("c1",[pC,ptc_1],["dr,0.5","Color=green"]);
+Lineplot("c2",[pC,ptc_2],["dr,0.5","Color=red"]);
 p1=Op(1,Intersectcurves("lna1","lnb2"));
 p2=Op(1,Intersectcurves("lnb1","lnc2"));
 p3=Op(1,Intersectcurves("lna2","lnc1"));

@@ -7,7 +7,6 @@ Ketinit();
 Setketcindyjs(["Nolabel=all","Color=offwhite","Fig=y"]);// no ketjs
 Setwindow([-7,7],[-7,7]);
 //Setax(["","","sw","","sw"]);
-Strictmove(A);
 
 //Slider("S",[0,YMIN-0.2],[2*pi,YMIN-0.2]);
 Movetojs(60,[0.2,6.5],16);//no ketjs

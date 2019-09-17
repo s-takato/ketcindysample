@@ -82,6 +82,7 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   YMAX=rangey_2/SCALEY;
   StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
+  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name)); //190917
   KETJSOP=[]; //190916
   JSBODY=[[],[]]; //190916
 );
@@ -1002,7 +1003,6 @@ Slider(ptstr,p1,p2,options):=(//190120
   );
   Listplot(pA+pB,[p1,p2],["Msg=n","notex",color,thick]);
   Putonseg(pC,parse("sg"+pA+pB));
-  Strictmove(pC);
 );
 Listplot(list):=Listplot(list,[]);
 Listplot(Arg1,Arg2):=(
@@ -1820,7 +1820,6 @@ Windispg():=(
 );
 Windispg(gcLorg):=( //190125
   regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,opcindy);
-  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name));  //
   gcL=gcLorg; //190125from
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
@@ -1973,7 +1972,6 @@ Setglist();
 Ketinit();
 Addglist();
 Setwindow([-5,5],[-5,5]);
-Strictmove(A);
 Slider("T",[-5,-6],[5,-6]);
 
 
@@ -2074,7 +2072,7 @@ var cdy = CindyJS({
     {name: "A", type: "Free", pos: [4.0, 1.5999999999999999, 1.0116209961937759], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
     {name: "Text0", type: "Free", pos: [4.0, 1.086303229971284, 1.7808249671660397], color: [1.0, 0.0, 0.0], size: 0.0, border: true },
     {name: "C", type: "Free", pos: [4.0, 0.0, 2.6666666666666665], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T", type: "Free", pos: [-3.3333333333333335, -4.0, 0.6666666666666666], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T", type: "Free", pos: [-3.333333333333334, -4.0, 0.6666666666666666], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "B", type: "Free", pos: [4.0, -0.46035989717223647, -1.0282776349614395], color: [1.0, 0.0, 0.0], size: 2.0, border: true },
     {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [310.0, 31.0]}},
     {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [373.0, 31.0]}},
@@ -2086,7 +2084,7 @@ var cdy = CindyJS({
     id: "CSCanvas",
     width: 737,
     height: 531,
-    transform: [{visibleRect: [-9.737754421087017, 6.835733964798729, 10.42491075077439, -7.691233750612951]}],
+    transform: [{visibleRect: [-9.725681775572227, 6.825759783418483, 10.436983396289182, -7.701207931993197]}],
     axes: true,
     grid: 1.0,
     snap: true,

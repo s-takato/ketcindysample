@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>s1611brachistchrone.cdy</title>
+    <title>s1611brachistchrone2.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -20,19 +20,20 @@
             width: 100%;
         }
     </style>
-    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
-    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
+    <link rel="stylesheet" href="ketcindyjs/CindyJS.css">
+   <script type="text/javascript" src="ketcindyjs/Cindy.js"></script>
 
 <script id="csinit" type="text/x-cindyscript">
-Ketinit():=Ketinit("fig",1,[-5,5],[-5,5]); //181001
+Ketinit():=Ketinit("fig",1,[-5,5],[-5,5],0.3); //190831from
 Ketinit(Arg):=(//181001from
   if(isstring(Arg),
-     Ketinit(Arg,1,[-5,5],[-5,5]);
+    Ketinit(Arg,1,[-5,5],[-5,5],0.3);
   ,
-    Ketinit("fig",Arg,[-5,5],[-5,5]);
+    Ketinit("fig",1,[-5,5],[-5,5],Arg);
   );
 );
-Ketinit(work,sy,rangex,rangey):=(//181001to
+Ketinit(Arg1,Arg2):=Ketinit(Arg1,1,[-5,5],[-5,5],Arg2);
+Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
  regional(pt,tmp,tmp1,tmp2,letterc,boxc,shadowc,mboxc);
   PenThickInit=8;
   ULEN="1cm";
@@ -59,7 +60,7 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   FUNLIST=[];
   LETTERlist=[];
   ADDAXES="1";
-  AXSTYLE=["l","x","e","y","n","O","sw","","",""]; //181216
+  AXSTYLE=[["l","x","e","y","n","O","sw","","",""],[]]; //190901
   AXCOUNT=1; //181215
   SHADECTR=1; //190222
   LFmark=unicode("000a");
@@ -75,7 +76,11 @@ Ketinit(work,sy,rangex,rangey):=(//181001to
   XMAX=rangex_2/SCALEX;
   YMIN=rangey_1/SCALEY;
   YMAX=rangey_2/SCALEY;
+  StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
+  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name)); //190917
+  KETJSOP=[]; //190916
+  JSBODY=[[],[]]; //190916
 );
 Indexall(str,key):=(
   regional(rest,out,flg,tmp,tmp1,);
@@ -103,14 +108,15 @@ Setwindow(str):=(
   tmp=indexof(str,"="); // 16.02.10
   tmp1=Toupper(substring(str,tmp,tmp+1));
   if(tmp1=="N",msg="n");
+  Strictmove("SW"); Strictmove("NE"); // ketjs //190909
   if((ispoint(SW) & ispoint(NE)),
-    tmp1=Lcrd(SW);
-    tmp2=Lcrd(NE);
+    tmp1=LLcrd(Ptpos(SW));//190912[2lines]
+    tmp2=LLcrd(Ptpos(NE));
     XMIN=tmp1_1; XMAX=tmp2_1;
     YMIN=tmp1_2; YMAX=tmp2_2;
   ,
     Putpoint("SW",Pcrd([XMIN,YMIN]));
-    Putpoint("NE", Pcrd([XMAX,YMAX])); 
+    Putpoint("NE", Pcrd([XMAX,YMAX]));
   );
 );
 Setwindow(xrange,yrange):=(
@@ -120,6 +126,7 @@ Setwindow(xrange,yrange):=(
   YMAX=yrange_2;
   Putpoint("SW",[XMIN,YMIN]);//181016
   Putpoint("NE",[XMAX,YMAX]);//181016
+  Strictmove("SW"); Strictmove("NE"); //
 );
 Toupper(str):=(
   regional(alphabet,out,tmp,tmp1);
@@ -136,29 +143,34 @@ Toupper(str):=(
   );
   out;
 );
-Lcrd(pt):=(
+LLcrd(pt):=(
   regional(tmp);
   if(ispoint(pt),
-    tmp=[pt.x/SCALEX,pt.y/SCALEY];
+    tmp=pt.xy
   ,
     tmp=pt;
   );
+  tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
   tmp;
 );
-Pcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=re(pt.xy); // 15.07.24
+Ptpos(pt):=Ptpos(pt,[]);
+Ptpos(ptorg,pos):=(
+  regional(pt,out,tmp);
+  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
+  if(length(pos)==0,
+    tmp=pt.name+"position";
+    out=parse(tmp);
+    if(!islist(out),
+      tmp=tmp+"="+Textformat(pt.xy,6)+";";
+      parse(tmp);
+    );
   ,
-    tmp=[pt_1*SCALEX,pt_2*SCALEY];
+    pt.xy=pos;
+    tmp=pt.name+"position="+Textformat(pt.xy,6)+";";
+    parse(tmp);
+    out=pt.xy;
   );
- tmp;
-);
-Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
-Putpoint(name,Ptinit,Pt):=(
-  regional(ptstr);
-    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
-    parse(ptstr);
+  out;
 );
 Textformat(value,dig):=(
   regional(vv,tmp,tmp1);
@@ -179,6 +191,42 @@ Textformat(value,dig):=(
     );
   );
   tmp1;
+);
+Pcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=re(pt.xy); // 15.07.24
+  ,
+    tmp=[pt_1*SCALEX,pt_2*SCALEY];
+  );
+ tmp;
+);
+Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
+Putpoint(name,Ptinit,Pt):=(
+  regional(ptstr);
+    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
+    parse(ptstr);
+);
+Strictmove(pC):=Strictmove(pC,StrictSep); //190831
+Strictmove(pCorg,sep):=(
+  regional(pC,tmp,tmp1,tmp2);
+  pC=pCorg;
+  if(ispoint(pC),pC=pC.name);
+  tmp1=pC+"position";
+  if(!islist(parse(tmp1)),
+    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
+    parse(tmp);
+  ,
+    tmp=parse(pC).xy;
+    tmp2=mouse().xy;
+    if(|tmp-tmp2|>sep,
+      tmp=pC+".xy="+pC+"position";
+      parse(pC).xy=parse(pC+"position");
+    ,
+      tmp=tmp1+"="+Textformat(parse(pC).xy,6)+";";
+      parse(tmp);
+    );
+  );
 );
 Bezier(ptctrlist):=Beziercurve(ptctrlist_3,ptctrlist_1,ptctrlist_2,[]);
 Bezier(Arg1,Arg2):=( //190202from
@@ -247,7 +295,7 @@ Beziercurve(nm,ptlistorg,ctrlistorg,options):=(
     tmp=name+"="+Textformat(out,5)+";"; //190415
     parse(tmp);
   );
-  if(Noflg<2,
+  if(Noflg<3, //190818
     if(isstring(Ltype),
       Ltype=Getlinestyle(text(Noflg)+Ltype,name);
     ,
@@ -415,9 +463,9 @@ Colorname2rgb(name):=( //181212
     ["olivegreen",[0.64,0,0.95,0.4]],["rawsienna",[0,0.72,1,0.45]],
     ["sepia",[0,0.83,1,0.7]],["brown",[0,0.81,1,0.6]],
     ["tan",[0.14,0.42,0.56,0]],["gray",[0,0,0,0.5]],
-    ["lightgray",[0,0,0,0.17]], //190429
+    ["lightgray",[0,0,0,0.15]], //190429,0809
     ["cindycolor",[0.66,0,69,0.71]], //190504
-    ["black",[0,0,0,1]],["white",[0,0,0,0]]
+    ["black",[0,0,0,1]],["white",[0,0,0,0]],["offwhite",[0,0,0,0.03]] //190809
   ];
   tmp=select(dL,#_1==name);
   if(length(tmp)>0,
@@ -435,18 +483,24 @@ Assign(str):=( //190125from
   forall(VLIST,tmp=concat(tmp,[#_1,#_2]));
   Assign(str,tmp);
 ); //190125to
-Assign(funstr,vrL):=(
-  regional(nn,out);
-  nn=length(vrL)/2;
-  out=funstr;
-  forall(1..nn,
-    out=Assign(out,vrL_(2*#-1),vrL_(2*#));
+Assign(funstr,vrL):=Assign(funstr,vrL,6);
+Assign(funstr,Arg1,Arg2):=( //190813from
+  regional(vrL,precise,nn,out,tmp);
+  if(islist(Arg1),
+    vrL=Arg1; precise=Arg2;
+    nn=length(vrL)/2;
+    out=funstr;
+    forall(1..nn,
+      out=Assign(out,vrL_(2*#-1),vrL_(2*#),precise);
+    );
+  , 
+    out=Assign(funstr,Arg1,Arg2,6);
   );
   out;
-);
-Assign(funstr,varname,rep):=(
+); //190813to
+Assign(funstr,varname,rep,precise):=(
   regional(repstr,ii,jj,tmp,tmp1,tmp2,Notvar,Flg);
-  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,6)+")");
+  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,precise)+")"); //190811to
   tmp=[46];  // 12.20
   tmp=concat(tmp,48..57);
   tmp=concat(tmp,65..90);
@@ -498,6 +552,15 @@ Measuredepth(list):=( //190423
   );
   nn;
 );
+Lcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=[pt.x/SCALEX,pt.y/SCALEY];
+  ,
+    tmp=pt;
+  );
+  tmp;
+);
 Bezierpt(t,ptlist,ctrlist):=(
   regional(flg3,p0,p1,p2,p3,p4,p5,p6,p7,p8,p9);
   p0=ptlist_1;
@@ -534,41 +597,45 @@ Getlinestyle(str,name):=(
   );
   noflg=parse(substring(str,0,1));
   if(substring(name,0,3)=="sub",subflg=1,subflg=0);  // 16.02.29
-  tmp1=substring(str,1,3);
+  if(noflg<=1, //1900818from
+    tmp1=Toupper(substring(str,1,3));
+  ,
+    tmp1="NO";
+  ); //1900818to
   tmp2=""; //190119from
   tmp=indexof(str,",");
   if(tmp>0,
     tmp2=substring(str,tmp,length(str));
   ); //190119to
-  if(tmp1=="dr" % tmp1=="Dr",
+  if(tmp1=="DR",
     if(length(tmp2)==0,tmp2="1"); //190125
     Ltype=[0,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
       Drwline(name+Dop);
     );
   );
-  if(tmp1=="da" % tmp1=="Da",
+  if(tmp1=="DA",
     if(length(tmp2)==0,tmp2="1,1"); //190125
     Ltype=[1,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
       Dashline(name+Dop);
     );
   );
-  if(tmp1=="id" % tmp1=="Id",
-     if(length(tmp2)==0,tmp2="1,1"); //190125
-   Ltype=[2,tmp2];  //190119
+  if(tmp1=="ID",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    Ltype=[2,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
       Invdashline(name+Dop);
     );
   );
-  if(tmp1=="do" % tmp1=="Do",
+  if(tmp1=="DO",
     if(length(tmp2)==0,tmp2="1,1"); //190125
     Ltype=[3,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
       Dottedline(name+Dop);
     );
   );
-  if(tmp1=="dp" % tmp1=="Dp",
+  if(tmp1=="DP",
     if(length(tmp2)==0,tmp2="1"); //190125
     Ltype=[0,tmp2];  //190119
     tmp1=parse(name);
@@ -581,9 +648,9 @@ Getlinestyle(str,name):=(
       Drwpt(tmp2+Dop);
     );
   );
-  if(tmp1=="no" % tmp1=="No",
-    Ltype=10;
-  );
+  if(tmp1=="NO", //190818from
+    Ltype=[-1,"0"];
+  );  //190818to
   Ltype;
 );
 Dashline(gstr):=(
@@ -710,8 +777,9 @@ Pointdata(nm,listorg,options):=(
       tmp2=substring(tmp2,0,length(tmp2)-1)+")";
     );
   );
-  if(Noflg<2,
-    tmp=[nameL,[0,1],opcindy];  //190126
+  if(Noflg<3, //190818
+    if(Noflg<2,tmp=[0,1],tmp=[-1,1]); //190819
+    tmp=[nameL,tmp,opcindy];  //190126
     GCLIST=append(GCLIST,tmp);
     if(Noflg==0,
       if(length(size)>0,
@@ -855,7 +923,7 @@ Deqplot(nm,deqorg,rngorg,initt,initf,options):=( //17.10.06
     tmp=name+"="+Textformat(tmp1,5)+";"; //190415
     parse(tmp);
   );
-  if((nn>0)&(Noflg<2), //190211
+  if((nn>0)&(Noflg<3), //190211
     if(isstring(Ltype),
       Ltype=Getlinestyle(text(Noflg)+Ltype,name);
     ,
@@ -927,6 +995,15 @@ Textedit(no):=(
   tmp="Text"+text(no)+".currenttext";
   tmp1=parse(tmp);
   tmp1;
+);
+Reparse(str):=( //190803
+  regional(out);
+  if(islist(str),
+    out=apply(str,re(parse(#)));
+  ,
+    out=re(parse(str));
+  );
+  out;
 );
 Animationparam(start,ratio,stop):=( //190524
   regional(rng);
@@ -1005,7 +1082,7 @@ Listplot(nm,list,options):=(
     tmp=name+"="+Textformat(ptlist,5)+";"; //190415
     parse(tmp);
   );
-  if(Noflg<2,
+  if(Noflg<3, //190818
     if(isstring(Ltype),
       Ltype=Getlinestyle(text(Noflg)+Ltype,name);
     ,
@@ -1163,16 +1240,6 @@ Intersectcrvspp(Gr1,Gr2,options):=(
   ); // 15.04.06 until
   Out;
 );
-LLcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=pt.xy
-  ,
-    tmp=pt;
-  );
-  tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
-  tmp;
-);
 Koutenseg(pA,pB,pC,pD):=Koutenseg(pA,pB,pC,pD,[]);
 Koutenseg(pA,pB,pC,pD,options):=(
   regional(Eps0,Eps,Eps2,pV,Sv2,Out,pP,pQ,Flg,p1,p2,q1,q2,
@@ -1282,15 +1349,6 @@ Koutenseg(pA,pB,pC,pD,options):=(
   );
   if(!isstring(Out_1),Out=apply(Out,re(#))); //190802
   Out;
-);
-Reparse(str):=( //190803
-  regional(out);
-  if(islist(str),
-    out=apply(str,re(parse(#)));
-  ,
-    out=re(parse(str));
-  );
-  out;
 );
 Sprintf(value,dig):=(
   regional(vv,tmp,tmp1);
@@ -1443,7 +1501,7 @@ Paramplot(nm,funstr,variable,options):=(
       tmp=name+"="+Textformat(tmp1,5)+";";
       parse(tmp);
     );
-    if(Noflg<2,
+    if(Noflg<3, //190818
       if(isstring(Ltype),
         Ltype=Getlinestyle(text(Noflg)+Ltype,name);
       ,
@@ -1453,7 +1511,7 @@ Paramplot(nm,funstr,variable,options):=(
     );
     Out;
   , 
-    if(Noflg<2,
+    if(Noflg<3, //190818
       if(isstring(Ltype),
         Ltype=Getlinestyle(text(Noflg)+Ltype,name);
       ,
@@ -1598,6 +1656,7 @@ Windispg(gcLorg):=( //190125
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
   ); //190125to
+  gcL=select(gcL,#_2_1>=0); //190818
   gsave();
   layer(KETPIClayer);
   forall(gcL,Nj,
@@ -1652,13 +1711,16 @@ Windispg(gcLorg):=( //190125
   grestore(); 
   layer(0);
 );
-Drwxy():=Drwxy(0,[]); //190103from
-Drwxy(Arg):=(
-  if(islist(Arg),Drwxy(0,Arg); Drwxy(Arg,[]));
+Drwxy():=Drwxy(0,[]);
+Drwxy(Arg):=( //190901from
+  if(islist(Arg),
+    Drwxy(0,Arg);
+  ,
+    Drwxy(Arg,[]);
+  ); //190901to
 );
-Drwxy(add):=Drwxy(add,[]);
-Drwxy(add,optionsorg):=( //190103to
-  regional(options,color,eqL,strL,org,xrng,yrng,ax,st,nn,size,
+Drwxy(add,optionsorg):=(
+  regional(options,color,eqL,strL,org,xrng,yrng,ax,st,nn,size,labelsize,
   linesty,colorax,colorla,tmp,tmp1,tmp2);
   options=optionsorg;
   tmp=Divoptions(options);
@@ -1667,7 +1729,16 @@ Drwxy(add,optionsorg):=( //190103to
   org=GENTEN; 
   xrng=[XMIN,XMAX];  //190103
   yrng=[YMIN,YMAX];  //190103
-  ax=AXSTYLE;
+  ax=AXSTYLE_1; //190901from
+  labelsize="Size=1";
+  forall(AXSTYLE_2,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(contains(["S","L"],tmp1), 
+      labelsize="Size="+tmp_2;
+      options=remove(options,[#]);
+    );
+  );  //190901to
   linesty=ax_8;
   if(length(ax_9)>0, //190427
     if(isstring(ax_9),colorax=ax_9,colorax=text(ax_9));
@@ -1684,8 +1755,6 @@ Drwxy(add,optionsorg):=( //190103to
     );
   ); //181217to
   forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
     if(tmp1=="O", //190103from
       org=parse(tmp_2);
       options=remove(options,[#]);
@@ -1733,9 +1802,10 @@ Drwxy(add,optionsorg):=( //190103to
     Listplot("-axy"+text(AXCOUNT),tmp,tmp1); 
   );
   AXCOUNT=AXCOUNT+1;
-  Expr([[xrng_2,org_2],ax_3,ax_2],[colorla]);//181216[3lines]
-  Expr([[org_1,yrng_2],ax_5,ax_4],[colorla]);
-  Letter([org,ax_7,ax_6],[colorla]);
+  tmp=[colorla,labelsize]; //190901from
+  Expr([[xrng_2,org_2],ax_3,ax_2],tmp);
+  Expr([[org_1,yrng_2],ax_5,ax_4],tmp);
+  Letter([org,ax_7,ax_6],tmp); //190901to
   if(add==0, //190103
     Addax(0);
   );
@@ -1819,7 +1889,7 @@ Lightarrowdata(nm,ptlist,optionsorg):=(
     tmp="ar"+nm+"="+Textformat([pA,pB],5)+";";
     parse(tmp);
   );
-  if(Noflg<2,
+  if(Noflg<3, //190818
     if(isstring(Ltype),
       if(lineflg==1, //190504from
         Listplot("-ar"+nm,[LLcrd(pA),LLcrd(pB)],append(options,"Msg=n"));
@@ -1953,50 +2023,57 @@ Dashlinedata(dataorg,sen,gap,ptn):=(
 Ketcindyjsfigure=1;
 Ketcindyjsscale=1.5;
 eqb=["(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))/sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)","sqrt((81*q2^2+(270-162*p2)*q2+81*q1^2+((-162*p1)-270)*q1+81*p2^2-270*p2+81*p1^2+270*p1+450)*u^4+((-108*q2^2)+(324*p2-180)*q2-108*q1^2+(324*p1+180)*q1-216*p2^2+360*p2-216*p1^2-360*p1)*u^3+(36*q2^2-198*p2*q2+36*q1^2-198*p1*q1+198*p2^2-90*p2+198*p1^2+90*p1)*u^2+(36*p2*q2+36*p1*q1-72*p2^2-72*p1^2)*u+9*p2^2+9*p1^2)/(sqrt(2)*sqrt(g)*sqrt((3*q2-3*p2+5)*u^3+(6*p2-3*q2)*u^2-3*p2*u))"];
+
 Ch=[0];
 Ctr=0;
 resetflg=0;
-pC=[0,0];
-pD=[0,0];
+pCorg=[0,0];
+pDorg=[0,0];
 ;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 Setwindow([-1,6],[-6,1]);
-
 A.xy=[0,0]; B.xy=[5,-5]; //
 if(resetflg==1,
-  C.xy=[5/3,-5/3]; D.xy=[10/3,-10/3];
-  resetflg=0;
-); //
+ Putpoint("C",[5/3,-5/3]);
+ Putpoint("D",[10/3,-10/3]);
+ Ptpos(C,C.xy); Ptpos(D,D.xy);
+ resetflg=0;
+);
 
-Bezier("1",[A,B],[C,D],["Num=50"]);
+pC=Ptpos(C); pD=Ptpos(D);
+pL=[pC,pD];
+Bezier("1",[A,B],pL,["Num=50"]);
 xu="3*u*(1-u)^2*p1+3*u^2*(1-u)*q1+u^3*5";
 yu="3*u*(1-u)^2*p2+3*u^2*(1-u)*q2+u^3*(-5)";
 fxy=Assign("[x,y]",["x",xu,"y",yu]);
 
-repdata=["g",9.8,"p1",C.x,"p2",C.y,"q1",D.x,"q2",D.y];
-fxyr=Assign(fxy,repdata);
-eqr=Assign(eqb_1,repdata);
+repdata=["g",9.8,"p1",pC_1,"p2",pC_2,"q1",pD_1,"q2",pD_2];
+tmp="fxyr(u):="+Assign(fxy,repdata)+";";
+parse(tmp);
+tmp="eqr(u):="+Assign(eqb_1,repdata)+";";
+parse(tmp);
 
 Eps=10^(-2);
-if(|pC-C.xy|+|pD-D.xy|>Eps,
+if(|pCorg-pC|+|pDorg-pD|>Eps,
   us=1/500;
-  p1=Reparse(Assign(fxyr,["u",us]));
+  p1=fxyr(us);
   tmp="sqrt(2*(a^2+b^2)/(b*g))";
   ts=Reparse(Assign(tmp,["a",p1_1,"b",-p1_2,"g",9.8]));
-  tmp1="u'="+eqr;
+  tmp1="u'=eqr(u)";
   tmp2="t="+textformat([ts,2.5],6);
   Deqplot("1",tmp1,tmp2,ts,us,["Num=250","nodisp"]);
-  pL=apply(de1,Reparse(Assign(fxyr,["u",#_2])));
+  pL=apply(de1,fxyr(#_2));
   tmp1=apply(1..(length(de1)),[pL_#_1,de1_#_1]);
   Listplot("d",[[B.x,0],[B.x,3]],["nodisp"]);
   tmp=Intersectcrvs(tmp1,sgd);
   te=tmp_1_2;
-  pC=C.xy; pD=D.xy;
+  pCorg=pC; pDorg=pD;
   Animeflg="";
   sstart=Current;
 );
+
 
 str=Textedit(80); 
 tmp=Strsplit(str,"=");
@@ -2010,7 +2087,7 @@ if(tt<=ts,
   Listplot("2",[[tt,0],[tt,1]],["nodisp"]);
   tmp=Intersectcrvs(de1,sg2);
   ut=tmp_1_2;
-  p2=Reparse(Assign(fxyr,["u",ut]));
+  p2=fxyr(ut);
   Pointdata("t",p2,["Color=blue","Size=4"]);
 );
 Letter([[6,-3.1],"w",Sprintf(tt*1000,2)+"ms"],["Size=1.6"]);
@@ -2060,7 +2137,7 @@ var cdy = CindyJS({
     axes: false,
     grid: 1.0,
     snap: true,
-    background: "rgb(247,247,247)"
+    background: "rgb(217,217,217)"
   }],
   csconsole: false,
   cinderella: {build: 1901, version: [2, 9, 1901]}
@@ -2069,5 +2146,4 @@ var cdy = CindyJS({
 </head>
 <body>
     <div id="CSCanvas"></div>
-</body>
 </html>

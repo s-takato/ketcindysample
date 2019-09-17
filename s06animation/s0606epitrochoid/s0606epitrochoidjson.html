@@ -78,6 +78,7 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   YMAX=rangey_2/SCALEY;
   StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
+  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name)); //190917
   KETJSOP=[]; //190916
   JSBODY=[[],[]]; //190916
 );
@@ -1124,7 +1125,6 @@ Windispg():=(
 );
 Windispg(gcLorg):=( //190125
   regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,opcindy);
-  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name));  //
   gcL=gcLorg; //190125from
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
@@ -1619,7 +1619,6 @@ rsorg=1;
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 Setwindow([-7,7],[-7,7]);
-Strictmove(A);
 
 
 Move(pdata,t):=(

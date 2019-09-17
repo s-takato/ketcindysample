@@ -88,11 +88,10 @@ Ketinit();
 Addglist();
 Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Color=offwhite"]);//no ketjs
 Setwindow([-6,6],[-5.5,5]);
-A.y=0;
-Strictmove(A);
 Slider("T",[-6,-4],[6,-4]);
-
 Addax(0);
+A.y=0;
+a=4;b=3;
 
 Cindyparse(str,value):=(
   regional(semi,tmp,tmp1);
@@ -112,25 +111,26 @@ Cindyparse(str,value):=(
   );
 );
 
-str0="A,x=3";
-a=4;b=3;
+str0="A.x=3";// no ketjs on
 str1="vx=-1";
-str2="vy=1";
+str2="vy=1";// no ketjs off
 //str0=Textedit(65);// only ketjs on
 //str1=Textedit(66);
 //str2=Textedit(67);// only ketjs off
-Cindyparse(str0,Ptpos(A)_1);
+Cindyparse(str0,A.x);
+Ptpos(A,A.xy);
+pA=Ptpos(A);
 Cindyparse(str1,-1);
 Cindyparse(str2,1);
 
 vec=[vx,vy];
 vec=vec/|vec|;
-Arrowdata("1",[Ptpos(A),Ptpos(A)+vec],["dr,2","Color=red","border->false"]);
+Arrowdata("1",[pA,pA+vec],["dr,2","Color=red","border->false"]);
 
 Eps=10^(-4);
-if((|A.x-Axorg|>Eps)%(|vec-vorg|>Eps)%(|[a,b]-aborg|>Eps),
+if((|pA_1-Axorg|>Eps)%(|vec-vorg|>Eps)%(|[a,b]-aborg|>Eps),
   vorg=vec;
-  Axorg=A.x;
+  Axorg=pA;
   aborg=[a,b];
   initflg=1;
 );

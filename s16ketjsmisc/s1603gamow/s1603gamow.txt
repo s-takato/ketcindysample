@@ -23,20 +23,20 @@ Ketinit();
 Setketcindyjs(["Sc=1","Nol=all","Axe=n"]);
 Ketcindyjsbody(["<p,f10>_;Gamow"],[]);
 
-//Strictmove("C");//only ketjs
 A.xy=[-2,0];
 B.xy=[2,0];
 p1=rotate([A,C],90);
 p2=rotate([B,C],-90);
 
-Listplot("0",[A,C,B,p2,p1,A]);
+Listplot("0",[A,Ptpos(C),B,p2,p1,A]);
 Pointdata("0",[p1,p2],["Color=red","Size=4"]);
-if(|C.xy-pc|>Ds,
+if(|Ptpos(C)-pc|>Ds,
  ptsL=append(ptsL,[p1,p2]);
- pc=C.xy;
+ pc=Ptpos(C);
 );
 forall(1..(length(ptsL)),
   Listplot(text(#),ptsL_#,["dr,0.3","Color=red"]);
 );
 
 Windispg();
+

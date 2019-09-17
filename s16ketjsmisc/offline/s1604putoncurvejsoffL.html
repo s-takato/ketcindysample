@@ -78,6 +78,7 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   YMAX=rangey_2/SCALEY;
   StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
+  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name)); //190917
   KETJSOP=[]; //190916
   JSBODY=[[],[]]; //190916
 );
@@ -1131,7 +1132,6 @@ Windispg():=(
 );
 Windispg(gcLorg):=( //190125
   regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,opcindy);
-  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name));  //
   gcL=gcLorg; //190125from
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
@@ -1581,11 +1581,9 @@ Ketcindyjsscale=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
-apply([A,B,C,D,E,A],Strictmove(text(#)));//
-pL=apply([A,B,C,D,E,A],Ptpos(#));//
+pL=apply([A,B,C,D,E,A],Ptpos(#));
 Ospline("1",pL);
 Putoncurve("G","bzo1");
-Strictmove("G");//
 Letter(G,"nw","P");
 Pointdata("1",G.xy,["Size=3","Color=blue"]);
 
@@ -1607,12 +1605,12 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, -1.0578512396694215, -1.314974797536054], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "B", type: "Free", pos: [1.0746268656716418, -4.0, -1.187402615685541], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "C", type: "Free", pos: [4.0, 3.125, 1.2430621132958009], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "D", type: "Free", pos: [4.0, -1.9154929577464788, 1.120506693675088], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "E", type: "Free", pos: [-1.8333333333333333, -4.0, 1.3343812288562085], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "G", type: "Free", pos: [3.952127989416896, -4.0, -1.653610037412927], color: [1.0, 0.0, 0.0], labeled: false, size: 1.0, border: true }
+    {name: "A", type: "Free", pos: [4.0, -1.057851337477477, -1.3149749678077691], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "B", type: "Free", pos: [1.3333333333333333, -4.0, -1.3333333333333333], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "C", type: "Free", pos: [4.0, 3.12499984461723, 1.243062159323277], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "D", type: "Free", pos: [4.0, -1.9154925158565685, 1.1205065586050142], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "E", type: "Free", pos: [-1.8333331109364555, -4.0, 1.3343812674220152], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "G", type: "Free", pos: [4.0, -3.9084526745782697, -1.7217853191974757], color: [1.0, 0.0, 0.0], labeled: false, size: 1.0, border: true }
   ],
   ports: [{
     id: "CSCanvas",

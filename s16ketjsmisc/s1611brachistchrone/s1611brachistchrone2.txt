@@ -7,35 +7,31 @@ import("ketcindy.ini");
 Ch=[0];
 Ctr=0;
 resetflg=0;
-pC=[0,0];
-pD=[0,0];
+pCorg=[0,0];
+pDorg=[0,0];
 
 //figures
 Ketinit();
 Setwindow([-1,6],[-6,1]);
 Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n"]);//no ketjs on
-Putpoint("A",[0,0]);
-Putpoint("B",[5,-5]);
-inspect(A,"ptsize",2);
-inspect(B,"ptsize",2);
-if(resetflg==1,
- Putpoint("C",[5/3,-5/3]);
- Putpoint("D",[10/3,-10/3]);
- resetflg=0;
-);
 Movetojs(30,[2,0.5],16);
 Movetojs(0,[3.5,0.5],16);
 Movetojs(80,[2,-0.5],12);
-Setplaybuttons(0,-6,16); //no ketjs off
+Setplaybuttons(0,-6,16);
+Putpoint("A",[0,0]);
+Putpoint("B",[5,-5]);
+inspect(A,"ptsize",2);
+inspect(B,"ptsize",2); //no ketjs off
+//A.xy=[0,0]; B.xy=[5,-5]; //only ketjs
+if(resetflg==1,
+ Putpoint("C",[5/3,-5/3]);
+ Putpoint("D",[10/3,-10/3]);
+ Ptpos(C,C.xy); Ptpos(D,D.xy);
+ resetflg=0;
+);
 
-//A.xy=[0,0]; B.xy=[5,-5]; //only ketjs on
-//if(resetflg==1,
-//  C.xy=[5/3,-5/3]; D.xy=[10/3,-10/3];
-//  resetflg=0;
-//); //only ketjs off
-pL=[C,D]; //no ketjs
-//apply([C,D],Strictmove(#)); //only ketjs on
-//pL=apply([C,D],Ptpos(#));//only ketjs off
+pC=Ptpos(C); pD=Ptpos(D);
+pL=[pC,pD];
 Bezier("1",[A,B],pL,["Num=50"]);
 xu="3*u*(1-u)^2*p1+3*u^2*(1-u)*q1+u^3*5";
 yu="3*u*(1-u)^2*p2+3*u^2*(1-u)*q2+u^3*(-5)";
@@ -52,14 +48,14 @@ cmdL=[ //no ketjs on
 CalcbyM("eqb",cmdL,[""]);
 Ketcindyjsdata(["eqb",eqb]);//no ketjs off
 
-repdata=["g",9.8,"p1",C.x,"p2",C.y,"q1",D.x,"q2",D.y];
+repdata=["g",9.8,"p1",pC_1,"p2",pC_2,"q1",pD_1,"q2",pD_2];
 tmp="fxyr(u):="+Assign(fxy,repdata)+";";
 parse(tmp);
 tmp="eqr(u):="+Assign(eqb_1,repdata)+";";
 parse(tmp);
 
 Eps=10^(-2);
-if(|pC-C.xy|+|pD-D.xy|>Eps,
+if(|pCorg-pC|+|pDorg-pD|>Eps,
   us=1/500;
   p1=fxyr(us);
   tmp="sqrt(2*(a^2+b^2)/(b*g))";
@@ -72,7 +68,7 @@ if(|pC-C.xy|+|pD-D.xy|>Eps,
   Listplot("d",[[B.x,0],[B.x,3]],["nodisp"]);
   tmp=Intersectcrvs(tmp1,sgd);
   te=tmp_1_2;
-  pC=C.xy; pD=D.xy;
+  pCorg=pC; pDorg=pD;
   Animeflg="";
   sstart=Current;
 );

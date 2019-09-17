@@ -78,6 +78,7 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   YMAX=rangey_2/SCALEY;
   StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
+  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name)); //190917
   KETJSOP=[]; //190916
   JSBODY=[[],[]]; //190916
 );
@@ -780,7 +781,6 @@ Windispg():=(
 );
 Windispg(gcLorg):=( //190125
   regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,opcindy);
-  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name));  //
   gcL=gcLorg; //190125from
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
@@ -1291,17 +1291,16 @@ Ketinit();
 Setketcindyjs(["Sc=1","Nol=all","Axe=n"]);
 Ketcindyjsbody(["<p,f10>_;Gamow"],[]);
 
-Strictmove("C");//
 A.xy=[-2,0];
 B.xy=[2,0];
 p1=rotate([A,C],90);
 p2=rotate([B,C],-90);
 
-Listplot("0",[A,C,B,p2,p1,A]);
+Listplot("0",[A,Ptpos(C),B,p2,p1,A]);
 Pointdata("0",[p1,p2],["Color=red","Size=4"]);
-if(|C.xy-pc|>Ds,
+if(|Ptpos(C)-pc|>Ds,
  ptsL=append(ptsL,[p1,p2]);
- pc=C.xy;
+ pc=Ptpos(C);
 );
 forall(1..(length(ptsL)),
   Listplot(text(#),ptsL_#,["dr,0.3","Color=red"]);
