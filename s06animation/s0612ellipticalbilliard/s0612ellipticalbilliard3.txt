@@ -93,22 +93,24 @@ Addax(0);
 A.y=0;
 a=4;b=3;
 
-Cindyparse(str,value):=(
-  regional(semi,tmp,tmp1);
+Gettext(str):=(
+  regional(out,semi,tmp,tmp1);
+  out=[];
   semi=Strsplit(str,";");
   forall(semi,
+    tmp1="";
     if(length(#)>0,
-      if(length(#)>0,
-        tmp=Strsplit(#,"=");
-        if(length(tmp_2)==0,
-          tmp1=str+format(value,6);
-        ,
-          tmp1=tmp_1+"="+Tocindyform(tmp_2);
-        );
-        parse(tmp1+";");
+      tmp=Strsplit(#,"=");
+      if(length(tmp)>1,
+        tmp1=tmp_2;
+      ,
+        tmp1=tmp_1;
       );
     );
+    out=append(out,tmp1);
   );
+  if(length(out)==1,out=out_1);
+  out;
 );
 
 str0="A.x=3";// no ketjs on
@@ -117,11 +119,21 @@ str2="vy=1";// no ketjs off
 //str0=Textedit(65);// only ketjs on
 //str1=Textedit(66);
 //str2=Textedit(67);// only ketjs off
-Cindyparse(str0,A.x);
-Ptpos(A,A.xy);
+tmp=Gettext(str0);
+if(length(tmp)>0,
+  Ptpos(A,[parse(tmp),0]);
+);
 pA=Ptpos(A);
-Cindyparse(str1,-1);
-Cindyparse(str2,1);
+vx=-1;
+tmp=Gettext(str1);
+if(length(tmp)>0,
+  vx=parse(tmp);
+);
+vy=1;
+tmp=Gettext(str2);
+if(length(tmp)>0,
+  vy=parse(tmp);
+);
 
 vec=[vx,vy];
 vec=vec/|vec|;
@@ -130,7 +142,7 @@ Arrowdata("1",[pA,pA+vec],["dr,2","Color=red","border->false"]);
 Eps=10^(-4);
 if((|pA_1-Axorg|>Eps)%(|vec-vorg|>Eps)%(|[a,b]-aborg|>Eps),
   vorg=vec;
-  Axorg=pA;
+  Axorg=pA_1;
   aborg=[a,b];
   initflg=1;
 );
@@ -141,6 +153,7 @@ Drwxy();
 fun=Assign("[a*cos(t),b*sin(t)]",["a",a,"b",b]);
 Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
+
 
 if(initflg==1,
   tt=200;
@@ -200,7 +213,7 @@ mf(ss):=(
   );
 );
 
-ss=Animationparam(0,2^(T.x+6),[0,tmp_1]);
+ss=Animationparam(0,2^(Ptpos(T)_1+6),[0,tmp_1]);
 mf(ss);
 
 Letter([-4.5,3.3],"nw",text(re(floor(ss))),["Size=1.2"]);
