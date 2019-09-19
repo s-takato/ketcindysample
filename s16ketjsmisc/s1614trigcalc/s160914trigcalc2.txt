@@ -35,7 +35,6 @@ Getans(str):=(
   ];
   vL=apply(fL,Reparse(Tocindyform(#)));
   forall(1..(length(fL)),
-println([37,#,fL_#]);
     if(flg==0,
       tmp=Fracform(val/vL_#,10,8);
       parse(tmp_2+";");
@@ -58,7 +57,9 @@ println([37,#,fL_#]);
       tmp2=Getans(tmp);
       if(indexof(tmp1,".")==0,
         tmp1=replace(tmp1,"\frac{1}{4}","");
+        tmp1=replace(tmp1,"\frac{1}{2}","");
         tmp2=replace(tmp2,"\frac{1}{4}","");
+        tmp2=replace(tmp2,"\frac{1}{2}","");
         out="\frac{"+tmp1+"}{"+tmp2+"}";
         flg=1;
       );
@@ -73,11 +74,9 @@ println([37,#,fL_#]);
 //figures
 Ketinit();
 
-Ketinit();
-
 Setketcindyjs(["Nol=all","Equal=","Axe=n"]);//no ketjs
 prelist=[
- "<p,f10>_;Calculator of Trigonometric Functions"
+ "<p,f10>_;Calculator of sin(x),cos(x),tan(x)_;%=pi"
 ];
 Ketcindyjsbody(prelist,[]);
 
@@ -87,9 +86,12 @@ Addax(0);
 inspect(Text50,"text.text","="); //no ketjs on
 inspect(Text51,"text.text","=");
 inspect(Text52,"text.text","=");
-Movetojs(Text50,[0.1,3.5],24);
-Movetojs(Text51,[0.1,3.5-0.52],24);
-Movetojs(Text52,[0.1,3.5-0.52*2],24); //no ketjs off
+Movetojs(Text50,[1.1,3.5],24);
+Movetojs(Text51,[1.1,3.5-0.52],24);
+Movetojs(Text52,[1.1,3.5-0.52*2],24); //no ketjs off
+Expr([0.9,3.5],"w","\sin",["Size=2"]);
+Expr([0.9,3.5-0.52],"w","\cos",["Size=2"]);
+Expr([0.9,3.5-0.52*2],"w","\tan",["Size=2"]);
 
 Pointdata("1",[-0.2,3.55],["Size=5","Color=black"]);
 Pointdata("2",[-0.2,3.55-0.52],["Size=5","Color=red"]);
@@ -100,13 +102,15 @@ Listplot("h",[[0.8,1],[3.2,1]]);
 Listplot("v",[[2,2.2],[2,-0.2]]);
 
 pos=1;
-pos2=3.5;
+pos2=0+0.55*3;
 win=[50,51,52];
 clr=["black","red","blue"];
+funL=["sin(","cos(","tan("];
 forall(1..(length(win)),
-  str="tan(pi/5)";//no ketjs
+  str="%/4";//no ketjs
 //  str=Textedit(win_#); //only ketjs
   if(length(str)>0,
+    str=funL_#+replace(str,"%","pi")+")";
     cstr=Tocindyform(str);
     if(indexof(cstr,"?")==0,
       tmp=Parlevel(cstr);
@@ -124,11 +128,11 @@ forall(1..(length(win)),
       Listplot(text(#),[tmp1,tmp2],[tmp]);
       Listplot(text(#)+"da",[tmp3,tmp2,tmp4],["do",tmp]);
       out=Getans(str);
-      Expr([4,pos2],"e",out,["Size=1.8"]);
+      Expr([4,pos2],"e",Totexform(str)+"="+out,["Size=1.8"]);
     );
   );
   pos=pos-0.6;
-  pos2=pos2-0.52;
+  pos2=pos2-0.55;
 );
 
 Windispg();
