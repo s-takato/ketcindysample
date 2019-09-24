@@ -6,19 +6,20 @@ Ketinit();
 Setketcindyjs(["Nolabel=all","Color=white"]);
 
 // Put A,B,C on the screen
+pA=Ptpos(A); pB=Ptpos(B); pC=Ptpos(C);
 
 Ch=[chno];
 if(contains(Ch,1),
  Setparent(Cdyname()+"fig1");
- Parabolaplot("1",[A,B,C],"[-5,10]");
+ Parabolaplot("1",[pA,pB,pC],"[-5,10]");
 );
 if(contains(Ch,2),
  Setparent(Cdyname()+"fig2");
- Ellipseplot("1",[A,B,C],"[0,2*pi]");
+ Ellipseplot("1",[pA,pB,pC],"[0,2*pi]");
 );
 if(contains(Ch,3),
  Setparent(Cdyname()+"fig3");
- Hyperbolaplot("1",[A,B,C],["Asy=da"]);
+ Hyperbolaplot("1",[pA,pB,pC],["Asy=da"]);
 );
 
 Figpdf();

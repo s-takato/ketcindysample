@@ -7,6 +7,7 @@ Slider("C",[1,-5.5],[5,-5.5]);
 funstr=Assign("a^x",["a",Sprintf(C.x,3)]);
 Plotdata("1",funstr,"x=[-5,5]"); 
 Putpoint("D",[0,1]);
+//D.xy=[0,1]; only ketjs
 coeff=Derivative(funstr,"x",D.x);
 Lineplot("1",[D,[D.x+1,D.y+coeff]]);
 Lineplot("2",[D,[D.x+1,D.y+1]],["da"]);
