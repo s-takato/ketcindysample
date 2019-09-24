@@ -17,6 +17,7 @@ Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nolabel=all","Color=white"]);
 
 Putpoint("A",[0,0],A.xy);
+pA=Pos(A);
 fun="(x-A.x)^2+2*(x-A.x)*(y-A.y)+2*(y-A.y)^2=1";
 
 Ch=[1];
@@ -34,7 +35,7 @@ if(contains(Ch,1),
 if(contains(Ch,3),
  // for Ketcindyjs
  // imp0,ha0 are assigned in ketlib slot.
- Translatedata("1",["imp0","ha0"],A.xy);
+ Translatedata("1",["imp0","ha0"],pA);
 );
 
 Figpdf();
