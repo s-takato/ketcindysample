@@ -1,17 +1,21 @@
 Ketinit();
-//Setfiles("");
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=white"]);
+Setketcindyjs([]);
 
+forall(allpoints(),
+ parse("p"+#.name+"=Ptpos(#);");
+);
 Addax(0);
 
-Arrowdata([A,B]);
-Arrowdata([A,C]);
-Arrowdata([A,D]);
-Listplot([C,D,B],["da"]);
-
-Expr([(A+B)/2,"se","\vec{a}",(A+C)/2,"nw","\vec{b}"]);
-Expr([(A+D)/2,"se","\vec{a}+\vec{b}"]);
+pD=pA+(pB-pA)+(pC-pA);
+Arrowdata("1",[pA,pB]);
+Arrowdata("2",[pA,pC]);
+Arrowdata("3",[pA,pD]);
+Listplot("1",[pC,pD,pB],["da"]);
+Pointdata("1",pD,["Size=3","Color=red"]);
+Letter([pD,"ne","D"]);
+Expr([(pA+pB)/2,"se","\vec{a}",(pA+pC)/2,"nw","\vec{b}"]);
+Expr([(pA+pD)/2,"se","\vec{a}+\vec{b}"]);
 
 Figpdf();
 Windispg();

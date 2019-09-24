@@ -78,6 +78,7 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   YMAX=rangey_2/SCALEY;
   StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
+  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name)); //190917
   KETJSOP=[]; //190916
   JSBODY=[[],[]]; //190916
 );
@@ -522,7 +523,6 @@ Slider(ptstr,p1,p2,options):=(//190120
   );
   Listplot(pA+pB,[p1,p2],["Msg=n","notex",color,thick]);
   Putonseg(pC,parse("sg"+pA+pB));
-  Strictmove(pC);
 );
 Listplot(list):=Listplot(list,[]);
 Listplot(Arg1,Arg2):=(
@@ -1197,7 +1197,6 @@ Windispg():=(
 );
 Windispg(gcLorg):=( //190125
   regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,opcindy);
-  forall(remove(allpoints(),[SW,NE]),Strictmove(#.name));  //
   gcL=gcLorg; //190125from
   if(length(gcL)>0,
     if(!islist(gcL_1),gcL=[gcL]);
@@ -1573,7 +1572,7 @@ Ketcindyjsscale=1;
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=white"]); 
+Setketcindyjs(["Nolabel=all","Color=offwhite"]); 
 
 Setax([7,"se"]);
 
@@ -1588,7 +1587,7 @@ if(contains(Ch,2),
  Plotdata("2",Assign("sin(x-Cx)",["Cx",Ptpos(C)_1]),"x",["Num=200"]);
 );
 
-Putpoint("D",[1,2],D.xy);
+Putpoint("D",[1,2],Ptpos(D));
 Letter([D,"s","Graph of $y=\sin x$"]);
 
 Figpdf();
@@ -1622,7 +1621,7 @@ var cdy = CindyJS({
     transform: [{visibleRect: [-8.297054167165703, 6.087575110167346, 11.841426821100566, -4.430465817418579]}],
     grid: 1.0,
     snap: true,
-    background: "rgb(255,255,255)"
+    background: "rgb(247,247,247)"
   }],
   csconsole: false,
   cinderella: {build: 1901, version: [2, 9, 1901]}

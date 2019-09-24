@@ -1,27 +1,29 @@
 Ketinit();
+Setparent(Cdyname()+"fig");
 
 Addax(0);
 
-Listplot("1",[A,B,C,A]);
-a=|C-B|; b=|A-C|; c=|B-A|;
+pA=Ptpos(A); pB=Ptpos(B); pC=Ptpos(C);
+Listplot("1",[pA,pB,pC,pA]);
+a=|pC-pB|; b=|pA-pC|; c=|pB-pA|;
 s=(a+b+c)/2;
 S=sqrt(s*(s-a)*(s-b)*(s-c));
-Letter([A,"w","A",B,"e","B",C,"n","C"]);
+Letter([pA,"w","A",pB,"e","B",pC,"n","C"]);
 Expr([D,"w","S="+Sprintf(S,3)]);
-Bowdata("1",[A,B],[1,0.5,"E="+Sprintf(c,3)]);
-Bowdata("2",[B,C],[1,0.5,"E="+Sprintf(b,3)]);
-Bowdata("3",[C,A],[1,0.5,"E="+Sprintf(a,3)]);
+Bowdata("1",[pA,pB],[1,0.5,"E="+Sprintf(c,3)]);
+Bowdata("2",[pB,pC],[1,0.5,"E="+Sprintf(b,3)]);
+Bowdata("3",[pC,pA],[1,0.5,"E="+Sprintf(a,3)]);
 
 Slider("P",[0,-6],[min([a,b,c]),-6]);
-p=P.x;
+p=Ptpos(P)_1;
 
-vBC=(C-B)/a;
-vCA=(A-C)/b;
-vAB=(B-A)/c;
+vBC=(pC-pB)/a;
+vCA=(pA-pC)/b;
+vAB=(pB-pA)/c;
 
-p1=A+p*vAB;
-p2=B+p*vBC;
-p3=C+p*vCA;
+p1=pA+p*vAB;
+p2=pB+p*vBC;
+p3=pC+p*vCA;
 Pointdata("1",p1,["Color=blue"]);
 Pointdata("2",p2,["Color=blue"]);
 Pointdata("3",p3,["Color=blue"]);
@@ -34,4 +36,5 @@ Expr([D-[0,1],"w","\frac{Ss}{S}="+Sprintf(Ss/S,3)]);
 
 Setketcindyjs(["No="+remove(allelements(),[P]),"Col=white"]);
 
+Figpdf();
 Windispg();

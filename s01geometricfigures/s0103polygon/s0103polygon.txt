@@ -1,12 +1,12 @@
 Ketinit();
-//Setfiles("");
-Setparent(Cdyname()+"fig");
-Setketcindyjs(["Color=white"]);
-
+//Setparent("");
+Setketcindyjs(["No=all"]);
+forall(allpoints(),
+ parse("p"+#.name+"=Ptpos(#);");
+);
 Addax(0);
-Polygonplot("1",[A,B],6);
+Polygonplot("1",[pA,pB],6);
 
-//Figpdf();
 Windispg();
 
 //Help("Poly");
