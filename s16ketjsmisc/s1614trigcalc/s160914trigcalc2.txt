@@ -37,6 +37,10 @@ forall(1..(length(win)),
   str="%/4";//no ketjs
 //  str=Textedit(win_#); //only ketjs
   if(length(str)>0,
+    str=Removespace(str);
+    str=replace(str,"   ","*");
+    str=replace(str,"  ","*");
+    str=replace(str," ","*");
     str=replace(str,"%","pi");
     str=replace(str,"#","pi");
     str=funL_#+str+")";

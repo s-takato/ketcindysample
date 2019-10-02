@@ -1,14 +1,15 @@
 Ketinit();
 
-Setketcindyjs(["Siz=1.5","No=all","Fig=y","Ax=n"]);//no ketjs
+Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Color=offwhite"]);//no ketjs
 Setax(["a"]);
-Setwindow([-6,6],[-7,2]);
+Setwindow([-6.5,6],[-7,2]);
 
-Setplaybuttons([-1.5,-6.5],14,[1]);//no ketjs
-Movetojs(60,[0.2,1.5],15);// no ketjs
+Setplaybuttons([0.2,-6.5],14,[1]);//no ketjs on
+Movetojs(60,[-6.7,-5.7],14);
+Movetojs(61,[-6.7,-6.5],14);// no ketjs off
 
 R=1; I0=0.05; m1=1; m2=1.05; L0=4;
-str="L0=4;m1=1;m2=1.05";
+str="m1=1;m2=1.05;I0=0.05";
 //str=Textedit(60);//only ketjs
 tmp1=Strsplit(str,";");
 forall(tmp1,
@@ -18,6 +19,12 @@ forall(tmp1,
       parse(#+";");
     );
   );
+);
+str="dphi=0.6";
+//str=Textedit(61);//only ketjs
+tmp=Strsplit(str,"=");
+if(length(tmp_2)>0,
+  parse(str+";");
 );
 
 if(!islist(vL),//no ketjs on
@@ -68,12 +75,12 @@ if(!islist(vL),//no ketjs on
  eqF="G";
  eq="[P,Q,F,G]'="+text([eqP,eqQ,eqF,eqG]);
  repnm=["R","I0","m1","m2","g","L0"];
- repva=[1,I0,m1,m2,9.8,L0];
+ repva=[R,I0,m1,m2,9.8,L0];
  rep=apply(1..(length(repnm)),[repnm_#,repva_#]);
  rep=flatten(rep);
  eqn=Assign(eq,rep);
- vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,0.6],600);
-);// no ketjs off
+ vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,dphi],600);
+);
 
 Ketcindyjsdata(["vL",vL]);//no ketjs
 
@@ -101,7 +108,7 @@ mf(s):=(
  Listplot("3",[pt0,p3],["dr,2","Color=blue"]);
  Partcrv("1",p1,q1,"cr1",["dr,2"]);
  Pointdata("1",[p2,q2],["Size=8","Color=red"]);
- Expr([-5,1.5],"e","t="+Sprintf(s,2),["Size=1.5"]);
+ Expr([0.5,1.5],"e","t="+Sprintf(s,2),["Size=1.5"]);
 );
 
 ss=Animationparam(0,1,[0,60]);
