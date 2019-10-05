@@ -82,6 +82,52 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   KETJSOP=[]; //190916
   JSBODY=[[],[]]; //190916
 );
+Usegraphics(gpack):=( //180817
+  regional(tmp);
+  GPACK=gpack;
+  tmp=Toupper(gpack); //191003from
+  if(tmp=="TIKZ",  //190615
+    if(!contains(ADDPACK,"tikz"),
+      Addpackage(["pgf","tikz"]); //190101
+    );
+  );
+  if(tmp=="PICT2E",
+    if(!contains(ADDPACK,"pict2e"),
+      Addpackage(["pict2e"]);
+    );
+  ); //191003to
+);
+Toupper(str):=(
+  regional(alphabet,out,tmp,tmp1);
+  alphabet="abcdefghijklmnopqrstuvwxyz";
+  out="";
+  forall(1..(length(str)),
+    tmp=substring(str,#-1,#);
+    tmp1=indexof(alphabet,tmp);
+    if(tmp1>0,
+      out=out+unicode(text(tmp1+64),base->10);
+    ,
+      out=out+tmp;
+    );
+  );
+  out;
+);
+Addpackage(packorg):=(
+  regional(packL,tmp);
+  packL=packorg; //17.06.25from
+  if(!islist(packL),packL=[packL]);
+  packL=apply(packL,replace(#,"\","/"));
+  forall(1..(length(packL)),
+    tmp=packL_#;
+    if(substring(tmp,0,11)=="ketpicstyle",
+      tmp=replace(Dirhead+"/"+tmp,"\","/");
+    );
+    if(indexof(tmp,"[")==0,
+      packL_#="{"+tmp+"}";
+    );
+  );
+  ADDPACK=concat(ADDPACK,packL); //17.06.25to
+);
 Indexall(str,key):=(
   regional(rest,out,flg,tmp,tmp1,);
   out=[];
@@ -101,47 +147,47 @@ Indexall(str,key):=(
   );
   out;
 );
-Setwindow():=Setwindow("Msg=yes");
+Setwindow():=Setwindow("Msg=y");
 Setwindow(str):=(
   regional(tmp,tmp1,tmp2,msg);
-  msg="y";
+  msg="Y";
   tmp=indexof(str,"="); // 16.02.10
-  tmp1=Toupper(substring(str,tmp,tmp+1));
-  if(tmp1=="N",msg="n");
-  Strictmove("SW"); Strictmove("NE"); // ketjs //190909
-  if((ispoint(SW) & ispoint(NE)),
+  msg=Toupper(substring(str,tmp,tmp+1));
+  Strictmove("SW"); Strictmove("NE");//190927
+  if((ispoint(SW)) & (ispoint(NE)),
     tmp1=LLcrd(Ptpos(SW));//190912[2lines]
     tmp2=LLcrd(Ptpos(NE));
     XMIN=tmp1_1; XMAX=tmp2_1;
     YMIN=tmp1_2; YMAX=tmp2_2;
   ,
-    Putpoint("SW",Pcrd([XMIN,YMIN]));
-    Putpoint("NE", Pcrd([XMAX,YMAX]));
+    if(!ispoint(SW), //191005from
+      Putpoint("SW",Pcrd([-5,-5]));
+      XMIN=-5; YMIN=-5;
+      Ptpos(SW,SW.xy);
+    );
+    if(!ispoint(NE),
+      Putpoint("NE", Pcrd([5,5]));
+      XMAX=5; YMAX=5;
+      Ptpos(NE,NE.xy);
+    ); //191005to
   );
 );
-Setwindow(xrange,yrange):=(
+Setwindow(xrange,yrange):=Setwindow(xrange,yrange,"Msg=y");
+Setwindow(xrange,yrange,msg):=(
   XMIN=xrange_1;
   XMAX=xrange_2;
   YMIN=yrange_1;
   YMAX=yrange_2;
-  Putpoint("SW",[XMIN,YMIN]);//181016
-  Putpoint("NE",[XMAX,YMAX]);//181016
-  Strictmove("SW"); Strictmove("NE"); //
-);
-Toupper(str):=(
-  regional(alphabet,out,tmp,tmp1);
-  alphabet="abcdefghijklmnopqrstuvwxyz";
-  out="";
-  forall(1..(length(str)),
-    tmp=substring(str,#-1,#);
-    tmp1=indexof(alphabet,tmp);
-    if(tmp1>0,
-      out=out+unicode(text(tmp1+64),base->10);
-    ,
-      out=out+tmp;
-    );
+  Ptpos(SW,Pcrd([XMIN,YMIN])); //190927from
+  Ptpos(NE,Pcrd([XMAX,YMAX]));
+  Strictmove("SW"); Strictmove("NE");
+  layer(KETPICLAYER); 
+  autoclearlayer(KETPICLAYER,true);
+  drawpoly([Pcrd([XMIN,YMIN]), Pcrd([XMAX,YMIN]),
+        Pcrd([XMAX,YMAX]),Pcrd([XMIN,YMAX])],color->[1,1,1]); //190927to
+  if(Toupper(substring(msg,0,1))=="Y", 
+    println("Setwindow(["+XMIN+","+XMAX+"],["+YMIN+","+YMAX+"])");
   );
-  out;
 );
 LLcrd(pt):=(
   regional(tmp);
@@ -152,6 +198,10 @@ LLcrd(pt):=(
   );
   tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
   tmp;
+);
+Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
+Putpoint(name,Ptinit,Pt):=(
+  regional(ptstr);
 );
 Ptpos(pt):=Ptpos(pt,[]);
 Ptpos(ptorg,pos):=(
@@ -200,12 +250,6 @@ Pcrd(pt):=(
     tmp=[pt_1*SCALEX,pt_2*SCALEY];
   );
  tmp;
-);
-Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
-Putpoint(name,Ptinit,Pt):=(
-  regional(ptstr);
-    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
-    parse(ptstr);
 );
 Strictmove(pC):=Strictmove(pC,StrictSep); //190831
 Strictmove(pCorg,sep):=(
@@ -1651,9 +1695,8 @@ Ketcindyjsscale=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
-Ketcindyjsbody(["<p,f10>_Napier`s Constant"],[]);
-Setwindow([-2,2],[-0.5,3.5]);
-Setax(["Size=2","a0.5"]);
+Ketcindyjsbody(["<p,f10>_;Napier`s Constant"],[]);
+Setax(["Size=1.5","a0.5"]);
 Slider("A",[-2+0.1,-1],[2,-1]);
 A.size=5;
 
@@ -1675,7 +1718,7 @@ Pointdata("1",[1,2],["Size=2","Color=blue"]);
 Htickmark([1,"ne","1"],["Size=1.4"]);
 Vtickmark([1,"1",2,"ne","2"],["Size=1.4"]);
 Vtickmark([log(aa)+1,Sprintf(log(aa)+1,10)],["Size=1.5"]);
-Expr([log(3.5)/log(aa),3.5],"n","y=a^x",["Size=1.5"]);
+Expr([log(3.5)/log(aa),3.5],"se","y=a^x",["Size=1.5"]);
 
 ss=Animationparam(pi/6,2,[0,2*pi+pi/6]);
 
@@ -1695,8 +1738,8 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "SW", type: "Free", pos: [4.0, 1.0, -2.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [-2.2857142857142856, -4.0, -1.1428571428571428], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "SW", type: "Free", pos: [4.0, 1.7142857142857142, -1.1428571428571428], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "NE", type: "Free", pos: [-3.381045365899292, -4.0, -0.9873259436923078], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text60", type: "EditableText", pos: [-3,3,1], color: [0.0, 0.0, 0.0], text: "", textsize: 14.0},
     {name: "A", type: "Free", pos: [0.0, -4.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true }
   ],
@@ -1704,9 +1747,9 @@ var cdy = CindyJS({
     id: "CSCanvas",
     width: 647,
     height: 506,
-    transform: [{visibleRect: [-3.6407228501702025, 4.277415240502034, 3.8490949051878927, -1.580154750550819]}],
+    transform: [{visibleRect: [-4.75524597906312, 4.66702298185399, 3.9995288751299873, -2.1798333956138807]}],
     axes: false,
-    grid: 1.0,
+    grid: 0.5,
     snap: true,
     background: "rgb(247,247,247)"
   }],
@@ -1716,6 +1759,6 @@ var cdy = CindyJS({
     </script>
 </head>
 <body>
-    <p><font size="10">_Napier's Constant</font></p>
+    <p><font size="10">&emsp;Napier's Constant</font></p>
     <div id="CSCanvas"></div>
 </html>
