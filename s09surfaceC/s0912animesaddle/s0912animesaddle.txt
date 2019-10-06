@@ -1,0 +1,32 @@
+Start3d([A,B,C]);
+
+Putaxes3d(3);
+
+fd=[
+ "z=x^2-y^2","x=[-2,2]","y=[-2,2]","ewns"
+];
+
+if(Isangle(),
+ Sf3data("1",fd);
+,
+ mf(s):=(
+  regional(ang);
+  ang=Getangle();
+  Startsurf();
+  Setangle(70,s);
+  Xyzax3data("","x=[-3,3]","y=[-3,3]","z=[-1,5]");
+  Sfbdparadata("1",fd);
+  Crvsfparadata("1","ax3d","sfbd3d",fd);
+ if(Gccexists(),
+   ExeccmdC("",[""]);
+ );
+  Setangle(ang);
+ );
+ ang=Getangle();
+ mf(ang_2);
+ Setpara("saddle","mf(s)","s=[0,360]",
+         ["Div=24","Out=y"]);
+);
+
+Windispg();
+
