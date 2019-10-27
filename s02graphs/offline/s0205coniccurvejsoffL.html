@@ -1407,6 +1407,122 @@ Hyperbolaplot(nm,ptlist,rng,optionsorg):=(
     Rotatedata(nm+"asy2","ln"+nm+"asy2",angle,append(opasy,pA));//180408
   );
 );
+Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
+Letter(list):=Letter(list,[]);
+Letter(Pt,Dr,St,options):=Letter([Pt,Dr,St],options);//181218
+Letter(list,options):=(
+  regional(Nj,Pos,Dir,Str,Off,Dmv,Xmv,Ymv,Noflg,opcindy,
+      opL,aln,sz,clr,bld,ita,tmp,tmp1,tmp2,color,eqL);
+  tmp=Divoptions(options);
+  eqL=tmp_5; //190209
+  Noflg=tmp_2;
+  color=tmp_(length(tmp)-2);
+  opL=select(options,indexof(#,"->")>0); //16.10.09from
+  tmp=select(opL,indexof(#,"color"));
+  sz=12;
+  bld=false;
+  ita=false;
+  aln="left";
+  forall(opL,
+    tmp=indexof(#,"->");
+    tmp1=Removespace(substring(#,0,tmp-1));
+    tmp2=substring(#,tmp+1,length(#));
+    if(tmp1=="size",sz=parse(tmp2));
+    if(tmp1=="color",clr=parse(tmp2));
+    if(tmp1=="bold",bld=parse(tmp2));
+    if(tmp1=="ita",ita=parse(tmp2));
+  );//16.10.09to
+  forall(eqL, //190209from
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(tmp1=="S",
+      sz=round(parse(tmp_2)*12);
+    );
+  ); //190209to
+  Off=-4;
+  Dmv=8;
+  Nj=1;
+  if(Ketcindyjsfigure>0,sz=round(sz*Ketcindyjsscale) ); // 
+  while(Nj+2<=length(list),
+    Pos=list_Nj;
+    Dir=list_(Nj+1);
+    tmp=indexof(Dir,"s")+indexof(Dir,"n");//16.10.19from
+    if(tmp>0, 
+      tmp=indexof(Dir,"w")+indexof(Dir,"e");
+      if(tmp==0,
+        Dir="c"+Dir;//16.10.08
+      );
+    );//16.10.19until
+    Str=list_(Nj+2);
+    if(!isstring(Str),Str=format(Str,5)); // 16.09.30,10.09
+    tmp=replace(Str,".xy","");
+    tmp=replace(tmp,".x","(1)");
+    Str=replace(tmp,".y","(2)");
+    Str=RSslash(Str); // 17.09.24
+    Str=replace(Str,"`","'");//180303
+    tmp=Dq+","+Dq+Str+Dq+")";
+    if(Noflg<2,
+      Xmv=0;//16.10.13
+      Ymv=-4;
+      if(indexof(Dir,"n")>0,
+        Ymv=Dmv/2;
+      );
+      if(indexof(Dir,"s")>0,
+        Ymv=-Dmv*3/2;//16.10.13
+      );
+      if(indexof(Dir,"e")>0,
+        Xmv=Dmv/2;
+        Off=0;
+        aln="left"; 
+      );
+      if(indexof(Dir,"w")>0, 
+        Xmv=-Dmv/2;
+        Off=0; // 16.09.30from
+        aln="right"; 
+      );
+      if(indexof(Dir,"c")>0,
+        Xmv=0;//16.10.13
+        Off=0;
+        if(Ymv==0,Ymv=-4);//16.10.08
+        aln="mid"; // 16.09.30until
+      );
+      if(Ketcindyjsfigure>0, // 
+        Off=round(Off*Ketcindyjsscale);
+        Xmv=round(Xmv*Ketcindyjsscale);
+        Ymv=round(Ymv*Ketcindyjsscale);
+      ); // 
+      Str=list_(Nj+2);  //17.10.17
+      drawtext(Pcrd(Pos),Str,offset->[Off+Xmv,Off+Ymv],
+         size->sz,color->color,align->aln,bold->bld,italics->ita);//16.10.09
+    );
+    Nj=Nj+3;
+  );
+);
+Removespace(str):=(
+  regional(tmp,flg,out);
+  tmp=length(str)+1;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      if((str_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(str,tmp-1,length(str));
+  flg=0;
+  tmp=0;
+  forall(reverse(1..(length(out))),
+    if(flg==0,
+      if((out_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(out,0,tmp);
+);
 Windispg():=(
   if(ADDAXES=="1", //181215from
     Drwxy();
@@ -1780,122 +1896,6 @@ Expr(listorg,options):=( //16.10.09
   );
   Letter(list,options);
 );
-Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
-Letter(list):=Letter(list,[]);
-Letter(Pt,Dr,St,options):=Letter([Pt,Dr,St],options);//181218
-Letter(list,options):=(
-  regional(Nj,Pos,Dir,Str,Off,Dmv,Xmv,Ymv,Noflg,opcindy,
-      opL,aln,sz,clr,bld,ita,tmp,tmp1,tmp2,color,eqL);
-  tmp=Divoptions(options);
-  eqL=tmp_5; //190209
-  Noflg=tmp_2;
-  color=tmp_(length(tmp)-2);
-  opL=select(options,indexof(#,"->")>0); //16.10.09from
-  tmp=select(opL,indexof(#,"color"));
-  sz=12;
-  bld=false;
-  ita=false;
-  aln="left";
-  forall(opL,
-    tmp=indexof(#,"->");
-    tmp1=Removespace(substring(#,0,tmp-1));
-    tmp2=substring(#,tmp+1,length(#));
-    if(tmp1=="size",sz=parse(tmp2));
-    if(tmp1=="color",clr=parse(tmp2));
-    if(tmp1=="bold",bld=parse(tmp2));
-    if(tmp1=="ita",ita=parse(tmp2));
-  );//16.10.09to
-  forall(eqL, //190209from
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    if(tmp1=="S",
-      sz=round(parse(tmp_2)*12);
-    );
-  ); //190209to
-  Off=-4;
-  Dmv=8;
-  Nj=1;
-  if(Ketcindyjsfigure>0,sz=round(sz*Ketcindyjsscale) ); // 
-  while(Nj+2<=length(list),
-    Pos=list_Nj;
-    Dir=list_(Nj+1);
-    tmp=indexof(Dir,"s")+indexof(Dir,"n");//16.10.19from
-    if(tmp>0, 
-      tmp=indexof(Dir,"w")+indexof(Dir,"e");
-      if(tmp==0,
-        Dir="c"+Dir;//16.10.08
-      );
-    );//16.10.19until
-    Str=list_(Nj+2);
-    if(!isstring(Str),Str=format(Str,5)); // 16.09.30,10.09
-    tmp=replace(Str,".xy","");
-    tmp=replace(tmp,".x","(1)");
-    Str=replace(tmp,".y","(2)");
-    Str=RSslash(Str); // 17.09.24
-    Str=replace(Str,"`","'");//180303
-    tmp=Dq+","+Dq+Str+Dq+")";
-    if(Noflg<2,
-      Xmv=0;//16.10.13
-      Ymv=-4;
-      if(indexof(Dir,"n")>0,
-        Ymv=Dmv/2;
-      );
-      if(indexof(Dir,"s")>0,
-        Ymv=-Dmv*3/2;//16.10.13
-      );
-      if(indexof(Dir,"e")>0,
-        Xmv=Dmv/2;
-        Off=0;
-        aln="left"; 
-      );
-      if(indexof(Dir,"w")>0, 
-        Xmv=-Dmv/2;
-        Off=0; // 16.09.30from
-        aln="right"; 
-      );
-      if(indexof(Dir,"c")>0,
-        Xmv=0;//16.10.13
-        Off=0;
-        if(Ymv==0,Ymv=-4);//16.10.08
-        aln="mid"; // 16.09.30until
-      );
-      if(Ketcindyjsfigure>0, // 
-        Off=round(Off*Ketcindyjsscale);
-        Xmv=round(Xmv*Ketcindyjsscale);
-        Ymv=round(Ymv*Ketcindyjsscale);
-      ); // 
-      Str=list_(Nj+2);  //17.10.17
-      drawtext(Pcrd(Pos),Str,offset->[Off+Xmv,Off+Ymv],
-         size->sz,color->color,align->aln,bold->bld,italics->ita);//16.10.09
-    );
-    Nj=Nj+3;
-  );
-);
-Removespace(str):=(
-  regional(tmp,flg,out);
-  tmp=length(str)+1;
-  flg=0;
-  forall(1..(length(str)),
-    if(flg==0,
-      if((str_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(str,tmp-1,length(str));
-  flg=0;
-  tmp=0;
-  forall(reverse(1..(length(out))),
-    if(flg==0,
-      if((out_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(out,0,tmp);
-);
 Addax(param):=(
   ADDAXES=text(param);
 );
@@ -1980,23 +1980,22 @@ chno=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
-Setketcindyjs(["Nolabel=all","Color=white"]);
+Setketcindyjs(["Color=offwhite"]);
 
 pA=Ptpos(A); pB=Ptpos(B); pC=Ptpos(C);
 
-Ch=[chno];
-if(contains(Ch,1),
- Setparent(Cdyname()+"fig1");
+if(chno==1,
  Parabolaplot("1",[pA,pB,pC],"[-5,10]");
  Lineplot("1",[pB,pC],["da"]);
+ Letter([A,"ne","F",B,"ne","A",C,"ne","B"]);
 );
-if(contains(Ch,2),
- Setparent(Cdyname()+"fig2");
+if(chno==2,
  Ellipseplot("1",[pA,pB,pC],"[0,2*pi]");
+ Letter([A,"ne","F$'$",B,"ne","F",C,"ne","A"]);
 );
-if(contains(Ch,3),
- Setparent(Cdyname()+"fig3");
+if(chno==3,
  Hyperbolaplot("1",[pA,pB,pC],["Asy=da"]);
+ Letter([A,"ne","F$'$",B,"ne","F",C,"ne","A"]);
 );
 
 Windispg();
@@ -2018,21 +2017,21 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, -0.0, -2.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "B", type: "Free", pos: [4.0, -0.0, 2.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "C", type: "Free", pos: [4.0, 4.0, 2.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "A", type: "Free", pos: [4.0, -0.0, -2.0], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
+    {name: "B", type: "Free", pos: [4.0, -0.0, 2.0], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
+    {name: "C", type: "Free", pos: [4.0, 4.0, 2.0], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
     {name: "Text62", type: "Button", pos: [4.0, -0.0, 0.6462906575578978], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=3;", text: "Hypo", textsize: 18.0},
     {name: "Text61", type: "Button", pos: [4.0, 0.975609756097561, 0.6515450531477994], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=2;", text: "Ellip", textsize: 18.0},
     {name: "Text60", type: "Button", pos: [4.0, 1.903225806451613, 0.6462906575578978], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=1;", text: "Para", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 815,
-    height: 528,
-    transform: [{visibleRect: [-10.090146471354107, 7.050676562481713, 10.723317371247465, -6.433383448430716]}],
+    width: 814,
+    height: 516,
+    transform: [{visibleRect: [-10.074738019516957, 7.035716918572678, 10.713187830639704, -6.141887183000832]}],
     grid: 1.0,
     snap: true,
-    background: "rgb(255,255,255)"
+    background: "rgb(247,247,247)"
   }],
   csconsole: false,
   cinderella: {build: 1901, version: [2, 9, 1901]}

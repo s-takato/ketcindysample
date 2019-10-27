@@ -1,23 +1,21 @@
 Ketinit();
-Setketcindyjs(["Nolabel=all","Color=white"]);
+Setketcindyjs(["Color=offwhite"]);
 
 // Put A,B,C on the screen
 pA=Ptpos(A); pB=Ptpos(B); pC=Ptpos(C);
 
-Ch=[chno];
-if(contains(Ch,1),
- Setparent(Cdyname()+"fig1");
+if(chno==1,
  Parabolaplot("1",[pA,pB,pC],"[-5,10]");
  Lineplot("1",[pB,pC],["da"]);
+ Letter([A,"ne","F",B,"ne","A",C,"ne","B"]);
 );
-if(contains(Ch,2),
- Setparent(Cdyname()+"fig2");
+if(chno==2,
  Ellipseplot("1",[pA,pB,pC],"[0,2*pi]");
+ Letter([A,"ne","F$'$",B,"ne","F",C,"ne","A"]);
 );
-if(contains(Ch,3),
- Setparent(Cdyname()+"fig3");
+if(chno==3,
  Hyperbolaplot("1",[pA,pB,pC],["Asy=da"]);
+ Letter([A,"ne","F$'$",B,"ne","F",C,"ne","A"]);
 );
 
 Windispg();
-
