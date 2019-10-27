@@ -1071,6 +1071,81 @@ Rotatedata(nm,plist,angle,optionorg):=(
   );
   PdL;
 );
+Lineplot(nm,list,optionorg):=(
+  regional(name,Out,tmp,tmp1,tmp2,opstr,opcindy,Mag,Semi,
+      Vec,pA,pB,options,Ltype,Noflg,color,Msg,eqL);
+  name="ln"+nm;
+  options=optionorg;
+  Mag=100;
+  Semi="";
+  Msg="Y";
+  tmp=Divoptions(options);
+  Ltype=tmp_1;
+  Noflg=tmp_2;
+  color=tmp_(length(tmp)-2);
+  opcindy=tmp_(length(tmp));
+  opstr=tmp_(length(tmp)-1);
+  eqL=tmp_5;
+  forall(eqL,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(tmp1=="M", //190206from
+      Msg=Toupper(substring(tmp_2,0,1));
+      options=remove(options,[#]);
+    ); //190206to
+  );
+  tmp=Divoptions(options);
+  opstr=tmp_(length(tmp)-1);
+  tmp1=tmp_6;
+  if(length(tmp1)>0,Mag=tmp1_1);
+  tmp1=tmp_7;
+  if(length(tmp1)>0,Semi=tmp1_1);
+  pA=Lcrd(list_1); pB=Lcrd(list_2);
+  Vec= Mag/dist(pA,pB)*(pB-pA);
+  if(length(Semi)==0,
+    Out=[pA-Vec,pA+Vec];
+  ,
+    if(Semi=="+",   
+      Out=[pA,pA+Vec];
+    ,
+      Out=[pA-Vec,pA];
+    );
+  );
+  if(Noflg<3,
+    if(Msg=="Y", //190206
+      println("generate Lineplot "+name);
+    );
+    tmp1=apply(Out,Pcrd(#));
+    tmp=name+"="+Textformat(tmp1,5)+";"; //190415
+    parse(tmp);
+  );
+  if(Noflg<3, //190818
+    if(isstring(Ltype),
+      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
+    ,
+      if(Noflg==1,Ltype=0);
+    );
+    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
+  );
+  Out;
+);
+Lineplot(Arg1,Arg2):=(
+  regional(name,list,options,str);
+  if(isstring(Arg1),
+    name=Arg1;
+    list=Arg2;
+    Lineplot(name,list,[]);
+  ,
+    list=Arg1;
+    options=Arg2;
+    name="";
+    forall(list, // 16.10.07from
+       name=name+#.name;
+    );// 16.10.07until
+    Lineplot(name,list,options);
+  );
+);
+Lineplot(list):=Lineplot(list,[]);
 Ellipseplot(nm,ptlist):=Ellipseplot(nm,ptlist,"[0,2*pi]",[]);
 Ellipseplot(nm,ptlist,Arg):=(
   regional(rng,options);
@@ -1332,81 +1407,6 @@ Hyperbolaplot(nm,ptlist,rng,optionsorg):=(
     Rotatedata(nm+"asy2","ln"+nm+"asy2",angle,append(opasy,pA));//180408
   );
 );
-Lineplot(nm,list,optionorg):=(
-  regional(name,Out,tmp,tmp1,tmp2,opstr,opcindy,Mag,Semi,
-      Vec,pA,pB,options,Ltype,Noflg,color,Msg,eqL);
-  name="ln"+nm;
-  options=optionorg;
-  Mag=100;
-  Semi="";
-  Msg="Y";
-  tmp=Divoptions(options);
-  Ltype=tmp_1;
-  Noflg=tmp_2;
-  color=tmp_(length(tmp)-2);
-  opcindy=tmp_(length(tmp));
-  opstr=tmp_(length(tmp)-1);
-  eqL=tmp_5;
-  forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    if(tmp1=="M", //190206from
-      Msg=Toupper(substring(tmp_2,0,1));
-      options=remove(options,[#]);
-    ); //190206to
-  );
-  tmp=Divoptions(options);
-  opstr=tmp_(length(tmp)-1);
-  tmp1=tmp_6;
-  if(length(tmp1)>0,Mag=tmp1_1);
-  tmp1=tmp_7;
-  if(length(tmp1)>0,Semi=tmp1_1);
-  pA=Lcrd(list_1); pB=Lcrd(list_2);
-  Vec= Mag/dist(pA,pB)*(pB-pA);
-  if(length(Semi)==0,
-    Out=[pA-Vec,pA+Vec];
-  ,
-    if(Semi=="+",   
-      Out=[pA,pA+Vec];
-    ,
-      Out=[pA-Vec,pA];
-    );
-  );
-  if(Noflg<3,
-    if(Msg=="Y", //190206
-      println("generate Lineplot "+name);
-    );
-    tmp1=apply(Out,Pcrd(#));
-    tmp=name+"="+Textformat(tmp1,5)+";"; //190415
-    parse(tmp);
-  );
-  if(Noflg<3, //190818
-    if(isstring(Ltype),
-      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
-    ,
-      if(Noflg==1,Ltype=0);
-    );
-    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
-  );
-  Out;
-);
-Lineplot(Arg1,Arg2):=(
-  regional(name,list,options,str);
-  if(isstring(Arg1),
-    name=Arg1;
-    list=Arg2;
-    Lineplot(name,list,[]);
-  ,
-    list=Arg1;
-    options=Arg2;
-    name="";
-    forall(list, // 16.10.07from
-       name=name+#.name;
-    );// 16.10.07until
-    Lineplot(name,list,options);
-  );
-);
-Lineplot(list):=Lineplot(list,[]);
 Windispg():=(
   if(ADDAXES=="1", //181215from
     Drwxy();
@@ -1988,6 +1988,7 @@ Ch=[chno];
 if(contains(Ch,1),
  Setparent(Cdyname()+"fig1");
  Parabolaplot("1",[pA,pB,pC],"[-5,10]");
+ Lineplot("1",[pB,pC],["da"]);
 );
 if(contains(Ch,2),
  Setparent(Cdyname()+"fig2");
@@ -1998,7 +1999,6 @@ if(contains(Ch,3),
  Hyperbolaplot("1",[pA,pB,pC],["Asy=da"]);
 );
 
-Figpdf();
 Windispg();
 
 ;
@@ -2020,14 +2020,16 @@ var cdy = CindyJS({
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "A", type: "Free", pos: [4.0, -0.0, -2.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "B", type: "Free", pos: [4.0, -0.0, 2.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "C", type: "Free", pos: [4.0, 3.44444265118777, 2.226111734113214], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "Text0", type: "Button", pos: [4.0, 1.7868852459016396, 0.6568855863703223], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=mod(chno,3)+1;\nCh=[chno];", text: "Choose", textsize: 18.0}
+    {name: "C", type: "Free", pos: [4.0, 4.0, 2.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "Text62", type: "Button", pos: [4.0, -0.0, 0.6462906575578978], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=3;", text: "Hypo", textsize: 18.0},
+    {name: "Text61", type: "Button", pos: [4.0, 0.975609756097561, 0.6515450531477994], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=2;", text: "Ellip", textsize: 18.0},
+    {name: "Text60", type: "Button", pos: [4.0, 1.903225806451613, 0.6462906575578978], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=1;", text: "Para", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
     width: 815,
     height: 528,
-    transform: [{visibleRect: [-9.545789911340313, 6.02694970872859, 10.79360558602532, -7.149983815945097]}],
+    transform: [{visibleRect: [-10.090146471354107, 7.050676562481713, 10.723317371247465, -6.433383448430716]}],
     grid: 1.0,
     snap: true,
     background: "rgb(255,255,255)"

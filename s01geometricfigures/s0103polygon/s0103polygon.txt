@@ -1,12 +1,12 @@
 Ketinit();
-//Setparent("");
 Setketcindyjs(["No=all"]);
-forall(allpoints(),
- parse("p"+#.name+"=Ptpos(#);");
-);
 Addax(0);
-Polygonplot("1",[pA,pB],6);
+
+Slider("N",[3,YMIN+1],[10,YMIN+1]);
+pA=Ptpos(A);
+pB=Ptpos(B);
+nn=round(N.x);
+Letter(N+[0,-0.2],"s",nn,["Size=1.2"]);
+Polygonplot("1",[pA,pB],nn);
 
 Windispg();
-
-//Help("Poly");

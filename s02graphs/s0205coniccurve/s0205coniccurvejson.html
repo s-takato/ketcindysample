@@ -82,6 +82,52 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   KETJSOP=[]; //190916
   JSBODY=[[],[]]; //190916
 );
+Usegraphics(gpack):=( //180817
+  regional(tmp);
+  GPACK=gpack;
+  tmp=Toupper(gpack); //191003from
+  if(tmp=="TIKZ",  //190615
+    if(!contains(ADDPACK,"tikz"),
+      Addpackage(["pgf","tikz"]); //190101
+    );
+  );
+  if(tmp=="PICT2E",
+    if(!contains(ADDPACK,"pict2e"),
+      Addpackage(["pict2e"]);
+    );
+  ); //191003to
+);
+Toupper(str):=(
+  regional(alphabet,out,tmp,tmp1);
+  alphabet="abcdefghijklmnopqrstuvwxyz";
+  out="";
+  forall(1..(length(str)),
+    tmp=substring(str,#-1,#);
+    tmp1=indexof(alphabet,tmp);
+    if(tmp1>0,
+      out=out+unicode(text(tmp1+64),base->10);
+    ,
+      out=out+tmp;
+    );
+  );
+  out;
+);
+Addpackage(packorg):=(
+  regional(packL,tmp);
+  packL=packorg; //17.06.25from
+  if(!islist(packL),packL=[packL]);
+  packL=apply(packL,replace(#,"\","/"));
+  forall(1..(length(packL)),
+    tmp=packL_#;
+    if(substring(tmp,0,11)=="ketpicstyle",
+      tmp=replace(Dirhead+"/"+tmp,"\","/");
+    );
+    if(indexof(tmp,"[")==0,
+      packL_#="{"+tmp+"}";
+    );
+  );
+  ADDPACK=concat(ADDPACK,packL); //17.06.25to
+);
 Indexall(str,key):=(
   regional(rest,out,flg,tmp,tmp1,);
   out=[];
@@ -101,47 +147,47 @@ Indexall(str,key):=(
   );
   out;
 );
-Setwindow():=Setwindow("Msg=yes");
+Setwindow():=Setwindow("Msg=y");
 Setwindow(str):=(
   regional(tmp,tmp1,tmp2,msg);
-  msg="y";
+  msg="Y";
   tmp=indexof(str,"="); // 16.02.10
-  tmp1=Toupper(substring(str,tmp,tmp+1));
-  if(tmp1=="N",msg="n");
-  Strictmove("SW"); Strictmove("NE"); // ketjs //190909
-  if((ispoint(SW) & ispoint(NE)),
+  msg=Toupper(substring(str,tmp,tmp+1));
+  Strictmove("SW"); Strictmove("NE");//190927
+  if((ispoint(SW)) & (ispoint(NE)),
     tmp1=LLcrd(Ptpos(SW));//190912[2lines]
     tmp2=LLcrd(Ptpos(NE));
     XMIN=tmp1_1; XMAX=tmp2_1;
     YMIN=tmp1_2; YMAX=tmp2_2;
   ,
-    Putpoint("SW",Pcrd([XMIN,YMIN]));
-    Putpoint("NE", Pcrd([XMAX,YMAX]));
+    if(!ispoint(SW), //191005from
+      Putpoint("SW",Pcrd([-5,-5]));
+      XMIN=-5; YMIN=-5;
+      Ptpos(SW,SW.xy);
+    );
+    if(!ispoint(NE),
+      Putpoint("NE", Pcrd([5,5]));
+      XMAX=5; YMAX=5;
+      Ptpos(NE,NE.xy);
+    ); //191005to
   );
 );
-Setwindow(xrange,yrange):=(
+Setwindow(xrange,yrange):=Setwindow(xrange,yrange,"Msg=y");
+Setwindow(xrange,yrange,msg):=(
   XMIN=xrange_1;
   XMAX=xrange_2;
   YMIN=yrange_1;
   YMAX=yrange_2;
-  Putpoint("SW",[XMIN,YMIN]);//181016
-  Putpoint("NE",[XMAX,YMAX]);//181016
-  Strictmove("SW"); Strictmove("NE"); //
-);
-Toupper(str):=(
-  regional(alphabet,out,tmp,tmp1);
-  alphabet="abcdefghijklmnopqrstuvwxyz";
-  out="";
-  forall(1..(length(str)),
-    tmp=substring(str,#-1,#);
-    tmp1=indexof(alphabet,tmp);
-    if(tmp1>0,
-      out=out+unicode(text(tmp1+64),base->10);
-    ,
-      out=out+tmp;
-    );
+  Ptpos(SW,Pcrd([XMIN,YMIN])); //190927from
+  Ptpos(NE,Pcrd([XMAX,YMAX]));
+  Strictmove("SW"); Strictmove("NE");
+  layer(KETPICLAYER); 
+  autoclearlayer(KETPICLAYER,true);
+  drawpoly([Pcrd([XMIN,YMIN]), Pcrd([XMAX,YMIN]),
+        Pcrd([XMAX,YMAX]),Pcrd([XMIN,YMAX])],color->[1,1,1]); //190927to
+  if(Toupper(substring(msg,0,1))=="Y", 
+    println("Setwindow(["+XMIN+","+XMAX+"],["+YMIN+","+YMAX+"])");
   );
-  out;
 );
 LLcrd(pt):=(
   regional(tmp);
@@ -152,6 +198,10 @@ LLcrd(pt):=(
   );
   tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
   tmp;
+);
+Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
+Putpoint(name,Ptinit,Pt):=(
+  regional(ptstr);
 );
 Ptpos(pt):=Ptpos(pt,[]);
 Ptpos(ptorg,pos):=(
@@ -200,12 +250,6 @@ Pcrd(pt):=(
     tmp=[pt_1*SCALEX,pt_2*SCALEY];
   );
  tmp;
-);
-Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
-Putpoint(name,Ptinit,Pt):=(
-  regional(ptstr);
-    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
-    parse(ptstr);
 );
 Strictmove(pC):=Strictmove(pC,StrictSep); //190831
 Strictmove(pCorg,sep):=(
@@ -864,8 +908,9 @@ Pointdata(nm,listorg,options):=(
         inside=text(tmp);
       ,
         if(contains(["0","1"],tmp2),
+          tmp2=tmp_2; //191025
           tmp=[1,1,1]-color;
-          tmp=parse(tmp_2)*tmp;
+          tmp=parse(tmp2)*tmp;  //191025
           inside=[1,1,1]-tmp;
         ,
           if(tmp2=="N",
@@ -1026,6 +1071,81 @@ Rotatedata(nm,plist,angle,optionorg):=(
   );
   PdL;
 );
+Lineplot(nm,list,optionorg):=(
+  regional(name,Out,tmp,tmp1,tmp2,opstr,opcindy,Mag,Semi,
+      Vec,pA,pB,options,Ltype,Noflg,color,Msg,eqL);
+  name="ln"+nm;
+  options=optionorg;
+  Mag=100;
+  Semi="";
+  Msg="Y";
+  tmp=Divoptions(options);
+  Ltype=tmp_1;
+  Noflg=tmp_2;
+  color=tmp_(length(tmp)-2);
+  opcindy=tmp_(length(tmp));
+  opstr=tmp_(length(tmp)-1);
+  eqL=tmp_5;
+  forall(eqL,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(tmp1=="M", //190206from
+      Msg=Toupper(substring(tmp_2,0,1));
+      options=remove(options,[#]);
+    ); //190206to
+  );
+  tmp=Divoptions(options);
+  opstr=tmp_(length(tmp)-1);
+  tmp1=tmp_6;
+  if(length(tmp1)>0,Mag=tmp1_1);
+  tmp1=tmp_7;
+  if(length(tmp1)>0,Semi=tmp1_1);
+  pA=Lcrd(list_1); pB=Lcrd(list_2);
+  Vec= Mag/dist(pA,pB)*(pB-pA);
+  if(length(Semi)==0,
+    Out=[pA-Vec,pA+Vec];
+  ,
+    if(Semi=="+",   
+      Out=[pA,pA+Vec];
+    ,
+      Out=[pA-Vec,pA];
+    );
+  );
+  if(Noflg<3,
+    if(Msg=="Y", //190206
+      println("generate Lineplot "+name);
+    );
+    tmp1=apply(Out,Pcrd(#));
+    tmp=name+"="+Textformat(tmp1,5)+";"; //190415
+    parse(tmp);
+  );
+  if(Noflg<3, //190818
+    if(isstring(Ltype),
+      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
+    ,
+      if(Noflg==1,Ltype=0);
+    );
+    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
+  );
+  Out;
+);
+Lineplot(Arg1,Arg2):=(
+  regional(name,list,options,str);
+  if(isstring(Arg1),
+    name=Arg1;
+    list=Arg2;
+    Lineplot(name,list,[]);
+  ,
+    list=Arg1;
+    options=Arg2;
+    name="";
+    forall(list, // 16.10.07from
+       name=name+#.name;
+    );// 16.10.07until
+    Lineplot(name,list,options);
+  );
+);
+Lineplot(list):=Lineplot(list,[]);
 Ellipseplot(nm,ptlist):=Ellipseplot(nm,ptlist,"[0,2*pi]",[]);
 Ellipseplot(nm,ptlist,Arg):=(
   regional(rng,options);
@@ -1039,14 +1159,14 @@ Ellipseplot(nm,ptlist,Arg):=(
   Ellipseplot(nm,ptlist,rng,options);
 );
 Ellipseplot(nm,ptlist,rng,options):=(
-  regional(pA,pB,d,angle,f,a,b,pM,tmp,tmp1,tmp2);
+  regional(pA,pB,dd,angle,f,a,b,pM,tmp,tmp1,tmp2);
   pA=Lcrd(ptlist_1);
   tmp1=Lcrd(ptlist_2);
-  if(ispoint(ptlist_3),
+  if((ispoint(ptlist_3))%(length(ptlist_3)>1), //191027
     tmp2=Lcrd(ptlist_3);
-    d=|tmp2-pA|+|tmp2-tmp1|;
+    dd=|tmp2-pA|+|tmp2-tmp1|;
   ,
-    d=ptlist_3;
+    dd=ptlist_3;
   );
   tmp=(tmp1-pA)/|tmp1-pA|;
   if(tmp_2>=0,
@@ -1060,8 +1180,8 @@ Ellipseplot(nm,ptlist,rng,options):=(
   );
   pB=Rotatepoint(tmp1,-angle,pA);
   f=|pB_1-pA_1|/2;
-  a=d/2;
-  b=sqrt(d^2/4-f^2);
+  a=dd/2;
+  b=sqrt(dd^2/4-f^2);
   pM=(pA+pB)/2;
   tmp="["+format(pM_1,5)+","+format(pM_2,5)+"]";
   tmp=tmp+"+["+format(a,5)+"*cos(t),"+format(b,5)+"*sin(t)]";
@@ -1251,7 +1371,7 @@ Hyperbolaplot(nm,ptlist,rng,optionsorg):=(
   );
   pA=Lcrd(ptlist_1);
   tmp1=Lcrd(ptlist_2);
-  if(ispoint(ptlist_3),
+  if((ispoint(ptlist_3))%(length(ptlist_3)>1), //191027
     tmp2=Lcrd(ptlist_3);
     d=abs(|tmp2-pA|-|tmp2-tmp1|);
   ,
@@ -1287,81 +1407,6 @@ Hyperbolaplot(nm,ptlist,rng,optionsorg):=(
     Rotatedata(nm+"asy2","ln"+nm+"asy2",angle,append(opasy,pA));//180408
   );
 );
-Lineplot(nm,list,optionorg):=(
-  regional(name,Out,tmp,tmp1,tmp2,opstr,opcindy,Mag,Semi,
-      Vec,pA,pB,options,Ltype,Noflg,color,Msg,eqL);
-  name="ln"+nm;
-  options=optionorg;
-  Mag=100;
-  Semi="";
-  Msg="Y";
-  tmp=Divoptions(options);
-  Ltype=tmp_1;
-  Noflg=tmp_2;
-  color=tmp_(length(tmp)-2);
-  opcindy=tmp_(length(tmp));
-  opstr=tmp_(length(tmp)-1);
-  eqL=tmp_5;
-  forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    if(tmp1=="M", //190206from
-      Msg=Toupper(substring(tmp_2,0,1));
-      options=remove(options,[#]);
-    ); //190206to
-  );
-  tmp=Divoptions(options);
-  opstr=tmp_(length(tmp)-1);
-  tmp1=tmp_6;
-  if(length(tmp1)>0,Mag=tmp1_1);
-  tmp1=tmp_7;
-  if(length(tmp1)>0,Semi=tmp1_1);
-  pA=Lcrd(list_1); pB=Lcrd(list_2);
-  Vec= Mag/dist(pA,pB)*(pB-pA);
-  if(length(Semi)==0,
-    Out=[pA-Vec,pA+Vec];
-  ,
-    if(Semi=="+",   
-      Out=[pA,pA+Vec];
-    ,
-      Out=[pA-Vec,pA];
-    );
-  );
-  if(Noflg<3,
-    if(Msg=="Y", //190206
-      println("generate Lineplot "+name);
-    );
-    tmp1=apply(Out,Pcrd(#));
-    tmp=name+"="+Textformat(tmp1,5)+";"; //190415
-    parse(tmp);
-  );
-  if(Noflg<3, //190818
-    if(isstring(Ltype),
-      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
-    ,
-      if(Noflg==1,Ltype=0);
-    );
-    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
-  );
-  Out;
-);
-Lineplot(Arg1,Arg2):=(
-  regional(name,list,options,str);
-  if(isstring(Arg1),
-    name=Arg1;
-    list=Arg2;
-    Lineplot(name,list,[]);
-  ,
-    list=Arg1;
-    options=Arg2;
-    name="";
-    forall(list, // 16.10.07from
-       name=name+#.name;
-    );// 16.10.07until
-    Lineplot(name,list,options);
-  );
-);
-Lineplot(list):=Lineplot(list,[]);
 Windispg():=(
   if(ADDAXES=="1", //181215from
     Drwxy();
@@ -1576,7 +1621,7 @@ Lightarrowdata(nm,ptlist,optionsorg):=(
     reL=append(reL,tmp1_#);
   );
   size=reL_1;
-  angle=reL_2;
+  if(reL_2<2.5,angle=reL_2*tmp1_2,angle=reL_2); //191011
   segpos=reL_3;
   cut=reL_4;
   lineflg=0;
@@ -1626,6 +1671,8 @@ Lightarrowdata(nm,ptlist,optionsorg):=(
       tmp2=pP+size*cos(angle)*Ev-size*sin(angle)*Nv;
       ArrowheadNumber=ArrowheadNumber+1;
       Listplot("-arh"+nm,[tmp1,pP,tmp2],append(options,"Msg=n"));
+      tmp=pP+(1-cut)*((tmp1+tmp2)/2-pP); //191011[2lines]
+      fillpoly([tmp1,pP,tmp2,tmp,tmp1],color->color);      
       Setscaling(scaley);
     ,
       if(Noflg==1,Ltype=0);
@@ -1941,6 +1988,7 @@ Ch=[chno];
 if(contains(Ch,1),
  Setparent(Cdyname()+"fig1");
  Parabolaplot("1",[pA,pB,pC],"[-5,10]");
+ Lineplot("1",[pB,pC],["da"]);
 );
 if(contains(Ch,2),
  Setparent(Cdyname()+"fig2");
@@ -1951,7 +1999,6 @@ if(contains(Ch,3),
  Hyperbolaplot("1",[pA,pB,pC],["Asy=da"]);
 );
 
-Figpdf();
 Windispg();
 
 ;
@@ -1973,14 +2020,16 @@ var cdy = CindyJS({
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "A", type: "Free", pos: [4.0, -0.0, -2.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "B", type: "Free", pos: [4.0, -0.0, 2.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "C", type: "Free", pos: [4.0, 3.44444265118777, 2.226111734113214], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "Text0", type: "Button", pos: [4.0, 1.7868852459016396, 0.6568855863703223], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=mod(chno,3)+1;\nCh=[chno];", text: "Choose", textsize: 18.0}
+    {name: "C", type: "Free", pos: [4.0, 4.0, 2.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "Text62", type: "Button", pos: [4.0, -0.0, 0.6462906575578978], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=3;", text: "Hypo", textsize: 18.0},
+    {name: "Text61", type: "Button", pos: [4.0, 0.975609756097561, 0.6515450531477994], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=2;", text: "Ellip", textsize: 18.0},
+    {name: "Text60", type: "Button", pos: [4.0, 1.903225806451613, 0.6462906575578978], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=1;", text: "Para", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
     width: 815,
     height: 528,
-    transform: [{visibleRect: [-9.545789911340313, 6.02694970872859, 10.79360558602532, -7.149983815945097]}],
+    transform: [{visibleRect: [-10.090146471354107, 7.050676562481713, 10.723317371247465, -6.433383448430716]}],
     grid: 1.0,
     snap: true,
     background: "rgb(255,255,255)"
