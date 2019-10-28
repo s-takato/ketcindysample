@@ -1,5 +1,5 @@
-// button "stop"  added initflg=1;
-
+// button "Stop"  added initflg=1;
+// button "Focus"   Ptpos("A",-pF);
 //ketlib
 use("KetCindyPlugin");
 Dircdy=loaddirectory;
