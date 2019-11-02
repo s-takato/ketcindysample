@@ -1,0 +1,64 @@
+// Buttons
+Rmv  Rmvbox();
+Undo Addbox();
+
+//ketlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+rmL=[];
+
+Findbox():=(
+ regional(tmp,x,y);
+ x=-1; y=-1;
+ tmp=floor(A.x);
+ if((tmp>=0)&(tmp<=4),
+   x=tmp+1;
+ );
+ tmp=floor(A.y);
+ if((tmp>=0)&(tmp<=4),
+   y=tmp+1;
+ );
+ (x,y);
+);
+
+Rmvbox():=(
+ regional(tmp);
+ tmp=Findbox();
+ if((tmp_1>-1)&(tmp_2>-1),
+  rmL=append(rmL,tmp);
+  rmL=set(rmL);
+ );
+);
+
+Addbox():=(
+ regional(tmp);
+ tmp=Findbox();
+ if((tmp_1>-1)&(tmp_2>-1),
+println([35,tmp]);
+  rmL=remove(rmL,[tmp]);
+ );
+);
+
+//figures
+Ketinit();
+Setketcindyjs(["No=all","Color=offwhite"]);
+Addax(0);
+
+Setwindow([0,5],[0,5]);
+
+forall(1..5,x,
+  forall(1..5,y,
+    Framedata2(text(10*x+y),[[x-1,y-1],[x,y]],["Msg=n"]);
+  );
+);
+
+rlist=apply(rmL,"fr"+text(#_1*10+#_2));
+Changestyle(rlist,["nodisp"]);
+forall(rmL,
+ Letter(#-1/2*[1,1],"c","x",["notex"]);
+);
+
+Windispg();
