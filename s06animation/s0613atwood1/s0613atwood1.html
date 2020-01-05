@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <title>s0613atwood1.cdy</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #CSConsole {
+            background-color: #FAFAFA;
+            border-top: 1px solid #333333;
+            bottom: 0px;
+            height: 200px;
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/KetCindyPlugin.js"></script>
+<script id="csinit" type="text/x-cindyscript">
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+;
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+Ketinit();
+
+Setketcindyjs(["Scale=1.5","No=all","Fig=y"]);//no ketjs
+Setax(["a"]);
+Setwindow([-6,6],[-7,2]);
+
+Setplaybuttons(-1.5,-6.5,14);//no ketjs
+
+if(!islist(vL), // no ketjs on
+ drawtext([-8,-1],"10",size->15);
+ lg="1/2*m1*(L0+R*(F-P))^2*G^2+1/2*(I0+(m1+m2)*R^2)*Q^2";
+ lg=lg+"-m1*g*(R*sin(F)-(L0+R*(F-P))*cos(F))+m2*g*R*P";
+ cmdL=[
+  "Lg:"+lg,[],
+  "dLdQ:diff(Lg,Q)",[],
+  "dLdP:diff(Lg,P)",[],
+  "dLdG:diff(Lg,G)",[],
+  "dLdF:diff(Lg,F)",[],
+  "dLdQ::dLdP::dLdG::dLdF",[]
+ ];
+ CalcbyM("out",cmdL);
+
+ rep=["P","P(t)","Q","Q(t)","F","F(t)","G","G(t)"];
+ tmp=["'diff(P(t),t,1)","Q","'diff(F(t),t,1)","G"];
+ repr=concat(tmp,reverse(rep));
+ lP=Assign(out_1,rep);
+ rP=Assign(out_2,rep);
+ cmdL=[
+  "leq:diff",[lP,"t"],
+  "req:"+rP,[],
+  "ans:solve(leq=req,diff(Q(t),t))",[],
+  "ans:rat(ans,R)",[],
+  "eqQ:rat(rhs(ans[1]),R)",[],
+  "eqQ",[]
+ ];
+ CalcbyM("eqQ",cmdL);
+ eqQ=Assign(eqQ,repr);
+ //eqQ="R/(I0+(m1+m2)*R^2)*(g*(m2-m1*cos(F))-m1*(L0+R*(F-P))*G^2)";
+
+ lF=Assign(out_3,rep);
+ rF=Assign(out_4,rep);
+ cmdL=[
+  "leq:diff",[lF,"t"],
+  "req:"+rF,[],
+  "ans:solve(leq=req,diff(G(t),t))",[],
+  "eqG:rat(rhs(ans[1]),R)",[],
+  "eqG",[]
+ ];
+ CalcbyM("eqG",cmdL);
+ eqG=Assign(eqG,repr);
+ //eqG="1/(L0+R*(F-P))*(2*R*Q*G-g*sin(F)-R*G^2)";
+ Ketcindyjsdata(["eqQ",eqQ,"eqG",eqG]);
+
+ eqP="Q";
+ eqF="G";
+ eq="[P,Q,F,G]'="+text([eqP,eqQ,eqF,eqG]);
+ repnm=["R","I0","m1","m2","g","L0"];
+ repva=[1,0.05,1,1.05,9.8,4];
+ rep=apply(1..(length(repnm)),[repnm_#,repva_#]);
+ rep=flatten(rep);
+ eqn=Assign(eq,rep);
+ vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,0.6],600);
+);// no ketjs off
+
+Ketcindyjsdata(["vL",vL]);//no ketjs
+
+pt0=[0,0];
+R=1;
+L0=4;
+
+Circledata("1",[pt0,R]);
+Shade("1",["cr1"],["Color=[0,0,0,0.2]"]);
+
+mf(s):=(
+ regional(tmp,phi,psi,p1,p2,q1,q2);
+ tmp=min(apply(1..(length(vL)),|vL_#_1-s|));
+ tmp=select(1..(length(vL)),|vL_#_1-s|==tmp);
+ tmp=tmp_1;
+ psi=vL_tmp_2;
+ phi=vL_tmp_4;
+ p1=R*[cos(phi),sin(phi)];
+ p2=p1+(L0+R*(phi-psi))*[sin(phi),-cos(phi)];
+ p3=R*[cos(psi),sin(psi)];
+ q1=R*[-1,0];
+ q2=q1+[0,-L0-R*psi];
+ Listplot("1",[p1,p2],["dr,2"]);
+ Listplot("2",[q1,q2],["dr,2"]);
+ Listplot("3",[pt0,p3],["dr,2","Color=blue"]);
+ Partcrv("1",p1,q1,"cr1",["dr,2"]);
+ Pointdata("1",[p2,q2],["Size=8","Color=red"]);
+ Expr([1,1.5],"e","t="+Sprintf(s,2),["Size=1.5"]);
+);
+
+ss=Animationparam(0,1,[0,60]);
+mf(ss);
+
+Windispg();
+
+;
+</script>
+    <script type="text/javascript">
+var cdy = CindyJS({
+  scripts: "cs*",
+  defaultAppearance: {
+    dimDependent: 0.7,
+    fontFamily: "sans-serif",
+    lineSize: 1,
+    pointSize: 5.0,
+    textsize: 12.0
+  },
+  angleUnit: "°",
+  geometry: [
+    {name: "SW", type: "Free", pos: [-3.4285714285714284, -4.0, 0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "NE", type: "Free", pos: [4.0, 1.3333333333333333, 0.6666666666666666], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "Text1", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.286, 0.286], fillalpha: 0.27272728085517883, script: "Viewtex();\nkc();", text: "Figure", textsize: 18.0, dock: {corner: "UL", offset: [10.0, -20.0]}},
+    {name: "Text2", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "if(length(Shellparent)>0,\n  Makeshell(),Makebat();\n);\nif(indexof(Libname,\"sci\")>0,\n  writetosci(2),writetoRS(2)\n);\nkc();", text: "Parent", textsize: 18.0, dock: {corner: "UL", offset: [77.0, -20.0]}},
+    {name: "Text3", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.929, 0.6], fillalpha: 0.48717948717948717, script: "Parafolder();", text: "ParaF", textsize: 18.0, dock: {corner: "UL", offset: [291.0, -20.0]}},
+    {name: "Text4", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.51, 0.949, 1.0], fillalpha: 0.27272728085517883, script: "Mkanimation();", text: "Anime", textsize: 18.0, dock: {corner: "UL", offset: [350.0, -20.0]}},
+    {name: "Text5", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 0.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkflipanime();", text: "Flip", textsize: 18.0, dock: {corner: "UL", offset: [421.0, -20.0]}},
+    {name: "Text21", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkketcindyjs();", text: "KeTJS", textsize: 18.0, dock: {corner: "UL", offset: [143.0, -20.0]}},
+    {name: "Text22", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkketcindyjs(append(Ketjsoption(),\"Web=n\"));\n", text: "KeTJSoff", textsize: 18.0, dock: {corner: "UL", offset: [205.0, -20.0]}},
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 14.0, dock: {corner: "LL", offset: [310.0, 21.0]}},
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 14.0, dock: {corner: "LL", offset: [373.0, 21.0]}},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 14.0, dock: {corner: "LL", offset: [448.0, 21.0]}},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 14.0, dock: {corner: "LL", offset: [508.0, 21.0]}}
+  ],
+  ports: [{
+    id: "CSCanvas",
+    width: 930,
+    height: 501,
+    transform: [{visibleRect: [-9.888933439926358, 3.9850925802688306, 11.228651173464026, -7.391154614686634]}],
+    grid: 1.0,
+    snap: true,
+    background: "rgb(168,176,192)"
+  }],
+  csconsole: false,
+  cinderella: {build: 1901, version: [2, 9, 1901]}
+});
+    </script>
+</head>
+<body>
+    <div id="CSCanvas"></div>
+</body>
+</html>

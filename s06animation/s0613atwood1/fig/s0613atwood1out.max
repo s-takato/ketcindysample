@@ -1,0 +1,15 @@
+writefile("/ketcindysample.git/s06animation/s0613atwood1/fig/s0613atwood1out.txt")$/*##*/
+powerdisp:false$/*##*/
+display2d:false$/*##*/
+linel:1000$/*##*/
+Lg:1/2*m1*(L0+R*(F-P))^2*G^2+1/2*(I0+(m1+m2)*R^2)*Q^2-m1*g*(R*sin(F)-(L0+R*(F-P))*cos(F))+m2*g*R*P$/*##*/
+dLdQ:diff(Lg,Q)$/*##*/
+dLdP:diff(Lg,P)$/*##*/
+dLdG:diff(Lg,G)$/*##*/
+dLdF:diff(Lg,F)$/*##*/
+disp(dLdQ)$/*##*/
+disp(dLdP)$/*##*/
+disp(dLdG)$/*##*/
+disp(dLdF)$/*##*/
+closefile()$/*##*/
+quit()$/*##*/
