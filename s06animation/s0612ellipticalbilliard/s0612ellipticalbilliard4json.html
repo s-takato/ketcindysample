@@ -551,12 +551,12 @@ Ptpos(ptorg,pos):=(
     tmp=pt.name+"position";
     out=parse(tmp);
     if(!islist(out),
-      tmp=tmp+"="+Textformat(pt.xy,6)+";";
+      tmp=tmp+"="+Textformat(pt.xy,12)+";";
       parse(tmp);
     );
   ,
     pt.xy=pos;
-    tmp=pt.name+"position="+Textformat(pt.xy,6)+";";
+    tmp=pt.name+"position="+Textformat(pt.xy,12)+";";
     parse(tmp);
     out=pt.xy;
   );
