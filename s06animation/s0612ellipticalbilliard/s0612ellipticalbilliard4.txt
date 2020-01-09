@@ -92,29 +92,7 @@ Deffun("fans(a,b,tpv1)",[
   "[tpv_1,tpv_2,[u1,v1]]"
 ]);
 
-Getcindystr(str):=(
-  regional(out,semi,tmp,tmp1);
-  out=[];
-  semi=Strsplit(str,";");
-  forall(semi,
-    tmp1="";
-    if(length(#)>0,
-      tmp=Strsplit(#,"=");
-      if(length(tmp)>1,tmp1=tmp_2,tmp1=tmp_1);
-    );
-    out=append(out,Tocindyform(tmp1));
-  );
-  if(length(out)==1,out=out_1);
-  out;
-);
-
-aborg=[4,3];
-Axorg=3;
-//A.x=Axorg;
-vorg=[-1,1]/sqrt(2);
 initflg=1;
-pflg=0;
-pL=[];
 
 ////////// figures
 Ketinit();
@@ -125,8 +103,10 @@ Slider("T",[-5,-4],[5,-4]);
 Addax(0);
 A.y=0;
 a=4;b=3;
+pF=[-sqrt(a^2-b^2),0];
+C.xy=pF;
 
-//str0="A.x=sq(7)";// no ketjs on
+//str0="A.x=";// no ketjs on
 str3="tmax=500";
 str1="vx=-1";
 str2="vy=1";// no ketjs off
@@ -136,15 +116,13 @@ str2="vy=1";// no ketjs off
 //str2=Textedit(67);// only ketjs off
 tmp=Getcindystr(str0);
 if(length(tmp)>0,
-  Ptpos(A,[parse(tmp),0]);
+  A.xy=parse(tmp);
 );
-pA=Ptpos(A);
 tmax=500;
 tmp=Getcindystr(str3);
 if(length(tmp)>0,
   tmax=parse(tmp);
 );
-pA=Ptpos(A);
 vx=-1;
 tmp=Getcindystr(str1);
 if(length(tmp)>0,
@@ -158,15 +136,8 @@ if(length(tmp)>0,
 
 vec=[vx,vy];
 vec=vec/|vec|;
-Arrowdata("0",[pA,pA+vec],["dr,2","Color=red","border->false"]);
+Arrowdata("0",[A,A+vec],["dr,2","Color=red","border->false"]);
 
-Eps=10^(-4);
-if(|pA_1-Axorg|+|vec-vorg|+|[a,b]-aborg|>Eps,
-  vorg=vec; Axorg=pA_1; aborg=[a,b]; initflg=1;
-);
-
-pF=[-sqrt(a^2-b^2),0];
-C.xy=pF;
 Drwxy();
 fun=Assign("[a*cos(t),b*sin(t)]",["a",a,"b",b]);
 Paramplot("1",fun,"t=[0,2*pi]");
@@ -198,10 +169,10 @@ mf(ss):=(
   );
 );
 
-ss=Animationparam(0,2^(Ptpos(T)_1+5),[0,tmax]);
+ss=Animationparam(0,2^(T.x+5),[0,tmax]);
 mf(ss);
 
-Letter(T+[0,-0.1],"s",2^(Ptpos(T)_1+5),["Size=1.2","notex"]);
+Letter(T+[0,-0.1],"s",2^(T.x+5),["Size=1.2","notex"]);
 Letter([-4.5,2.5],"nw",text(re(floor(ss))),["Size=1.2"]);
 
 Windispg();
