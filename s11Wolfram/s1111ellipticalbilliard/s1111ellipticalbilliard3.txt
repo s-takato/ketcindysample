@@ -23,6 +23,7 @@ Dircdy=loaddirectory;
 setdirectory(plugindirectory);
 import("ketcindy.ini");
 
+//PathW="";
 Ketinit();
 
 Setplaybuttons([-5,-5],16,[1]);//no ketjs on
@@ -34,15 +35,19 @@ Movetojs(Text67,[1.2,3.6],15);//no ketjs off
 
 cmdL=[ //no ketjs on
  "f=x^2/a^2+y^2/b^2-1",[],
- "ans=Solve[f==0 && x==x0+u0*t && y==y0+v0*t,{t,x,y}]",[],
- "L1={t/.ans[[1]],x/.ans[[1]],y/.ans[[1]]}",[],
- "L2={t/.ans[[2]],x/.ans[[2]],y/.ans[[2]]}",[],
- "L=Join[L1,L2]",[],
+ "eq=f==0/.{x->x0+u0*t,y->y0+v0*t}",[],
+ "ans=Solve[eq,t]",[],
+ "t1=t/.ans[[1]]",[],
+ "x1=x0+u0*t1",[],
+ "y1=y0+v0*t1",[],
+ "t2=t/.ans[[2]]",[],
+ "x2=x0+u0*t2",[],
+ "y2=y0+v0*t2",[],
+ "L={t1,x1,y1,t2,x2,y2,t1-t2,Numerator[t1-t2]}",[],
  "L=Simplify[L,a>0&&b>0]",[],
- "L[[1]]::L[[2]]::L[[3]]::L[[4]]::L[[5]]::L[[6]]",[]
+ "L[[1]]::L[[2]]::L[[3]]::L[[4]]::L[[5]]::L[[6]]::L[[7]]::L[[8]]",[]
 ];
 CalcbyW("ans0",cmdL,[""]);
-//println(ans0_4);
 
 cmdL=[
  "f=x^2/a^2+y^2/b^2-1",[],
@@ -55,25 +60,29 @@ cmdL=[
  "V1[[1]]::V1[[2]]",[]
 ];
 CalcbyW("ans",cmdL,[""]);
-//println(ans);
 
 Ketcindyjsdata(["ans0",ans0,"ans",ans]);//no ketjs off
 
+
 Deffun("fans0(a,b,tpv)",[
-  "regional(x0,y0,u0,v0,t,P,t1,x1,y1,t2,x2,y2)",
+  "regional(eps,x0,y0,u0,v0,t,P,t1,x1,y1,t2,x2,y2)",
+  "eps=10^(-4)",
   "x0=tpv_2_1;y0=tpv_2_2;u0=tpv_3_1;v0=tpv_3_2",
   "t1="+ans0_1,"x1="+ans0_2,"y1="+ans0_3,
   "t2="+ans0_4,"x2="+ans0_5,"y2="+ans0_6,
-  "if(t1>=t2,t=t1;P=[x1,y1],t=t2;P=[x2,y2])",
-  "[tpv_1+t,P,tpv_3]"
+  "if(abs(t1-t2)<eps,t=0;P=tpv_2)",
+  "if(t1>=t2+eps,t=t1;P=[x1,y1],t=t2;P=[x2,y2])",
+  "re([tpv_1+t,P,tpv_3])"
 ]);
 
 Deffun("fans(a,b,tpv1)",[
-  "regional(tpv,u0,v0,x,y,u1,v1)",
+  "regional(eps,tpv,u0,v0,x,y,u1,v1)",
+  "eps=10^(-4)",
   "tpv=fans0(a,b,tpv1)",
   "x=tpv_2_1;y=tpv_2_2;u0=tpv_3_1;v0=tpv_3_2",
   "u1="+ans_1,"v1="+ans_2,
-  "[tpv_1,tpv_2,[u1,v1]]"
+  "if((abs(y)<eps)&(abs(v1)<eps),y=0;v1=0)",
+  "re([tpv_1,[x,y],[u1,v1]])"
 ]);
 
 initflg=1;
@@ -81,14 +90,17 @@ initflg=1;
 ///////// figures ///////////
 
 Ketinit();
-
 Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Co=offwhite"]);//no ketjs
 Setwindow([-6,6],[-5.5,5]);
 Slider("T",[-5,-4],[5,-4]);
 Addax(0);
 A.y=0;
 a=4;b=3;
-
+A.x=min(max(-a,A.x),a);
+pF=[-sqrt(a^2-b^2),0];
+Putpoint("C",pF);
+//tmax=500;
+//vx=-1; vy=1;
 str0="A.x=";// no ketjs on
 str3="tmax=500";
 str1="vx=-1";
@@ -98,33 +110,18 @@ str2="vy=1";// no ketjs off
 //str1=Textedit(66);
 //str2=Textedit(67);// only ketjs off
 
-tmp=Getcindystr(str0);
-if(length(tmp)>0,
-  A.x=parse(tmp);
-);
-tmax=500;
-tmp=Getcindystr(str3);
-if(length(tmp)>0,
-  tmax=parse(tmp);
-);
-vx=-1;
-tmp=Getcindystr(str1);
-if(length(tmp)>0,
-  vx=parse(tmp);
-);
-vy=1;
-tmp=Getcindystr(str2);
-if(length(tmp)>0,
-  vy=parse(tmp);
-);
+A.x=Getcindystr(str0,"");
+tmax=Getcindystr(str3,500);
+vx=Getcindystr(str1,-1);
+vy=Getcindystr(str2,1);
 
 vec=[vx,vy];
 vec=vec/|vec|;
-Arrowdata("0",[A,A+vec],["dr,2","Color=red","border->false"]);
 
-pF=[-sqrt(a^2-b^2),0];
-C.xy=pF;
+Arrowdata("0",[A.xy,A.xy+vec],["dr,2","Color=red","border->false"]);
+
 Drwxy();
+
 fun=Assign("[a*cos(t),b*sin(t)]",["a",a,"b",b]);
 Paramplot("1",fun,"t=[0,2*pi]");
 Pointdata("1",C,["Size=3","Color=red","border->false"]);
@@ -132,34 +129,37 @@ Pointdata("1",C,["Size=3","Color=red","border->false"]);
 if(initflg==1,
   tpv=[0,A.xy,vec];
   pL=[tpv];
-  while(tpv_1<tmax,
+  flg=0;
+  while((tpv_1<tmax)&(flg==0),
     tpv=fans(a,b,tpv);
-    pL=append(pL,tpv);
+    if(tpv_1==0,
+      flg=1;
+    ,
+      pL=append(pL,tpv);
+    );
   );
   initflg=0;
 );
 
 mf(ss):=(
   regional(plist,nn,tp1,tp2,pt);
-  plist=select(pL,#_1<=ss);
-  plist=apply(plist,[#_1,#_2]);
-  nn=length(plist);
-  tp1=plist_nn;
-  if(tp1_1<ss,
-    tp2=pL_(nn+1)_[1,2];
-    pt=tp1_2+(tp2_2-tp1_2)/(tp2_1-tp1_1)*(ss-tp1_1);
-    plist=append(plist,[ss,pt]);
-  );
-  if(length(plist)>1,
+  if(length(pL)>1,
+    plist=select(pL,#_1<=ss);
+    plist=apply(plist,[#_1,#_2]);
+    nn=length(plist);
+    tp1=plist_nn;
+    if(tp1_1<ss,
+      tp2=pL_(nn+1)_[1,2];
+      pt=tp1_2+(tp2_2-tp1_2)/(tp2_1-tp1_1)*(ss-tp1_1);
+      plist=append(plist,[ss,pt]);
+    );
     Listplot("1",apply(plist,#_2));
   );
 );
-
 ss=Animationparam(0,2^(T.x+5),[0,tmax]);
 mf(ss);
 
-Letter(T+[0,-0.1],"s",2^(Ptpos(T)_1+5),["Size=1.2","notex"]);
-Letter([-4.5,2.5],"nw",text(re(floor(ss))),["Size=1.2"]);
+Letter(T+[0,-0.1],"s",2^(T.x+5),["Size=1.2","notex"]);
+Letter([-4.5,2.5],"nw",floor(ss),["Size=1.2"]);
 
 Windispg();
-
