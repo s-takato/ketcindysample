@@ -1,0 +1,55 @@
+Ketinit();
+
+eq0="x'[t]==t*x[t]^3";
+eq1="x''[t]==6*x'[t]-10*x[t]";
+eq2="x''[t]==-3*x'[t]-2*x[t]+t^2-t";
+
+Ch=[5];
+if(contains(Ch,1),
+  Wlfun("1","DSolve",[eq0,"x[t]","t"],[""]);
+);
+if(contains(Ch,2),
+  eq="{"+eq0+",x[0]==1}";
+  Wlfun("2","DSolve",[eq,"x[t]","t"],[]);
+);
+if(contains(Ch,3),
+  Wlfun("3","DSolve",[eq1,"x[t]","t"],[]);
+);
+if(contains(Ch,4),
+  eq="{"+eq1+",x[0]==1,x[1]==3}";
+  cmdL=[
+   "ans=DSolve",[eq,"x[t]","t"],
+   "sol=x[t]/.ans[[1]]",[],
+   "sol",[]
+  ];
+  CalcbyW("sol4",cmdL,[]);
+  println(sol4);
+  Wltex("4",sol4,[]);
+  Expr([-5,3],"e",tx4,["Size=1.5"]);
+);
+if(contains(Ch,5),
+  Slider("A",[0,YMIN],[0,YMAX]);
+  Slider("B",[XMIN+1,YMIN],[XMIN+1,YMAX]);
+  Arrowdata("1",[[XMIN,0],B],[1.5,1,1,0.2,"Color=red"]);
+  Setketcindyjs(["No=all","Sc=1.2","Col=offwhite"]);//no ketjs on
+  tmp="Solution of ";
+  tmp=tmp+"\(\frac{d^2 x}{dt^2}+3\frac{dx}{dt}+2x=t^2+t,";
+  tmp=tmp+"~ x(0)=x_0,x'(0)=x'_0\)";
+  Ketcindyjstitle(["<p,f6>_;"+tmp]);
+  eq="{"+eq2+",x[0]==aa,x'[0]==bb}";
+  cmdL=[
+    "ans=DSolve",[eq,"x[t]","t"],
+    "sol=x[t]/.ans[[1]]",[],
+    "sol",[]
+  ];
+  CalcbyW("sol5",cmdL,[""]);
+  sol=Assign(sol5,["E","exp(1)"]);
+  Wltex("5",sol5,[]);
+  Ketcindyjsdata(["sol",sol,"tx5",tx5]);  //no ketjs off
+  tmp=Assign(sol,["aa",A.y,"bb",B.y]);
+  Plotdata("4",tmp,"t=[-2,XMAX]");
+  str=Assign(tx5,["\text{aa}","x_0","\text{bb}","x'_0"]);
+  str=replace(str,[["\left",""],["\right",""]]);
+  Expr([-6,5.5],"e","x="+str,["Size=1.5"]);
+);
+Windispg();

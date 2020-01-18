@@ -1,0 +1,45 @@
+///// figures ////////
+
+Ketinit();
+Setketcindyjs(["No=all","Col=offwhite"]);
+//Setwindow([-5,5],[-2,5]);
+
+Addax(0);
+
+nL=1..300;//1..300;//[10,20,50,100,200,300];
+tmp=text(nL);
+nLstr="{"+substring(tmp,1,length(tmp)-1)+"}";
+//Slider("N",[1,YMIN-1/2],[length(nL),YMIN-1/2]);
+//nn=round(N.x);
+str0="nn=10"; //no ketjs
+//str0=Textedit(60); //only ketjs
+nn=Getcindystr(str0,10);
+
+Ch=[1];
+if(contains(Ch,1), // no ketjs on
+ cmdL=[
+  "nL="+nLstr,[],
+  "vL={}",[],
+  "n=Length[nL]",[],
+  "For[i=1,i<=n,i++,",[],
+  "  v=nL[[i]]!;",[],
+  "  vL=Append[vL,v]",[],
+  "]",[],
+  "vL",[]
+ ];
+);
+calcbyW("vL",cmdL,[]);
+vL=TocindyW(vL);
+Ketcindyjsdata(["vL",vL]); //no ketjs off
+n=ceil(length(vL_nn)/50);
+pos=[-5,4.5];
+Expr(pos,"e",nL_nn+"!=",["Size=1.5"]);
+pos_2=pos_2-0.5;
+forall(1..n,
+  fr=(#-1)*50;
+  str=substring(vL_nn,fr,fr+50);
+  Letter(pos,"e",str,["Size=1.5"]);
+  pos_2=pos_2-0.5;
+);
+
+Windispg();
