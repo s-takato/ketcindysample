@@ -1,0 +1,17 @@
+Ketinit();
+
+Ch=[];
+if(contains(Ch,1),
+  Wlfun("1","Simplify",["Cos[x]^2-Sin[x]^2"],[""]);
+);
+if(contains(Ch,2),
+  Wlfun("2","TrigReduce",["Cos[x]^2-Sin[x]^2"],[""]);
+);
+if(contains(Ch,3),
+  Wlfun("3","TrigExpand",["Cos[3*x]"],[""]);
+);
+if(contains(Ch,4),
+  Wlfun("4","TrigFactor",["Cos[x]^2-Sin[x]^2"],[""]);
+);
+
+Windispg();

@@ -90,7 +90,14 @@ initflg=1;
 ///////// figures ///////////
 
 Ketinit();
-Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Co=offwhite"]);//no ketjs
+Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Co=offwhite"]);//no ketjs on
+prL=["<pf6/fp>Elliptical Billiard"];
+poL=["<pf5/br>_;(vx,vy) is the initial direction vector.",
+ "</br>_;tmax is the maximum time in seconds.",
+ "</br>_;The speed can be changed with the slider below.",
+ "</fp>_;A.x is movable on the x-axes if the box of A.x blank."
+];
+Ketcindyjsmain(prL,poL);//no ketjs off
 Setwindow([-6,6],[-5.5,5]);
 Slider("T",[-5,-4],[5,-4]);
 Addax(0);

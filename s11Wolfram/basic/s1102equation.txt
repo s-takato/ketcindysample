@@ -1,0 +1,17 @@
+Ketinit();
+
+Ch=[];
+if(contains(Ch,1),
+  Wlfun("1","Solve",["x^2-x-2==0"],[""]);
+);
+if(contains(Ch,2),
+  Wlfun("1","Solve",["x^3-x-2==0"],[""]);
+);
+if(contains(Ch,3),
+  Wlfun("3","NSolve",["x^3-x-2==0","x","Reals"],[""]);
+);
+if(contains(Ch,4),
+  Wlfun("4","NSolve",["{x^2+y^3==1,2*x+3*y==4}","{x,y}","Reals"],[""]);
+);
+
+Windispg();

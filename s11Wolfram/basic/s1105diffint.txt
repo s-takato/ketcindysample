@@ -1,0 +1,17 @@
+Ketinit();
+
+Ch=[];
+if(contains(Ch,1),
+  Wlfun("1","D",["x^2","x"],[""]);
+);
+if(contains(Ch,2),
+  Wlfun("2","D",["x^3","x","x"],[""]);
+);
+if(contains(Ch,3),
+  Wlfun("3","Integrate",["Sin[x]","x"],[""]);
+);
+if(contains(Ch,4),
+  Wlfun("4","Integrate",["Sin[x]","{x,0,Pi}"],[""]);
+);
+
+Windispg();

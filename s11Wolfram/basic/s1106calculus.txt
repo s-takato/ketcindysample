@@ -1,0 +1,24 @@
+Ketinit();
+
+Ch=[];
+if(contains(Ch,1),
+  Wlfun("1","LaplaceTransform",["t^4 Sin[t]","t","s"]);
+);
+if(contains(Ch,2),
+  Wlfun("2","InverseLaplaceTransform",["s/(s^2+1)","s","t"]), 
+);
+if(contains(Ch,3),
+  Wlfun("3","LaplaceTransform",["DiracDelta[t]","t","s"],[""]);
+);
+if(contains(Ch,4),
+  Wlfun("4","Limit",["Log[x]/x","x->Infinity"],[""]);
+);
+if(contains(Ch,5),
+  Wlfun("5","Series",["Sin[x]","{x,0,5}"],[""]);
+  Wltex("5",wl5,[]);
+  Expr([-5,4],"e",tx5,["Size=1.5"]);
+);
+
+Windispg();
+
+//Example("Mxfun","lap");

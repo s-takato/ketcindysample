@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>s1112factorial.cdy</title>
+    <title>s1111factorial.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -81,7 +81,7 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   Setwindow("Msg=n"); // 16.05.31
   forall(remove(allpoints(),[SW,NE]),Strictmove(#.name)); //190917
   KETJSOP=[]; //190916
-  JSBODY=[[],[]]; //190916
+  JSBODY=[[],[]]; JSMAIN=[]; //190916,200119
 );
 Setwindow():=Setwindow("Msg=y");
 Setwindow(str):=(
@@ -224,6 +224,13 @@ Toupper(str):=(
     );
   );
   out;
+);
+Ketcindyjsmain(prelist):=Ketcindyjsmain(prelist,[]);
+Ketcindyjsmain(prelist,postlist):=(
+  JSMAIN=[[],[]];
+  if(islist(prelist),JSMAIN_1=prelist,JSMAIN_1=[prelist]);
+  if(islist(postlist),JSMAIN_2=postlist,JSMAIN_2=[postlist]);
+  JSMAIN;
 );
 Addax(param):=(
   ADDAXES=text(param);
@@ -1254,7 +1261,6 @@ Pointdata(nm,listorg,options):=(
     list=listorg;
    ); //17.10.23
   list=apply(list,Lcrd(#));  //190426
-  list=apply(list,[re(#_1),re(#_2)]); //191227
   if(Measuredepth(list)==0,list=[list]);//180530
   tmp=Measuredepth(list);
   if(tmp==1,ptlist=list,ptlist=list_1); //190126from
@@ -1423,6 +1429,7 @@ vL=["1","2","6","24","120","720","5040","40320","362880","3628800","39916800","4
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 Setketcindyjs(["No=all","Col=offwhite"]);
+Ketcindyjsmain(["<p,f6>Input \(n(1\leq n \leg 300\)"]);
 
 Addax(0);
 
@@ -1466,9 +1473,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 745,
-    height: 473,
-    transform: [{visibleRect: [-6.755059078534259, 6.534665633883876, 9.664252547919324, -3.889944298079272]}],
+    width: 761,
+    height: 444,
+    transform: [{visibleRect: [-7.0270009628254115, 6.181692312539384, 9.115911497551556, -3.236774352910516]}],
     background: "rgb(247,247,247)"
   }],
   csconsole: false,

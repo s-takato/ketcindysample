@@ -1,0 +1,58 @@
+Ketinit();
+
+Addax(0);
+
+mA="{{1, -2},{-3, 4}}";
+mB="{{4, 3},{5, 1}}";
+
+Ch=[];
+if(contains(Ch,1),
+  Wlfun("1",mA+"."+mB,[]);
+  Wltex("1",wl1);
+  Expr([-5,5],"se",tx1);
+);
+if(contains(Ch,2),
+  Wlfun("2","MatrixPower",[mA,3],[]);
+);
+if(contains(Ch,3),
+  Wlfun("3","Det",[mA]);
+);
+if(contains(Ch,4),
+  Wlfun("4","Inverse",[mA],[]);
+);
+if(contains(Ch,5),
+  Wlfun("5","Transpose",[mA]);
+);
+if(contains(Ch,6),
+  Wlfun("6","MatrixRank",[mA]);
+);
+if(contains(Ch,7),
+  Wlfun("7","Eigenvalues",[mA]);
+);
+if(contains(Ch,8),
+  Wlfun("8","Eigenvectors",[mA]);
+);
+if(contains(Ch,9),
+  Wlfun("9","CharacteristicPolynomial",[mA,"x"]);
+);
+if(contains(Ch,10),
+  Wlfun("10","RowReduce",[mA]);
+);
+
+va="{2,5,1}";
+vb="{4,-1,2}";
+
+Ch=[];
+if(contains(Ch,21),
+  Wlfun("21",va+"."+vb,[],[""]);
+  Wlfun("21b","Dot",[va,vb],[]);
+);
+if(contains(Ch,22),
+  Wlfun("22","Cross",[va,vb],[]);
+);
+if(contains(Ch,23),
+  Wlfun("23","Norm",[va],[]);
+);
+
+
+Windispg();

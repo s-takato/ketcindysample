@@ -4,7 +4,7 @@ eq0="x'[t]==t*x[t]^3";
 eq1="x''[t]==6*x'[t]-10*x[t]";
 eq2="x''[t]==-3*x'[t]-2*x[t]+t^2-t";
 
-Ch=[5];
+Ch=[];
 if(contains(Ch,1),
   Wlfun("1","DSolve",[eq0,"x[t]","t"],[""]);
 );
@@ -35,7 +35,8 @@ if(contains(Ch,5),
   tmp="Solution of ";
   tmp=tmp+"\(\frac{d^2 x}{dt^2}+3\frac{dx}{dt}+2x=t^2+t,";
   tmp=tmp+"~ x(0)=x_0,x'(0)=x'_0\)";
-  Ketcindyjstitle(["<p,f6>_;"+tmp]);
+  Ketcindyjsmain(["<p,f6>_;"+tmp],["<p,f4>_;end"]);
+
   eq="{"+eq2+",x[0]==aa,x'[0]==bb}";
   cmdL=[
     "ans=DSolve",[eq,"x[t]","t"],
@@ -51,5 +52,7 @@ if(contains(Ch,5),
   str=Assign(tx5,["\text{aa}","x_0","\text{bb}","x'_0"]);
   str=replace(str,[["\left",""],["\right",""]]);
   Expr([-6,5.5],"e","x="+str,["Size=1.5"]);
+  Expr([6,4.5],"e","x_0="+format(A.y,5),["Size=1.5"]);
+  Expr([6,3.3],"e","x'_0="+format(B.y,5),["Size=1.5"]);
 );
 Windispg();

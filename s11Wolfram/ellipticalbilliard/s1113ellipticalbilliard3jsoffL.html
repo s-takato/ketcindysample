@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>s1111ellipticalbilliard3.cdy</title>
+    <title>s1113ellipticalbilliard3.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -117,7 +117,7 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   Setwindow("Msg=n"); // 16.05.31
   forall(remove(allpoints(),[SW,NE]),Strictmove(#.name)); //190917
   KETJSOP=[]; //190916
-  JSBODY=[[],[]]; //190916
+  JSBODY=[[],[]]; JSMAIN=[]; //190916,200119
 );
 Setwindow():=Setwindow("Msg=y");
 Setwindow(str):=(
@@ -782,7 +782,6 @@ Pointdata(nm,listorg,options):=(
     list=listorg;
    ); //17.10.23
   list=apply(list,Lcrd(#));  //190426
-  list=apply(list,[re(#_1),re(#_2)]); //191227
   if(Measuredepth(list)==0,list=[list]);//180530
   tmp=Measuredepth(list);
   if(tmp==1,ptlist=list,ptlist=list_1); //190126from

@@ -1,0 +1,52 @@
+Ketinit();
+
+Ch=[];
+if(contains(Ch,1),
+  cmdL=[
+    "a=Expand",["(x^2+2*x+1)*(x^2-2*x+1)"],
+    "b=Factor",["x^4-1"],
+    "c=124521122233333444",[],
+    "a::b::c",[]
+  ];
+  CalcbyW("test",cmdL,[""]);
+  println(test);
+);
+if(contains(Ch,2),
+  cmdL=[
+    "y=x^2+3*x+4",[],
+    "ans=Solve",["y==0","x"],
+    "s1=y/.ans[[1]]",[],
+    "s2=y/.ans[[2]]",[],
+    "s1::s2",[]
+  ];
+  CalcbyW("ans",cmdL,[""]);
+  println(ans);
+);
+if(contains(Ch,3),
+  cmdL=[
+   "nL={1,2,3,4}",[],
+   "ansL={}",[],
+   "For[j=1,j<=Length[nL],j++,",[],
+   "  ansL=Append[ansL,j!]",[],
+   "]",[],
+   "ansL",[]
+  ];
+  CalcbyW("ansL",cmdL,[""]);
+  ansL=TocindyW(ansL);
+  println(ansL);
+);
+if(contains(Ch,4),
+  cmdL=[
+   "A={{1,-2},{-3,4}}",[],
+   "d=Det",["A"],
+   "b=Tr",["A"],
+   "C=Inverse",["A"],
+   "A::d::b::C",[]
+  ];
+  CalcbyW("mat",cmdL,[""]);
+println(mat);
+  mC=TocindyW(mat_4);
+println(mC);
+);
+
+Windispg();

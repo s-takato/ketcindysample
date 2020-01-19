@@ -2,6 +2,7 @@
 
 Ketinit();
 Setketcindyjs(["No=all","Col=offwhite"]);
+Ketcindyjsmain(["<p,f6>Input \(n\)_;\((1\leq n \leq 300)\)"]);
 //Setwindow([-5,5],[-2,5]);
 
 Addax(0);
@@ -15,7 +16,7 @@ str0="nn=10"; //no ketjs
 //str0=Textedit(60); //only ketjs
 nn=Getcindystr(str0,10);
 
-Ch=[1];
+Ch=[];
 if(contains(Ch,1), // no ketjs on
  cmdL=[
   "nL="+nLstr,[],
@@ -27,19 +28,19 @@ if(contains(Ch,1), // no ketjs on
   "]",[],
   "vL",[]
  ];
-);
-calcbyW("vL",cmdL,[]);
-vL=TocindyW(vL);
-Ketcindyjsdata(["vL",vL]); //no ketjs off
-n=ceil(length(vL_nn)/50);
-pos=[-5,4.5];
-Expr(pos,"e",nL_nn+"!=",["Size=1.5"]);
-pos_2=pos_2-0.5;
-forall(1..n,
-  fr=(#-1)*50;
-  str=substring(vL_nn,fr,fr+50);
-  Letter(pos,"e",str,["Size=1.5"]);
-  pos_2=pos_2-0.5;
+ calcbyW("vL",cmdL,[]);
+ vL=TocindyW(vL);
+ Ketcindyjsdata(["vL",vL]); //no ketjs off
+ n=ceil(length(vL_nn)/50);
+ pos=[-5,4.5];
+ Expr(pos,"e",nL_nn+"!=",["Size=1.5"]);
+ pos_2=pos_2-0.5;
+ forall(1..n,
+   fr=(#-1)*50;
+   str=substring(vL_nn,fr,fr+50);
+   Letter(pos,"e",str,["Size=1.5"]);
+   pos_2=pos_2-0.5;
+ );
 );
 
 Windispg();
