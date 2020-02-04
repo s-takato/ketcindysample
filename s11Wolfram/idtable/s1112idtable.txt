@@ -1,0 +1,72 @@
+////// Figures /////
+
+Ketinit();
+Usegraphics("pict2e");
+Addax(0);
+
+//Setscaling(0.2);
+fun="3*x^4-8*x^3+6*x^2+1/2";
+f(x):=parse(Assign(fun,["x",x]));
+Plotdata("1",fun,"x=[-2,2]");
+Listplot("x",[[XMIN,0],[XMAX,0]]);
+Listplot("y",[[0,-0.2],[0,YMAX]]);
+Expr([[XMAX,0],"e1","x",[0,YMAX],"n1","y"]);
+Letter([[0,0],"s1w1","O"]);
+Htickmark([1,"1"]);
+Vtickmark([1/2,"sw","\frac{1}{2}"]);
+tmp=Totexform("y="+fun);
+Expr([1,1],"e",tmp);
+
+
+Ch=[1,2];
+//Ch=[1,2];
+if(contains(Ch,1),
+ cmdL=[
+  "f[x_]:="+fun,[],
+  "df=D",["f[x]","x"],
+  "zero=Solve",["df==0","x"],
+  "sL={}",[],
+  "For[i=1,i<=Length[zero],i++,",[],
+  "  xi=x/.zero[[i]];",[],
+  "  sL=Append[sL,{xi,f[xi]}]",[],
+  "]",[],
+  "sL=Union[sL]",[],
+  "sL=Sort[sL,#1[[1]]<#2[[1]]&]",[],
+  "df::sL",[]
+ ];
+ CalcbyW("dt",cmdL);
+ df(x):=parse(Assign(dt_1,["x",x]));
+ pL=TocindyW(dt_2);
+ println(pL);
+ pLv=apply(pL,parse(#));
+ println(pLv);
+);
+
+if(contains(Ch,2),
+ xL=apply(pLv,#_1);
+ mdL=apply(1..(length(xL)-1),(xL_#+xL_(#+1))/2);
+ mdL=prepend(xL_1-1,mdL);
+ mdL=append(mdL,xL_(-1)+1);
+ sgL=apply(mdL,if(df(#)>0,"+","-"));
+ arL=apply(sgL,if(#=="+","\NEarrow","\SEarrow"));
+ xLst=[];
+ forall(1..(length(xL)+length(mdL)),
+   if(mod(#,2)==1,tmp=10,tmp=8);
+   xLst=append(xLst,tmp);
+ );
+ xLst=prepend(8,xLst);
+ yLst=[8,8,8];
+ rmvL=[];
+ Tabledatalight("",xLst,yLst,rmvL,["Move=[-2,-3]"]);
+ Putcolexpr(1,"c",["x","y'","y"]);
+ forall(1..(length(mdL)),
+   Putcolexpr(2*#,"c",["\cdots",sgL_#,arL_#]);
+ );
+ forall(1..(length(xL)),
+   tmp=Fracform(f(xL_#),10,4);
+   tmp=Totexform(tmp_1);
+   Putcolexpr(2*#+1,"c",[xL_#,0,tmp]);
+ );
+);
+
+Windispg();

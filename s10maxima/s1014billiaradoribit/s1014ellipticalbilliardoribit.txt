@@ -1,0 +1,232 @@
+/////// ketlib ///////////
+
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(plugindirectory);
+import("ketcindy.ini");
+
+Ketinit();
+
+Setplaybuttons([-5,-5],16,[1]);//no ketjs on
+Movetojs(Text60,[4.5,-5],16);
+Movetojs(Text61,[3,-5],16);
+Movetojs(Text65,[1.2,4.5],15);
+Movetojs(Text69,[-5.8,3.5],15);
+Movetojs(Text68,[-5.8,4.5],15);
+Movetojs(Text66,[-5.8,5.5],15);
+Movetojs(Text67,[1.2,3.6],15);//no ketjs off
+
+cmdL=[ //no ketjs on
+ "assume(a>0,b>0)",[],
+ "declare([u0,v0,x1,y1],real)",[],
+ "f:x^2/a^2+y^2/b^2-1",[],
+ "eq3:ev(f=0,[x=x0+u0*t,y=y0+v0*t])",[],
+ "ans:solve(eq3,t)",[],
+ "t1:ratsimp(ev(t,ans[1]))",[],
+ "x1:x0+u0*t1",[],
+ "y1:y0+v0*t1",[],
+ "t2:ratsimp(ev(t,ans[2]))",[],
+ "x2:x0+u0*t2",[],
+ "y2:y0+v0*t2",[],
+ "L:[t1,x1,y1,t2,x2,y2]",[],
+ "L",[]
+// "t1::x1::y1::t2::x2::y2",[]
+];
+CalcbyM("ans0",cmdL,[""]);
+ans0=TocindyM(ans0);
+
+cmdL=[
+ "assume(a>0,b>0)",[],
+ "norm(x):=sqrt(x.x)",[],
+ "f:x^2/a^2+y^2/b^2-1",[],
+ "nv:[diff(f,x),diff(f,y)]",[],
+ "nv:nv/norm(nv)",[],
+ "tv:[-nv[2],nv[1]]",[],
+ "V0:[u0,v0]",[],
+ "V1:ratsimp((tv.V0)*tv-(nv.V0)*nv)",[],
+ "V1",[]
+];
+CalcbyM("ans",cmdL,[""]);
+ans=TocindyM(ans);
+//println(ans);
+
+Ketcindyjsdata(["ans0",ans0,"ans",ans]);//no ketjs off
+
+Deffun("fans0(a,b,tpv)",[
+  "regional(x0,y0,u0,v0,t,P,t1,x1,y1,t2,x2,y2)",
+  "eps=10^(-4)",
+  "x0=tpv_2_1;y0=tpv_2_2;u0=tpv_3_1;v0=tpv_3_2",
+  "t1="+ans0_1,"x1="+ans0_2,"y1="+ans0_3,
+  "t2="+ans0_4,"x2="+ans0_5,"y2="+ans0_6,
+  "if(abs(t1-t2)<eps,t=0;P=tpv_2)",
+  "if(t1>=t2,t=t1;P=[x1,y1],t=t2;P=[x2,y2])",
+  "re([tpv_1+t,P,tpv_3])"
+]);
+
+Deffun("fans(a,b,tpv1)",[
+  "regional(tpv,u0,v0,x,y,u1,v1)",
+  "tpv=fans0(a,b,tpv1)",
+  "x=tpv_2_1;y=tpv_2_2;u0=tpv_3_1;v0=tpv_3_2",
+  "u1="+ans_1,"v1="+ans_2,
+  "if((abs(y)<eps)&(abs(v1)<eps),y=0;v1=0)",
+  "[tpv_1,tpv_2,[u1,v1]]"
+]);
+
+initflg=1;
+orbitflg=0;
+trajflg=0;
+
+//// figures ////
+Ketinit();
+
+Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n","Co=offwhite"]);//no ketjs
+Setwindow([-7,7],[-6,6]);
+Slider("T",[-5,-4],[5,-4]);
+Addax(0);
+
+Inf=10000;
+
+str0="A.xy=pi/6";// no ketjs on
+str3="norbit=30";
+str4="bisect=-0.5,-0.48,2";
+str1="[a,b]=[4,3]";
+str2="[vx,vy]=[-1,1]";// no ketjs off
+
+//str0=Textedit(65);// only ketjs on
+//str3=Textedit(68);
+//str4=Textedit(69);
+//str1=Textedit(66);
+//str2=Textedit(67);// only ketjs off
+tmp=Getcindystr(str1);
+if(length(tmp)>0,
+  tmp=parse(tmp);
+  a=tmp_1; b=tmp_2;
+);
+tmp=Getcindystr(str0);
+if(length(tmp)>0,
+  if(substring(tmp,0,1)=="[",
+    A.xy=parse(tmp);
+  ,
+    tmp=parse(tmp);
+    A.xy=[a*cos(tmp),b*sin(tmp)];
+  );
+);
+tmp=Getcindystr(str3);
+norb=parse(tmp);
+pF=[-sqrt(a^2-b^2),0];
+C.xy=pF;
+tmp=Getcindystr(str2);
+if(length(tmp)>0,
+  v=parse(tmp);
+);
+tmp=Getcindystr(str4);
+tmp=Strsplit(tmp,",");
+if(length(tmp_1)>0,vy1=parse(tmp_1),vy1=Inf);
+if(length(tmp)>1,
+  if(length(tmp_2)>0,vy2=parse(tmp_2),vy2=Inf);
+);
+if(length(tmp)>2,
+  if(length(tmp_3)>0,xy=parse(tmp_3),xy=Inf);
+  if((vy1!=Inf)%(vy2!=Inf)%(xy!=Inf),
+    findorbit=1;
+  );
+);
+vec=v/|v|;
+Drwxy();
+fun=Assign("[a*cos(t),b*sin(t)]",["a",a,"b",b]);
+Paramplot("1",fun,"t=[0,2*pi]");
+Pointdata("1",C,["Size=3","Color=red","border->false"]);
+Letter(T+[0,-0.1],"s",2^(Ptpos(T)_1+5),["Size=1.2","notex"]);
+
+orbit(v):=(
+  regional(pts);
+  pts=[A.xy];
+  tpv=[0,A.xy,v/|v|];
+  forall(1..norb,
+   tpv=fans(a,b,tpv);
+   pts=append(pts,tpv_2);
+  );
+  pts;
+);
+bisect(vy1org,vy2org,xy):=(
+  regional(vy1,vy2,tmp1,tmp2,y0,vy,ym,pL);
+  y0=A.xy_xy;
+  vy1=vy1org; vy2=vy2org;
+  pL=orbit([-1,vy1]); tmp1=pL_(-1)_xy;
+  pL=orbit([-1,vy2]); tmp2=pL_(-1)_xy;
+  if(tmp1>y0,
+    vy=vy1; vy1=vy2; vy2=vy;
+  );
+  repeat(50,
+    vy=(vy1+vy2)/2;
+    pL=orbit([-1,vy]);
+    ym=pL_(-1)_xy;
+    if(ym<y0,
+      vy1=vy;
+    ,
+      vy2=vy;
+    );
+  );
+  [vy,pL];
+);
+
+if(vy1<Inf,
+  v=[-1,vy1];
+  tmp1=orbit(v);
+  Listplot("o1",tmp1);
+  Pointdata("o1",[tmp1_(-1)],["Size=2"]);
+);
+if(vy2<Inf,
+  v=[-1,vy2];
+  tmp2=orbit(v);
+  Listplot("o2",tmp2,["Color=blue"]);
+  Pointdata("o2",[tmp2_(-1)],["Size=2","Color=blue"]);
+);
+if(findorbit==1,
+  Changestyle(["sgo1","sgo2","pto1","pto2"],["nodisp"]);
+  Eps=10^(-10);
+  tmp=bisect(vy1,vy2,xy);
+  vy=tmp_1;
+  v=[-1,vy];
+  if(orbitflg==1,
+    Listplot("o3",tmp_2,["Color=red"]);
+//  tmp=Fracform(vy,100);
+    println([115,format(vy,16)]);
+    println([116,format(|A.xy-tmp_2_(-1)|,16)]);
+    println([116,format(v/|v|,16)]);
+  );
+);
+
+tmax=500;
+if(trajflg==1,
+ if(initflg==1,
+   tpv=[0,A.xy,v/|v|];
+   pL=[tpv];
+   while(tpv_1<tmax,
+     tpv=fans(a,b,tpv);
+     pL=append(pL,tpv);
+   );
+   initflg=0;
+ );
+ mf(ss):=(
+   regional(plist,nn,tp1,tp2,pt);
+   plist=select(pL,#_1<=ss);
+   plist=apply(plist,[#_1,#_2]);
+   nn=length(plist);
+   tp1=plist_nn;
+   if(tp1_1<ss,
+     tp2=pL_(nn+1)_[1,2];
+     pt=tp1_2+(tp2_2-tp1_2)/(tp2_1-tp1_1)*(ss-tp1_1);
+     plist=append(plist,[ss,pt]);
+   );
+   if(length(plist)>1,
+     Listplot("1",apply(plist,#_2));
+   );
+ );
+
+ ss=Animationparam(0,2^(T.x+5),[0,tmax]);
+ mf(ss);
+ Letter([-4.5,1.5],"nw",text(re(floor(ss))),["Size=1.2"]);
+);//1
+
+Windispg();
