@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>s0612ellipticalbilliardoribit.cdy</title>
+    <title>s1014ellipticalbilliardoribit.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -1752,7 +1752,7 @@ Deffun("fans(a,b,tpv1)",[
   "x=tpv_2_1;y=tpv_2_2;u0=tpv_3_1;v0=tpv_3_2",
   "u1="+ans_1,"v1="+ans_2,
   "if((abs(y)<eps)&(abs(v1)<eps),y=0;v1=0)",
-  "[tpv_1,tpv_2,[u1,v1]]"
+  "[tpv_1,tpv_2,re([u1,v1])]"
 ]);
 
 initflg=1;
@@ -1773,13 +1773,14 @@ Inf=10000;
 str0=Textedit(65);// 
 str3=Textedit(68);
 str4=Textedit(69);
-str1=Textedit(66);
-str2=Textedit(67);// 
+str1=Textedit(66);// 
+
 tmp=Getcindystr(str1);
 if(length(tmp)>0,
   tmp=parse(tmp);
   a=tmp_1; b=tmp_2;
 );
+
 tmp=Getcindystr(str0);
 if(length(tmp)>0,
   if(substring(tmp,0,1)=="[",
@@ -1789,27 +1790,34 @@ if(length(tmp)>0,
     A.xy=[a*cos(tmp),b*sin(tmp)];
   );
 );
-tmp=Getcindystr(str3);
-norb=parse(tmp);
 pF=[-sqrt(a^2-b^2),0];
 C.xy=pF;
-tmp=Getcindystr(str2);
-if(length(tmp)>0,
-  v=parse(tmp);
-);
+
+tmp=Getcindystr(str3);
+norb=parse(tmp);
+
 tmp=Getcindystr(str4);
-tmp=Strsplit(tmp,",");
-if(length(tmp_1)>0,vy1=parse(tmp_1),vy1=Inf);
+tmp=Strsplit(tmp,":");
+if(length(tmp_1)>0,
+  v1=parse(tmp_1);
+  if(!islist(v1),v1=[-1,v1]);
+,
+  v1=[Inf,0];
+);
 if(length(tmp)>1,
-  if(length(tmp_2)>0,vy2=parse(tmp_2),vy2=Inf);
+  if(length(tmp_2)>0,
+    v2=parse(tmp_2);
+    if(!islist(v2),v2=[-1,v2]);
+  );
+,
+  v2=[Inf,0];
 );
 if(length(tmp)>2,
   if(length(tmp_3)>0,xy=parse(tmp_3),xy=Inf);
-  if((vy1!=Inf)%(vy2!=Inf)%(xy!=Inf),
+  if((v1_1!=Inf)&(v2_1!=Inf)&(xy!=Inf),
     findorbit=1;
   );
 );
-vec=v/|v|;
 Drwxy();
 fun=Assign("[a*cos(t),b*sin(t)]",["a",a,"b",b]);
 Paramplot("1",fun,"t=[0,2*pi]");
@@ -1817,60 +1825,71 @@ Pointdata("1",C,["Size=3","Color=red","border->false"]);
 Letter(T+[0,-0.1],"s",2^(Ptpos(T)_1+5),["Size=1.2","notex"]);
 
 orbit(v):=(
-  regional(pts);
-  pts=[A.xy];
+  regional(pL);
   tpv=[0,A.xy,v/|v|];
+  pL=[tpv];
   forall(1..norb,
    tpv=fans(a,b,tpv);
-   pts=append(pts,tpv_2);
+   pL=append(pL,tpv);
   );
-  pts;
+  pL;
 );
-bisect(vy1org,vy2org,xy):=(
-  regional(vy1,vy2,tmp1,tmp2,y0,vy,ym,pL);
+bisect(v1org,v2org,xy):=(
+  regional(eps,v1,v2,tmp1,tmp2,y0,v,ym,pL);
+  eps=10^(-10);
   y0=A.xy_xy;
-  vy1=vy1org; vy2=vy2org;
-  pL=orbit([-1,vy1]); tmp1=pL_(-1)_xy;
-  pL=orbit([-1,vy2]); tmp2=pL_(-1)_xy;
+  v1=v1org; v2=v2org;
+  pL=orbit(v1); tmp1=pL_(-1)_2_xy;
+  pL=orbit(v2); tmp2=pL_(-1)_2_xy;
   if(tmp1>y0,
-    vy=vy1; vy1=vy2; vy2=vy;
+    v=v1; v1=v2; v2=v;
   );
   repeat(50,
-    vy=(vy1+vy2)/2;
-    pL=orbit([-1,vy]);
-    ym=pL_(-1)_xy;
-    if(ym<y0,
-      vy1=vy;
-    ,
-      vy2=vy;
+    v=(v1+v2)/2;
+    pL=orbit(v);
+    ym=pL_(-1)_2_xy;
+    if(abs(ym-y0)>eps,
+      if(ym<y0,
+        v1=v;
+      ,
+        v2=v;
+      );
     );
   );
-  [vy,pL];
+  [v/|v|,pL];
 );
 
-if(vy1<Inf,
-  v=[-1,vy1];
-  tmp1=orbit(v);
-  Listplot("o1",tmp1);
+if(v1_1<Inf,
+  tmp=orbit(v1);
+  tmp1=apply(tmp,#_2);
+  Listplot("o1",tmp1,["do"]);
   Pointdata("o1",[tmp1_(-1)],["Size=2"]);
 );
-if(vy2<Inf,
-  v=[-1,vy2];
-  tmp2=orbit(v);
-  Listplot("o2",tmp2,["Color=blue"]);
+if(v2_1<Inf,
+  tmp=orbit(v2);
+  tmp2=apply(tmp,#_2);
+  Listplot("o2",tmp2,["do","Color=blue"]);
   Pointdata("o2",[tmp2_(-1)],["Size=2","Color=blue"]);
+  if(v1_1<Inf,
+    tmp=orbit((v1+v2)/2);
+    tmp3=apply(tmp,#_2);
+    Pointdata("o3",[tmp3_(-1)],["Size=2","Color=green"]);
+  );
 );
+
 if(findorbit==1,
-  Changestyle(["sgo1","sgo2","pto1","pto2"],["nodisp"]);
+  Changestyle(["sgo1","sgo2","pto1L","pto2L","pto3L"],["nodisp"]);
   Eps=10^(-10);
-  tmp=bisect(vy1,vy2,xy);
-  vy=tmp_1;
-  v=[-1,vy];
+  tmp=bisect(v1,v2,xy);
+  v=tmp_1;
+  pL=tmp_2;
   if(orbitflg==1,
-    Listplot("o3",tmp_2,["Color=red"]);
-    println([115,format(vy,16)]);
-    println([116,format(|A.xy-tmp_2_(-1)|,16)]);
-    println([116,format(v/|v|,16)]);
+    tmp1=apply(tmp_2,#_2);
+    Listplot("o3",tmp1,["Color=red"]);
+    Letter([-7,-0.5],"e",Textformat(A.xy,6));
+    Letter([-7,-1.5],"e",Textformat(v,6));
+    Letter([-7,-2.5],"e",Textformat(pL_(-1)_2,6));
+    Letter([-7,-3.5],"e",Textformat(pL_(-1)_3,6));
   );
 );
 
@@ -1923,21 +1942,20 @@ var cdy = CindyJS({
   angleUnit: "°",
   geometry: [
     {name: "NE", type: "Free", pos: [4.0, 3.4285714285714284, 0.5714285714285714], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, 1.7320508075688767, 1.1547005383792515], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
+    {name: "A", type: "Free", pos: [4.0, 1.2426406871190432, 1.082392200292437], color: [1.0, 0.0, 0.0], size: 3.0, border: true },
     {name: "C", type: "Free", pos: [4.0, -0.0, -1.5118578920369088], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T", type: "Free", pos: [4.0, 4.0, -1.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "Text66", type: "EditableText", pos: [-5.8,5.5,1], color: [0.0, 0.0, 0.0], text: "[a,b]=[4,3]", textsize: 23},
-    {name: "Text67", type: "EditableText", pos: [1.2,3.6,1], color: [0.0, 0.0, 0.0], text: "[vx,vy]=[-1,*]", textsize: 23},
-    {name: "Text65", type: "EditableText", pos: [1.2,4.5,1], color: [0.0, 0.0, 0.0], text: "A.xy=", textsize: 23},
+    {name: "Text65", type: "EditableText", pos: [1.2,5.5,1], color: [0.0, 0.0, 0.0], text: "A.xy=", textsize: 23},
     {name: "SW", type: "Free", pos: [4.0, 3.4285714285714284, -0.5714285714285714], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text68", type: "EditableText", pos: [-5.8,4.5,1], color: [0.0, 0.0, 0.0], text: "norbit=5", textsize: 23},
-    {name: "Text69", type: "EditableText", pos: [-5.8,3.5,1], color: [0.0, 0.0, 0.0], text: "bisect=", textsize: 23},
-    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n\ninitflg=1;\n", text: "Play", textsize: 24, pos: [-5,-5,1]},
-    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 24, pos: [-3.56,-5,1]},
-    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 24, pos: [-1.76,-5,1]},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\ninitflg=1;\n", text: "Stop", textsize: 24, pos: [-0.44,-5,1]},
-    {name: "Text60", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "trajflg=1-trajflg;", text: "Trajec", textsize: 24, pos: [4.5,-5,1]},
-    {name: "Text61", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "orbitflg=1-orbitflg;", text: "Oribit", textsize: 24, pos: [3,-5,1]}
+    {name: "Text69", type: "EditableText", pos: [1.2,4.5,1], color: [0.0, 0.0, 0.0], text: "bisect=", textsize: 23},
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n\ninitflg=1;\n", text: "Play", textsize: 24, pos: [-5,-6,1]},
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);", text: "Pause", textsize: 24, pos: [-3.56,-6,1]},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();", text: "Rev", textsize: 24, pos: [-1.76,-6,1]},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.27272728085517883, pinned: true, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\ninitflg=1;\n", text: "Stop", textsize: 24, pos: [-0.44,-6,1]},
+    {name: "Text60", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "trajflg=1-trajflg;", text: "Trajec", textsize: 24, pos: [4.5,-5.8,1]},
+    {name: "Text61", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.29914529914529914, script: "orbitflg=1-orbitflg;", text: "Oribit", textsize: 24, pos: [3,-5.8,1]}
   ],
   ports: [{
     id: "CSCanvas",
