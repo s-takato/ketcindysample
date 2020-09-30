@@ -47,10 +47,10 @@ forall(1..all,
 
 ss=Animationparam(0,5,[0,25/aa]);
 ang=-0.1*aa*ss^2+5*ss;
-Arrowdata("1",[[0,0],r1*[cos(ang),sin(ang)]],[3,"dr,2"]);
 
 Eps=0.01;
 dang=0.025;
+flg=0;
 if(ss>25/aa-Eps,
   ang2=mod(ang,2*pi);
   tmp=select(wL,|ang2-#|<dang);
@@ -58,8 +58,11 @@ if(ss>25/aa-Eps,
     th=tmp_1;
     if(ang2<th,ang2=th-dang,ang2=th+dang);
     Arrowdata("1",[[0,0],r1*[cos(ang2),sin(ang2)]],[3,"dr,2"]);
+    flg=1;
   );
+);
+if(flg==0,
+  Arrowdata("1",[[0,0],r1*[cos(ang),sin(ang)]],[3,"dr,2"]);
 );
 
 Windispg();
-
