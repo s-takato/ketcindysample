@@ -1,21 +1,21 @@
 Ketinit();
-Setketcindyjs(["Color=offwhite"]);
+Setketcindyjs([]);
 
-// Put A,B,C on the screen
-pA=Ptpos(A); pB=Ptpos(B); pC=Ptpos(C);
-
+Putpoint("A",[2,0],A.xy);
+Putpoint("B",[2,2],B.xy);
+Putpoint("C",[-2,0],C.xy);
 if(chno==1,
- Parabolaplot("1",[pA,pB,pC],"[-5,10]");
- Lineplot("1",[pB,pC],["da"]);
- Letter([A,"ne","F",B,"ne","A",C,"ne","B"]);
+ Parabolaplot("1",[C,A,B],"[-5,10]");
+ Lineplot("1",[A,B],["da"]);
+// Letter([A,"ne","F",B,"ne","A",C,"ne","B"]);
 );
 if(chno==2,
- Ellipseplot("1",[pA,pB,pC],"[0,2*pi]");
- Letter([A,"ne","F$'$",B,"ne","F",C,"ne","A"]);
+ Ellipseplot("1",[C,A,B],"[0,2*pi]");
+// Letter([A,"ne","F$'$",B,"ne","F",C,"ne","A"]);
 );
 if(chno==3,
- Hyperbolaplot("1",[pA,pB,pC],["Asy=da"]);
- Letter([A,"ne","F$'$",B,"ne","F",C,"ne","A"]);
+ Hyperbolaplot("1",[C,A,B],["Asy=da"]);
+// Letter([A,"ne","F$'$",B,"ne","F",C,"ne","A"]);
 );
 
 Windispg();

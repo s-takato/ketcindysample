@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>s0205coniccurve.cdy</title>
+    <title>s0105vector.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -26,10 +26,9 @@
 <script id="csinit" type="text/x-cindyscript">
 use("KetCindyPlugin");
 Dircdy=loaddirectory;
-setdirectory(plugindirectory);
+setdirectory(gethome());
 import("ketcindy.ini");
-
-chno=1;
+;
 </script>
 <script id="cskeytyped" type="text/x-cindyscript">
 if(key()=="?" % keydownlist()==[32],
@@ -160,34 +159,27 @@ if(key()==">",
   );
   Dispchoice();
 );
-;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 //Setfiles("");
+Setparent(Cdyname()+"fig");
 Setketcindyjs(["Nolabel=all","Color=white"]);
 
-// Put A,B,C on the screen
-pA=Ptpos(A); pB=Ptpos(B); pC=Ptpos(C);
+Addax(0);
 
-Ch=[chno];
-if(contains(Ch,1),
- Setparent(Cdyname()+"fig1");
- Parabolaplot("1",[pA,pB,pC],"[-5,10]");
-);
-if(contains(Ch,2),
- Setparent(Cdyname()+"fig2");
- Ellipseplot("1",[pA,pB,pC],"[0,2*pi]");
-);
-if(contains(Ch,3),
- Setparent(Cdyname()+"fig3");
- Hyperbolaplot("1",[pA,pB,pC],["Asy=da"]);
-);
+Arrowdata("1",[A,B]);
+Arrowdata("2",[A,C]);
+Arrowdata("3",[A,D]);
+Listplot("1",[C,D,B],["da"]);
+
+Expr([(A+B)/2,"se","\vec{a}",(A+C)/2,"nw","\vec{b}"]);
+Expr([(A+D)/2,"se","\vec{a}+\vec{b}"]);
 
 Figpdf();
 Windispg();
 
-//Help("Hyperbola")
+//Help("Arrow");
 ;
 </script>
     <script type="text/javascript">
@@ -204,29 +196,34 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0, 0.0, 0.0], labeled: true},
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0, 0.0, 0.0], labeled: true},
-    {name: "A", type: "Free", pos: [4.0, -0.0, -2.0], color: [1.0, 0.0, 0.0], labeled: true},
-    {name: "B", type: "Free", pos: [4.0, -0.0, 2.0], color: [1.0, 0.0, 0.0], labeled: true},
-    {name: "C", type: "Free", pos: [4.0, 3.44444265118777, 2.226111734113214], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "A", type: "Free", pos: [4.0, 4.0, -1.3333333333333333], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "B", type: "Free", pos: [4.0, -1.295238095238095, 1.535404282980142], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "C", type: "Free", pos: [4.0, -2.4782608695653887, -1.7523635838364007], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "a", type: "Segment", color: [0.0, 0.0, 1.0], args: ["A", "B"], visible: false, labeled: true},
+    {name: "b", type: "Segment", color: [0.0, 0.0, 1.0], args: ["A", "C"], visible: false, labeled: true},
+    {name: "c", type: "Parallel", color: [0.0, 0.0, 1.0], args: ["b", "B"], visible: false, labeled: true},
+    {name: "d", type: "Parallel", color: [0.0, 0.0, 1.0], args: ["a", "C"], visible: false, labeled: true},
+    {name: "D", type: "Meet", color: [1.0, 0.0, 0.0], args: ["c", "d"], labeled: true},
     {name: "Text33", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.286, 0.286], fillalpha: 0.27272728085517883, script: "Viewtex();\nkc();", text: "Figure", textsize: 18.0, dock: {corner: "UL", offset: [10.0, -20.0]}},
-    {name: "Text134'", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "if(length(Shellparent)>0,\n  Makeshell(),Makebat();\n);\nif(indexof(Libname,\"sci\")>0,\n  writetosci(2),writetoRS(2)\n);\nkc();", text: "Parent", textsize: 18.0, dock: {corner: "UL", offset: [77.0, -20.0]}},
+    {name: "Text134", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "if(length(Shellparent)>0,\n  Makeshell(),Makebat();\n);\nif(indexof(Libname,\"sci\")>0,\n  writetosci(2),writetoRS(2)\n);\nkc();", text: "Parent", textsize: 18.0, dock: {corner: "UL", offset: [77.0, -20.0]}},
     {name: "Text3", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.929, 0.6], fillalpha: 0.27272728085517883, script: "Parafolder();", text: "ParaF", textsize: 18.0, dock: {corner: "UL", offset: [143.0, -20.0]}},
     {name: "Text4", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.51, 0.949, 1.0], fillalpha: 0.27272728085517883, script: "Mkanimation();", text: "Anime", textsize: 18.0, dock: {corner: "UL", offset: [204.0, -20.0]}},
     {name: "Text5", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 0.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkflipanime();", text: "Flip", textsize: 18.0, dock: {corner: "UL", offset: [271.0, -20.0]}},
     {name: "Text21", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkketcindyjs();", text: "KeTJS", textsize: 18.0, dock: {corner: "UL", offset: [488.0, -20.0]}},
-    {name: "Text22", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkketcindyjs(append(Ketjsoption(),\"Web=n\"));\n", text: "KeTJSoff", textsize: 18.0, dock: {corner: "UL", offset: [551.0, -20.0]}},
-    {name: "Text0", type: "Button", pos: [4.0, 1.7868852459016396, 0.6568855863703223], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "chno=mod(chno,3)+1;\nCh=[chno];", text: "Choose", textsize: 18.0}
+    {name: "Text22", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkketcindyjs(append(Ketjsoption(),\"Web=n\"));\n", text: "KeTJSoff", textsize: 18.0, dock: {corner: "UL", offset: [551.0, -20.0]}}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 815,
-    height: 528,
-    transform: [{visibleRect: [-9.545789911340313, 6.02694970872859, 10.79360558602532, -7.149983815945097]}],
+    width: 923,
+    height: 467,
+    transform: [{visibleRect: [-10.755659533678205, 5.7686063242910794, 12.145087293507455, -5.818228744284981]}],
+    axes: true,
     grid: 1.0,
     snap: true,
     background: "rgb(168,176,192)"
   }],
   csconsole: false,
-  cinderella: {build: 1901, version: [2, 9, 1901]}
+  cinderella: {build: 1952, version: [3, 0, 1952]}
 });
     </script>
 </head>

@@ -24,16 +24,15 @@
    <script type="text/javascript" src="ketcindyjs/Cindy.js"></script>
 
 <script id="csinit" type="text/x-cindyscript">
-Ketinit():=Ketinit("fig",1,[-5,5],[-5,5],0.3); //190831from
+Ketinit():=Ketinit("fig",0.3); //190831from
 Ketinit(Arg):=(//181001from
   if(isstring(Arg),
-    Ketinit(Arg,1,[-5,5],[-5,5],0.3);
+    Ketinit(Arg,0.3);
   ,
-    Ketinit("fig",1,[-5,5],[-5,5],Arg);
+    Ketinit("fig",Arg);
   );
 );
-Ketinit(Arg1,Arg2):=Ketinit(Arg1,1,[-5,5],[-5,5],Arg2);
-Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
+Ketinit(work,strictsep):=( //200509
  regional(pt,tmp,tmp1,tmp2,letterc,boxc,shadowc,mboxc);
   PenThickInit=8;
   ULEN="1cm";
@@ -52,12 +51,14 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   TenSizeInit=0.02;
   TenSize=TenSizeInit;
   YaSize=1; YaAngle=18; YaPosition=1;
-  YaCut=0; YasenStyle="dr,1"; Yajiristyle="tf";
+  YaCut=0.2; //191203
+  YasenStyle="dr,1"; Yajiristyle="tf";
   KETPICCOUNT=1;
-  KCOLOR=[0,0,0];
-  GCLIST=[];
-  VLIST=[];
-  FUNLIST=[];
+  KCOLOR=[1,1,1,1]; //200513
+  if(!islist(GLISTadd),GLIST=[],GLIST=GLISTadd); //200123
+  if(!islist(GCLISTadd),GCLIST=[],GCLIST=GCLISTadd); //200123
+  if(!islist(VLISTadd),VLIST=[],VLIST=VLISTadd); //200123
+  if(!islist(FUNLISTadd),FUNLIST=[],FUNLIST=FUNLISTadd); //200123
   LETTERlist=[];
   ADDAXES="1";
   AXSTYLE=[["l","x","e","y","n","O","sw","","",""],[]]; //190901
@@ -71,77 +72,58 @@ Ketinit(work,sy,rangex,rangey,strictsep):=(////190831to
   ArrowheadNumber=1;
   BezierNumber=1; //15.01.03
   SCALEX=1;
-  SCALEY=sy;
-  XMIN=rangex_1/SCALEX;
-  XMAX=rangex_2/SCALEX;
-  YMIN=rangey_1/SCALEY;
-  YMAX=rangey_2/SCALEY;
+  SCALEY=1;
+  XMIN=-5;
+  XMAX=5;
+  YMIN=-5;
+  YMAX=5;
   StrictSep=strictsep; //190831
   Setwindow("Msg=n"); // 16.05.31
   forall(remove(allpoints(),[SW,NE]),Strictmove(#.name)); //190917
-  KETJSOP=[]; //190916
-  JSBODY=[[],[]]; //190916
+  KETJSOP=["Web=n"]; WebMode=0; //200516
+  JSBODY=[[],[]]; JSMAIN=[]; //190916,200119
 );
-Indexall(str,key):=(
-  regional(rest,out,flg,tmp,tmp1,);
-  out=[];
-  rest=str;
-  flg=0;
-  forall(1..(length(str)),
-    if(flg==0,
-      tmp=indexof(rest,key);
-      if(tmp>0,
-        tmp1=tmp+length(str)-length(rest);
-        out=append(out,tmp1);
-        rest=substring(rest,tmp,length(rest));
-      ,
-        flg=1;
-      );
-    );
-  );
-  out;
-);
-Setwindow():=Setwindow("Msg=yes");
+Setwindow():=Setwindow("Msg=y");
 Setwindow(str):=(
   regional(tmp,tmp1,tmp2,msg);
-  msg="y";
+  msg="Y";
   tmp=indexof(str,"="); // 16.02.10
-  tmp1=Toupper(substring(str,tmp,tmp+1));
-  if(tmp1=="N",msg="n");
-  Strictmove("SW"); Strictmove("NE"); // ketjs //190909
-  if((ispoint(SW) & ispoint(NE)),
+  msg=Toupper(substring(str,tmp,tmp+1));
+  Strictmove("SW"); Strictmove("NE");//190927
+  if((ispoint(SW)) & (ispoint(NE)),
     tmp1=LLcrd(Ptpos(SW));//190912[2lines]
     tmp2=LLcrd(Ptpos(NE));
     XMIN=tmp1_1; XMAX=tmp2_1;
     YMIN=tmp1_2; YMAX=tmp2_2;
   ,
-    Putpoint("SW",Pcrd([XMIN,YMIN]));
-    Putpoint("NE", Pcrd([XMAX,YMAX]));
+    if(!ispoint(SW), //191005from
+      Putpoint("SW",Pcrd([-5,-5]));
+      XMIN=-5; YMIN=-5;
+      Ptpos(SW,SW.xy);
+    );
+    if(!ispoint(NE),
+      Putpoint("NE", Pcrd([5,5]));
+      XMAX=5; YMAX=5;
+      Ptpos(NE,NE.xy);
+    ); //191005to
   );
 );
-Setwindow(xrange,yrange):=(
+Setwindow(xrange,yrange):=Setwindow(xrange,yrange,"Msg=y");
+Setwindow(xrange,yrange,msg):=(
   XMIN=xrange_1;
   XMAX=xrange_2;
   YMIN=yrange_1;
   YMAX=yrange_2;
-  Putpoint("SW",[XMIN,YMIN]);//181016
-  Putpoint("NE",[XMAX,YMAX]);//181016
-  Strictmove("SW"); Strictmove("NE"); //
-);
-Toupper(str):=(
-  regional(alphabet,out,tmp,tmp1);
-  alphabet="abcdefghijklmnopqrstuvwxyz";
-  out="";
-  forall(1..(length(str)),
-    tmp=substring(str,#-1,#);
-    tmp1=indexof(alphabet,tmp);
-    if(tmp1>0,
-      out=out+unicode(text(tmp1+64),base->10);
-    ,
-      out=out+tmp;
-    );
+  Ptpos(SW,Pcrd([XMIN,YMIN])); //190927from
+  Ptpos(NE,Pcrd([XMAX,YMAX]));
+  Strictmove("SW"); Strictmove("NE");
+  layer(KETPICLAYER); 
+  autoclearlayer(KETPICLAYER,true);
+  drawpoly([Pcrd([XMIN,YMIN]), Pcrd([XMAX,YMIN]),
+        Pcrd([XMAX,YMAX]),Pcrd([XMIN,YMAX])],color->[1,1,1]); //190927to
+  if(Toupper(substring(msg,0,1))=="Y", 
+    println("Setwindow(["+XMIN+","+XMAX+"],["+YMIN+","+YMAX+"])");
   );
-  out;
 );
 LLcrd(pt):=(
   regional(tmp);
@@ -151,26 +133,13 @@ LLcrd(pt):=(
     tmp=pt;
   );
   tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
-  tmp;
+  re(tmp); //191231
 );
-Ptpos(pt):=Ptpos(pt,[]);
-Ptpos(ptorg,pos):=(
-  regional(pt,out,tmp);
-  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
-  if(length(pos)==0,
-    tmp=pt.name+"position";
-    out=parse(tmp);
-    if(!islist(out),
-      tmp=tmp+"="+Textformat(pt.xy,6)+";";
-      parse(tmp);
-    );
-  ,
-    pt.xy=pos;
-    tmp=pt.name+"position="+Textformat(pt.xy,6)+";";
-    parse(tmp);
-    out=pt.xy;
-  );
-  out;
+Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
+Putpoint(name,Ptinit,Pt):=(
+  regional(ptstr); 
+    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
+    parse(ptstr);
 );
 Textformat(value,dig):=(
   regional(vv,tmp,tmp1);
@@ -195,17 +164,30 @@ Textformat(value,dig):=(
 Pcrd(pt):=(
   regional(tmp);
   if(ispoint(pt),
-    tmp=re(pt.xy); // 15.07.24
+    tmp=pt.xy;
   ,
     tmp=[pt_1*SCALEX,pt_2*SCALEY];
   );
- tmp;
+ re(tmp); //191231
 );
-Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
-Putpoint(name,Ptinit,Pt):=(
-  regional(ptstr);
-    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
-    parse(ptstr);
+Ptpos(pt):=Ptpos(pt,[]);
+Ptpos(ptorg,pos):=(
+  regional(pt,out,tmp);
+  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
+  if(length(pos)==0,
+    tmp=pt.name+"position";
+    out=parse(tmp);
+    if(!islist(out),
+      tmp=tmp+"="+Textformat(pt.xy,12)+";";  //200108 6->12
+      parse(tmp);
+    );
+  ,
+    pt.xy=pos;
+    tmp=pt.name+"position="+Textformat(pt.xy,12)+";"; //200108 6->12
+    parse(tmp);
+    out=pt.xy;
+  );
+  out;
 );
 Strictmove(pC):=Strictmove(pC,StrictSep); //190831
 Strictmove(pCorg,sep):=(
@@ -214,31 +196,55 @@ Strictmove(pCorg,sep):=(
   if(ispoint(pC),pC=pC.name);
   tmp1=pC+"position";
   if(!islist(parse(tmp1)),
-    tmp=tmp1+"="+textformat(parse(pC).xy,6)+";";
+    tmp=tmp1+"="+Textformat(parse(pC).xy,12)+";"; //200112
     parse(tmp);
   ,
-    tmp=parse(pC).xy;
+   tmp=parse(pC).xy;
     tmp2=mouse().xy;
     if(|tmp-tmp2|>sep,
       tmp=pC+".xy="+pC+"position";
       parse(pC).xy=parse(pC+"position");
     ,
-      tmp=tmp1+"="+Textformat(parse(pC).xy,6)+";";
+      tmp=tmp1+"="+Textformat(parse(pC).xy,12)+";"; //200112
       parse(tmp);
     );
   );
 );
+Toupper(str):=(
+  regional(alphabet,out,tmp,tmp1);
+  alphabet="abcdefghijklmnopqrstuvwxyz";
+  out="";
+  forall(1..(length(str)),
+    tmp=substring(str,#-1,#);
+    tmp1=indexof(alphabet,tmp);
+    if(tmp1>0,
+      out=out+unicode(text(tmp1+64),base->10);
+    ,
+      out=out+tmp;
+    );
+  );
+  out;
+);
+Ketcindyjsmain(prelist):=Ketcindyjsmain(prelist,[]);
+Ketcindyjsmain(prelist,postlist):=(
+  JSMAIN=[[],[]];
+  if(islist(prelist),JSMAIN_1=prelist,JSMAIN_1=[prelist]);
+  if(islist(postlist),JSMAIN_2=postlist,JSMAIN_2=[postlist]);
+  JSMAIN;
+);
 Addax(param):=(
   ADDAXES=text(param);
 );
-Arrowdata(ptlist):=Lightarrowdata(ptlist,[]);
-Arrowdata(Arg1,Arg2):=Lightarrowdata(Arg1,Arg2);
-Arrowdata(nm,ptlistorg,optionsorg):=Lightarrowdata(nm,ptlistorg,optionsorg);
-Lightarrowdata(ptlist):=Lightarrowdata(ptlist,[]); //181110from
-Lightarrowdata(Arg1,Arg2):=(
+Arrowdata(ptlist):=Arrowdataseg(ptlist);
+Arrowdata(Arg1,Arg2):=Arrowdataseg(Arg1,Arg2);
+Arrowdata(nm,ptlistorg,optionsorg):=(
+  Arrowdataseg(nm,ptlistorg,optionsorg);
+);
+Arrowdataseg(ptlist):=Arrowdataseg(ptlist,[]); //181110from
+Arrowdataseg(Arg1,Arg2):=(
   regional(name);
   if(isstring(Arg1),
-    Lightarrowdata(Arg1,Arg2,[]);
+    Arrowdataseg(Arg1,Arg2,[]);
   ,
     name="";
     forall(Arg1,
@@ -246,24 +252,21 @@ Lightarrowdata(Arg1,Arg2):=(
         name=name+#.name; //190505
       );
     );
-    Lightarrowdata(name,Arg1,Arg2);
+    Arrowdataseg(name,Arg1,Arg2);
   );
 );  //181110from
-Lightarrowdata(nm,ptlist,optionsorg):=(
-  regional(options,Ltype,Noflg,opstr,opcindy,eqL,reL,strL,color,size,coord,lineflg,
-      flg,lineflg,cutend,tmp,tmp1,tmp2,pA,pB,angle,segpos,cut,scaley,Ev,Nv,pP);
-  pA=Pcrd(ptlist_1); pB=Pcrd(ptlist_2);
+Arrowdataseg(nm,ptlistorg,optionsorg):=(
+  regional(options,Ltype,Noflg,opstr,opcindy,eqL,reL,strL,color,size,lineflg,
+      flg,cutend,tmp,tmp1,tmp2,pA,pB,pC,angle,segpos,cut,scaley,Ev,Nv,pP,ptlist);
   scaley=SCALEY; //190412
-  Setscaling(1); 
+  SCALEY=1; //200114
   ptlist=[];
   forall(ptlistorg,
-    if(ispoint(#),tmp=[#.x, scaley*#.y], tmp=[#_1,scaley*#_2]);
+    if(ispoint(#),tmp=[#.x, #.y], tmp=[#_1,scaley*#_2]);
     ptlist=append(ptlist,tmp);
   );
+  pA=ptlist_1; pB=ptlist_2;
   options=optionsorg;
-  tmp=select(options,isstring(#)); //181214from
-  tmp1=select(tmp,contains(["dr","da","do","id"],substring(#,0,2)));
-  if(length(tmp1)==0,options=append(options,YasenStyle)); //181214to
   tmp=Divoptions(options);
   Ltype=tmp_1;
   Noflg=tmp_2;
@@ -273,25 +276,26 @@ Lightarrowdata(nm,ptlist,optionsorg):=(
   color=tmp_(length(tmp)-2);
   opstr=tmp_(length(tmp)-1);
   opcindy=tmp_(length(tmp));
-  tmp1=[YaSize,YaAngle,YaPosition,YaCut]; //181214from
-  forall(1..(length(reL)),
-    if(reL_#<0, reL_#=tmp1_#);
-  ); 
-  forall((length(reL)+1)..4,
-    reL=append(reL,tmp1_#);
+  size=0.2*YaSize*1/2.54*1000/MilliIn; 
+  angle=YaAngle*pi/180;
+  segpos=YaPosition;
+  cut=YaCut;
+  if(length(reL)>=1,
+    size=0.2*reL_1*1/2.54*1000/MilliIn; 
   );
-  size=reL_1;
-  angle=reL_2;
-  segpos=reL_3;
-  cut=reL_4;
-  lineflg=0;
-  if(contains(strL,"l")%contains(strL,"L"),
-    lineflg=1;
-  );//181018from
-  options=remove(options,strL);
+  if(length(reL)>=2,
+    if(reL_2<2.5,angle=reL_2*YaAngle,angle=reL_2);
+    angle=angle*pi/180;
+  );
+  if(length(reL)>=3,
+    segpos=reL_3;
+  );
+  if(length(reL)>=4,
+    cut=reL_4;
+  );
+  options=remove(options,reL); //191202
   cutend=[0,0];//180719
-  coord="P";//181018
-  lineflg=1; //190504
+  lineflg=0;
   forall(eqL,
     tmp=Strsplit(#,"=");
     tmp1=Toupper(substring(tmp_1,0,2));
@@ -301,47 +305,40 @@ Lightarrowdata(nm,ptlist,optionsorg):=(
       tmp2=replace(tmp2,"]","");
       cutend=tokenize(tmp2,",");
       if(length(cutend)==1,cutend=[cutend_1,cutend_1]);
-      options=remove(options,[#]);
     );
     if(tmp1=="LI",//190504from
       tmp2=Toupper(substring(tmp2,0,1));
-      if(tmp2=="N",lineflg=0);
-      options=remove(options,[#]);
+      if(tmp2=="Y",lineflg=1);
     );//190504to
   );
-  if(Noflg<3,
-    tmp="ar"+nm+"="+Textformat([pA,pB],5)+";";
-    parse(tmp);
-  );
-  if(Noflg<3, //190818
-    if(isstring(Ltype),
-      if(lineflg==1, //190504from
-        Listplot("-ar"+nm,[LLcrd(pA),LLcrd(pB)],append(options,"Msg=n"));
-      ,
-        tmp=pB;
-        pB=pA;
-        pA=pB-tmp;
-      );  //190504to
-      size=0.2*size;
-      angle=angle*pi/180;
-      pP=pA+segpos*(pB-pA);
-      Ev=-1/|pB-pA|*(pB-pA);
-      Nv=[-Ev_2, Ev_1];
-      tmp1=pP+size*cos(angle)*Ev+size*sin(angle)*Nv;
-      tmp2=pP+size*cos(angle)*Ev-size*sin(angle)*Nv;
-      ArrowheadNumber=ArrowheadNumber+1;
-      Listplot("-arh"+nm,[tmp1,pP,tmp2],append(options,"Msg=n"));
-      Setscaling(scaley);
+  tmp=pB-pA;
+  tmp=tmp/|tmp|;
+  pA=ptlist_1+tmp*cutend_1;
+  pB=ptlist_2-tmp*cutend_2;
+  pP=pA+segpos*(pB-pA);
+  Ev=-1/|pB-pA|*(pB-pA); Nv=[-Ev_2, Ev_1];
+  tmp1=pP+size*cos(angle)*Ev+size*sin(angle)*Nv;
+  tmp2=pP+size*cos(angle)*Ev-size*sin(angle)*Nv;
+  pC=pP+(1-cut)*((tmp1+tmp2)/2-pP);
+  ArrowheadNumber=ArrowheadNumber+1;
+  if(Noflg<2,
+    if(lineflg==1,
+      Listplot("-arh"+nm,[tmp1,pP,tmp2],append(options,"Msg=n")); //191106
     ,
-      if(Noflg==1,Ltype=0);
+      Listplot("-arh"+nm,[tmp1,pP,tmp2,pC,tmp1],["dr,0.1","Color="+color,"Msg=n"]); //191106
+    fillpoly(parse("arh"+nm),color->color); // 
     );
+    if(lineflg==0,
+      if(segpos==1,pB=pC); //191202
+    );
+    Listplot("-ar"+nm,[pA,pB],[Ltype,"Color="+color,"Msg=n"]); 
   );
-  Setscaling(scaley); //190412
-  [Lcrd(pA),Lcrd(pB)];
+  SCALEY=scaley; //200114
+  [LLcrd(pA),LLcrd(pB)];
 );
 Divoptions(options):=(
-  regional(Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,color,opstr,opcindy,flg,
-       tmp,tmp1,tmp2);
+  regional(Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,
+      color,opstr,opcindy,flg,tmp,tmp1,tmp2);
   Ltype="dr";  // 2015.01.13
   Noflg=0;
   Inflg=0;
@@ -349,7 +346,7 @@ Divoptions(options):=(
   eqL=[];
   realL=[];
   strL=[];
-  color=KCOLOR; //180603
+  color=Colorcmyk2rgb(KCOLOR); //200513
   opstr="";
   opcindy="";
   forall(options,
@@ -374,8 +371,9 @@ Divoptions(options):=(
               tmp1=Colorcmyk2rgb(tmp1);
             );
           ,
-            tmp1=Colorname2rgb(tmp2); color=tmp1; //181212
-         );
+            color=Colorname2cmyk(tmp2);//200425
+            tmp1=Colorcmyk2rgb(color); ;//200425
+          );
           tmp="color->"+text(tmp1);
           opcindy=opcindy+","+tmp;
         ,
@@ -438,7 +436,8 @@ Divoptions(options):=(
     );
   );
   if(indexof(opcindy,"color->")==0,// 16.10.07from
-    opcindy=opcindy+",color->"+text(KCOLOR);
+    tmp=Colorcmyk2rgb(KCOLOR); //200513[2lines]
+    opcindy=opcindy+",color->"+text(tmp);
   );
   [Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,color,opstr,opcindy];
 );
@@ -453,15 +452,27 @@ Strsplit(str,key):=( //180505
   out=append(out,substring(str,start,length(str)));
   out;
 );
-Colorcmyk2rgb(clr):=(
-  regional(clrnew,tmp,black);
-  black=clr_4;
-  tmp=apply(clr,1-min(1,#*(1-black)+black));
-  clrnew=tmp_(1..3);
-  clrnew;
+Indexall(str,key):=(
+  regional(rest,out,flg,tmp,tmp1,);
+  out=[];
+  rest=str;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      tmp=indexof(rest,key);
+      if(tmp>0,
+        tmp1=tmp+length(str)-length(rest);
+        out=append(out,tmp1);
+        rest=substring(rest,tmp,length(rest));
+      ,
+        flg=1;
+      );
+    );
+  );
+  out;
 );
-Colorname2rgb(name):=( //181212
-  regional(dL,nameL,codeL,tmp);
+Colorname2cmyk(name):=( //181212
+  regional(dL,code,tmp);
   dL=[
     ["greenyellow",[0.15,0,0.69,0]],["yellow",[0,0,1,0]],
     ["goldenrod",[0,0.1,0.84,0]],["dandelion",[0,0.29,0.84,0]],
@@ -482,7 +493,8 @@ Colorname2rgb(name):=( //181212
     ["plum",[0.5,1,0,0]],["violet",[0.79,0.88,0,0]],
     ["royalpurple",[0.75,0.9,0,0]],["blueviolet",[0.86,0.91,0,0.04]],
     ["periwinkle",[0.57,0.55,0,0]], ["cadetblue",[0.62,0.57,0.23,0]],
-    ["cornflowerblue",[0.65,0.13,0,0]],["midnightblue",[0.98,0.13,0,0.43]],
+    ["cornflowerblue",[0.65,0.13,0,0]],
+    ["midnightblue",[0.98,0.13,0,0.43]],
     ["navyblue",[0.94,0.54,0,0]],["royalblue",[1,0.5,0,0]],
     ["blue",[1,1,0,0]],["cerulean",[0.94,0.11,0,0]],
     ["cyan",[1,0,0,0]],["processblue",[0.96,0,0,0]],
@@ -498,13 +510,13 @@ Colorname2rgb(name):=( //181212
     ["tan",[0.14,0.42,0.56,0]],["gray",[0,0,0,0.5]],
     ["lightgray",[0,0,0,0.15]], //190429,0809
     ["cindycolor",[0.66,0,69,0.71]], //190504
-    ["black",[0,0,0,1]],["white",[0,0,0,0]],["offwhite",[0,0,0,0.03]] //190809
+    ["black",[0,0,0,1]],["white",[0,0,0,0]],
+    ["offwhite",[0,0,0,0.03]] //190809
   ];
   tmp=select(dL,#_1==name);
   if(length(tmp)>0,
     tmp=tmp_1;
     code=tmp_2;
-    code=Colorcmyk2rgb(code);
   ,
     println("    "+name+" not found");
     code=Assign(name); //190323
@@ -570,6 +582,13 @@ Assign(funstr,varname,rep,precise):=(
   );
   funstr=tmp2+funstr;
   funstr;
+);
+Colorcmyk2rgb(clr):=(
+  regional(clrnew,tmp,black);
+  black=clr_4;
+  tmp=apply(clr,1-min(1,#*(1-black)+black));
+  clrnew=tmp_(1..3);
+  clrnew;
 );
 Listplot(list):=Listplot(list,[]);
 Listplot(Arg1,Arg2):=(
@@ -666,28 +685,24 @@ Getlinestyle(str,name):=(
     if(length(tmp2)==0,tmp2="1"); //190125
     Ltype=[0,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
-      Drwline(name+Dop);
     );
   );
   if(tmp1=="DA",
     if(length(tmp2)==0,tmp2="1,1"); //190125
     Ltype=[1,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
-      Dashline(name+Dop);
     );
   );
   if(tmp1=="ID",
     if(length(tmp2)==0,tmp2="1,1"); //190125
     Ltype=[2,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
-      Invdashline(name+Dop);
     );
   );
   if(tmp1=="DO",
     if(length(tmp2)==0,tmp2="1,1"); //190125
     Ltype=[3,tmp2];  //190119
     if(noflg==0 & subflg==0, // 16.02.29
-      Dottedline(name+Dop);
     );
   );
   if(tmp1=="DP",
@@ -700,152 +715,12 @@ Getlinestyle(str,name):=(
     );
     tmp2=substring(tmp2,0,length(tmp2)-1);
     if(noflg==0,
-      Drwpt(tmp2+Dop);
     );
   );
   if(tmp1=="NO", //190818from
     Ltype=[-1,"0"];
   );  //190818to
   Ltype;
-);
-Dashline(gstr):=(
-  Com2nd("Dashline("+gstr+")");
-);
-Drwpt(pstr):=Drwpt(pstr,1); //181231
-Drwpt(ptlist,nn):=(  // 16.03.05 from
-  if(!isreal(DrwPtCtr), //181231from
-    DrwPtCtr=1;
-  );
-  Pointdata(text(DrwPtCtr),ptlist,["Inside="+text(nn)]);
-  DrwPtCtr=DrwPtCtr+1; //181231to
-);
-Pointdata(nm,list):=Pointdata(nm,list,[]);
-Pointdata(nm,listorg,options):=(
-  regional(list,name,nameL,ptlist,opstr,opcindy,Msg,
-      eqL,dispflg,size,thick,tmp,tmp1,tmp2,tmp3,
-      Ltype,Noflg,color,inside,border);
-  name="pt"+nm;
-  nameL=name+"L";
-  tmp=Divoptions(options);
-  Ltype=tmp_1;
-  Noflg=tmp_2;
-  eqL=tmp_5;
-  opstr=tmp_(length(tmp)-1);
-  color=tmp_(length(tmp)-2);
-  opcindy=tmp_(length(tmp));
-  size="";
-  dispflg="Y";
-  inside=color;
-  border="Y";
-  Msg="Y";
-  forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    if(tmp1=="S",
-      size=tmp_2; //190406from
-      tmp1=parse(size);
-      opcindy=opcindy+",size->"+text(tmp1); //190409to
-    );
-    if(tmp1=="D", //181030from
-      dispflg=Toupper(substring(tmp_2,0,1));
-    );
-    if(tmp1=="I", //190628from
-      tmp2=Toupper(substring(tmp_2,0,1));
-      if(tmp2=="[",
-        tmp=parse(tmp_2);
-        if(length(tmp)==4,
-          tmp=Colorcmyk2rgb(tmp);
-        );
-        inside=text(tmp);
-      ,
-        if(contains(["0","1"],tmp2),
-          tmp=[1,1,1]-color;
-          tmp=parse(tmp_2)*tmp;
-          inside=[1,1,1]-tmp;
-        ,
-          if(tmp2=="N",
-            inside=[1,1,1];
-          ,
-            inside=Colorname2rgb(tmp_2);
-          );
-        );
-        tmp1=indexof(opcindy,"color->");
-        tmp=substring(opcindy,tmp1,length(opcindy));
-        tmp2=indexof(tmp,"]");
-        tmp=substring(tmp,tmp2,length(tmp));
-        opcindy=substring(opcindy,0,tmp1-1)+"color->"+text(inside)+tmp;
-      );
-    );  //190628to
-    if(tmp1=="B", //1810628from
-      border=Toupper(substring(tmp_2,0,1));
-      if(border=="N",
-        opcindy=opcindy+",border->false";
-      );
-    ); //1810628to
-    if(tmp1=="M", //190206from
-      Msg=Toupper(substring(tmp_2,0,1));
-    ); //190206to
-  );
-  if(dispflg=="Y", 
-    if(Msg=="Y", //190206
-      println("generate pointdata "+name);
-    );
-  ); //181030to
-  if(isstring(listorg),
-    list=parse(listorg);
-  ,
-    list=listorg;
-   ); //17.10.23
-  list=apply(list,Lcrd(#));  //190426
-  if(Measuredepth(list)==0,list=[list]);//180530
-  tmp=Measuredepth(list);
-  if(tmp==1,ptlist=list,ptlist=list_1); //190126from
-  tmp=apply(ptlist,[Textformat(Pcrd(#),5)]);
-  tmp1=text(tmp);
-  tmp2=substring(tmp1,1,length(tmp1)-1);
-  tmp3=tmp1;
-  tmp=parse(tmp1);
-  if(length(tmp)==1, //190301from
-    tmp1=Textformat(tmp_1,5);
-  ); //190301to
-  tmp=name+"="+tmp1+";"; //190415
-  parse(tmp);
-  tmp=nameL+"="+tmp3+";"; //190415
-  parse(tmp); //190126to
-  if(Noflg<3,
-    if(isstring(listorg), //17.10.23
-      tmp2=listorg;
-    ,
-      tmp2="list"+PaO(); //17.10.10from
-      forall(list,
-        if(isstring(#),
-          tmp=#;
-        ,
-          if(ispoint(#),
-            tmp=#.name; //190505
-          ,
-            tmp=Textformat(#,6);
-          );
-        );
-        tmp2=tmp2+tmp+",";
-      );
-      tmp2=substring(tmp2,0,length(tmp2)-1)+")";
-    );
-  );
-  if(Noflg<3, //190818
-    if(Noflg<2,tmp=[0,1],tmp=[-1,1]); //190819
-    tmp=[nameL,tmp,opcindy];  //190126
-    GCLIST=append(GCLIST,tmp);
-    if(Noflg==0,
-      if(length(size)>0,
-        Com2nd("Setpt("+size+")");
-      );
-      thick=PenThick/PenThickInit;  // 16.04.09
-      opstr=","+Textformat(inside,2);
-      Com2nd("Drwpt"+PaO()+"list"+PaO()+name+")"+opstr+")");
-    );
-  );
-  ptlist;
 );
 Lcrd(pt):=(
   regional(tmp);
@@ -854,52 +729,21 @@ Lcrd(pt):=(
   ,
     tmp=pt;
   );
-  tmp;
+  re(tmp); //191231
 );
-Measuredepth(list):=( //190423
-  regional(str,nn,tmp,tmp1,tmp2);
-  str=text(list);
-  tmp1=Indexall(str,"[");
-  tmp2=select(tmp1,!contains(tmp1,#+1));
-  nn=tmp2_1;
-  tmp1=substring(str,nn,length(str));
-  tmp=indexof(tmp1,",");
-  tmp1=substring(tmp1,0,tmp-1);
-  if(!ispoint(parse(tmp1)),
-    nn=nn-1;
+Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
+Expr(list):=Expr(list,[]);
+Expr(Pt,Dr,St,options):=Expr([Pt,Dr,St],options); //190409
+Expr(listorg,options):=( //16.10.09
+  regional(list,str,tmp,tmp1,tmp2);
+  list=listorg;
+  forall(1..round(length(list)/3),
+    str=list_(3*#);
+    if(!isstring(str),str=format(str,5));
+    str="$"+str+"$";
+    list_(3*#)=str;
   );
-  nn;
-);
-PaO():=PaO("");
-PaO(Arg):=(
-  regional(out);
-  if(isstring(Arg),
-    out="("+Arg;
-  ,
-    out="";
-    repeat(Arg,
-      out=out+"(";
-    );
-  );
-  out;
-);
-Dqq(str):=DqDq(str); //18.02.11
-DqDq(str):=(
-  unicode("0022")+str+unicode("0022");
-);
-Setscaling(sc):=(
-  regional(tmp);
-  tmp=format(sc,5);
-  if(!islist(sc),
-    SCALEX=1;
-    SCALEY=sc;
-    Com0th("Setscaling("+tmp+")");
-  ,
-    SCALEX=sc_1;
-    SCALEY=sc_2;
-    Com0th("Setscaling("+tmp_1+","+tmp_2+")");
-  );
-  Setwindow("Msg=no");
+  Letter(list,options);
 );
 Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
 Letter(list):=Letter(list,[]);
@@ -1017,20 +861,6 @@ Removespace(str):=(
   );
   out=substring(out,0,tmp);
 );
-Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
-Expr(list):=Expr(list,[]);
-Expr(Pt,Dr,St,options):=Expr([Pt,Dr,St],options); //190409
-Expr(listorg,options):=( //16.10.09
-  regional(list,str,tmp,tmp1,tmp2);
-  list=listorg;
-  forall(1..round(length(list)/3),
-    str=list_(3*#);
-    if(!isstring(str),str=format(str,5));
-    str="$"+str+"$";
-    list_(3*#)=str;
-  );
-  Letter(list,options);
-);
 Windispg():=(
   if(ADDAXES=="1", //181215from
     Drwxy();
@@ -1047,6 +877,9 @@ Windispg(gcLorg):=( //190125
   gcL=select(gcL,#_2_1>=0); //190818
   gsave();
   layer(KETPIClayer);
+  forall(PTSHADElist, //200513from
+    parse(#_2);
+  ); //200513to
   forall(gcL,Nj,
     if(isstring(Nj_1),Dt=parse(Nj_1),Dt=Nj_1);  // 11.17
     if(islist(Dt) & length(Dt)>0,  // 12.19,12.22
@@ -1061,7 +894,8 @@ Windispg(gcLorg):=( //190125
           if(length(Nk)>1,
             tmp3="";
             if(indexof(opcindy,"color")==0, //190122from
-              tmp3=tmp3+",linecolor->"+KCOLOR;
+              tmp=Colorcmyk2rgb(KCOLOR); //200513[2lines]
+              tmp3=tmp3+",linecolor->"+text(tmp);
             );
             tmp3=tmp3+opcindy; 
             if(tmp1==0,  //190126from
@@ -1179,9 +1013,9 @@ Drwxy(add,optionsorg):=(
     if(length(tmp)>0,size=parse(tmp),size=YaSize);
     tmp1=concat(options,[size,YaAngle,YaPosition,YaCut,colorax]);//181216
     tmp=[[xrng_1,org_2],[xrng_2,org_2]];
-    Lightarrowdata("axx"+text(AXCOUNT),tmp,tmp1);
+    Arrowdataseg("axx"+text(AXCOUNT),tmp,tmp1);
     tmp=[[org_1,yrng_1],[org_1,yrng_2]];
-    Lightarrowdata("axy"+text(AXCOUNT),tmp,tmp1); //190419
+    Arrowdataseg("axy"+text(AXCOUNT),tmp,tmp1); //190419
   ,
     tmp=[[xrng_1,org_2],[xrng_2,org_2]];
     tmp1=concat(options,[colorax,"Msg=n"]);//181216,190325
@@ -1197,6 +1031,20 @@ Drwxy(add,optionsorg):=(
   if(add==0, //190103
     Addax(0);
   );
+);
+Measuredepth(list):=( //190423
+  regional(str,nn,tmp,tmp1,tmp2);
+  str=text(list);
+  tmp1=Indexall(str,"[");
+  tmp2=select(tmp1,!contains(tmp1,#+1));
+  nn=tmp2_1;
+  tmp1=substring(str,nn,length(str));
+  tmp=indexof(tmp1,",");
+  tmp1=substring(tmp1,0,tmp-1);
+  if(!ispoint(parse(tmp1)),
+    nn=nn-1;
+  );
+  nn;
 );
 Dashlinedata(dataorg,sen,gap,ptn):=(
   regional(data,eps,dtall,len,lenlist,ii,lenall,kari,
@@ -1278,27 +1126,23 @@ Ketcindyjsscale=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
-Setparent(Cdyname()+"fig");
-Setketcindyjs([]);
+Setketcindyjs(["Nolabel=all","Color=white"]);
+Ketcindyjsmain(["<pf8/fp>_;_;$\vec{a},\overrightarrow{a}$"],[]);
 
-forall(allpoints(),
- parse("p"+#.name+"=Ptpos(#);");
-);
 Addax(0);
 
-pD=pA+(pB-pA)+(pC-pA);
-Arrowdata("1",[pA,pB]);
-Arrowdata("2",[pA,pC]);
-Arrowdata("3",[pA,pD]);
-Listplot("1",[pC,pD,pB],["da"]);
-Pointdata("1",pD,["Size=3","Color=red"]);
-Letter([pD,"ne","D"]);
-Expr([(pA+pB)/2,"se","\vec{a}",(pA+pC)/2,"nw","\vec{b}"]);
-Expr([(pA+pD)/2,"se","\vec{a}+\vec{b}"]);
+Arrowdata("1",[A,B],[2]);
+Arrowdata("2",[A,C],[2]);
+Arrowdata("3",[A,D],[2]);
+Listplot("1",[C,D,B],["da"]);
 
-Figpdf();
+Expr([(A+B)/2,"se","\vec{a}",
+  (A+C)/2,"nw","\vec{b}",
+  (A+D)/2,"se","\vec{a}+\vec{b}"],["Size=1.5"]);
+
 Windispg();
 
+Help("Arrowd");
 ;
 </script>
     <script type="text/javascript">
@@ -1316,25 +1160,28 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, 4.0, -1.3333333333333333], color: [1.0, 0.0, 0.0], labeled: true, size: 3.0, border: true },
-    {name: "B", type: "Free", pos: [4.0, -1.4666813172502484, 1.6278426201754814], color: [1.0, 0.0, 0.0], labeled: true, size: 3.0, border: true },
-    {name: "C", type: "Free", pos: [4.0, -2.478261269561309, -1.7523638292829635], color: [1.0, 0.0, 0.0], labeled: true, size: 3.0, border: true },
+    {name: "A", type: "Free", pos: [4.0, 4.0, -1.3333333333333333], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "B", type: "Free", pos: [4.0, -1.2952380952375104, 1.535404282980049], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "C", type: "Free", pos: [4.0, -2.4782608695653887, -1.7523635838364007], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "a", type: "Segment", color: [0.0, 0.0, 1.0], args: ["A", "B"], visible: false, labeled: true, size: 3.0, border: true },
     {name: "b", type: "Segment", color: [0.0, 0.0, 1.0], args: ["A", "C"], visible: false, labeled: true, size: 3.0, border: true },
     {name: "c", type: "Parallel", color: [0.0, 0.0, 1.0], args: ["b", "B"], visible: false, labeled: true, size: 3.0, border: true },
-    {name: "d", type: "Parallel", color: [0.0, 0.0, 1.0], args: ["a", "C"], visible: false, labeled: true, size: 3.0, border: true }
+    {name: "d", type: "Parallel", color: [0.0, 0.0, 1.0], args: ["a", "C"], visible: false, labeled: true, size: 3.0, border: true },
+    {name: "D", type: "Meet", color: [1.0, 0.0, 0.0], args: ["c", "d"], labeled: false, size: 3.0, border: true }
   ],
   ports: [{
     id: "CSCanvas",
-    width: 872,
-    height: 485,
-    transform: [{visibleRect: [-10.811357544227024, 6.024442494598694, 10.795023562154258, -5.992868097826675]}],
+    width: 752,
+    height: 425,
+    transform: [{visibleRect: [-11.431019306333175, 6.84090492214739, 10.742024325021216, -5.690402981211142]}],
+    axes: true,
     grid: 1.0,
     snap: true,
-    background: "rgb(217,217,217)"
+    background: "rgb(255,255,255)"
   }],
   csconsole: false,
-  cinderella: {build: 1901, version: [2, 9, 1901]}
+  use: ["katex"],
+  cinderella: {build: 1952, version: [3, 0, 1952]}
 });
     </script>
 </head>

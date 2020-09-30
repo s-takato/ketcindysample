@@ -1,6 +1,5 @@
 Ketinit();
 //Setfiles("");
-Setparent(Cdyname()+"fig");
 
 Addax(0);
 Listplot([A,B,C,A]);
