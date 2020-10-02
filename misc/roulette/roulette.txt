@@ -9,23 +9,23 @@ aa=1;
 out=apply(1..100,[#,random()]);
 out=sort(out,#_2);
 seq=apply(out,#_1);
-
-////figures////
-Ketinit();
-Setketcindyjs(["Nolabel=all"]);//no ketjs on
-Seteditable(0,["all=36","Size=18","Width=80"]);//no ketjs off
-
-Addax(0);
-
 pO=[0,0];
 r1=4;
 r2=5;
+
+Initglist();
 Circledata("1",[pO,r1],["Msg=n","dr,2"]);
 Circledata("2",[pO,r2],["Msg=n","dr,2"]);
-str="all=36";// no ketjs off
-//str=Textedit(0);//only ketjs
-if(length(str)>0,parse(str+";"),all=36);
+Setglist();
 
+////figures////
+Ketinit();
+Addglist();
+
+Addax(0);
+
+str=Textedit(0);//
+if(length(str)>0,parse(str+";"),all=36);
 tmp=apply(1..(all),[seq_#,#]);
 tmp=sort(tmp,#_1);
 seq2=apply(tmp,#_2);
@@ -40,10 +40,6 @@ forall(1..all,
   tmp=[cos((ang0+ang1)/2),sin((ang0+ang1)/2)];
   Letter((r1+r2)/2*tmp,"c",text(seq2_#));
 );
-
-//dang=0.025;
-//tmp=[cos(dang),sin(dang)];
-//Listplot("t1",[pO,r1*tmp],["Color=red"]);
 
 ss=Animationparam(0,5,[0,25/aa]);
 ang=-0.1*aa*ss^2+5*ss;

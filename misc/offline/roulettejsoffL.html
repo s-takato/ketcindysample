@@ -24,6 +24,10 @@
    <script type="text/javascript" src="ketcindyjs/Cindy.js"></script>
 
 <script id="csinit" type="text/x-cindyscript">
+Initglist():=(
+  GCLISTadd=[]; //190719
+  Ketinit(); //190802
+);
 Ketinit():=Ketinit("fig",0.3); //190831from
 Ketinit(Arg):=(//181001from
   if(isstring(Arg),
@@ -226,9 +230,6 @@ Toupper(str):=(
     );
   );
   out;
-);
-Addax(param):=(
-  ADDAXES=text(param);
 );
 Circledata(cenrad):=Circledata(cenrad,[]);
 Circledata(para1,para2):=(
@@ -752,6 +753,19 @@ Getlinestyle(str,name):=(
   );  //190818to
   Ltype;
 );
+Setglist():=(
+  GCLISTadd=GCLIST;
+  VLISTadd=VLIST; //200124[2lines]
+  FUNLISTadd=FUNLIST;
+);
+Addglist():=(
+  GCLIST=GCLISTadd;
+  VLIST=VLISTadd; //200124[2lines]
+  FUNLIST=FUNLISTadd;
+);
+Addax(param):=(
+  ADDAXES=text(param);
+);
 Textedit(no):=(
   regional(tmp,tmp1,tmp2);
   tmp="Text"+text(no)+".currenttext";
@@ -1251,21 +1265,24 @@ aa=1;
 out=apply(1..100,[#,random()]);
 out=sort(out,#_2);
 seq=apply(out,#_1);
+pO=[0,0];
+r1=4;
+r2=5;
+
+Initglist();
+Circledata("1",[pO,r1],["Msg=n","dr,2"]);
+Circledata("2",[pO,r2],["Msg=n","dr,2"]);
+Setglist();
 ;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
+Addglist();
 
 Addax(0);
 
-pO=[0,0];
-r1=4;
-r2=5;
-Circledata("1",[pO,r1],["Msg=n","dr,2"]);
-Circledata("2",[pO,r2],["Msg=n","dr,2"]);
 str=Textedit(0);//
 if(length(str)>0,parse(str+";"),all=36);
-
 tmp=apply(1..(all),[seq_#,#]);
 tmp=sort(tmp,#_1);
 seq2=apply(tmp,#_2);
@@ -1280,7 +1297,6 @@ forall(1..all,
   tmp=[cos((ang0+ang1)/2),sin((ang0+ang1)/2)];
   Letter((r1+r2)/2*tmp,"c",text(seq2_#));
 );
-
 
 ss=Animationparam(0,5,[0,25/aa]);
 ang=-0.1*aa*ss^2+5*ss;
@@ -1320,16 +1336,16 @@ var cdy = CindyJS({
     {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text0", type: "EditableText", pos: [4.0, -2.143344709897611, -0.4981390922397675], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "all=36", textsize: 18.0},
-    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\naa=1/(0.25+0.75*random());", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [284.0, 36.0]}},
-    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [349.0, 36.0]}},
-    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [425.0, 36.0]}},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\nvs=0;\n", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [481.0, 36.0]}}
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\naa=1/(0.25+0.75*random());", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [284.0, 39.0]}},
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [349.0, 39.0]}},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [425.0, 39.0]}},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\nvs=0;\n", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [481.0, 39.0]}}
   ],
   ports: [{
     id: "CSCanvas",
     width: 785,
-    height: 476,
-    transform: [{visibleRect: [-10.959864218555557, 6.321366846057205, 11.2426994241957, -7.141588942413621]}],
+    height: 459,
+    transform: [{visibleRect: [-10.959864218555557, 6.321366846057205, 11.2426994241957, -6.660769092825378]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
