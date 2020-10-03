@@ -1286,6 +1286,9 @@ if(length(str)>0,parse(str+";"),all=36);
 tmp=apply(1..(all),[seq_#,#]);
 tmp=sort(tmp,#_1);
 seq2=apply(tmp,#_2);
+str=Textedit(10);//
+if(length(str)>0,parse(str+";"),rat=3);
+
 
 wL=[];
 forall(1..all,
@@ -1298,13 +1301,17 @@ forall(1..all,
   Letter((r1+r2)/2*tmp,"c",text(seq2_#));
 );
 
-ss=Animationparam(0,5,[0,25/aa]);
-ang=-0.1*aa*ss^2+5*ss;
+mxs=12/aa;
+s=Animationparam(0,1,[0,mxs]);
+ss=rat*s;
+b=2;
+c=b/(2*rat*mxs);
+ang=-c*ss^2+b*ss;
 
-Eps=0.01;
+Eps=0.001;
 dang=0.025;
 flg=0;
-if(ss>25/aa-Eps,
+if(s>mxs-Eps,
   ang2=mod(ang,2*pi);
   tmp=select(wL,|ang2-#|<dang);
   if(length(tmp)>0,
@@ -1336,16 +1343,17 @@ var cdy = CindyJS({
     {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text0", type: "EditableText", pos: [4.0, -2.143344709897611, -0.4981390922397675], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "all=36", textsize: 18.0},
-    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\naa=1/(0.25+0.75*random());", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [284.0, 39.0]}},
-    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [349.0, 39.0]}},
-    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [425.0, 39.0]}},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\nvs=0;\n", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [481.0, 39.0]}}
+    {name: "Text10", type: "EditableText", pos: [4.0, -1.5123674911660778, -0.4997353701560712], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "rat=3", textsize: 18.0},
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\naa=1/(0.25+0.75*random());", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [284.0, 31.0]}},
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [349.0, 31.0]}},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [425.0, 31.0]}},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\nvs=0;\n", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [481.0, 31.0]}}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 785,
-    height: 459,
-    transform: [{visibleRect: [-10.959864218555557, 6.321366846057205, 11.2426994241957, -6.660769092825378]}],
+    width: 789,
+    height: 511,
+    transform: [{visibleRect: [-9.849167128077191, 6.016663125622447, 10.390901204204098, -7.091923588947563]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],

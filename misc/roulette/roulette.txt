@@ -21,14 +21,22 @@ Setglist();
 ////figures////
 Ketinit();
 Addglist();
+Setketcindyjs(["Nolabel=all"]);//no ketjs on
+Seteditable(0,["all=36","Size=18","Width=80"]);
+Seteditable(10,["rat=3","Size=18","Width=80"]);//no ketjs off
 
 Addax(0);
 
-str=Textedit(0);//
+str="all=36";// no ketjs off
+//str=Textedit(0);//only ketjs
 if(length(str)>0,parse(str+";"),all=36);
 tmp=apply(1..(all),[seq_#,#]);
 tmp=sort(tmp,#_1);
 seq2=apply(tmp,#_2);
+str="rat=3";// no ketjs off
+//str=Textedit(10);//only ketjs
+if(length(str)>0,parse(str+";"),rat=3);
+
 
 wL=[];
 forall(1..all,
@@ -40,14 +48,22 @@ forall(1..all,
   tmp=[cos((ang0+ang1)/2),sin((ang0+ang1)/2)];
   Letter((r1+r2)/2*tmp,"c",text(seq2_#));
 );
+//dang=0.025;
+//tmp=[cos(dang),sin(dang)];
+//Listplot("t1",[pO,r1*tmp],["Color=red"]);
 
-ss=Animationparam(0,5,[0,25/aa]);
-ang=-0.1*aa*ss^2+5*ss;
+//rat=3;
+mxs=12/aa;
+s=Animationparam(0,1,[0,mxs]);
+ss=rat*s;
+b=2;
+c=b/(2*rat*mxs);
+ang=-c*ss^2+b*ss;
 
-Eps=0.01;
+Eps=0.001;
 dang=0.025;
 flg=0;
-if(ss>25/aa-Eps,
+if(s>mxs-Eps,
   ang2=mod(ang,2*pi);
   tmp=select(wL,|ang2-#|<dang);
   if(length(tmp)>0,
