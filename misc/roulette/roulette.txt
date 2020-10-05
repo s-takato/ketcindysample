@@ -1,8 +1,22 @@
 ////ketlib////
-use("KetCindyPlugin");
-Dircdy=loaddirectory;
-setdirectory(gethome());
-import("ketcindy.ini");
+Maketable(all):=(
+ Circledata("1",[pO,r1],["Msg=n","dr,2"]);
+ Circledata("2",[pO,r2],["Msg=n","dr,2"]);
+ tmp=apply(1..(all),[seq_#,#]);
+ tmp=sort(tmp,#_1);
+ seq2=apply(tmp,#_2);
+ wL=[];
+ forall(1..all,
+   ang0=(#-1)*2*pi/all;
+   ang1=#*2*pi/all;
+   wL=append(wL,ang0);
+   tmp=[cos(ang0),sin(ang0)];
+   Listplot(text(#),[r1*tmp,r2*tmp],["dr,3","Msg=n"]);
+   tmp=[cos((ang0+ang1)/2),sin((ang0+ang1)/2)];
+   Letter((r1+r2)/2*tmp,"c",text(seq2_#));
+ );
+ allinit=all;
+);
 
 aa=1;
 
@@ -13,46 +27,30 @@ pO=[0,0];
 r1=4;
 r2=5;
 
+allinit=36;
 Initglist();
-Circledata("1",[pO,r1],["Msg=n","dr,2"]);
-Circledata("2",[pO,r2],["Msg=n","dr,2"]);
+Maketable(allinit);
 Setglist();
 
 ////figures////
 Ketinit();
 Addglist();
-Setketcindyjs(["Nolabel=all"]);//no ketjs on
-Seteditable(0,["all=36","Size=18","Width=80"]);
-Seteditable(10,["rat=3","Size=18","Width=80"]);//no ketjs off
 
 Addax(0);
 
-str="all=36";// no ketjs off
-//str=Textedit(0);//only ketjs
+str=Textedit(0);//
 if(length(str)>0,parse(str+";"),all=36);
-tmp=apply(1..(all),[seq_#,#]);
-tmp=sort(tmp,#_1);
-seq2=apply(tmp,#_2);
-str="rat=3";// no ketjs off
-//str=Textedit(10);//only ketjs
+
+if(all!=allinit,
+ Initglist();
+ Maketable(all);
+ Setglist();
+);
+
+str=Textedit(10);//
 if(length(str)>0,parse(str+";"),rat=3);
 
 
-wL=[];
-forall(1..all,
-  ang0=(#-1)*2*pi/all;
-  ang1=#*2*pi/all;
-  wL=append(wL,ang0);
-  tmp=[cos(ang0),sin(ang0)];
-  Listplot(text(#),[r1*tmp,r2*tmp],["dr,3","Msg=n"]);
-  tmp=[cos((ang0+ang1)/2),sin((ang0+ang1)/2)];
-  Letter((r1+r2)/2*tmp,"c",text(seq2_#));
-);
-//dang=0.025;
-//tmp=[cos(dang),sin(dang)];
-//Listplot("t1",[pO,r1*tmp],["Color=red"]);
-
-//rat=3;
 mxs=12/aa;
 s=Animationparam(0,1,[0,mxs]);
 ss=rat*s;
@@ -77,4 +75,4 @@ if(flg==0,
   Arrowdata("1",[[0,0],r1*[cos(ang),sin(ang)]],[3,"dr,2"]);
 );
 
-Windispg();
+Windispg();g();
