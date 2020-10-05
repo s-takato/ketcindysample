@@ -1,4 +1,18 @@
+////Play button////
+resetclock();
+playanimation();
+Animeflg=1;
+Dirflg=1;
+sorg=Current;
+aa=1/(0.25+0.75*random());
+angstart=ang2;
+
 ////ketlib////
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
 Maketable(all):=(
  Circledata("1",[pO,r1],["Msg=n","dr,2"]);
  Circledata("2",[pO,r2],["Msg=n","dr,2"]);
@@ -26,6 +40,7 @@ seq=apply(out,#_1);
 pO=[0,0];
 r1=4;
 r2=5;
+angstart=0;
 
 allinit=36;
 Initglist();
@@ -35,10 +50,14 @@ Setglist();
 ////figures////
 Ketinit();
 Addglist();
+Setketcindyjs(["Nolabel=all"]);//no ketjs on
+Seteditable(0,["all=36","Size=18","Width=80"]);
+Seteditable(10,["rat=3","Size=18","Width=80"]);//no ketjs off
 
 Addax(0);
 
-str=Textedit(0);//
+str="all=36";// no ketjs off
+//str=Textedit(0);//only ketjs
 if(length(str)>0,parse(str+";"),all=36);
 
 if(all!=allinit,
@@ -47,22 +66,28 @@ if(all!=allinit,
  Setglist();
 );
 
-str=Textedit(10);//
+str="rat=3";// no ketjs off
+//str=Textedit(10);//only ketjs
 if(length(str)>0,parse(str+";"),rat=3);
 
 
+
+//dang=0.025;
+//tmp=[cos(dang),sin(dang)];
+//Listplot("t1",[pO,r1*tmp],["Color=red"]);
+
+//rat=3;
 mxs=12/aa;
 s=Animationparam(0,1,[0,mxs]);
 ss=rat*s;
 b=2;
 c=b/(2*rat*mxs);
-ang=-c*ss^2+b*ss;
-
+ang=angstart-c*ss^2+b*ss;
+ang2=mod(ang,2*pi);
 Eps=0.001;
 dang=0.025;
 flg=0;
 if(s>mxs-Eps,
-  ang2=mod(ang,2*pi);
   tmp=select(wL,|ang2-#|<dang);
   if(length(tmp)>0,
     th=tmp_1;
@@ -75,4 +100,4 @@ if(flg==0,
   Arrowdata("1",[[0,0],r1*[cos(ang),sin(ang)]],[3,"dr,2"]);
 );
 
-Windispg();g();
+Windispg();

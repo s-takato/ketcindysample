@@ -760,8 +760,8 @@ Ketinit(work,strictsep):=( //200509
   YasenStyle="dr,1"; Yajiristyle="tf";
   KETPICCOUNT=1;
   KCOLOR=[0,0,0,1]; //200513,200618
-  GLIST=[];//if(!islist(GLISTadd),GLIST=[],GLIST=GLISTadd); //200123
-  GCLIST=[];//if(!islist(GCLISTadd),GCLIST=[],GCLIST=GCLISTadd); //200123
+  GLIST=[]; //201005rechanged
+  GCLIST=[]; //201005rechanged
   if(!islist(VLISTadd),VLIST=[],VLIST=VLISTadd); //200123
   if(!islist(FUNLISTadd),FUNLIST=[],FUNLIST=FUNLISTadd); //200123
   LETTERlist=[];
@@ -1294,6 +1294,7 @@ seq=apply(out,#_1);
 pO=[0,0];
 r1=4;
 r2=5;
+angstart=0;
 
 allinit=36;
 Initglist();
@@ -1327,13 +1328,12 @@ s=Animationparam(0,1,[0,mxs]);
 ss=rat*s;
 b=2;
 c=b/(2*rat*mxs);
-ang=-c*ss^2+b*ss;
-
+ang=angstart-c*ss^2+b*ss;
+ang2=mod(ang,2*pi);
 Eps=0.001;
 dang=0.025;
 flg=0;
 if(s>mxs-Eps,
-  ang2=mod(ang,2*pi);
   tmp=select(wL,|ang2-#|<dang);
   if(length(tmp)>0,
     th=tmp_1;
@@ -1365,16 +1365,16 @@ var cdy = CindyJS({
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text0", type: "EditableText", pos: [4.0, -2.143344709897611, -0.4981390922397675], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "all=36", textsize: 18.0},
     {name: "Text10", type: "EditableText", pos: [4.0, -1.5123674911660778, -0.4997353701560712], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "rat=3", textsize: 18.0},
-    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\naa=1/(0.25+0.75*random());", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [284.0, 32.0]}},
-    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [349.0, 32.0]}},
-    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [425.0, 32.0]}},
-    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\nvs=0;\n", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [481.0, 32.0]}}
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\naa=1/(0.25+0.75*random());\nangstart=ang2;", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [284.0, 38.0]}},
+    {name: "Text72", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 18.0, dock: {corner: "LL", offset: [349.0, 38.0]}},
+    {name: "Text73", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 18.0, dock: {corner: "LL", offset: [425.0, 38.0]}},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\nvs=0;\n", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [481.0, 38.0]}}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 779,
-    height: 552,
-    transform: [{visibleRect: [-9.086996012537409, 6.101438000595522, 9.371334870817588, -6.978149480292743]}],
+    width: 764,
+    height: 558,
+    transform: [{visibleRect: [-9.086996012537409, 6.101438000595522, 9.015911297967364, -7.120318909432832]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
