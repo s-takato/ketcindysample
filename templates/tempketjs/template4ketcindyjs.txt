@@ -1,7 +1,7 @@
 //Initialization/ketlib
 use("KetCindyPlugin");
 Dircdy=loaddirectory;
-setdirectory(plugindirectory);
+setdirectory(gethome());
 import("ketcindy.ini");
 
 //Draw/figures

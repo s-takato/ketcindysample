@@ -1,26 +1,53 @@
-Ketinit();
-Setparent(Cdyname()+"fig");
+////ketlib////
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
 
+Initglist();
 Setwindow([-3,5],[-3,5]);
 
-Slider("S",[0,-4],[8,-4]);
-s=S.x/2;
 fun1="x+2";
 fun2="x^2";
-Plotdata("1",fun1,"x",["Num=1"]);
-Plotdata("2",fun2,"x");
+Plotdata("1",fun1,"x",["Num=1","nodisp"]);
+Plotdata("2",fun2,"x",["nodisp"]);
+Listplot("0",[[XMIN,YMAX],[XMAX,YMAX]],["nodisp"]);
+tmp=Intersectcurvespp("gr1","sg0");
+tmp=tmp_1_2;
+Partcrv("1",1,tmp,"gr1");
+tmp=Intersectcurvespp("gr2","sg0");
+Partcrv("2",tmp_1_2,tmp_2_2,"gr2");
+
 n=30;
 forall(1..n,
  x=-1+#/n*3;
  y1=parse(Assign(fun1,["x",x]));
  y2=parse(Assign(fun2,["x",x]));
- Listplot(text(#)+"o",[[x,y1],[x,y2]],["dr,3","Color=gray"]);
+ Listplot(text(#)+"o",[[x,y1],[x,y2]],["dr,3","Color=gray","Msg=n"]);
+ dy=y1-y2;
+);
+Setglist();
+
+////figures////
+Ketinit();
+Addglist();
+Setwindow([-3,5],[-3,5]);
+
+Slider("S",[0,-4],[8,-4]);
+inspect(S,"ptsize",5.1);//no ketjs
+s=S.x/2;
+
+n=30;
+forall(1..n,
+ x=-1+#/n*3;
+ y1=parse(Assign(fun1,["x",x]));
+ y2=parse(Assign(fun2,["x",x]));
  dy=y1-y2;
  y1=y1-s;
  if(y1<0,y1=0);
  y2=y1-dy;
- Listplot(text(#)+"d",[[x,y1],[x,y2]],["dr,3","Color=red"]);
+ Listplot(text(#)+"d",[[x,y1],[x,y2]],["dr,3","Color=red","Msg=n"]);
 );
 
-Figpdf();
 Windispg();
+
