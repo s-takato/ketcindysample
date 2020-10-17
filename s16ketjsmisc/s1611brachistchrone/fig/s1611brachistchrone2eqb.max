@@ -1,0 +1,14 @@
+writefile("/ketcindysample.git/s16ketjsmisc/s1611brachistchrone/fig/s1611brachistchrone2eqb.txt")$/*##*/
+powerdisp:false$/*##*/
+display2d:false$/*##*/
+linel:1000$/*##*/
+assume(g>0)$/*##*/
+fxy:[3*u*(1-u)^2*p1+3*u^2*(1-u)*q1+u^3*5,3*u*(1-u)^2*p2+3*u^2*(1-u)*q2+u^3*(-5)]$/*##*/
+d2:diff(fxy[1],u)^2+diff(fxy[2],u)^2$/*##*/
+n2:2*g*(-fxy[2])$/*##*/
+eq:ratsimp(sqrt(n2/d2))$/*##*/
+tt:ratsimp(1/eq)$/*##*/
+disp(eq)$/*##*/
+disp(tt)$/*##*/
+closefile()$/*##*/
+quit()$/*##*/
