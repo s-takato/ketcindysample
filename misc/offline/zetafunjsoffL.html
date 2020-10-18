@@ -847,6 +847,134 @@ Textedit(no):=(
   tmp1=parse(tmp);
   tmp1;
 );
+Sla2fra(str):=(
+  regional(out,subL,nn,sub,numer,ctr,sla,par,nstr,dstr,
+       tmp,tmp1,tmp2,tmp3,tmp4);
+  numer=".0123456789";
+  numer=apply(1..(length(numer)),numer_#);
+  subL=Strsplit(str,"//");
+  forall(2..(length(subL)),
+    tmp=subL_#;
+    if(substring(tmp,0,1)=="/",
+      subL_#=substring(tmp,1,length(tmp))
+    );
+  ); 
+  forall(1..(length(subL)),nn,
+    sub="("+subL_nn+")";
+    sla=Getlevel(sub,"/");
+    sla=sort(sla,[-#_2,#_1]);
+    if(length(sla)>0,sla=sla_1_1,sla=0);
+    ctr=0;
+    while((sla>0)&(ctr<20),
+      par1=Bracket(sub,"()");
+      par2=Bracket(sub,"{}");
+      tmp1=sla-1;
+      tmp=sub_(tmp1);
+      if((tmp==")")%(tmp=="}"),
+        if(tmp==")",par=par1,par=par2);
+        tmp=select(par,#_1==tmp1);
+        tmp=tmp_1_2;
+        tmp2=select(par,(#_1<tmp1)&(#_2==-tmp));
+        tmp2=tmp2_(-1)_1;
+        nstr=substring(sub,tmp2,tmp1-1);
+        tmp2=tmp2-1;
+      ,
+        if(contains(numer,sub_(tmp1)),
+          tmp2=select(1..(tmp1),!contains(numer,sub_#));
+          if(length(tmp2)>0,tmp2=tmp2_(-1),tmp2=0);
+          nstr=substring(sub,tmp2,tmp1);
+        ,
+          if(substring(sub,tmp1-2,tmp1)=="pi",
+            nstr="pi";
+            tmp2=tmp1-2;
+          ,
+            nstr=sub_(tmp1);
+            tmp2=tmp1-1;
+          );
+        );
+      );
+      tmp3=sla+1;
+      tmp=sub_(tmp3);
+      if((tmp=="(")%(tmp=="{"),
+        if(tmp=="(",par=par1,par=par2);
+        tmp=select(par,#_1==tmp3);
+        tmp=tmp_1_2;
+        tmp4=select(par,(#_1>tmp3)&(#_2==-tmp));
+        tmp4=tmp4_1_1;
+        dstr=substring(sub,tmp3,tmp4-1);
+      ,
+        if(contains(numer,sub_(tmp3)),
+          tmp4=select((tmp3)..(length(sub)),
+            !contains(numer,sub_#));
+          if(length(tmp4)>0,tmp4=tmp4_1-1,tmp4=length(sub));
+          dstr=substring(sub,tmp3-1,tmp4);
+        ,
+          if(substring(sub,tmp3-1,tmp3+1)=="pi",
+            dstr="pi";
+            tmp4=tmp3+1;
+          ,
+            tmp4=tmp3;
+            dstr=sub_(tmp4);
+          );
+        );
+      );
+      sub=substring(sub,0,tmp2)+"fr("+nstr+","+dstr+")"+substring(sub,tmp4,length(sub));
+      sla=Getlevel(sub,"/");
+      sla=sort(sla,[-#_2,#_1]);
+      if(length(sla)>0,sla=sla_1_1,sla=0);
+      ctr=ctr+1;
+    );
+    subL_nn=substring(sub,1,length(sub)-1);
+  );
+  out="";
+  forall(subL,
+    out=out+#+"//";
+  );
+  out=substring(out,0,length(out)-2);
+  out;
+);
+Bracket(str):=Bracket(str,"()");
+Bracket(str,br):=(
+  regional(ph,pt,out,noL,ncL,nall,level,tmp);
+  ph=substring(br,0,1);
+  pt=substring(br,1,2);
+  noL=Indexall(str,ph);
+  ncL=Indexall(str,pt); // 16.05.22until
+  nall=sort(concat(noL,ncL));
+  level=0;
+  out=[];
+  forall(nall,
+    if(contains(noL,#),
+      level=level+1;
+      tmp=[#,level];
+    ,
+      tmp=[#,-level];
+      level=level-1;
+    );
+    out=append(out,tmp);
+  );
+  out;
+);
+Getlevel(str):=Getlevel(str,",");
+Getlevel(str,Arg):=Getlevel(str,Arg,"()");
+Getlevel(str,Arg,bra):=(
+  regional(nL,parL,n,tmp,tmp1,tmp2,out);
+  if(islist(Arg),
+    nL=Arg;
+  ,
+    nL=Indexall(str,Arg);
+  );
+  parL=Bracket(str,bra);
+  if(length(parL)==0,parL=[[0,0]]);
+  out=[];
+  forall(nL,n,
+    tmp2=select(parL,#_1<n);
+    tmp2=tmp2_(-1);
+    if(tmp2_2>=0,tmp=tmp2_2,tmp=-tmp2_2-1);
+    out=append(out,[n,tmp]);
+  );
+  out;
+);
 Tocindyform(str):=( //190521
   regional(out,plv,flg,nn,tmp,tmp1);
   out=str;
@@ -883,28 +1011,6 @@ Tocindyform(str):=( //190521
   );
   out=replace(out,"{","(");
   out=replace(out,"}",")");
-  out;
-);
-Bracket(str):=Bracket(str,"()");
-Bracket(str,br):=(
-  regional(ph,pt,out,noL,ncL,nall,level,tmp);
-  ph=substring(br,0,1);
-  pt=substring(br,1,2);
-  noL=Indexall(str,ph);
-  ncL=Indexall(str,pt); // 16.05.22until
-  nall=sort(concat(noL,ncL));
-  level=0;
-  out=[];
-  forall(nall,
-    if(contains(noL,#),
-      level=level+1;
-      tmp=[#,level];
-    ,
-      tmp=[#,-level];
-      level=level-1;
-    );
-    out=append(out,tmp);
-  );
   out;
 );
 Tocindyformpart(str):=( //190521
@@ -990,7 +1096,7 @@ Totexform(str):=( //190514
     );
   );
   out=replace(out,"$","\cdot ");
-  out=replace(out,"%",""); //190915to
+  out=replace(out,"%"," "); //190915to,201018
   out=replace(out,"  ","\;");
   plv=Bracket(out,"()"); //190515from
   flg=0; //190521from
@@ -1764,13 +1870,15 @@ if((length(tmp)>1)&(length(tmp_2)>0),
  cn=4;
 );
 n=max([round(A.x*cn),1]);
-strk="a_k=fr(1,pi*(k^2))";
+strk="a_k=fr(1,pi*k^2)";
+strk="a_k=1/(pi*k^2)";
 strk=Textedit(50);//
 tmp=Strsplit(strk,"=");
 if(length(tmp)>1,
  ak=tmp_2;
- akc=Tocindyform(ak);
- akt=Totexform(ak);
+ akf=Sla2fra(ak);
+ akc=Tocindyform(akf);
+ akt=Totexform(akf);
  tmp="\displaystyle\theta=\sum_{k=1}^{"+text(n)+"}{"+akt+"}";
  Expr([11,7],"e",tmp,[size]);
 ,
@@ -1819,14 +1927,14 @@ var cdy = CindyJS({
     {name: "SW", type: "Free", pos: [4.0, 4.0, -4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.36363636363636365], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "A", type: "Free", pos: [0.0, -4.0, 4.0], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1, border: true },
-    {name: "Text50", type: "EditableText", pos: [-3.708683473389356, -4.0, -0.40088362495375635], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "a_k=fr(1,pi*(k^2))", textsize: 18.0},
+    {name: "Text50", type: "EditableText", pos: [-3.708683473389356, -4.0, -0.40088362495375635], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "a_k=fr(1,pi*k^2)", textsize: 18.0},
     {name: "Text51", type: "EditableText", pos: [4.0, 3.818731117824773, 0.43237297313743506], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "n=48", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 762,
-    height: 512,
-    transform: [{visibleRect: [-5.941449221410084, 12.507953776900848, 16.11306421396904, -2.3108269040888]}],
+    width: 792,
+    height: 495,
+    transform: [{visibleRect: [-3.979653014914212, 12.228388354918215, 18.94314835099165, -2.098362498772948]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
