@@ -1,36 +1,49 @@
 Ketinit();
-Setparent(Cdyname()+"fig");
-Setketcindyjs(["Nolabel=all","Color=0.1*[0,0,0,1]"]);
-
-tmp=["nodisp","Num=100","r"];
-PlotdataR("1","dnorm(x)","x=[-3,3]",tmp);//no ketjs
-Ketcindyjsdata(["grR1",grR1]);
+Setketcindyjs(["Nolabel=all","Color=offwhite"]);
 
 Setscaling(8);
 Setwindow([-3,3],[-0.05,0.5]);
 
-Putpoint("C",[-2,0],[C.x,0]);//no ketjs
-Putpoint("D",[2,0],[D.x,0]);//no ketjs
+Slider("C",[XMIN,0],[XMAX,0]);
+Slider("D",[XMIN,0],[XMAX,0]);
+inspect(C,"ptsize","5.1");
+inspect(D,"ptsize","5.1");
 
-Listplot("0",grR1);
+make="";
+options=["nodisp","Msg=n"];
+optionR=["Num=100","Pre=",make];
+PlotdataR("1","dnorm(x)","x=[-5,5]",optionR);//no ketjs
+Ketcindyjsdata(["grR1",grR1]);//no ketjs
+//Listplot("-grR1",Unscaling(grR1)); //only ketjs
+Listplot("x",[[XMIN,0],[XMAX,0]],options);
+Listplot("1",[C,C+[0,1]],options);
+Listplot("2",[D,D+[0,1]],["nodisp"]);
 
-Lineplot("1",[C,C+[0,1]],["nodisp"]);
-Lineplot("2",[D,D+[0,1]],["nodisp"]);
-tmp=Intersectcrvs("sg0","ln1");
-p1=tmp_1;
-tmp=Intersectcrvs("sg0","ln2");
-p2=tmp_1;
-Listplot("3",[C,p1],["do"]);
-Listplot("4",[p2,D],["do"]);
-Listplot("5",[D,C],["notex"]);
-Partcrv("1",p1,p2,"sg0",["nodisp"]);
-Shade("1",["sg3","part1","sg4","sg5"],["Color=0.3*[1,0,0,0]"]);
+Ch=["part"];
+if(contains(Ch,"enc"),
+  tmp=["sg1","grR1","Invert(sg2)","Invert(sgx)"];
+  Enclosing("1",tmp,["nodisp"]);
+  options=["Color=0.3*[1,0,0,0]"];
+  Shade(["en1"],options);
+);
+if(contains(Ch,"part"),
+  tmp=Intersectcurves("grR1","sg1");
+  pt1=tmp_1;
+  tmp=Intersectcurves("grR1","sg2");
+  pt2=tmp_1;
+  Partcrv("x",C.xy,D.xy,"sgx",options);
+  Partcrv("1",C,pt1,"sg1",options);
+  Partcrv("2",D.xy,pt2,"sg2",options);
+  Partcrv("g",pt1,pt2,"grR1",options);
+  tmp=["part1","partg","part2","partx"];
+  Joincrvs("1",tmp,["nodisp"]);
+  Shade("1",["join1"],["Color=0.3*[1,0,0,0]"]);
+);
+
 Letter(C-[0,0.02],"s",Sprintf(C.x,2));
 Letter(D-[0,0.02],"s",Sprintf(D.x,2));
 p3=[1,0.4];
-tmp=Integrate("sg0",[C.x,D.x]);
+tmp=Integrate("grR1",[C.x,D.x]);
 Expr(p3,"e","P="+Sprintf(tmp,4),["Size=1.6"]);
 
-Figpdf();
 Windispg();
-
