@@ -1,0 +1,83 @@
+//// ketlb ////
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+Initglist();
+r=10;
+p0=[0,0];
+p1=[r,0];
+Circledata("1",[p0,r],["Rng=[0,pi/2]","Msg=n"]);
+Setglist();
+
+//// figures ////
+Ketinit();
+Addglist();
+Setwindow([-1,11],[-1,11]);
+Slider("A",[0.25,-1],[12,-1]);
+
+//no ketjs on
+inspect(A,"ptsize",5.1);
+Seteditable(51,["n=48","Size=18","Width=200"]);
+tmp1="<pf3/fp>_;$\displaystyle\theta=\sum_{k=1}^n\frac{1}{k^2}";
+tmp2="<\sum_{k=1}^m\frac{1}{k^2}+\sum_{k=m+1}^{n}\dfrac{1}{(k-\tfrac{1}{2})(k+\tfrac{1}{2})}";
+tmp3="<\sum_{k=1}^m\frac{1}{k^2}+\frac{1}{m+\tfrac{1}{2}}$";
+tmp4="&emsp;&emsp;$(1 \le m < n)$";
+Ketcindyjsmain(["<pf5/fp>Basel's Problem",tmp1+tmp2+tmp3+tmp4]);
+////no ketjs off
+
+size="Size=1.5";
+strn="n=48";
+tmp=Strsplit(strn,"=");
+if((length(tmp)>1)&(length(tmp_2)>0),
+ cn=parse(tmp_2)/48*4;
+,
+ cn=4;
+);
+n=max([round(A.x*cn),1]);
+strk="a_k=fr(1,pi*k^2)";
+tmp=Strsplit(strk,"=");
+akc=Tocindyform(tmp_2);
+akt=Totexform(tmp_2);
+tmp="\displaystyle\theta=\sum_{k=1}^{"+text(n)+"}{"+akt+"}";
+Expr([11,7],"e",tmp,[size]);
+t=0;
+ctr=1;
+forall(1..n,k,
+  t=t+parse(akc);
+  pP=r*[cos(t),sin(t)];
+  Listplot(text(ctr),[p0,pP],["Msg=n"]);
+  ctr=ctr+1;
+);
+tmp=parse("sg"+text(ctr-1));
+tmp=tmp_2;
+tmp=arctan2(tmp_1,tmp_2);
+str="\theta="+format(tmp,4)+"=";
+str=str+format(tmp*180/pi,4)+"^{\circ}";
+Expr([11,3],"e",str,[size]);
+pP0=[0,0];
+forall(1..(n-1),m,
+  t1=0;
+  forall(1..m,k,
+    t1=t1+parse(akc);
+  );
+  t1=t1+1/(m+1/2);
+  pP=r*[cos(t1),sin(t1)];
+  Listplot(text(ctr),[p0,pP],["Msg=n","Color=red"]);
+  if((|pP-pP0|>0.4)%(m==n-1),
+    Expr(pP,"ne",m,["Color=red"]);
+  );
+  pP0=pP;
+  ctr=ctr+1;
+);
+
+p2=Ptend("sg1");
+tmp=Assign("E="+akt,["k","1"]);
+Anglemark("1",[p1,p0,p2],[8,tmp,size,"Msg=n"]);
+Expr([11,5],"e","n="+text(n),[size]);
+Htickmark([10,"1"],[size]);
+Vtickmark([10,"1"],[size]);
+
+
+Windispg();
