@@ -1103,6 +1103,44 @@ Totexformpart(str):=( //190514
   );
   out;
 );
+Fracform(x):=Fracform(x,1..100,5);
+Fracform(x,Arg):=( //200329
+  if(islist(Arg),
+    Fracform(x,Arg,5);
+  ,
+    if(Arg<0,Fracform(x,1..100,-Arg),Fracform(x,1..Arg,5));
+  );
+);
+Fracform(x,denorg,deg):=(
+  regional(Eps,denL,fL,flg,tmp,nn,mm,err);
+  Eps=10^(-abs(deg));
+  denL=denorg;
+  if(!islist(denL),denL=1..denL);
+  fL=[];
+  flg=0;
+  forall(denL,
+    if(flg==0,
+      tmp=round(x*#);
+      tmp=[tmp,#,abs(tmp/#-x)];
+      if(tmp_3<Eps,
+        flg=1;
+      ,
+        fL=append(fL,tmp);
+      );
+    );
+  );
+  if(flg==0,
+    fL=sort(fL,#_3);
+    tmp=fL_1;
+  );
+  mm=tmp_1; nn=tmp_2; err=abs(x-mm/nn);
+  if(nn>1,
+    out="fr("+text(mm)+","+text(nn)+")";
+  ,
+    out=text(mm);
+  );
+  [out,"err="+format(err,10),mm,nn]; //190914
+);
 Ptend(Fig):=(
   regional(tmp);
   if(isstring(Fig),tmp=parse(Fig),tmp=Fig);
@@ -1771,6 +1809,8 @@ forall(1..n,k,
   Listplot(text(ctr),[p0,pP],["Msg=n"]);
   ctr=ctr+1;
 );
+t0=t;
+tmp=Fracform(6*t,2500);
 tmp=parse("sg"+text(ctr-1));
 tmp=tmp_2;
 tmp=arctan2(tmp_1,tmp_2);
@@ -1825,8 +1865,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 894,
-    height: 467,
-    transform: [{visibleRect: [-8.484687819283746, 13.128219181145274, 22.039702162364822, -2.8168480687762942]}],
+    height: 450,
+    transform: [{visibleRect: [-8.484687819283746, 13.128219181145274, 22.039702162364822, -2.2364066485436034]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
