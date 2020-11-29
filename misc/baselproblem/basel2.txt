@@ -62,7 +62,7 @@ forall(1..(n-1),m,
   forall(1..m,k,
     t1=t1+parse(akc);
   );
-  t1=t1+1/(m+1/2);
+  t1=t1+1/(pi*(m+1/2));
   pP=r*[cos(t1),sin(t1)];
   Listplot(text(ctr),[p0,pP],["Msg=n","Color=red"]);
   if((|pP-pP0|>0.4)%(m==n-1),

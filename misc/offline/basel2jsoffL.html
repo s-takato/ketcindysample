@@ -1783,7 +1783,7 @@ forall(1..(n-1),m,
   forall(1..m,k,
     t1=t1+parse(akc);
   );
-  t1=t1+1/(m+1/2);
+  t1=t1+1/(pi*(m+1/2));
   pP=r*[cos(t1),sin(t1)];
   Listplot(text(ctr),[p0,pP],["Msg=n","Color=red"]);
   if((|pP-pP0|>0.4)%(m==n-1),
@@ -1824,9 +1824,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 808,
-    height: 444,
-    transform: [{visibleRect: [-8.484687819283746, 13.128219181145274, 19.103351448246503, -2.031544970814418]}],
+    width: 894,
+    height: 467,
+    transform: [{visibleRect: [-8.484687819283746, 13.128219181145274, 22.039702162364822, -2.8168480687762942]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
