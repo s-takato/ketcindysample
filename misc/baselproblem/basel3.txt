@@ -1,0 +1,84 @@
+//// ketlb ////
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+Initglist();
+r=10;
+p0=[0,0];
+p1=[r,0];
+Circledata("1",[p0,r],["Rng=[0,pi/2]","Msg=n"]);
+Setglist();
+
+//// figures ////
+Ketinit();
+Addglist();
+Setwindow([-1,11],[-1,11]);
+Slider("A",[0.25,-1],[12,-1]);
+
+//no ketjs on
+inspect(A,"ptsize",5.1);
+Seteditable(51,["n=48","Size=18","Width=200"]);
+
+tmp0="<pf3/fp>The next inequality was derived by Prof.Oshima.";
+tmp1="<pf3/fp>_;$A_m=\displaystyle\pi\theta_m=\sum_{k=1}^m\frac{1}{k^2}$";
+tmp2="<pf3/fp>_;$B_m=\pi\theta_m+\dfrac{1}{m+\tfrac{1}{2}}$,_;";
+tmp3="$C_m=\pi \theta_m + \dfrac{1}{m+\tfrac{1}{2}}-\dfrac{1}{12(m^2-\tfrac{1}{4})(m+\tfrac{3}{2})}$";
+tmp4="<pf3/fp>_;$\Longrightarrow C_m < A_{\infty} < B_m$";
+Ketcindyjsmain(["<pf5\Longrightarrow /fp>Basel Problem",tmp0,tmp1,tmp2+tmp3,tmp4]);
+////no ketjs off
+
+size="Size=1.5";
+strn="n=48";
+//strn=Textedit(51); // only ketjs
+tmp=Strsplit(strn,"=");
+if((length(tmp)>1)&(length(tmp_2)>0),
+ n=parse(tmp_2);
+,
+ n=48;
+);
+strk="a_k=fr(1,pi*k^2)";
+tmp=Strsplit(strk,"=");
+akc=Tocindyform(tmp_2);
+akt=Totexform(tmp_2);
+m=round(n/12*A.x);
+t=0;
+ctr=1;
+forall(1..m,k,
+  t=t+1/(pi*k^2);//parse(akc);
+  pP=r*[cos(t),sin(t)];
+  Listplot(text(ctr),[p0,pP],["Msg=n","Color=blue"]);ctr=ctr+1;
+);
+tm=t;
+tmp="\displaystyle\theta_{"+text(m)+"}=\sum_{k=1}^{"+text(m)+"}{"+akt+"}";
+Expr([11,7],"e",tmp,[size,"Color=blue"]);
+str="\theta_{"+text(m)+"}="+Sprintf(t,6)+"=";
+str=str+Sprintf(tm*180/pi,6)+"^{\circ}";
+Expr([11,5],"e",str,[size,"Color=blue"]);
+tc=tm+(1/(m+1/2)-1/(12*(m^2-1/4)*(m+3/2)))/pi;
+pP=r*[cos(tc),sin(tc)];
+Listplot(text(ctr),[p0,pP],["Msg=n","Color=black"]);ctr=ctr+1;
+tb=tm+1/(pi*(m+1/2));
+pP=r*[cos(tb),sin(tb)];
+Listplot(text(ctr),[p0,pP],["Msg=n","Color=red"]);ctr=ctr+1;
+
+str="\theta_{\infty}<"+Sprintf(tb,6)+"=";
+str=str+Sprintf(tb*180/pi,6)+"^{\circ}";
+Expr([1,7],"e",str,[size,"Color=red"]);
+str="\theta_{\infty}>"+Sprintf(tc,6)+"=";
+str=str+Sprintf(tc*180/pi,6)+"^{\circ}";
+Expr([1,6],"e",str,[size,"Color=black"]);
+
+
+p2=Ptend("sg1");
+tmp=Assign("E="+akt,["k","1"]);
+Anglemark("1",[p1,p0,p2],[8,tmp,size,"Msg=n"]);
+//Expr([11,5],"e","n="+text(n),[size]);
+Htickmark([10,"1"],[size]);
+Vtickmark([10,"1"],[size]);
+
+
+Windispg();
+
+//Help("Ketcindyjsmain");
