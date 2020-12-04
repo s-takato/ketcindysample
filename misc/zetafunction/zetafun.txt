@@ -16,60 +16,67 @@ Ketinit();
 Addglist();
 //Fontsize("L");
 Setwindow([-1,11],[-1,11]);
-Slider("A",[0,-1],[12,-1]);
+Slider("A",[0.25,-1],[12,-1]);
 
 //no ketjs on
 inspect(A,"ptsize",5.1);
-Seteditable(50,["a_k=fr(1,pi*(k^2))","Size=18","Width=200"]);
-Seteditable(51,["n=48","Size=18","Width=200"]);
+Seteditable(50,["value of s=1","Size=18","Width=200"]);
+Seteditable(51,["number n=48","Size=18","Width=200"]);
 ////no ketjs off
 
 size="Size=1.5";
 
 strn="n=48";
-//strn=Textedit(51);//only ketjs;
+//strn=Textedit(51);//only ketjs
 tmp=Strsplit(strn,"=");
 if((length(tmp)>1)&(length(tmp_2)>0),
- cn=parse(tmp_2)/48*4;
+ n=parse(tmp_2);
 ,
- cn=4;
+ n=48;
 );
-n=max([round(A.x*cn),1]);
-strk="a_k=fr(1,pi*(k^2))";
-//strk=Textedit(50);//only ketjs;
-tmp=Strsplit(strk,"=");
-if(length(tmp)>1,
- ak=tmp_2;
- akc=Tocindyform(ak);
- akt=Totexform(ak);
- tmp="\displaystyle\theta=\sum_{k=1}^{"+text(n)+"}{"+akt+"}";
- Expr([11,7],"e",tmp,[size]);
+m=round(n/12*A.x);
+strs="s=1";
+//strs=Textedit(50);//only ketjs
+tmp=Strsplit(strs,"=");
+if((length(tmp)>1)&(length(tmp_2)>0),
+ s=parse(tmp_2);
 ,
- ak="";
+ s=1;
 );
-if(length(ak)>0,
-  t=0;
-  ctr=1;
-  forall(1..n,k,
-    t=t+parse(akc);
-    pP=r*[cos(t),sin(t)];
-    Listplot(text(ctr),[p0,pP],["Msg=n"]);
-    ctr=ctr+1;
-  );
-  p2=Ptend("sg1");
-  tmp=Assign("E="+akt,["k","1"]);
-  Anglemark("1",[p1,p0,p2],[8,tmp,size,"Msg=n"]);
-  Expr([11,5],"e","n="+text(n),[size]);
-  Htickmark([10,"1"],[size]);
-  Vtickmark([10,"1"],[size]);
-  tmp=parse("sg"+text(ctr-1));
-  tmp=tmp_2;
-  tmp=arctan2(tmp_1,tmp_2);
-  str="\theta="+format(tmp,4)+"=";
-  str=str+format(tmp*180/pi,4)+"^{\circ}";
-  Expr([11,3],"e",str,[size]);
+ak="fr(1,pi*k^("+text(s)+"))";
+akt=Totexform(ak);
+akc=Tocindyform(ak);
+t=0;
+ctr=1;
+forall(1..m,k,
+  t=t+parse(akc);
+  pP=r*[cos(t),sin(t)];
+  Listplot(text(ctr),[p0,pP],["Msg=n","Color=blue"]);
+  ctr=ctr+1;
 );
+p2=Ptend("sg1");
+tmp=Assign("E="+akt,["k","1"]);
+Anglemark("1",[p1,p0,p2],[8,tmp,size,"Msg=n"]);
+Htickmark([10,"1"],[size]);
+Vtickmark([10,"1"],[size]);
+str="\displaystyle\theta_{"+text(m)+"}=";
+str=str+"\sum_{k=1}^{"+text(m)+"}"+akt;
+Expr([11,7],"e",str,[size]);
+
+str="\theta_{"+text(m)+"}="+format(t,4)+"=";
+str=str+format(t*180/pi,4)+"^{\circ}";
+Expr([11,5],"e",str,[size]);
+
+if(s==1,
+  ang=(log(m)+1)/pi;
+  pP=r*[cos(ang),sin(ang)];
+  Listplot("min",[p0,pP],["Msg=n","Color=red"]);
+  Expr(pP,"ne","\frac{\log m+1}{\pi}",["Size=1.5"]);
+  ang=log(m+1)/pi;
+  pP=r*[cos(ang),sin(ang)];
+  Listplot("max",[p0,pP],["Msg=n","Color=black"]);
+  Expr(pP,"ne","\frac{\log(m+1)}{\pi}",["Size=1.5"]);
+);//s=1
 
 Windispg();
 
-//Help("Sete");
