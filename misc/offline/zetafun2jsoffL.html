@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>zetafun.cdy</title>
+    <title>zetafun2.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -848,267 +848,6 @@ Textedit(no):=(
   tmp1=parse(tmp);
   tmp1;
 );
-Totexform(str):=( //190514
-  regional(out,plv,flg,nn,tmp,tmp1,tmp2);
-  out=replace(str,"pi","\pi"); //190715
-  tmp1=apply(0..9,text(#));  //190915from
-  tmp2=Indexall(out,"*");
-  forall(tmp2,
-    tmp=substring(out,#,#+1);
-    if(contains(tmp1,tmp),
-      out=substring(out,0,#-1)+"$"+substring(out,#,length(out));
-    ,
-      out=substring(out,0,#-1)+"%"+substring(out,#,length(out));
-    );
-  );
-  out=replace(out,"$","\cdot ");
-  out=replace(out,"%"," "); //190915to,201018
-  out=replace(out,"  ","\;");
-  plv=Bracket(out,"()"); //190515from
-  flg=0; //190521from
-  if(length(plv)==0,
-    flg=4; //190522
-  );
-  if(flg==0, //190521to
-    tmp=Indexall(out,"("); //190522from
-    tmp1=Indexall(out,")");
-    if(length(tmp)>length(tmp1),
-      flg=2;
-      out=out+"?+)?";
-    );
-    if(length(tmp)<length(tmp1),
-      flg=3;
-      out=out+"?)-?";
-    );  //190522to
-    forall(1..20,
-      if(flg==0,
-        tmp=Totexformpart(out);
-        if(length(tmp)==0,
-          flg=1;
-        ,
-          out=tmp;
-        );
-      );
-    );
-  );
-  if(flg<=1,
-    out=replace(out,"+-","\pm ");
-    out=replace(out,"-+","\mp ");
-    out=replace(out,"<=","\leq ");
-    out=replace(out,">=","\geq ");
-    tmp1=Indexall(out,"^");
-    forall(tmp1,nn,
-      if(substring(out,nn,nn+1)=="(",
-        tmp2=Bracket(substring(out,nn,length(out)),"()");
-        tmp2=select(tmp2,#_2==-1);
-        tmp2=tmp2_1_1+nn;
-        tmp=substring(out,nn+1,tmp2-1);
-        tmp2=substring(out,tmp2,length(out));//190915
-        out=substring(out,0,nn)+"{"+tmp+"}";
-        out=out+tmp2;
-      );
-    );
-  );
-  out;
-);
-Totexformpart(str):=( //190514
-  regional(plv,funL,repL,flg,flgf,nall,nn,fun,funf,
-      frL,fr,out,tmp,tmp1,tmp2,tmp3,tmp4);
-  repL=[ //190515from
-    ["frac",["","{\frac{xx}{yy}}"]], //200730from
-    ["log",["{\log{xx}}","{\log_{xx} yy}"]],
-    ["sqrt",["{\sqrt{xx}}","{\sqrt[xx]{yy}}"]],
-    ["pow",["","{xx}^{yy}"]],
-    ["sin",["{\sin{xx}}","{\sin^{xx}\!{yy}}"]], //200823[3lines]
-    ["cos",["{\cos{xx}}","{\cos^{xx}\!{yy}}"]],
-    ["tan",["{\tan{xx}}","{\tan^{xx}\!{yy}}"]]  //200730to
-  ];
-  funL=apply(repL,substring(#_1,0,2)); //190515to
-  out="";
-  plv=Bracket(str,"()");
-  nall=length(plv);
-  if(nall>0,
-    frL=[];
-    forall(1..nall,nn,
-      tmp1=plv_nn;
-      if(tmp1_2>0,
-        fun="";
-        flgf=0;
-        forall(1..20,
-          if(flgf==0,
-            tmp2=tmp1_1;
-            tmp=substring(str,tmp2-#-1,tmp2-#);
-            if((tmp>="a")&(tmp<="z"),
-              fun=tmp+fun;
-            ,
-              flgf=1;
-            );       
-          );
-        );
-        tmp=substring(fun,0,2); //190515from
-        if(contains(funL,tmp), 
-          tmp=select(repL,substring(#_1,0,2)==tmp);
-          funf=tmp_1_1; //190515to
-          tmp=select(plv,(#_1>tmp1_1)&(#_2==-tmp1_2));
-          tmp=tmp_1_1-1;
-          frL=append(frL,[fun,funf,tmp1_1,tmp,tmp1_2]);
-        );
-      );
-    );
-    if(length(frL)>0,
-      frL=sort(frL,[-#_5]);
-      fr=frL_1;
-      fun=fr_1; funf=fr_2;
-      tmp1=substring(str,fr_3,fr_4);
-      tmp=select(repL,#_1==funf);
-      tmp=tmp_1;
-      tmp2=tmp_2;
-      tmp=Strsplit(tmp1,","); //190515from
-      nn=length(tmp); 
-      if(nn==1,
-        tmp2=Assign(tmp2_1,["xx",tmp_1]);
-      );
-      if(nn==2,
-        tmp2=Assign(tmp2_2,["xx",tmp_1,"yy",tmp_2]);
-      ); //190515to
-      nn=fr_3-length(fun);
-      tmp=substring(str,0,nn-1);
-      out=tmp+tmp2+substring(str,fr_4+1,length(str));
-    ,
-      out="";
-    );
-  );
-  out;
-);
-Bracket(str):=Bracket(str,"()");
-Bracket(str,br):=(
-  regional(ph,pt,out,noL,ncL,nall,level,tmp);
-  ph=substring(br,0,1);
-  pt=substring(br,1,2);
-  noL=Indexall(str,ph);
-  ncL=Indexall(str,pt); // 16.05.22until
-  nall=sort(concat(noL,ncL));
-  level=0;
-  out=[];
-  forall(nall,
-    if(contains(noL,#),
-      level=level+1;
-      tmp=[#,level];
-    ,
-      tmp=[#,-level];
-      level=level-1;
-    );
-    out=append(out,tmp);
-  );
-  out;
-);
-Tocindyform(str):=( //190521
-  regional(out,plv,flg,nn,tmp,tmp1);
-  out=str;
-  out=replace(out,"\",""); //190712[4lines]
-  out=replace(out,"   "," ");
-  out=replace(out,"  "," "); 
-  out=replace(out," ","*"); 
-  plv=Bracket(out,"()");
-  flg=0;
-  if(length(plv)==0,
-    flg=4; //190522
-  );
-  if(flg==0,
-    tmp=Indexall(out,"("); //190522from
-    tmp1=Indexall(out,")");
-    if(length(tmp)>length(tmp1),
-      flg=2;
-      out=out+"?+)?";
-    );
-    if(length(tmp)<length(tmp1),
-      flg=3;
-      out=out+"?)-?";
-    );  //190522to
-    forall(1..20,
-      if(flg==0,
-        tmp=Tocindyformpart(out);
-        if(length(tmp)==0,
-          flg=1;
-        ,
-          out=tmp;
-        );
-      );
-    );
-  );
-  out=replace(out,"{","(");
-  out=replace(out,"}",")");
-  out;
-);
-Tocindyformpart(str):=( //190521
-  regional(plv,funL,repL,flg,flgf,nall,nn,fun,funf,
-      frL,fr,out,tmp,tmp1,tmp2,tmp3,tmp4);
-  repL=[ //190515from
-    ["frac",["","{xx}/{yy}"]],
-    ["log",["log{xx}","log{yy}/log{xx}"]],
-    ["sqrt",["sqrt{xx}","{yy}^(1/{xx})"]], //190522
-    ["pow",["","{xx}^{yy}"]],
-    ["sin",["sin{xx}","{sin{yy}}^{xx}"]], //190522from
-    ["cos",["cos{xx}","{cos{yy}}^{xx}"]],
-    ["tan",["tan{xx}","{tan{yy}}^{xx}"]] //190522to
-  ];
-  funL=apply(repL,substring(#_1,0,2)); //190515to
-  out="";
-  plv=Bracket(str,"()");
-  nall=length(plv);
-  if(nall>0,
-    frL=[];
-    forall(1..nall,nn,
-      tmp1=plv_nn;
-      if(tmp1_2>0,
-        fun="";
-        flgf=0;
-        forall(1..20,
-          if(flgf==0,
-            tmp2=tmp1_1;
-            tmp=substring(str,tmp2-#-1,tmp2-#);
-            if((tmp>="a")&(tmp<="z"),
-              fun=tmp+fun;
-            ,
-              flgf=1;
-            );       
-          );
-        );
-        tmp=substring(fun,0,2); //190515from
-        if(contains(funL,tmp), 
-          tmp=select(repL,substring(#_1,0,2)==tmp);
-          funf=tmp_1_1; //190515to
-          tmp=select(plv,(#_1>tmp1_1)&(#_2==-tmp1_2));
-          tmp=tmp_1_1-1;
-          frL=append(frL,[fun,funf,tmp1_1,tmp,tmp1_2]);
-        );
-      );
-    );
-    if(length(frL)>0,
-      frL=sort(frL,[-#_5]);
-      fr=frL_1;
-      fun=fr_1; funf=fr_2;
-      tmp1=substring(str,fr_3,fr_4);
-      tmp=select(repL,#_1==funf);
-      tmp=tmp_1;
-      tmp2=tmp_2;
-      tmp=Strsplit(tmp1,","); //190515from
-      nn=length(tmp); 
-      if(nn==1,
-        tmp2=Assign(tmp2_1,["xx",tmp_1]);
-      );
-      if(nn==2,
-        tmp2=Assign(tmp2_2,["xx",tmp_1,"yy",tmp_2]);
-      ); //190515to
-      nn=fr_3-length(fun);
-      tmp=substring(str,0,nn-1);
-      out=tmp+tmp2+substring(str,fr_4+1,length(str));
-    ,
-      out="";
-    );
-  );
-  out;
-);
 Ptend(Fig):=(
   regional(tmp);
   if(isstring(Fig),tmp=parse(Fig),tmp=Fig);
@@ -1421,6 +1160,322 @@ Vtickmark(arglist,options):=( //190203
       Expr([[0,arglist_nn],"w1",arglist_(nn+1)],options); //190203
     );
   );//180710to//  tmp=MakeRarg(arglist);
+);
+Fracform(x):=Fracform(x,1..100,5);
+Fracform(x,Arg):=( //200329
+  if(islist(Arg),
+    Fracform(x,Arg,5);
+  ,
+    if(Arg<0,Fracform(x,1..100,-Arg),Fracform(x,1..Arg,5));
+  );
+);
+Fracform(x,denorg,deg):=(
+  regional(Eps,denL,fL,flg,tmp,nn,mm,err);
+  Eps=10^(-abs(deg));
+  denL=denorg;
+  if(!islist(denL),denL=1..denL);
+  fL=[];
+  flg=0;
+  forall(denL,
+    if(flg==0,
+      tmp=round(x*#);
+      tmp=[tmp,#,abs(tmp/#-x)];
+      if(tmp_3<Eps,
+        flg=1;
+      ,
+        fL=append(fL,tmp);
+      );
+    );
+  );
+  if(flg==0,
+    fL=sort(fL,#_3);
+    tmp=fL_1;
+  );
+  mm=tmp_1; nn=tmp_2; err=abs(x-mm/nn);
+  if(nn>1,
+    out="fr("+text(mm)+","+text(nn)+")";
+  ,
+    out=text(mm);
+  );
+  [out,"err="+format(err,10),mm,nn]; //190914
+);
+Totexform(str):=( //190514
+  regional(out,plv,flg,nn,tmp,tmp1,tmp2);
+  out=replace(str,"pi","\pi"); //190715
+  tmp1=apply(0..9,text(#));  //190915from
+  tmp2=Indexall(out,"*");
+  forall(tmp2,
+    tmp=substring(out,#,#+1);
+    if(contains(tmp1,tmp),
+      out=substring(out,0,#-1)+"$"+substring(out,#,length(out));
+    ,
+      out=substring(out,0,#-1)+"%"+substring(out,#,length(out));
+    );
+  );
+  out=replace(out,"$","\cdot ");
+  out=replace(out,"%"," "); //190915to,201018
+  out=replace(out,"  ","\;");
+  plv=Bracket(out,"()"); //190515from
+  flg=0; //190521from
+  if(length(plv)==0,
+    flg=4; //190522
+  );
+  if(flg==0, //190521to
+    tmp=Indexall(out,"("); //190522from
+    tmp1=Indexall(out,")");
+    if(length(tmp)>length(tmp1),
+      flg=2;
+      out=out+"?+)?";
+    );
+    if(length(tmp)<length(tmp1),
+      flg=3;
+      out=out+"?)-?";
+    );  //190522to
+    forall(1..20,
+      if(flg==0,
+        tmp=Totexformpart(out);
+        if(length(tmp)==0,
+          flg=1;
+        ,
+          out=tmp;
+        );
+      );
+    );
+  );
+  if(flg<=1,
+    out=replace(out,"+-","\pm ");
+    out=replace(out,"-+","\mp ");
+    out=replace(out,"<=","\leq ");
+    out=replace(out,">=","\geq ");
+    tmp1=Indexall(out,"^");
+    forall(tmp1,nn,
+      if(substring(out,nn,nn+1)=="(",
+        tmp2=Bracket(substring(out,nn,length(out)),"()");
+        tmp2=select(tmp2,#_2==-1);
+        tmp2=tmp2_1_1+nn;
+        tmp=substring(out,nn+1,tmp2-1);
+        tmp2=substring(out,tmp2,length(out));//190915
+        out=substring(out,0,nn)+"{"+tmp+"}";
+        out=out+tmp2;
+      );
+    );
+  );
+  out;
+);
+Totexformpart(str):=( //190514
+  regional(plv,funL,repL,flg,flgf,nall,nn,fun,funf,
+      frL,fr,out,tmp,tmp1,tmp2,tmp3,tmp4);
+  repL=[ //190515from
+    ["frac",["","{\frac{xx}{yy}}"]], //200730from
+    ["log",["{\log{xx}}","{\log_{xx} yy}"]],
+    ["sqrt",["{\sqrt{xx}}","{\sqrt[xx]{yy}}"]],
+    ["pow",["","{xx}^{yy}"]],
+    ["sin",["{\sin{xx}}","{\sin^{xx}\!{yy}}"]], //200823[3lines]
+    ["cos",["{\cos{xx}}","{\cos^{xx}\!{yy}}"]],
+    ["tan",["{\tan{xx}}","{\tan^{xx}\!{yy}}"]]  //200730to
+  ];
+  funL=apply(repL,substring(#_1,0,2)); //190515to
+  out="";
+  plv=Bracket(str,"()");
+  nall=length(plv);
+  if(nall>0,
+    frL=[];
+    forall(1..nall,nn,
+      tmp1=plv_nn;
+      if(tmp1_2>0,
+        fun="";
+        flgf=0;
+        forall(1..20,
+          if(flgf==0,
+            tmp2=tmp1_1;
+            tmp=substring(str,tmp2-#-1,tmp2-#);
+            if((tmp>="a")&(tmp<="z"),
+              fun=tmp+fun;
+            ,
+              flgf=1;
+            );       
+          );
+        );
+        tmp=substring(fun,0,2); //190515from
+        if(contains(funL,tmp), 
+          tmp=select(repL,substring(#_1,0,2)==tmp);
+          funf=tmp_1_1; //190515to
+          tmp=select(plv,(#_1>tmp1_1)&(#_2==-tmp1_2));
+          tmp=tmp_1_1-1;
+          frL=append(frL,[fun,funf,tmp1_1,tmp,tmp1_2]);
+        );
+      );
+    );
+    if(length(frL)>0,
+      frL=sort(frL,[-#_5]);
+      fr=frL_1;
+      fun=fr_1; funf=fr_2;
+      tmp1=substring(str,fr_3,fr_4);
+      tmp=select(repL,#_1==funf);
+      tmp=tmp_1;
+      tmp2=tmp_2;
+      tmp=Strsplit(tmp1,","); //190515from
+      nn=length(tmp); 
+      if(nn==1,
+        tmp2=Assign(tmp2_1,["xx",tmp_1]);
+      );
+      if(nn==2,
+        tmp2=Assign(tmp2_2,["xx",tmp_1,"yy",tmp_2]);
+      ); //190515to
+      nn=fr_3-length(fun);
+      tmp=substring(str,0,nn-1);
+      out=tmp+tmp2+substring(str,fr_4+1,length(str));
+    ,
+      out="";
+    );
+  );
+  out;
+);
+Bracket(str):=Bracket(str,"()");
+Bracket(str,br):=(
+  regional(ph,pt,out,noL,ncL,nall,level,tmp);
+  ph=substring(br,0,1);
+  pt=substring(br,1,2);
+  noL=Indexall(str,ph);
+  ncL=Indexall(str,pt); // 16.05.22until
+  nall=sort(concat(noL,ncL));
+  level=0;
+  out=[];
+  forall(nall,
+    if(contains(noL,#),
+      level=level+1;
+      tmp=[#,level];
+    ,
+      tmp=[#,-level];
+      level=level-1;
+    );
+    out=append(out,tmp);
+  );
+  out;
+);
+Tocindyform(str):=( //190521
+  regional(out,plv,flg,nn,tmp,tmp1);
+  out=str;
+  out=replace(out,"\",""); //190712[4lines]
+  out=replace(out,"   "," ");
+  out=replace(out,"  "," "); 
+  out=replace(out," ","*"); 
+  plv=Bracket(out,"()");
+  flg=0;
+  if(length(plv)==0,
+    flg=4; //190522
+  );
+  if(flg==0,
+    tmp=Indexall(out,"("); //190522from
+    tmp1=Indexall(out,")");
+    if(length(tmp)>length(tmp1),
+      flg=2;
+      out=out+"?+)?";
+    );
+    if(length(tmp)<length(tmp1),
+      flg=3;
+      out=out+"?)-?";
+    );  //190522to
+    forall(1..20,
+      if(flg==0,
+        tmp=Tocindyformpart(out);
+        if(length(tmp)==0,
+          flg=1;
+        ,
+          out=tmp;
+        );
+      );
+    );
+  );
+  out=replace(out,"{","(");
+  out=replace(out,"}",")");
+  out;
+);
+Tocindyformpart(str):=( //190521
+  regional(plv,funL,repL,flg,flgf,nall,nn,fun,funf,
+      frL,fr,out,tmp,tmp1,tmp2,tmp3,tmp4);
+  repL=[ //190515from
+    ["frac",["","{xx}/{yy}"]],
+    ["log",["log{xx}","log{yy}/log{xx}"]],
+    ["sqrt",["sqrt{xx}","{yy}^(1/{xx})"]], //190522
+    ["pow",["","{xx}^{yy}"]],
+    ["sin",["sin{xx}","{sin{yy}}^{xx}"]], //190522from
+    ["cos",["cos{xx}","{cos{yy}}^{xx}"]],
+    ["tan",["tan{xx}","{tan{yy}}^{xx}"]] //190522to
+  ];
+  funL=apply(repL,substring(#_1,0,2)); //190515to
+  out="";
+  plv=Bracket(str,"()");
+  nall=length(plv);
+  if(nall>0,
+    frL=[];
+    forall(1..nall,nn,
+      tmp1=plv_nn;
+      if(tmp1_2>0,
+        fun="";
+        flgf=0;
+        forall(1..20,
+          if(flgf==0,
+            tmp2=tmp1_1;
+            tmp=substring(str,tmp2-#-1,tmp2-#);
+            if((tmp>="a")&(tmp<="z"),
+              fun=tmp+fun;
+            ,
+              flgf=1;
+            );       
+          );
+        );
+        tmp=substring(fun,0,2); //190515from
+        if(contains(funL,tmp), 
+          tmp=select(repL,substring(#_1,0,2)==tmp);
+          funf=tmp_1_1; //190515to
+          tmp=select(plv,(#_1>tmp1_1)&(#_2==-tmp1_2));
+          tmp=tmp_1_1-1;
+          frL=append(frL,[fun,funf,tmp1_1,tmp,tmp1_2]);
+        );
+      );
+    );
+    if(length(frL)>0,
+      frL=sort(frL,[-#_5]);
+      fr=frL_1;
+      fun=fr_1; funf=fr_2;
+      tmp1=substring(str,fr_3,fr_4);
+      tmp=select(repL,#_1==funf);
+      tmp=tmp_1;
+      tmp2=tmp_2;
+      tmp=Strsplit(tmp1,","); //190515from
+      nn=length(tmp); 
+      if(nn==1,
+        tmp2=Assign(tmp2_1,["xx",tmp_1]);
+      );
+      if(nn==2,
+        tmp2=Assign(tmp2_2,["xx",tmp_1,"yy",tmp_2]);
+      ); //190515to
+      nn=fr_3-length(fun);
+      tmp=substring(str,0,nn-1);
+      out=tmp+tmp2+substring(str,fr_4+1,length(str));
+    ,
+      out="";
+    );
+  );
+  out;
+);
+Sprintf(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(!islist(value),  // 17.03.12from
+    if(isstring(value),
+      vv=value;
+    ,
+      vv=Textformat(value,dig);
+    );  // 17.03.12from
+    if(indexof(vv,".")==0,vv=vv+".");
+    vv=vv+"0000000000000000";
+    tmp=indexof(vv,".")+dig;
+    vv=substring(vv,0,tmp);
+  ,
+    vv=apply(value,Sprintf(#,dig));
+  );
+  vv;
 );
 Windispg():=(
   if(ADDAXES=="1", //181215from
@@ -1754,9 +1809,7 @@ Setwindow([-1,11],[-1,11]);
 Slider("A",[0.25,-1],[12,-1]);
 
 
-size="Size=1.5";
-
-strn="n=48";
+strn="m<=48";
 strn=Textedit(51);//
 tmp=Strsplit(strn,"=");
 if((length(tmp)>1)&(length(tmp_2)>0),
@@ -1765,22 +1818,39 @@ if((length(tmp)>1)&(length(tmp_2)>0),
  n=48;
 );
 m=round(n/12*A.x);
+
 strs="s=1";
-strs=Textedit(50);//
+strs=Textedit(49);//
 tmp=Strsplit(strs,"=");
 if((length(tmp)>1)&(length(tmp_2)>0),
  s=parse(tmp_2);
 ,
  s=1;
 );
-ak="fr(1,pi*k^("+text(s)+"))";
+strp="coeff=fr(1,pi)";
+strp=Textedit(50);//
+tmp=Strsplit(strp,"=");
+if((length(tmp)>1)&(length(tmp_2)>0),
+ strp=tmp_2+"*";
+,
+ strp="";
+);
+
+size="Size=1.5";
+
+ak=strp+"fr(1,k^(s))";
 akt=Totexform(ak);
-akc=Tocindyform(ak);
-t=0;
+str="\displaystyle \theta_m=\sum_{k=1}^m "+akt;
+Expr([11,11.5],"e",str,[size]);
+
+akt=Assign(akt,["s",text(s)]);
+akc=Assign(Tocindyform(ak),["s",s]);
+
+tm=0;
 ctr=1;
 forall(1..m,k,
-  t=t+parse(akc);
-  pP=r*[cos(t),sin(t)];
+  tm=tm+parse(akc);
+  pP=r*[cos(tm),sin(tm)];
   Listplot(text(ctr),[p0,pP],["Msg=n","Color=blue"]);
   ctr=ctr+1;
 );
@@ -1790,23 +1860,91 @@ Anglemark("1",[p1,p0,p2],[8,tmp,size,"Msg=n"]);
 Htickmark([10,"1"],[size]);
 Vtickmark([10,"1"],[size]);
 str="\displaystyle\theta_{"+text(m)+"}=";
-str=str+"\sum_{k=1}^{"+text(m)+"}"+akt;
+str=str+"\sum_{k=1}^{"+text(m)+"}"+Assign(akt,["s",s,"p",p]);
 Expr([11,7],"e",str,[size]);
 
-str="\theta_{"+text(m)+"}="+format(t,4)+"=";
-str=str+format(t*180/pi,4)+"^{\circ}";
+str="\theta_{"+text(m)+"}="+Sprintf(tm,6)+"=";
+str=str+Sprintf(tm*180/pi,6)+"^{\circ}";
 Expr([11,5],"e",str,[size]);
 
+mmin=1;
+mn="";
+mx="";
+flg=0;
+if(s<1,
+  flg=-1;
+);
 if(s==1,
-  ang=(log(m)+1)/pi;
-  pP=r*[cos(ang),sin(ang)];
-  Listplot("min",[p0,pP],["Msg=n","Color=red"]);
-  Expr(pP,"ne","\frac{\log m+1}{\pi}",["Size=1.5"]);
-  ang=log(m+1)/pi;
-  pP=r*[cos(ang),sin(ang)];
-  Listplot("max",[p0,pP],["Msg=n","Color=black"]);
-  Expr(pP,"ne","\frac{\log(m+1)}{\pi}",["Size=1.5"]);
+  mn=strp+"log((m+1))";
+  mx=strp+"(log(m)+1)";
+  ineq=[mn+" < \theta_m < "+mx];
+  rng="vmn < \theta_{m} < vmx";
+  flg=1;
 );//s=1
+
+if((s==2)&(flg==0),
+  mn="\theta_m+"+strp+"(fr(1,m+fr(1,2)))-";
+  mn=mn+strp+"(fr(1,12*(m^2-fr(1,4))*(m+fr(3,2))))";
+  mx="\theta_m+"+strp+"(fr(1,m+fr(1,2)))";
+  ineq=[mn+" \le \theta_{\infty}","\theta_{\infty} \le "+mx];
+  mn=replace(mn,"\theta_m","tm");
+  mx=replace(mx,"\theta_m","tm");
+  rng="vmn < \theta_{\infty} < vmx";
+  flg=1;
+); //s=2;
+
+if((isinteger(s))&(flg==0),
+  tmp="(m+(s-1)/2)";
+  forall(1..(s-1-1),j,
+    tmp=tmp+"*(m+(s-1)/2-"+text(j)+")";
+  );
+  mx="\theta_m+"+strp+"(fr(1,"+tmp+"))";
+  ineq=["\theta_{\infty} \le "+mx];
+  mx=replace(mx,"\theta_m","tm");
+  rng="\theta_{\infty} < vmx";
+  flg=1;
+); //s=integer;
+
+if(flg==0,
+  tmp=Fracform(s-1);
+  J=text(tmp_3);
+  N=text(tmp_4);
+  mx="\theta_m+"+strp;
+  tmp="(fr(N,J)*(m-J+1)^(-J/N))";
+  mx=mx+Assign(tmp,["N",N,"J",J]);
+  ineq=["\theta_{\infty} \le "+mx];
+  mx=replace(mx,"\theta_m","tm");
+  rng="\theta_{\infty} < vmx";
+  mmin=parse(J);
+  flg=1;
+); //s=fracform;
+
+if(flg==1,
+  py=9;
+  forall(ineq,
+    tmp="\displaystyle "+Totexform(#);
+    Expr([-7,py],"e",tmp,[size]);
+    py=py-2;
+  );
+  if((length(mn)>0)&(m>=mmin),
+    mnt=Totexform(mn);
+    mnc=Assign(Tocindyform(mn),["s",s,"m",m]);
+    vmn=parse(mnc);
+    vmns=Sprintf(vmn*180/pi,6);
+    pP=r*[cos(vmn),sin(vmn)];
+    Listplot("min",[p0,pP],["Msg=n","Color=black"]);
+  );
+  if((length(mx)>0)&(m>=mmin),
+    mxt=Totexform(mx);
+    mxc=Assign(Tocindyform(mx),["s",s,"m",m]);
+    vmx=parse(mxc);
+    vmxs=Sprintf(vmx*180/pi,6);
+    pP=r*[cos(vmx),sin(vmx)];
+    Listplot("max",[p0,pP],["Msg=n","Color=red"]);
+  );
+  tmp=Assign(rng,["vmn",vmns+"{}^{\circ}","vmx",vmxs+"{}^{\circ}"]);
+  Expr([11,3],"e",tmp,[size]);
+);
 
 Windispg();
 
@@ -1828,14 +1966,15 @@ var cdy = CindyJS({
     {name: "SW", type: "Free", pos: [4.0, 4.0, -4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.36363636363636365], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "A", type: "Free", pos: [1.0, -4.0, 4.0], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1, border: true },
-    {name: "Text50", type: "EditableText", pos: [-3.708683473389356, -4.0, -0.40088362495375635], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "s=1", textsize: 18.0},
-    {name: "Text51", type: "EditableText", pos: [4.0, 3.818731117824773, 0.43237297313743506], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "n=48", textsize: 18.0}
+    {name: "Text50", type: "EditableText", pos: [4.0, 2.8099999999999996, 0.33318910248712746], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "coeff=fr(1,pi)", textsize: 18.0},
+    {name: "Text51", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "m<=48", textsize: 18.0, dock: {corner: "LL", offset: [683.0, 55.0]}},
+    {name: "Text49", type: "EditableText", pos: [4.0, 3.23, 0.33318910248712746], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "s=1", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 792,
-    height: 513,
-    transform: [{visibleRect: [-6.557837527367559, 13.250733493513854, 17.212447697690138, -2.145928527262153]}],
+    width: 912,
+    height: 495,
+    transform: [{visibleRect: [-7.5769568750000005, 12.798305375000002, 19.790111125000003, -2.055530875]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"

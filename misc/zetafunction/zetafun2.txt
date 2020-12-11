@@ -1,0 +1,172 @@
+////ketlib////
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+Initglist();
+r=10;
+p0=[0,0];
+p1=[r,0];
+Circledata("1",[p0,r],["Rng=[0,pi/2]","Msg=n"]);
+Setglist();
+
+////figures////
+Ketinit();
+Addglist();
+//Fontsize("L");
+Setwindow([-1,11],[-1,11]);
+Slider("A",[0.25,-1],[12,-1]);
+
+//no ketjs on
+inspect(A,"ptsize",5.1);
+Seteditable(49,["s=1","Size=18","Width=100"]);
+Seteditable(50,["coeff=fr(1,pi)","Size=18","Width=150"]);
+Seteditable(51,["m<=48","Size=18","Width=100"]);
+pre=[
+ "<pf5/fp>Rieman zeta function",
+ "<pf3/fp>_;$\zeta(s)=\displaystyle\sum_{k=1}^{\infty} \dfrac{1}{k^s}$_;$s>0$"
+];
+Ketcindyjsmain(pre);
+
+////no ketjs off
+
+strn="m<=48";
+//strn=Textedit(51);//only ketjs
+tmp=Strsplit(strn,"=");
+if((length(tmp)>1)&(length(tmp_2)>0),
+ n=parse(tmp_2);
+,
+ n=48;
+);
+m=round(n/12*A.x);
+
+strs="s=1";
+//strs=Textedit(49);//only ketjs
+tmp=Strsplit(strs,"=");
+if((length(tmp)>1)&(length(tmp_2)>0),
+ s=parse(tmp_2);
+,
+ s=1;
+);
+strp="coeff=fr(1,pi)";
+//strp=Textedit(50);//only ketjs
+tmp=Strsplit(strp,"=");
+if((length(tmp)>1)&(length(tmp_2)>0),
+ strp=tmp_2+"*";
+,
+ strp="";
+);
+
+size="Size=1.5";
+
+ak=strp+"fr(1,k^(s))";
+akt=Totexform(ak);
+str="\displaystyle \theta_m=\sum_{k=1}^m "+akt;
+Expr([11,11.5],"e",str,[size]);
+
+akt=Assign(akt,["s",text(s)]);
+akc=Assign(Tocindyform(ak),["s",s]);
+
+tm=0;
+ctr=1;
+forall(1..m,k,
+  tm=tm+parse(akc);
+  pP=r*[cos(tm),sin(tm)];
+  Listplot(text(ctr),[p0,pP],["Msg=n","Color=blue"]);
+  ctr=ctr+1;
+);
+p2=Ptend("sg1");
+tmp=Assign("E="+akt,["k","1"]);
+Anglemark("1",[p1,p0,p2],[8,tmp,size,"Msg=n"]);
+Htickmark([10,"1"],[size]);
+Vtickmark([10,"1"],[size]);
+str="\displaystyle\theta_{"+text(m)+"}=";
+str=str+"\sum_{k=1}^{"+text(m)+"}"+Assign(akt,["s",s,"p",p]);
+Expr([11,7],"e",str,[size]);
+
+str="\theta_{"+text(m)+"}="+Sprintf(tm,6)+"=";
+str=str+Sprintf(tm*180/pi,6)+"^{\circ}";
+Expr([11,5],"e",str,[size]);
+
+mmin=1;
+mn="";
+mx="";
+flg=0;
+if(s<1,
+  flg=-1;
+);
+if(s==1,
+  mn=strp+"log((m+1))";
+  mx=strp+"(log(m)+1)";
+  ineq=[mn+" < \theta_m < "+mx];
+  rng="vmn < \theta_{m} < vmx";
+  flg=1;
+);//s=1
+
+if((s==2)&(flg==0),
+  mn="\theta_m+"+strp+"(fr(1,m+fr(1,2)))-";
+  mn=mn+strp+"(fr(1,12*(m^2-fr(1,4))*(m+fr(3,2))))";
+  mx="\theta_m+"+strp+"(fr(1,m+fr(1,2)))";
+  ineq=[mn+" \le \theta_{\infty}","\theta_{\infty} \le "+mx];
+  mn=replace(mn,"\theta_m","tm");
+  mx=replace(mx,"\theta_m","tm");
+  rng="vmn < \theta_{\infty} < vmx";
+  flg=1;
+); //s=2;
+
+if((isinteger(s))&(flg==0),
+  tmp="(m+(s-1)/2)";
+  forall(1..(s-1-1),j,
+    tmp=tmp+"*(m+(s-1)/2-"+text(j)+")";
+  );
+  mx="\theta_m+"+strp+"(fr(1,"+tmp+"))";
+  ineq=["\theta_{\infty} \le "+mx];
+  mx=replace(mx,"\theta_m","tm");
+  rng="\theta_{\infty} < vmx";
+  flg=1;
+); //s=integer;
+
+if(flg==0,
+  tmp=Fracform(s-1);
+  J=text(tmp_3);
+  N=text(tmp_4);
+  mx="\theta_m+"+strp;
+  tmp="(fr(N,J)*(m-J+1)^(-J/N))";
+  mx=mx+Assign(tmp,["N",N,"J",J]);
+  ineq=["\theta_{\infty} \le "+mx];
+  mx=replace(mx,"\theta_m","tm");
+  rng="\theta_{\infty} < vmx";
+  mmin=parse(J);
+  flg=1;
+); //s=fracform;
+
+if(flg==1,
+  py=9;
+  forall(ineq,
+    tmp="\displaystyle "+Totexform(#);
+    Expr([-7,py],"e",tmp,[size]);
+    py=py-2;
+  );
+  if((length(mn)>0)&(m>=mmin),
+    mnt=Totexform(mn);
+    mnc=Assign(Tocindyform(mn),["s",s,"m",m]);
+    vmn=parse(mnc);
+    vmns=Sprintf(vmn*180/pi,6);
+    pP=r*[cos(vmn),sin(vmn)];
+    Listplot("min",[p0,pP],["Msg=n","Color=black"]);
+  );
+  if((length(mx)>0)&(m>=mmin),
+    mxt=Totexform(mx);
+    mxc=Assign(Tocindyform(mx),["s",s,"m",m]);
+    vmx=parse(mxc);
+    vmxs=Sprintf(vmx*180/pi,6);
+    pP=r*[cos(vmx),sin(vmx)];
+    Listplot("max",[p0,pP],["Msg=n","Color=red"]);
+  );
+  tmp=Assign(rng,["vmn",vmns+"{}^{\circ}","vmx",vmxs+"{}^{\circ}"]);
+  Expr([11,3],"e",tmp,[size]);
+);
+
+Windispg();
+
