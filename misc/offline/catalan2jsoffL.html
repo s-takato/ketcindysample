@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <title>catalan2.cdy</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #CSConsole {
+            background-color: #FAFAFA;
+            border-top: 1px solid #333333;
+            bottom: 0px;
+            height: 200px;
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="ketcindyjs/CindyJS.css">
+   <script type="text/javascript" src="ketcindyjs/Cindy.js"></script>
+
+<script id="csinit" type="text/x-cindyscript">
+Invert(x):=reverse(x);
+Initglist():=(
+  GCLISTadd=[]; //190719
+  Ketinit(); //190802
+);
+Ketinit():=Ketinit("fig",0.3); //190831from
+Ketinit(Arg):=(//181001from
+  if(isstring(Arg),
+    Ketinit(Arg,0.3);
+  ,
+    Ketinit("fig",Arg);
+  );
+);
+Ketinit(work,strictsep):=( //200509
+ regional(pt,tmp,tmp1,tmp2,letterc,boxc,shadowc,mboxc);
+  PenThickInit=8;
+  ULEN="1cm";
+  MEMORI=0.05;//18.01.15from
+  MEMORIInit=MEMORI;
+  MEMORINow=MEMORI;
+  MARKLEN=0.05;
+  MARKLENInit=MARKLEN; //180504
+  MARKLENNow= MARKLEN;
+  GENTEN=[0,0];//18.01.15to
+  TABLECOUNT=0; //190428
+  KETPICLAYER=20;
+  MilliIn=1/2.54*1000;
+  PenThick=round(MilliIn*0.02);
+  PenThickInit=PenThick;
+  TenSizeInit=0.02;
+  TenSize=TenSizeInit;
+  YaSize=1; YaAngle=18; YaPosition=1;
+  YaCut=0.2; //191203
+  YasenStyle="dr,1"; Yajiristyle="tf";
+  KETPICCOUNT=1;
+  KCOLOR=[0,0,0,1]; //200513,200618
+  GLIST=[]; //201005rechanged
+  GCLIST=[]; //201005rechanged
+  if(!islist(VLISTadd),VLIST=[],VLIST=VLISTadd); //200123
+  if(!islist(FUNLISTadd),FUNLIST=[],FUNLIST=FUNLISTadd); //200123
+  LETTERlist=[];
+  ADDAXES="1";
+  AXSTYLE=[["l","x","e","y","n","O","sw","","",""],[]]; //190901
+  AXCOUNT=1; //181215
+  SHADECTR=1; //190222
+  LFmark=unicode("000a"); Bs=unicode("005c");
+  CRmark=unicode("000d");//16.12.13
+  Dq=unicode("0022");
+  Fillstore(); //181212
+  ArrowlineNumber=1;  // 15.01.05
+  ArrowheadNumber=1;
+  BezierNumber=1; //15.01.03
+  SCALEX=1;
+  SCALEY=1;
+  XMIN=-5;
+  XMAX=5;
+  YMIN=-5;
+  YMAX=5;
+  StrictSep=strictsep; //190831
+  Setwindow("Msg=n"); // 16.05.31
+  forall(remove(allpoints(),[SW,NE]),
+    Strictmove(#.name);
+    Ptpos(#,#.xy); //200529
+  ); //190917
+);
+Setwindow():=Setwindow("Msg=y");
+Setwindow(str):=(
+  regional(tmp,tmp1,tmp2,msg);
+  msg="Y";
+  tmp=indexof(str,"="); // 16.02.10
+  msg=Toupper(substring(str,tmp,tmp+1));
+  Strictmove("SW"); Strictmove("NE");//190927
+  if((ispoint(SW)) & (ispoint(NE)),
+    tmp1=LLcrd(Ptpos(SW));//190912[2lines]
+    tmp2=LLcrd(Ptpos(NE));
+    XMIN=tmp1_1; XMAX=tmp2_1;
+    YMIN=tmp1_2; YMAX=tmp2_2;
+  ,
+    if(!ispoint(SW), //191005from
+      Putpoint("SW",Pcrd([-5,-5]));
+      XMIN=-5; YMIN=-5;
+      Ptpos(SW,SW.xy);
+    );
+    if(!ispoint(NE),
+      Putpoint("NE", Pcrd([5,5]));
+      XMAX=5; YMAX=5;
+      Ptpos(NE,NE.xy);
+    ); //191005to
+  );
+);
+Setwindow(xrange,yrange):=Setwindow(xrange,yrange,"Msg=y");
+Setwindow(xrange,yrange,msg):=(
+  XMIN=xrange_1;
+  XMAX=xrange_2;
+  YMIN=yrange_1;
+  YMAX=yrange_2;
+  Ptpos(SW,Pcrd([XMIN,YMIN])); //190927from
+  Ptpos(NE,Pcrd([XMAX,YMAX]));
+  Strictmove("SW"); Strictmove("NE");
+  layer(KETPICLAYER); 
+  autoclearlayer(KETPICLAYER,true);
+  drawpoly([Pcrd([XMIN,YMIN]), Pcrd([XMAX,YMIN]),
+        Pcrd([XMAX,YMAX]),Pcrd([XMIN,YMAX])],color->[1,1,1]); //190927to
+  if(Toupper(substring(msg,0,1))=="Y", 
+    println("Setwindow(["+XMIN+","+XMAX+"],["+YMIN+","+YMAX+"])");
+  );
+);
+LLcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=pt.xy
+  ,
+    tmp=pt;
+  );
+  tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
+  re(tmp); //191231
+);
+Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
+Putpoint(name,Ptinit,Pt):=(
+  regional(ptstr); 
+    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
+    parse(ptstr);
+    Ptpos(name,Pcrd([Pt_1,Pt_2])); //200529
+);
+Textformat(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(islist(value),
+    tmp1="[";
+    forall(value,
+      tmp1=tmp1+Textformat(#,dig)+",";
+    );
+    if(length(tmp1)>1, //18.01.29from
+      tmp1=substring(tmp1,0,length(tmp1)-1);
+    );
+    tmp1=tmp1+"]"; //18.01.29until
+  ,
+    if(ispoint(value) % isstring(value),
+      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
+    ,
+      tmp1=format(value,dig);
+    );
+  );
+  tmp1;
+);
+Ptpos(pt):=Ptpos(pt,[]);
+Ptpos(ptorg,pos):=(
+  regional(pt,out,tmp);
+  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
+  if(length(pos)==0,
+    tmp=pt.name+"position";
+    out=parse(tmp);
+    if(!islist(out),
+      tmp=tmp+"="+Textformat(pt.xy,12)+";";  //200108 6->12
+      parse(tmp);
+    );
+  ,
+    pt.xy=pos;
+    tmp=pt.name+"position="+Textformat(pt.xy,12)+";"; //200108 6->12
+    parse(tmp);
+    out=pt.xy;
+  );
+  out;
+);
+Pcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=pt.xy;
+  ,
+    tmp=[pt_1*SCALEX,pt_2*SCALEY];
+  );
+ re(tmp); //191231
+);
+Strictmove(pC):=Strictmove(pC,StrictSep); //190831
+Strictmove(pCorg,sep):=(
+  regional(pC,tmp,tmp1,tmp2);
+  pC=pCorg;
+  if(ispoint(pC),pC=pC.name);
+  tmp1=pC+"position";
+  if(!islist(parse(tmp1)),
+    tmp=tmp1+"="+Textformat(parse(pC).xy,12)+";"; //200112
+    parse(tmp);
+  ,
+   tmp=parse(pC).xy;
+    tmp2=mouse().xy;
+    if(|tmp-tmp2|>sep,
+      tmp=pC+".xy="+pC+"position";
+      parse(pC).xy=parse(pC+"position");
+    ,
+      tmp=tmp1+"="+Textformat(parse(pC).xy,12)+";"; //200112
+      parse(tmp);
+    );
+  );
+);
+Toupper(str):=(
+  regional(alphabet,out,tmp,tmp1);
+  alphabet="abcdefghijklmnopqrstuvwxyz";
+  out="";
+  forall(1..(length(str)),
+    tmp=substring(str,#-1,#);
+    tmp1=indexof(alphabet,tmp);
+    if(tmp1>0,
+      out=out+unicode(text(tmp1+64),base->10);
+    ,
+      out=out+tmp;
+    );
+  );
+  out;
+);
+Circledata(cenrad):=Circledata(cenrad,[]);
+Circledata(para1,para2):=(
+  regional(name,cenrad,options,str,n); 
+  if(isstring(para1), 
+    name=para1;
+    cenrad=para2;
+    options=[];
+    ,
+    cenrad=para1;
+    options=para2;
+    name="";// 16.10.07from
+    forall(cenrad, 
+       name=name+#.name;
+    );// 16.10.07until
+  );
+  Circledata(name,cenrad,options);
+);
+Circledata(nm,cenrad,options):=(
+  regional(name,Out,Ctr,Ptcir,ra,Num,Rg,opstr,opcindy,color,color4,Msg,
+      tmp,tmp1,tmp2,Th,Ltype,Noflg,eqL,pA,pB,pC,d1,d2,Eps);  
+  name="cr"+nm;
+  tmp=Divoptions(options);
+  Ltype=tmp_1;
+  Noflg=tmp_2;
+  eqL=tmp_5;
+  color=tmp_(length(tmp)-2); color4=Colorrgb2cmyk(color); //200618
+  opstr=tmp_(length(tmp)-1);
+  opcindy=tmp_(length(tmp));
+  Num=50;
+  Rg=[0,2*pi];
+  Msg="Y";
+ Msg="N"; //
+  forall(eqL,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(substring(#,0,1)=="N",
+      Num=parse(tmp_2);
+     opstr=opstr+",'"+#+"'";
+    );
+    if(substring(#,0,1)=="R",
+      Rg=parse(tmp_2);
+      opstr=opstr+",'"+#+"'";
+    );
+    if(tmp1=="M", //190206from
+      Msg=Toupper(substring(tmp_2,0,1));
+    ); //190206to
+  );
+  if(length(cenrad)==2,
+    Ctr=Lcrd(cenrad_1);
+    Ptcir=Lcrd(cenrad_2);
+    if(!islist(Ptcir),  //190323from
+      Ptcir=Ctr+[Ptcir,0];
+    );  //190323to
+    ra=dist(Ctr,Ptcir);
+  ,
+    Eps=10^(-1);
+    pA=Lcrd(cenrad_1);
+    pB=Lcrd(cenrad_2);
+    pC=Lcrd(cenrad_3);
+    tmp=pB-pA;
+    tmp1=(tmp_2,-tmp_1);
+    tmp=pC-pB;
+    tmp2=(tmp_2,-tmp_1);
+    d1=det([tmp1,tmp2]);
+    d2=det([pC-pA,tmp2]);
+    if(abs(d1)<Eps & abs(d2)>10*Eps,
+      println("points are in a line");
+      ra=0;
+    ,
+      Ctr=1/2*(pA+pB)+1/2*d2/d1*tmp1;
+      ra=|pA-Ctr|;
+      tmp=name+"center="+Textformat(Ctr,5)+";";
+      parse(tmp);
+    );
+  );
+  if(ra>0,
+    Out=[];
+    forall(0..Num,
+      Th=Rg_1+#*(Rg_2-Rg_1)/Num;
+      Out=append(Out,Ctr+ra*[cos(Th),sin(Th)]);
+    );
+  ,
+    tmp=100/dist(pA,pB)*(pB-pA);
+    Out=Listplot("1",[pA-tmp,pB+tmp],["nodata"]);
+  );
+  if(Noflg<3,
+    if(Msg=="Y", //190206
+      println("generate Circledata "+name);
+    );
+    tmp1=apply(Out,Pcrd(#));
+    tmp=name+"="+Textformat(tmp1,5)+";"; //190415
+    parse(tmp);
+  );
+  if(Noflg<3, //190818
+    if(isstring(Ltype),
+      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
+    ,
+      if(Noflg==1,Ltype=0);
+    );
+    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
+  );
+  Out;
+);
+Divoptions(options):=(
+  regional(Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,
+      color,opstr,opcindy,flg,tmp,tmp1,tmp2);
+  Ltype="dr";  // 2015.01.13
+  Noflg=0;
+  Inflg=0;
+  Outflg=0;
+  eqL=[];
+  realL=[];
+  strL=[];
+  color=Colorcmyk2rgb(KCOLOR); //200513
+  opstr="";
+  opcindy="";
+  forall(options,
+    flg=0;
+    if(flg==0,
+      if(isreal(#) % ispoint(#) % islist(#),
+        realL=append(realL,#);
+        opstr=opstr+","+text(#);
+        flg=1;
+      );
+    );
+    if(flg==0,
+      if(indexof(#,"=")>0,
+        tmp=Strsplit(#,"="); //180602from
+        tmp1=Toupper(tmp_1);
+        tmp2=tmp_2;
+        if(tmp1=="COLOR",
+          if(indexof(tmp2,"[")>0, //180928
+            tmp1=parse(tmp2);
+            color=tmp1;
+            if(length(tmp1)==4,
+              tmp1=Colorcmyk2rgb(tmp1);
+            );
+          ,
+            color=Colorname2cmyk(tmp2);//200425
+            tmp1=Colorcmyk2rgb(color); ;//200425
+          );
+          tmp="color->"+text(tmp1);
+          opcindy=opcindy+","+tmp;
+        ,
+          eqL=append(eqL,#);
+        );//180602to
+        flg=1; 
+      );
+    );
+    if(flg==0,
+      if(indexof(#,"no")+indexof(#,"No")>0,
+        if(indexof(#,"tex")>0,Noflg=1);
+        if(indexof(#,"disp")>0,Noflg=2);
+        if(indexof(#,"data")>0,Noflg=3);
+        flg=1;
+      );
+    );
+    if(flg==0,
+      if(indexof(#,"->")>0,
+        opcindy=opcindy+","+#;
+        flg=1; 
+      );
+    );
+    if(flg==0,
+      if(indexof(#,"out")+indexof(#,"Out")>0,
+        if(indexof(#,"-")==0,
+          Outflg=1;
+        ,
+          Outflg=2;
+        );
+        flg=1;
+      );
+    );
+    if(flg==0,
+      if(indexof(#,"in")+indexof(#,"In")>0,
+        if(indexof(#,"-")==0,
+          Inflg=1;
+        ,
+          Inflg=2;
+        );
+        flg=1;
+      );
+    );
+    if(flg==0,
+      tmp=substring(#,0,2);
+      tmp1=indexof(tmp,"dr")+indexof(tmp,"Dr");
+      tmp1=tmp1+indexof(tmp,"da")+indexof(tmp,"Da");
+      tmp1=tmp1+indexof(tmp,"id")+indexof(tmp,"Id");
+      tmp1=tmp1+indexof(tmp,"do")+indexof(tmp,"Do");
+      tmp1=tmp1+indexof(tmp,"dp")+indexof(tmp,"Dp");
+      if(tmp1>0,
+        Ltype=#;
+        flg=1;
+      );
+      if(flg==0,
+        if(length(#)>0, //180408
+          strL=append(strL,#);
+          opstr=opstr+","+Dq+#+Dq;
+        );
+      );
+    );
+  );
+  if(indexof(opcindy,"color->")==0,// 16.10.07from
+    tmp=Colorcmyk2rgb(KCOLOR); //200513[2lines]
+    opcindy=opcindy+",color->"+text(tmp);
+  );
+  [Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,color,opstr,opcindy];
+);
+Strsplit(str,key):=( //180505
+  regional(start,out,tmp1,tmp2);
+  tmp1=Indexall(str,key);
+  out=[]; start=0;
+  forall(tmp1,
+    out=append(out,substring(str,start,#-1));
+    start=#;
+  );
+  out=append(out,substring(str,start,length(str)));
+  out;
+);
+Indexall(str,key):=(
+  regional(rest,out,flg,tmp,tmp1,);
+  out=[];
+  rest=str;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      tmp=indexof(rest,key);
+      if(tmp>0,
+        tmp1=tmp+length(str)-length(rest);
+        out=append(out,tmp1);
+        rest=substring(rest,tmp,length(rest));
+      ,
+        flg=1;
+      );
+    );
+  );
+  out;
+);
+Colorname2cmyk(name):=( //181212
+  regional(dL,code,tmp);
+  dL=[
+    ["greenyellow",[0.15,0,0.69,0]],["yellow",[0,0,1,0]],
+    ["goldenrod",[0,0.1,0.84,0]],["dandelion",[0,0.29,0.84,0]],
+    ["apricot",[0,0.32,0.52,0]],["peach",[0,0.5,0.7,0]],
+    ["melon",[0,0.46,0.5,0]],["yelloworange",[0,0.42,1,0]],
+    ["orange",[0,0.61,0.87,0]],["burntorange",[0,0.51,1,0]],
+    ["bittersweet",[0,0.75,1,0.24]],["redorange",[0,0.77,0.87,0]],
+    ["mahogany",[0,0.85,0.87,0.35]],["maroon",[0,0.87,0.68,0.32]],
+    ["brickred",[0,0.89,0.94,0.28]],["red",[0,1,1,0]],
+    ["orangered",[0,1,0.5,0]],["rubinered",[0,1,0.13,0]],
+    ["wildstrawberry",[0,0.96,0.39,0]],["salmon",[0,0.53,0.38,0]],
+    ["carnationpink",[0,0.63,0,0]],["magenta",[0,1,0,0]],
+    ["violetred",[0,0.81,0,0]],["rhodamine",[0,0.82,0,0]],
+    ["mulberry",[0.34,0.9,0,0.02]],["redviolet",[0.07,0.9,0,0.34]],
+    ["fuchsia",[0.47,0.91,0,0.08]],["lavender",[0,0.48,0,0]],
+    ["thistle",[0.12,0.59,0,0]],["orchid",[0.32,0.64,0,0]],
+    ["darkorchid",[0.4,0.8,0.2,0]],["purple",[0.45,0.86,0,0]],
+    ["plum",[0.5,1,0,0]],["violet",[0.79,0.88,0,0]],
+    ["royalpurple",[0.75,0.9,0,0]],["blueviolet",[0.86,0.91,0,0.04]],
+    ["periwinkle",[0.57,0.55,0,0]], ["cadetblue",[0.62,0.57,0.23,0]],
+    ["cornflowerblue",[0.65,0.13,0,0]],
+    ["midnightblue",[0.98,0.13,0,0.43]],
+    ["navyblue",[0.94,0.54,0,0]],["royalblue",[1,0.5,0,0]],
+    ["blue",[1,1,0,0]],["cerulean",[0.94,0.11,0,0]],
+    ["cyan",[1,0,0,0]],["processblue",[0.96,0,0,0]],
+    ["skyblue",[0.62,0,0.12,0]],["turquoise",[0.85,0,0.2,0]],
+    ["tealblue",[0.86,0,0.34,0.02]],["aquamarine",[0.82,0,0.3,0]],
+    ["bluegreen",[0.85,0,0.33,0]],["emerald",[1,0,0.5,0]],
+    ["junglegreen",[0.99,0,0.52,0]],["seagreen",[0.69,0,0.5,0]],
+    ["green",[1,0,1,0]],["forestgreen",[0.91,0,0.88,0.12]],
+    ["pinegreen",[0.92,0,0.59,0.25]],["limegreen",[0.5,0,1,0]],
+    ["yellowgreen",[0.44,0,0.74,0]],["springgreen",[0.26,0,0.76,0]],
+    ["olivegreen",[0.64,0,0.95,0.4]],["rawsienna",[0,0.72,1,0.45]],
+    ["sepia",[0,0.83,1,0.7]],["brown",[0,0.81,1,0.6]],
+    ["tan",[0.14,0.42,0.56,0]],["gray",[0,0,0,0.5]],
+    ["lightgray",[0,0,0,0.15]], //190429,0809
+    ["cindycolor",[0.125,0.083,0,0.247]], //201027
+    ["black",[0,0,0,1]],["white",[0,0,0,0]],
+    ["offwhite",[0,0,0,0.03]] //190809
+  ];
+  tmp=select(dL,#_1==name);
+  if(length(tmp)>0,
+    tmp=tmp_1;
+    code=tmp_2;
+  ,
+    println("    "+name+" not found");
+    code=Assign(name); //190323
+  );
+);
+Assign(str):=( //190125from
+  regional(tmp);
+  tmp=[];
+  forall(VLIST,tmp=concat(tmp,[#_1,#_2]));
+  Assign(str,tmp);
+); //190125to
+Assign(funstr,vrL):=Assign(funstr,vrL,6);
+Assign(funstr,Arg1,Arg2):=( //190813from
+  regional(vrL,precise,nn,out,tmp);
+  if(islist(Arg1),
+    vrL=Arg1; precise=Arg2;
+    nn=length(vrL)/2;
+    out=funstr;
+    forall(1..nn,
+      out=Assign(out,vrL_(2*#-1),vrL_(2*#),precise);
+    );
+  , 
+    out=Assign(funstr,Arg1,Arg2,6);
+  );
+  out;
+); //190813to
+Assign(funstr,varname,rep,precision):=(
+  regional(repstr,ii,jj,tmp,tmp1,tmp2,Notvar,Flg);
+  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,precise)+")"); //190811to
+  tmp=[46];  // 12.20
+  tmp=concat(tmp,48..57);
+  tmp=concat(tmp,65..90);
+  tmp=concat(tmp,97..122);
+  Notvar=apply(tmp,unicode(text(#),base->10));
+  tmp2="";
+  forall(1..100,
+    ii=indexof(funstr,varname);
+    if(ii>0,
+      Flg=0;
+      if(ii>1,
+        tmp=substring(funstr,ii-2,ii-1);
+        if(contains(Notvar,tmp),
+          tmp2=tmp2+substring(funstr,0,ii);
+          funstr=substring(funstr,ii,length(funstr));
+          Flg=1;
+        );
+      );
+      if(Flg==0,
+        jj=ii-1+length(varname);
+        if(jj<length(funstr),
+          tmp=substring(funstr,jj,jj+1));
+          if(contains(Notvar,tmp),
+          tmp2=tmp2+substring(funstr,0,jj);
+          funstr=substring(funstr,jj,length(funstr));
+          Flg=1;
+        );
+      );
+      if(Flg==0,
+        tmp2=tmp2+substring(funstr,0,ii-1)+repstr;
+        funstr=substring(funstr,jj,length(funstr));
+      );
+    );
+  );
+  funstr=tmp2+funstr;
+  funstr;
+);
+Colorcmyk2rgb(clr):=(
+  regional(clrnew,tmp,black);
+  if(length(clr)==4,  //200618
+    black=clr_4;
+    tmp=apply(clr,1-min(1,#*(1-black)+black));
+    clrnew=tmp_(1..3);
+  ,
+    clrnew=clr;  //200618
+  );
+  clrnew;
+);
+Colorrgb2cmyk(clr):=(
+  regional(clrnew,tmp,black);
+  if(length(clr)==3, //200618
+    tmp=apply(clr,1-#);
+    black=min(tmp);
+    if(black!=1, //181112from
+      tmp=apply(clr,(1-#-black)/(1-black));
+      clrnew=append(tmp,black);
+    ,
+      clrnew=[0,0,0,1];  //200618
+    ); //181112to
+  ,
+    clrnew=clr;
+  );
+  clrnew;
+);
+Lcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=[pt.x/SCALEX,pt.y/SCALEY];
+  ,
+    tmp=pt;
+  );
+  re(tmp); //191231
+);
+Listplot(list):=Listplot(list,[]);
+Listplot(Arg1,Arg2):=(
+  regional(name,list,options,str);
+  if(isstring(Arg1),
+    name=Arg1;
+    list=Arg2;
+    Listplot(name,list,[]);
+  ,
+    list=Arg1;
+    options=Arg2;
+    name="";
+    forall(list, // 16.10.07from
+       name=name+#.name;
+    );// 16.10.07until
+    Listplot(name,list,options);
+  );
+);
+Listplot(nm,list,options):=(
+  regional(name,cutend,tmp,tmp1,tmp2,ptlist,Ltype,opcindy,Noflg,eqL,Msg,color,color4);
+  if(substring(nm,0,1)=="-",  // 16.01.27 from
+    name=substring(nm,1,length(nm));
+  ,
+    name="sg"+nm;
+  ); // upto
+  tmp=Divoptions(options);
+  Ltype=tmp_1;
+  Noflg=tmp_2;
+  eqL=tmp_5;
+  color=tmp_(length(tmp)-2); color4=Colorrgb2cmyk(color); //200618
+  opcindy=tmp_(length(tmp));
+  Msg="Y";  //190206
+ Msg="N"; //
+  cutend=[0,0];//180719
+  forall(eqL,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(tmp1=="M",
+      Msg=Toupper(substring(tmp_2,0,1));
+    );
+    if(tmp1=="C",//180719from
+      tmp2=replace(tmp_2,"[","");
+      tmp2=replace(tmp2,"]","");
+      cutend=tokenize(tmp2,",");
+      if(length(cutend)==1,cutend=[cutend_1,cutend_1]);     
+    );//180719to
+  );
+  if(Noflg<3,
+    if(Msg=="Y", //190206
+      println("generate Listplot "+name);
+    );
+    if(isstring(list_1),tmp=apply(list,parse(#)),tmp=list); // 15.03.24
+    ptlist=apply(tmp,Pcrd(#));
+    if(|cutend|>0,//180719from
+      tmp=ptlist_(length(ptlist))-ptlist_1;
+      tmp=tmp/|tmp|;
+      ptlist_1=ptlist_1+tmp*cutend_1;
+      ptlist_(length(ptlist))=ptlist_(length(ptlist))-tmp*cutend_2;
+    );//180719to
+    tmp=name+"="+Textformat(ptlist,5)+";"; //190415
+    parse(tmp);
+  );
+  if(Noflg<3, //190818
+    if(isstring(Ltype),
+      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
+    ,
+      if(Noflg==1,Ltype=0);
+    );
+    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
+  );
+  tmp1=apply(list,Lcrd(#));
+  tmp1;
+);
+Getlinestyle(str,name):=(
+  regional(noflg,tmp,tmp1,tmp2,Dop,Ltype,subflg);
+  Ltype=-1;
+  Dop="";
+  tmp1=indexof(str,",");
+  if(tmp1>0,
+    Dop=","+substring(str,tmp1,length(str));
+  );
+  noflg=parse(substring(str,0,1));
+  if(substring(name,0,3)=="sub",subflg=1,subflg=0);  // 16.02.29
+  if(noflg<=1, //1900818from
+    tmp1=Toupper(substring(str,1,3));
+  ,
+    tmp1="NO";
+  ); //1900818to
+  tmp2=""; //190119from
+  tmp=indexof(str,",");
+  if(tmp>0,
+    tmp2=substring(str,tmp,length(str));
+  ); //190119to
+  if(tmp1=="DR",
+    if(length(tmp2)==0,tmp2="1"); //190125
+    Ltype=[0,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="DA",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
+    Ltype=[1,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="ID",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
+    Ltype=[2,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="DO",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
+    Ltype=[3,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="DP",
+    if(length(tmp2)==0,tmp2="1"); //190125
+    Ltype=[0,tmp2];  //190119
+    tmp1=parse(name);
+    tmp2="";
+    forall(tmp1,
+      tmp2=tmp2+Textformat(#_1,5)+",";
+    );
+    tmp2=substring(tmp2,0,length(tmp2)-1);
+    if(noflg==0,
+    );
+  );
+  if(tmp1=="NO", //190818from
+    Ltype=[-1,"0"];
+  );  //190818to
+  Ltype;
+);
+Setglist():=(
+  GCLISTadd=GCLIST;
+  VLISTadd=VLIST; //200124[2lines]
+  FUNLISTadd=FUNLIST;
+);
+Addglist():=(
+  GCLIST=GCLISTadd;
+  VLIST=VLISTadd; //200124[2lines]
+  FUNLIST=FUNLISTadd;
+);
+Slider(ptstr,p1,p2):=Slider(ptstr,p1,p2,[]);
+Slider(ptstr,p1,p2,options):=(//190120
+  regional(pA,pB,pC,color,thick,sep,tmp,tmp1,tmp2);
+  color="Color=0.6*[0,0,1]"; //190120from
+  thick="size->2";
+  sep=0.3; //190824
+  forall(options,
+    tmp=Toupper(substring(#,0,1));
+    if(tmp=="C",
+      color=#;
+    );
+    if(tmp=="T",
+      tmp=Strsplit(#,"=");
+      thick="size->"+tmp_2;
+    );
+    if(tmp=="S",//190824from
+      tmp=Strsplit(#,"=");
+      sep=parse(tmp_2);
+    ); //190824to
+  );
+  tmp=Indexall(ptstr,"-");
+  if(length(tmp)>0,
+    pA=substring(ptstr,0,tmp_1-1); //190824from
+    pC=substring(ptstr,tmp_1,tmp_2-1);
+    pB=substring(ptstr,tmp_2,length(ptstr));
+    parse(pA).xy=p1;
+    parse(pB).xy=p2; //190824to
+    tmp1=pC+"position"; //190827from
+    if(!islist(parse(tmp1)),
+      tmp2=parse(pC).xy;
+      if(|tmp2-p1|<0.1,tmp2=p1+0.1*(p2-p1)/|p2-p1|);
+      if(|tmp2-p2|<0.1,tmp2=p2+0.1*(p1-p2)/|p1-p2|);
+      tmp=tmp1+"="+textformat(tmp2,6)+";";
+      parse(tmp);
+      parse(pC).xy=tmp2;
+    ); //190827to
+    PTEXCEPTION=concat(TEXCEPTION,[pA,pC,pB]);
+  ,
+    pC=ptstr; pA=pC+"l"; pB=pC+"r"; 
+    PTEXCEPTION=concat(PTEXCEPTION,[pC]);
+  );
+  Listplot(pA+pB,[p1,p2],["Msg=n","notex",color,thick]);
+  Putonseg(pC,parse("sg"+pA+pB));
+);
+Putonseg(name,sgstr):=(
+  regional(seg,p1,p2);
+  if(isstring(sgstr),seg=parse(sgstr),seg=sgstr);
+  Putonseg(name,LLcrd(seg_1),LLcrd(seg_2));
+);
+Putonseg(name,p1,p2):=Putonseg(name,p1,p2,[]);
+Putonseg(name,p1org,p2org,options):=(
+  regional(Eps,par,p1,p2,dx,dy,p,tmp,tmp1,tmp2);
+  Eps=10^(-5);
+  par=0.5;
+  tmp=Divoptions(options);
+  if(length(tmp_6)>0,
+    par=tmp_6_1;
+  );
+  p1=Lcrd(p1org);//16.10.11from
+  p2=Lcrd(p2org);
+  p1=Pcrd(p1); p2=Pcrd(p2); //190120
+  dx=p2_1-p1_1;
+  dy=p2_2-p1_2;
+  p=parse(name+".xy");
+  if(abs(dx)>abs(dy), //190120from
+    if(p1_1>p2_1,tmp=p1;p1=p2;p2=tmp);
+    if(p_1<p1_1,parse(name+".xy="+Textformat(p1,5));p=p1);
+    if(p_1>p2_1,parse(name+".xy="+Textformat(p2,5));p=p2);
+    tmp=(p2_2-p1_2)/(p2_1-p1_1)*(p_1-p1_1)+p1_2;
+    parse(name+".y="+tmp+";"); //190415
+  ,
+    if(p1_2>p2_2,tmp=p1;p1=p2;p2=tmp);
+    if(p_2<p1_2,parse(name+".xy="+Textformat(p1,5));p=p1);
+    if(p_2>p2_2,parse(name+".xy="+Textformat(p2,5));p=p2);
+    tmp=(p2_1-p1_1)/(p2_2-p1_2)*(p_2-p1_2)+p1_1;
+    parse(name+".x="+tmp+";"); //190415
+  ); //190120to
+);
+Textedit(no):=(
+  regional(tmp,tmp1,tmp2);
+  tmp="Text"+text(no)+".currenttext";
+  tmp1=parse(tmp);
+  tmp1;
+);
+Totexform(str):=( //190514
+  regional(out,plv,flg,nn,tmp,tmp1,tmp2);
+  out=replace(str,"pi","\pi"); //190715
+  tmp1=apply(0..9,text(#));  //190915from
+  tmp2=Indexall(out,"*");
+  forall(tmp2,
+    tmp=substring(out,#,#+1);
+    if(contains(tmp1,tmp),
+      out=substring(out,0,#-1)+"$"+substring(out,#,length(out));
+    ,
+      out=substring(out,0,#-1)+"%"+substring(out,#,length(out));
+    );
+  );
+  out=replace(out,"$","\cdot ");
+  out=replace(out,"%"," "); //190915to,201018
+  out=replace(out,"  ","\;");
+  plv=Bracket(out,"()"); //190515from
+  flg=0; //190521from
+  if(length(plv)==0,
+    flg=4; //190522
+  );
+  if(flg==0, //190521to
+    tmp=Indexall(out,"("); //190522from
+    tmp1=Indexall(out,")");
+    if(length(tmp)>length(tmp1),
+      flg=2;
+      out=out+"?+)?";
+    );
+    if(length(tmp)<length(tmp1),
+      flg=3;
+      out=out+"?)-?";
+    );  //190522to
+    forall(1..20,
+      if(flg==0,
+        tmp=Totexformpart(out);
+        if(length(tmp)==0,
+          flg=1;
+        ,
+          out=tmp;
+        );
+      );
+    );
+  );
+  if(flg<=1,
+    out=replace(out,"+-","\pm ");
+    out=replace(out,"-+","\mp ");
+    out=replace(out,"<=","\leq ");
+    out=replace(out,">=","\geq ");
+    tmp1=Indexall(out,"^");
+    forall(tmp1,nn,
+      if(substring(out,nn,nn+1)=="(",
+        tmp2=Bracket(substring(out,nn,length(out)),"()");
+        tmp2=select(tmp2,#_2==-1);
+        tmp2=tmp2_1_1+nn;
+        tmp=substring(out,nn+1,tmp2-1);
+        tmp2=substring(out,tmp2,length(out));//190915
+        out=substring(out,0,nn)+"{"+tmp+"}";
+        out=out+tmp2;
+      );
+    );
+  );
+  out;
+);
+Totexformpart(str):=( //190514
+  regional(plv,funL,repL,flg,flgf,nall,nn,fun,funf,
+      frL,fr,out,tmp,tmp1,tmp2,tmp3,tmp4);
+  repL=[ //190515from
+    ["frac",["","{\frac{xx}{yy}}"]], //200730from
+    ["log",["{\log{xx}}","{\log_{xx} yy}"]],
+    ["sqrt",["{\sqrt{xx}}","{\sqrt[xx]{yy}}"]],
+    ["pow",["","{xx}^{yy}"]],
+    ["sin",["{\sin{xx}}","{\sin^{xx}\!{yy}}"]], //200823[3lines]
+    ["cos",["{\cos{xx}}","{\cos^{xx}\!{yy}}"]],
+    ["tan",["{\tan{xx}}","{\tan^{xx}\!{yy}}"]]  //200730to
+  ];
+  funL=apply(repL,substring(#_1,0,2)); //190515to
+  out="";
+  plv=Bracket(str,"()");
+  nall=length(plv);
+  if(nall>0,
+    frL=[];
+    forall(1..nall,nn,
+      tmp1=plv_nn;
+      if(tmp1_2>0,
+        fun="";
+        flgf=0;
+        forall(1..20,
+          if(flgf==0,
+            tmp2=tmp1_1;
+            tmp=substring(str,tmp2-#-1,tmp2-#);
+            if((tmp>="a")&(tmp<="z"),
+              fun=tmp+fun;
+            ,
+              flgf=1;
+            );       
+          );
+        );
+        tmp=substring(fun,0,2); //190515from
+        if(contains(funL,tmp), 
+          tmp=select(repL,substring(#_1,0,2)==tmp);
+          funf=tmp_1_1; //190515to
+          tmp=select(plv,(#_1>tmp1_1)&(#_2==-tmp1_2));
+          tmp=tmp_1_1-1;
+          frL=append(frL,[fun,funf,tmp1_1,tmp,tmp1_2]);
+        );
+      );
+    );
+    if(length(frL)>0,
+      frL=sort(frL,[-#_5]);
+      fr=frL_1;
+      fun=fr_1; funf=fr_2;
+      tmp1=substring(str,fr_3,fr_4);
+      tmp=select(repL,#_1==funf);
+      tmp=tmp_1;
+      tmp2=tmp_2;
+      tmp=Strsplit(tmp1,","); //190515from
+      nn=length(tmp); 
+      if(nn==1,
+        tmp2=Assign(tmp2_1,["xx",tmp_1]);
+      );
+      if(nn==2,
+        tmp2=Assign(tmp2_2,["xx",tmp_1,"yy",tmp_2]);
+      ); //190515to
+      nn=fr_3-length(fun);
+      tmp=substring(str,0,nn-1);
+      out=tmp+tmp2+substring(str,fr_4+1,length(str));
+    ,
+      out="";
+    );
+  );
+  out;
+);
+Bracket(str):=Bracket(str,"()");
+Bracket(str,br):=(
+  regional(ph,pt,out,noL,ncL,nall,level,tmp);
+  ph=substring(br,0,1);
+  pt=substring(br,1,2);
+  noL=Indexall(str,ph);
+  ncL=Indexall(str,pt); // 16.05.22until
+  nall=sort(concat(noL,ncL));
+  level=0;
+  out=[];
+  forall(nall,
+    if(contains(noL,#),
+      level=level+1;
+      tmp=[#,level];
+    ,
+      tmp=[#,-level];
+      level=level-1;
+    );
+    out=append(out,tmp);
+  );
+  out;
+);
+Tocindyform(str):=( //190521
+  regional(out,plv,flg,nn,tmp,tmp1);
+  out=str;
+  out=replace(out,"\",""); //190712[4lines]
+  out=replace(out,"   "," ");
+  out=replace(out,"  "," "); 
+  out=replace(out," ","*"); 
+  plv=Bracket(out,"()");
+  flg=0;
+  if(length(plv)==0,
+    flg=4; //190522
+  );
+  if(flg==0,
+    tmp=Indexall(out,"("); //190522from
+    tmp1=Indexall(out,")");
+    if(length(tmp)>length(tmp1),
+      flg=2;
+      out=out+"?+)?";
+    );
+    if(length(tmp)<length(tmp1),
+      flg=3;
+      out=out+"?)-?";
+    );  //190522to
+    forall(1..20,
+      if(flg==0,
+        tmp=Tocindyformpart(out);
+        if(length(tmp)==0,
+          flg=1;
+        ,
+          out=tmp;
+        );
+      );
+    );
+  );
+  out=replace(out,"{","(");
+  out=replace(out,"}",")");
+  out;
+);
+Tocindyformpart(str):=( //190521
+  regional(plv,funL,repL,flg,flgf,nall,nn,fun,funf,
+      frL,fr,out,tmp,tmp1,tmp2,tmp3,tmp4);
+  repL=[ //190515from
+    ["frac",["","{xx}/{yy}"]],
+    ["log",["log{xx}","log{yy}/log{xx}"]],
+    ["sqrt",["sqrt{xx}","{yy}^(1/{xx})"]], //190522
+    ["pow",["","{xx}^{yy}"]],
+    ["sin",["sin{xx}","{sin{yy}}^{xx}"]], //190522from
+    ["cos",["cos{xx}","{cos{yy}}^{xx}"]],
+    ["tan",["tan{xx}","{tan{yy}}^{xx}"]] //190522to
+  ];
+  funL=apply(repL,substring(#_1,0,2)); //190515to
+  out="";
+  plv=Bracket(str,"()");
+  nall=length(plv);
+  if(nall>0,
+    frL=[];
+    forall(1..nall,nn,
+      tmp1=plv_nn;
+      if(tmp1_2>0,
+        fun="";
+        flgf=0;
+        forall(1..20,
+          if(flgf==0,
+            tmp2=tmp1_1;
+            tmp=substring(str,tmp2-#-1,tmp2-#);
+            if((tmp>="a")&(tmp<="z"),
+              fun=tmp+fun;
+            ,
+              flgf=1;
+            );       
+          );
+        );
+        tmp=substring(fun,0,2); //190515from
+        if(contains(funL,tmp), 
+          tmp=select(repL,substring(#_1,0,2)==tmp);
+          funf=tmp_1_1; //190515to
+          tmp=select(plv,(#_1>tmp1_1)&(#_2==-tmp1_2));
+          tmp=tmp_1_1-1;
+          frL=append(frL,[fun,funf,tmp1_1,tmp,tmp1_2]);
+        );
+      );
+    );
+    if(length(frL)>0,
+      frL=sort(frL,[-#_5]);
+      fr=frL_1;
+      fun=fr_1; funf=fr_2;
+      tmp1=substring(str,fr_3,fr_4);
+      tmp=select(repL,#_1==funf);
+      tmp=tmp_1;
+      tmp2=tmp_2;
+      tmp=Strsplit(tmp1,","); //190515from
+      nn=length(tmp); 
+      if(nn==1,
+        tmp2=Assign(tmp2_1,["xx",tmp_1]);
+      );
+      if(nn==2,
+        tmp2=Assign(tmp2_2,["xx",tmp_1,"yy",tmp_2]);
+      ); //190515to
+      nn=fr_3-length(fun);
+      tmp=substring(str,0,nn-1);
+      out=tmp+tmp2+substring(str,fr_4+1,length(str));
+    ,
+      out="";
+    );
+  );
+  out;
+);
+Ptend(Fig):=(
+  regional(tmp);
+  if(isstring(Fig),tmp=parse(Fig),tmp=Fig);
+  tmp_(length(tmp)); // 15.04.12
+);
+Anglemark(plist):=Anglemark(plist,[]);
+Anglemark(Arg1,Arg2):=( // 2015.04.28 from
+  regional(nm,plist,options,tmp);
+  if(isstring(Arg1),
+    nm=Arg1;
+    plist=Arg2;
+    Anglemark(nm,plist,[]);
+  ,
+    plist=Arg1;
+    options=Arg2;
+    tmp=Textformat(plist,5);
+    tmp=replace(tmp,",","");
+    nm=substring(tmp,1,length(tmp)-1);
+    Anglemark(nm,plist,options);
+  );
+);// to
+Anglemark(nm,plist,optionsorg):=(
+  regional(name,options,Out,pB,pA,pC,Ctr,ra,sab,sac,ratio,opstr,Bname,Bpos,Bstr,color,color4,
+       Brat,tmp,tmp1,tmp2,Num,opcindy,Ltype,eqL,realL,Rg,Th,Noflg,Msg,scaley);
+  name="ag"+nm;
+  options=optionsorg; //200619
+  ra=0.5;
+  tmp=Divoptions(options);
+  Ltype=tmp_1;
+  Noflg=tmp_2;
+  color=tmp_(length(tmp)-2);color4=Colorrgb2cmyk(color); //200629
+  opcindy=tmp_(length(tmp));
+  eqL=tmp_5;
+  realL=tmp_6;
+  Bname="";
+  Brat=1.2; //180530
+  Num=20;
+  Msg="Y";
+ Msg="N"; //
+  opstr="";
+  if(length(realL)>0,
+    ra=realL_1*ra;
+    opstr=","+text(realL_1);//180530
+  );
+  forall(eqL,
+    tmp=indexof(#,"="); //200617[2lines]
+    tmp=[substring(#,0,tmp-1),substring(#,tmp,length(#))];
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if((tmp1=="L")%(tmp1=="E"),
+      if(tmp1=="L",Bname="L");
+      if(tmp1=="E",Bname="E");
+      tmp2=tmp_2;
+      tmp=indexof(tmp2,",");
+      if((tmp==0)%(substring(tmp2,tmp-2,tmp-1)=="\"), //200710
+        Bstr=tmp2;
+      ,
+        Bstr=substring(tmp2,tmp,length(tmp2)); //200201
+        tmp1=parse(substring(tmp2,0,tmp-1));
+        Brat=tmp1*Brat;
+      );
+      options=remove(options,[#]); //200619
+    );
+    if(tmp1=="M", //190206from
+      Msg=Toupper(substring(tmp_2,0,1));
+    ); //190206to
+  );
+  pB=Pcrd(plist_1); pA=Pcrd(plist_2); pC=Pcrd(plist_3);
+  scaley=SCALEY; //191231[2lines]
+  SCALEY=1;
+  sab=pB-pA;
+  Ctr=pA;
+  if((length(plist_3)>1)%(ispoint(plist_3)), //180506from
+    sac=pC-pA;
+    Rg=[arctan2(sab)+0,arctan2(sac)+0];
+  ,
+    sac=pB-pA;
+    Rg=[arctan2(sab)+0,arctan2(sab)+plist_3];   
+  ); //180506to
+  if(Rg_2<Rg_1,Rg_2=Rg_2+2*pi);
+  Out=[];
+  if(ra>min(|sab|,|sac|),  // 16.12.29
+    println("  segments too short");
+  ,
+    forall(0..Num,
+      Th=Rg_1+#*(Rg_2-Rg_1)/Num;
+      Out=append(Out,Ctr+ra*[cos(Th),sin(Th)]);
+    );
+    Th=(Rg_1+Rg_2)/2; //16.10.31from[moved]
+    if(Noflg<3,
+      if(Msg=="Y", //190206
+        println("generate anglemark "+name+" and m"+name); //200610
+      );
+      tmp1=apply(Out,Pcrd(#));
+      tmp=name+"="+Textformat(tmp1,5)+";";
+      parse(tmp);
+    );
+    if(Noflg<3, //190818
+      if(isstring(Ltype),
+        Ltype=Getlinestyle(text(Noflg)+Ltype,name);
+      ,
+        if(Noflg==1,Ltype=0);
+      );
+      GCLIST=append(GCLIST,[name,Ltype,opcindy]);
+    );
+  );
+  SCALEY=scaley;  //191231
+  tmp1=Ctr+Brat*ra*[cos(Th),sin(Th)];
+  Bpos=LLcrd(tmp1);
+  options=remove(options,realL); //200619[3lines]
+  if(Bname=="L",Letter(Bpos,"c",Bstr,options)); 
+  if(Bname=="E",Expr(Bpos,"c",Bstr,options));
+  parse("m"+name+"="+Textformat(Bpos,6)+";"); //200610
+  Out;
+);
+Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
+Letter(list):=Letter(list,[]);
+Letter(Pt,Dr,St,options):=Letter([Pt,Dr,St],options);//181218
+Letter(list,options):=(
+  regional(Nj,Pos,Dir,Str,Off,Dmv,Xmv,Ymv,Noflg,opcindy,
+      opL,aln,sz,clr,bld,ita,tmp,tmp1,tmp2,color,color4,eqL);
+  tmp=Divoptions(options);
+  eqL=tmp_5; //190209
+  Noflg=tmp_2;
+  color=tmp_(length(tmp)-2); color4=Colorrgb2cmyk(color); //200618
+  opL=select(options,indexof(#,"->")>0); //16.10.09from
+  tmp=select(opL,indexof(#,"color"));
+  sz=12;
+  bld=false;
+  ita=false;
+  aln="left";
+  forall(opL,
+    tmp=indexof(#,"->");
+    tmp1=Removespace(substring(#,0,tmp-1));
+    tmp2=substring(#,tmp+1,length(#));
+    if(tmp1=="size",sz=parse(tmp2));
+    if(tmp1=="color",clr=parse(tmp2));
+    if(tmp1=="bold",bld=parse(tmp2));
+    if(tmp1=="ita",ita=parse(tmp2));
+  );//16.10.09to
+  forall(eqL, //190209from
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(tmp1=="S",
+      sz=round(parse(tmp_2)*12);
+    );
+  ); //190209to
+  Off=-4;
+  Dmv=8;
+  Nj=1;
+  if(Ketcindyjsfigure>0,sz=round(sz*Ketcindyjsscale) ); // 
+  while(Nj+2<=length(list),
+    Pos=list_Nj;
+    Dir=list_(Nj+1);
+    Str=list_(Nj+2);
+    if(!isstring(Str),Str=format(Str,5)); // 16.09.30,10.09
+    tmp=replace(Str,".xy","");
+    tmp=replace(tmp,".x","(1)");
+    Str=replace(tmp,".y","(2)");
+    Str=RSslash(Str); // 17.09.24
+    Str=replace(Str,"`","'");//180303
+    tmp=Dq+","+Dq+Str+Dq+")";
+    if(Noflg<2,
+      Xmv=0;//16.10.13
+      Ymv=-4;
+      tmp1=[]; //200619from
+      forall(1..10,
+        tmp=substring(Dir,#-1,#);
+        if(contains(["n","s","e","w"],tmp),
+          tmp1=append(tmp1,[tmp,#]);
+        );
+      );
+      tmp1=append(tmp1,["",length(Dir)+1]);
+      tmp2=[];
+      forall(1..(length(tmp1)-1),
+        tmp=substring(Dir,tmp1_#_2,tmp1_(#+1)_2-1);
+        if(length(tmp)>0,tmp=MARKLEN*parse(tmp),tmp=0);
+        tmp2=append(tmp2,[tmp1_#_1,tmp]);
+      );
+      if(indexof(Dir,"n")>0,
+        Ymv=Dmv/2;
+        tmp=select(tmp2,#_1=="n"); //200619[2lines]
+        Pos=Pos+[0,tmp_1_2];
+      ); //200619to
+      if(indexof(Dir,"s")>0,
+        Ymv=-Dmv*3/2;
+        tmp=select(tmp2,#_1=="s"); //200619[2lines]
+        Pos=Pos-[0,tmp_1_2];
+      );
+      if(indexof(Dir,"e")>0,
+        Xmv=Dmv/2;
+        Off=0;
+        aln="left"; 
+        tmp=select(tmp2,#_1=="e"); //200619[2lines]
+        Pos=Pos+[tmp_1_2,0];
+      );
+      if(indexof(Dir,"w")>0, 
+        Xmv=-Dmv/2;
+        Off=0; // 16.09.30from
+        aln="right"; 
+        tmp=select(tmp2,#_1=="w"); //200619[2lines]
+        Pos=Pos-[tmp_1_2,0];
+      );
+      if(indexof(Dir,"c")>0,
+        Xmv=0;//16.10.13
+        Off=0;
+        if(Ymv==0,Ymv=-4);//16.10.08
+        aln="mid"; // 16.09.30until
+      );
+      if(Ketcindyjsfigure>0, // 
+        Off=round(Off*Ketcindyjsscale);
+        Xmv=round(Xmv*Ketcindyjsscale);
+        Ymv=round(Ymv*Ketcindyjsscale);
+      ); // 
+      Str=list_(Nj+2);  //17.10.17
+      if(length(color)==4,color=Colorcmyk2rgb(color)); //200523
+      tmp="drawtext("+format(Pcrd(Pos),5)+","+Dqq(Str)+",offset->"+format([Off+Xmv,Off+Ymv],5)+","; //201004from
+      tmp1="size->sz,color->colornow,align->aln,bold->bld,italics->ita";
+      tmp1=Assign(tmp1,["sz",text(sz),"colornow",text(color),"aln",Dqq(aln),"bld",text(bld),"ita",text(ita)]);
+      tmp=tmp+tmp1+");";
+      GCLIST=append(GCLIST,[tmp,[6,0]]); //201004to
+    );
+    Nj=Nj+3;
+  );
+);
+Removespace(str):=(
+  regional(tmp,flg,out);
+  tmp=length(str)+1;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      if((str_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(str,tmp-1,length(str));
+  flg=0;
+  tmp=0;
+  forall(reverse(1..(length(out))),
+    if(flg==0,
+      if((out_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(out,0,tmp);
+);
+Dqq(str):=DqDq(str); //18.02.11
+DqDq(str):=(
+  unicode("0022")+str+unicode("0022");
+);
+Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
+Expr(list):=Expr(list,[]);
+Expr(Pt,Dr,St,options):=Expr([Pt,Dr,St],options); //190409
+Expr(listorg,options):=( //16.10.09
+  regional(list,str,tmp,tmp1,tmp2);
+  list=listorg;
+  forall(1..round(length(list)/3),
+    str=list_(3*#);
+    if(isstring(str), //200526from
+      if(!iswindows(),
+        str=replace(str,"¥","\");
+      ); 
+    ,
+      str=format(str,5)
+    ); //200526to
+    str="$"+str+"$"; //200526
+    list_(3*#)=str;
+  );
+  Letter(list,options);
+);
+Htickmark(arglist):=Htickmark(arglist,[]); //190203
+Htickmark(arglist,options):=( //190203
+  regional(nn,tmp,tmp1,tmp2,mark);
+  mark=MARKLEN/SCALEY;
+  tmp1=select(1..(length(arglist)),!isstring(arglist_#)); //180710from
+  forall(tmp1,nn,
+    Listplot("ht"+text(nn),
+        [[arglist_nn,mark],[arglist_nn,-mark]],append(options,"Msg=n"));//191101
+    if(nn+2<=length(arglist),
+      tmp=arglist_(nn+2);
+      if(!isstring(tmp),
+        Expr([[arglist_nn,0],"s1",arglist_(nn+1)],options); //190203
+      ,
+        Expr([[arglist_nn,0],arglist_(nn+1),arglist_(nn+2)],options); //190203
+      );
+    ,
+      Expr([[arglist_nn,0],"s1",arglist_(nn+1)],options); //190203
+    );
+  );//180710to
+);
+Vtickmark(arglist):=Vtickmark(arglist,[]); //190203
+Vtickmark(arglist,options):=( //190203
+  regional(nn,tmp,tmp1,tmp2,mark);
+  mark=MARKLEN/SCALEX;
+  tmp1=select(1..(length(arglist)),!isstring(arglist_#)); //180710from
+  forall(tmp1,nn,
+    Listplot("vt"+text(nn),
+         [[mark,arglist_nn],[-mark,arglist_nn]],append(options,"Msg=n")); //191101
+    if(nn+2<=length(arglist),
+      tmp=arglist_(nn+2);
+      if(!isstring(tmp),
+        Expr([[0,arglist_nn],"w1",arglist_(nn+1)],options); //190203
+      ,
+        Expr([[0,arglist_nn],arglist_(nn+1),arglist_(nn+2)],options); //190203
+      );
+    ,
+      Expr([[0,arglist_nn],"w1",arglist_(nn+1)],options); //190203
+    );
+  );//180710to//  tmp=MakeRarg(arglist);
+);
+Sprintf(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(!islist(value),  // 17.03.12from
+    if(isstring(value),
+      vv=value;
+    ,
+      vv=Textformat(value,dig);
+    );  // 17.03.12from
+    if(indexof(vv,".")==0,vv=vv+".");
+    vv=vv+"0000000000000000";
+    tmp=indexof(vv,".")+dig;
+    vv=substring(vv,0,tmp);
+  ,
+    vv=apply(value,Sprintf(#,dig));
+  );
+  vv;
+);
+Windispg():=(
+  if(ADDAXES=="1", //181215from
+    Drwxy();
+    ADDAXES="0";
+  ); //181215to
+  Windispg(GCLIST); //190125
+);
+Windispg(gcLorg):=( //190125
+  regional(gcL,Nj,Nk,Dt,Vj,tmp,tmp1,tmp2,tmp3,tmp4,typeL,opcindy,flg);
+  gcL=gcLorg; //190125from
+  if(length(gcL)>0,
+    if(!islist(gcL_1),gcL=[gcL]);
+  ); //190125to
+  gcL=select(gcL,#_2_1>=0); //190818
+  gsave();
+  layer(KETPIClayer);
+  forall(gcL,Nj,
+    flg=0;
+    if(isstring(Nj_1),
+      if(Nj_2_1>4, //200716from
+        parse(Nj_1);
+        flg=1; 
+      ,
+        Dt=parse(Nj_1);
+      );  //200716to
+    ,
+      Dt=Nj_1
+    );  // 11.17
+    if((flg==0)&(islist(Dt))&(length(Dt)>0),  // 12.19,12.22,200716
+      tmp=Measuredepth(Dt);
+      if(tmp==1,Dt=[Dt]);
+      opcindy=Nj_3;
+      typeL=Nj_2; //200620from
+      if(isstring(typeL_2),tmp=tokenize(typeL_2,","),tmp=[typeL_2]); //200623
+      typeL=prepend(typeL_1,tmp); //200620from
+      if(typeL_1<0,typeL_1=0);
+      tmp1=typeL_1;
+      if(tmp1<10,
+        forall(Dt,Nk,
+          if(length(Nk)>1,
+            tmp3="";
+            if(indexof(opcindy,"color")==0, //190122from
+              tmp=Colorcmyk2rgb(KCOLOR); //200513[2lines]
+              tmp3=tmp3+",linecolor->"+text(tmp);
+            );
+            tmp3=tmp3+opcindy;
+            if(tmp1==0,  //190126from
+              if(indexof(opcindy,"size")==0, 
+                tmp3=tmp3+",size->"+text(typeL_2);
+              ); //190124to
+              tmp="connect("+Textformat(Nk,5)+tmp3+");";//190125
+              parse(tmp);
+            );
+            if((tmp1==1)%(tmp1==2),
+              if(length(typeL)<4,typeL=append(typeL,1)); //
+              if(typeL_(-1)!=1,
+                tmp="linesize("+text(typeL_4)+")";
+                parse(tmp);
+              );
+              tmp3=",dashtype->1"+tmp3;
+              forall(1..(length(Nk)-1),
+                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],5)+tmp3+");";
+                parse(tmp);
+              );
+              if(typeL_(-1)!=1,
+                tmp="linesize(1)";
+                parse(tmp);
+              );  //
+            );
+            if(tmp1==3,
+              if(typeL_3!=1,
+                tmp="linesize("+text(typeL_3)+")";
+                parse(tmp);
+              );
+              tmp3=",dashtype->3"+tmp3;
+              forall(1..(length(Nk)-1),
+                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],5)+tmp3+");";
+                parse(tmp);
+              );
+              if(typeL_3!=1,
+                tmp="linesize(1)";
+                parse(tmp);
+              );
+            );
+          ,
+            if(indexof(opcindy,"size")==0,  //190425from
+              opcindy=opcindy+",size->"+text(TenSize/TenSizeInit);
+            ); //190425to
+            tmp="draw("+text(Nk_1)+opcindy+");"; 
+            parse(tmp);
+           ); //190126to
+        );
+      );
+    );
+  );
+  forall(PTSHADElist, //200519from
+    parse(#_2);
+  ); //200519to
+
+  grestore(); 
+  layer(0);
+);
+Drwxy():=Drwxy(0,[]);
+Drwxy(Arg):=( //190901from
+  if(islist(Arg),
+    Drwxy(0,Arg);
+  ,
+    Drwxy(Arg,[]);
+  ); //190901to
+);
+Drwxy(add,optionsorg):=(
+  regional(options,color,eqL,strL,org,xrng,yrng,ax,st,nn,size,labelsize,
+  linesty,colorax,colorla,tmp,tmp1,tmp2);
+  options=optionsorg;
+  tmp=Divoptions(options);
+  color=tmp_(length(tmp)-2);
+  eqL=tmp_5;
+  org=GENTEN; 
+  xrng=[XMIN,XMAX];  //190103
+  yrng=[YMIN,YMAX];  //190103
+  ax=AXSTYLE_1; //190901from
+  labelsize="Size=1.5"; //201012
+  forall(AXSTYLE_2,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(contains(["S","L"],tmp1), 
+      labelsize="Size="+tmp_2;
+      options=remove(options,[#]);
+    );
+  );  //190901to
+  linesty=ax_8;
+  if(length(ax_9)>0, //190427
+    if(isstring(ax_9),colorax=ax_9,colorax=text(ax_9));
+  ,
+    colorax=KCOLOR; //190427
+  );
+  colorax="Color="+colorax; //190427[if removed]
+  if(isstring(ax_10),colorla=ax_10,colorla=text(ax_10));
+  if(length(colorla)>0, //181217from
+    colorla="Color="+colorla;
+  ,
+    if(length(colorax)>0,
+      colorla=colorax;
+    );
+  ); //181217to
+  forall(eqL,
+    if(tmp1=="O", //190103from
+      org=parse(tmp_2);
+      options=remove(options,[#]);
+    );  //190103to
+    if(tmp1=="X",
+      xrng=parse(tmp_2);
+      options=remove(options,[#]);
+    );
+    if(tmp1=="Y",
+      yrng=parse(tmp_2);
+      options=remove(options,[#]);
+    );
+    if(tmp1=="A",
+      tmp2=tokenize(tmp_2,",");
+      st=1; nn=1;
+      if(isreal(tmp2_1),
+        st=2;
+        nn=tmp2_1;
+      );
+      forall(st..(length(tmp2)),
+        tmp=tmp2_#;
+        if(length(tmp)>0,ax_nn=tmp);
+        nn=nn+1;
+      );
+      options=remove(options,[#]);
+    );
+  );
+  options=append(options,linesty); //181216
+  if(substring(ax_1,0,1)=="a",
+    strL=select(options,isstring(#)); //181216
+    tmp=select(strL,contains(["dr","da","do","id"],substring(#,0,2)));
+    if(length(tmp)==0,options=append(options,YasenStyle));
+    tmp=substring(ax_1,1,length(ax_1)); //181216[2lines]
+    if(length(tmp)>0,size=parse(tmp),size=YaSize);
+    tmp1=concat(options,[size,YaAngle,YaPosition,YaCut,colorax]);//181216
+    tmp=[[xrng_1,org_2],[xrng_2,org_2]];
+    Arrowdataseg("axx"+text(AXCOUNT),tmp,tmp1);
+    tmp=[[org_1,yrng_1],[org_1,yrng_2]];
+    Arrowdataseg("axy"+text(AXCOUNT),tmp,tmp1); //190419
+  ,
+    tmp=[[xrng_1,org_2],[xrng_2,org_2]];
+    tmp1=concat(options,[colorax,"Msg=n"]);//181216,190325
+    Listplot("-axx"+text(AXCOUNT),tmp,tmp1); 
+    tmp=[[org_1,yrng_1],[org_1,yrng_2]];
+    Listplot("-axy"+text(AXCOUNT),tmp,tmp1); 
+  );
+  AXCOUNT=AXCOUNT+1;
+  tmp=[colorla,labelsize]; //190901from
+  Expr([[xrng_2,org_2],ax_3,ax_2],tmp);
+  Expr([[org_1,yrng_2],ax_5,ax_4],tmp);
+  Letter([org,ax_7,ax_6],tmp); //190901to
+  if(add==0, //190103
+    Addax(0);
+  );
+);
+Arrowdataseg(ptlist):=Arrowdataseg(ptlist,[]); //181110from
+Arrowdataseg(Arg1,Arg2):=(
+  regional(name);
+  if(isstring(Arg1),
+    Arrowdataseg(Arg1,Arg2,[]);
+  ,
+    name="";
+    forall(Arg1,
+      if(ispoint(#),
+        name=name+#.name; //190505
+      );
+    );
+    Arrowdataseg(name,Arg1,Arg2);
+  );
+);  //181110from
+Arrowdataseg(nm,ptlistorg,optionsorg):=(
+  regional(options,Ltype,Noflg,opstr,opcindy,eqL,reL,strL,color,size,lineflg,
+      flg,cutend,tmp,tmp1,tmp2,pA,pB,pC,angle,segpos,cut,scaley,Ev,Nv,pP,ptlist);
+  scaley=SCALEY; //190412
+  SCALEY=1; //200114
+  ptlist=[];
+  forall(ptlistorg,
+    if(ispoint(#),tmp=[#.x, #.y], tmp=[#_1,scaley*#_2]);
+    ptlist=append(ptlist,tmp);
+  );
+  pA=ptlist_1; pB=ptlist_2;
+  options=optionsorg;
+  tmp=Divoptions(options);
+  Ltype=tmp_1;
+  Noflg=tmp_2;
+  eqL=tmp_5;
+  reL=tmp_6;
+  strL=tmp_7;
+  color=tmp_(length(tmp)-2);
+  opstr=tmp_(length(tmp)-1);
+  opcindy=tmp_(length(tmp));
+  size=0.2*YaSize*1/2.54*1000/MilliIn; 
+  angle=YaAngle*pi/180;
+  segpos=YaPosition;
+  cut=YaCut;
+  if(length(reL)>=1,
+    size=0.2*reL_1*1/2.54*1000/MilliIn; 
+  );
+  if(length(reL)>=2,
+    if(reL_2<2.5,angle=reL_2*YaAngle,angle=reL_2);
+    angle=angle*pi/180;
+  );
+  if(length(reL)>=3,
+    segpos=reL_3;
+  );
+  if(length(reL)>=4,
+    cut=reL_4;
+  );
+  options=remove(options,reL); //191202
+  cutend=[0,0];//180719
+  lineflg=0;
+  forall(eqL,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,2));
+    tmp2=tmp_2;
+    if(tmp1=="CU",//180719from
+      tmp2=replace(tmp2,"[","");
+      tmp2=replace(tmp2,"]","");
+      cutend=tokenize(tmp2,",");
+      if(length(cutend)==1,cutend=[cutend_1,cutend_1]);
+    );
+    if(tmp1=="LI",//190504from
+      tmp2=Toupper(substring(tmp2,0,1));
+      if(tmp2=="Y",lineflg=1);
+    );//190504to
+  );
+  tmp=pB-pA;
+  tmp=tmp/|tmp|;
+  pA=ptlist_1+tmp*cutend_1;
+  pB=ptlist_2-tmp*cutend_2;
+  pP=pA+segpos*(pB-pA);
+  Ev=-1/|pB-pA|*(pB-pA); Nv=[-Ev_2, Ev_1];
+  tmp1=pP+size*cos(angle)*Ev+size*sin(angle)*Nv;
+  tmp2=pP+size*cos(angle)*Ev-size*sin(angle)*Nv;
+  pC=pP+(1-cut)*((tmp1+tmp2)/2-pP);
+  ArrowheadNumber=ArrowheadNumber+1;
+  if(Noflg<2,
+    if(lineflg==1,
+      Listplot("-arh"+nm,[tmp1,pP,tmp2],append(options,"Msg=n")); //191106
+    ,
+      Listplot("-arh"+nm,[tmp1,pP,tmp2,pC,tmp1],["dr,0.1","Color="+color,"Msg=n"]); //191106
+    fillpoly(parse("arh"+nm),color->color); // 
+    );
+    if(lineflg==0,
+      if(segpos==1,pB=pC); //191202
+    );
+    Listplot("-ar"+nm,[pA,pB],[Ltype,"Color="+color,"Msg=n"]); 
+  );
+  SCALEY=scaley; //200114
+  [LLcrd(pA),LLcrd(pB)];
+);
+Addax(param):=(
+  ADDAXES=text(param);
+);
+Measuredepth(list):=( //190423
+  regional(str,nn,tmp,tmp1,tmp2);
+  str=text(list);
+  tmp1=Indexall(str,"[");
+  tmp2=select(tmp1,!contains(tmp1,#+1));
+  nn=tmp2_1;
+  tmp1=substring(str,nn,length(str));
+  tmp=indexof(tmp1,",");
+  tmp1=substring(tmp1,0,tmp-1);
+  if(!ispoint(parse(tmp1)),
+    nn=nn-1;
+  );
+  nn;
+);
+Ketcindyjsfigure=0;
+Ketcindyjsscale=1;
+pL=[[1,5.403023058681,8.414709848079],[0.888888888889,6.302750509229,7.763719213007],[0.928888888889,5.987243018939,8.009551862131],[0.908480725624,6.14944513507,7.885703806939],[0.920826404636,6.051624609804,7.961020008895],[0.912561941826,6.117210748758,7.910735279054],[0.918479101589,6.070294847456,7.946793093126],[0.914034657145,6.105553858162,7.919735607019],[0.917494864757,6.078113432437,7.940814637204],[0.914724781655,6.10008680099,7.923947313075],[0.916992355351,6.082102998909,7.937759325569],[0.915101996183,6.097097339022,7.926247790631],[0.916701996183,6.084407543686,7.935992996616],[0.91533025407,6.095287951627,7.927639294692],[0.916519314712,6.085857201021,7.934881355684],[0.915478731986,6.094110805085,7.928544222955],[0.916397005632,6.086827663543,7.934136940735],[0.915580679101,6.093302481208,7.929165458767],[0.916311139291,6.087508916408,7.933614257868],[0.915653677095,6.092723651801,7.929610236498],[0.916248561093,6.088005375775,7.933233296994],[0.91570772821,6.092295038627,7.929939543422],[0.91620155537,6.088378276409,7.932947117141],[0.915748861844,6.091968846242,7.930190134947],[0.916165354972,6.088665448267,7.932726710222],[0.915780887459,6.091714873899,7.930385229932],[0.916136886035,6.088891282093,7.932553369178],[0.915806307523,6.091513281034,7.930540079149],[0.916114094534,6.08907207531,7.932414592146],[0.915826820762,6.091350598684,7.930665034151],[0.916095565723,6.089219052474,7.932301767519],[0.915843613091,6.091217423496,7.930767320991],[0.916080299481,6.089340148206,7.932208807101],[0.915857532718,6.09110702958,7.930852107699],[0.916067572625,6.089441099789,7.932131308306],[0.915869199287,6.091014503333,7.93092316948],[0.916056851754,6.089526138795,7.932066023737],[0.915879073977,6.090936187629,7.930983315972],[0.916047736483,6.089598441477,7.932010515724],[0.915887505751,6.090869315153,7.931034673088],[0.916039921541,6.089660429493,7.931962925623],[0.915894762592,6.090811760734,7.931078873351],[0.916033170896,6.089713975217,7.93192181631],[0.915901053047,6.090761870515,7.931117187173],[0.916027299733,6.089760544719,7.931886062469],[0.915906541371,6.090718341887,7.931150615125],[0.916022161674,6.089801299142,7.931854772812],[0.91591135835,6.090680137631,7.931179953895],[0.91601763957,6.089837167751,7.931827234016],[0.915915609165,6.090646423597,7.931205844178],[0.91601363877,6.089868901358,7.931802869731],[0.915919379179,6.090616522797,7.931228805944],[0.916010082127,6.089897111911,7.931781210191],[0.915922738254,6.09058988117,7.931249264737],[0.916006906253,6.089922302214,7.931761869408],[0.91592574401,6.090566041742,7.931267571528],[0.916004058678,6.089944888476,7.931744527865],[0.915928444311,6.090544624905,7.931284017865],[0.916001495666,6.08996521761,7.93172891924],[0.915930879185,6.090525313216,7.931298847545],[0.91599918053,6.089983580627,7.931714820119],[0.915933082308,6.09050783957,7.931312265706],[0.915997082308,6.090000223112,7.931702041964],[0.915935082184,6.090491977917,7.93132444595],[0.915995174727,6.090015353469,7.931690424778],[0.915936903064,6.090477535917,7.931335535992],[0.915993435372,6.090029149479,7.931679832072],[0.915938565688,6.090464349082,7.931345662154],[0.915991845032,6.090041763547,7.931670146839],[0.915940087876,6.090452276074,7.931354932977],[0.915990387157,6.090053326921,7.931661268313],[0.91594148501,6.090441194903,7.931363442147],[0.915989047436,6.09006395313,7.931653109333],[0.915942770421,6.090430999832,7.931371270864],[0.915987813438,6.09007374077,7.931645594199],[0.915943955712,6.090421598849,7.931378489788],[0.915986674325,6.090082775807,7.931638656912],[0.915945051015,6.090412911579,7.931385160643],[0.915985620613,6.090091133466,7.931632239714],[0.915946065215,6.090404867566,7.931391337535],[0.915984643974,6.090098879803,7.931626291891],[0.915947006125,6.090397404839,7.931397068054],[0.915983737071,6.090106073015,7.93162076876],[0.91594788064,6.090390468711,7.931402394194],[0.91598289342,6.090112764534,7.931615630832],[0.915948694863,6.09038401078,7.931407353127],[0.915982107272,6.090118999951,7.931610843103],[0.915949454211,6.090377988079,7.931411977846],[0.915981373519,6.090124819795,7.931606374457],[0.915950163507,6.09037236236,7.931416297724],[0.915980687606,6.090130260188,7.931602197157],[0.915950827055,6.090367099487,7.931420338974],[0.915980045462,6.090135353415,7.931598286417],[0.915951448705,6.090362168915,7.931424125052],[0.915979443442,6.090140128396,7.931594620031],[0.915952031913,6.090357543246,7.931427676997],[0.915978878271,6.090144611102,7.931591178059],[0.915952579783,6.09035319785,7.931431013722],[0.915978347002,6.090148824909,7.931587942554],[0.915953095115,6.090349110534,7.931434152271],[0.915977846977,6.0901527909,7.931584897326],[0.915953580433,6.090345261259,7.931437108032],[0.915977375793,6.090156528134,7.931582027744],[0.915954038026,6.090341631893,7.931439894927],[0.915976931275,6.09016005387,7.931579320554],[0.915954469964,6.090338205999,7.931442525578],[0.915976511446,6.090163383771,7.931576763732],[0.915954878131,6.090334968647,7.931445011451],[0.915976114513,6.090166532076,7.931574346344],[0.915955264239,6.090331906252,7.931447362978],[0.91597573884,6.090169511754,7.931572058432],[0.915955629849,6.090329006431,7.931449589666],[0.915975382936,6.090172334634,7.931569890914],[0.915955976388,6.090326257877,7.9314517002],[0.915975045437,6.090175011529,7.931567835488],[0.915956305159,6.090323650249,7.93145370252],[0.915974725096,6.090177552333,7.931565884557],[0.915956617355,6.090321174075,7.931455603898],[0.91597442077,6.090179966117,7.931564031155],[0.915956914074,6.090318820666,7.931457411008],[0.915974131408,6.090182261209,7.931562268888],[0.91595719632,6.090316582039,7.93145912998],[0.915973856045,6.090184445265,7.931560591879],[0.915957465021,6.090314450849,7.931460766453],[0.915973593793,6.090186525334,7.931558994715],[0.915957721029,6.09031242033,7.931462325623],[0.915973343832,6.090188507913,7.931557472406],[0.915957965132,6.09031048424,7.931463812283],[0.915973105407,6.090190399001,7.931556020348],[0.915958198056,6.090308636813,7.931465230861],[0.915972877817,6.090192204142,7.931554634282],[0.915958420473,6.090306872717,7.931466585452],[0.915972660416,6.090193928467,7.931553310271],[0.915958633007,6.090305187014,7.931467879846],[0.915972452606,6.090195576728,7.931552044664],[0.915958836233,6.090303575129,7.931469117558],[0.915972253829,6.090197153333,7.931550834076],[0.915959030689,6.090302032812,7.93147030185],[0.915972063571,6.090198662379,7.931549675364],[0.91595921687,6.090300556118,7.931471435752],[0.91597188135,6.090200107669,7.931548565605],[0.915959395241,6.090299141375,7.931472522083],[0.915971706721,6.090201492745,7.931547502081],[0.915959566232,6.090297785167,7.931473563468],[0.915971539268,6.090202820906,7.931546482258],[0.915959730244,6.090296484308,7.931474562351],[0.915971378603,6.090204095229,7.931545503775],[0.915959887652,6.090295235827,7.931475521015],[0.915971224364,6.090205318584,7.931544564427],[0.915960038807,6.090294036949,7.93147644159],[0.915971076213,6.090206493654,7.931543662154],[0.915960184034,6.090292885081,7.931477326068],[0.915970933833,6.090207622946,7.931542795031],[0.915960323641,6.090291777797,7.931478176311],[0.915970796928,6.090208708808,7.931541961255],[0.915960457912,6.090290712825,7.931478994064],[0.915970665223,6.090209753439,7.931541159139],[0.915960587117,6.090289688037,7.931479780961],[0.915970538455,6.090210758899,7.931540387099],[0.915960711508,6.090288701436,7.931480538535],[0.915970416383,6.090211727124,7.931539643651],[0.91596083132,6.090287751148,7.931481268225],[0.915970298776,6.090212659929,7.931538927399],[0.915960946776,6.090286835414,7.931481971384],[0.915970185419,6.09021355902,7.931538237034],[0.915961058084,6.090285952577,7.931482649281],[0.915970076111,6.090214426004,7.931537571322],[0.91596116544,6.09028510108,7.931483303113],[0.91596997066,6.090215262391,7.931536929104],[0.91596126903,6.090284279459,7.931483934005],[0.915969868887,6.090216069604,7.931536309287],[0.915961369027,6.09028348633,7.931484543018],[0.915969770624,6.090216848984,7.931535710841],[0.915961465597,6.090282720393,7.931485131152],[0.91596967571,6.090217601796,7.931535132796],[0.915961558893,6.090281980417,7.931485699351],[0.915969583995,6.090218329235,7.931534574233],[0.915961649062,6.090281265243,7.931486248506],[0.915969495337,6.090219032427,7.931534034288],[0.915961736242,6.090280573775,7.931486779457],[0.915969409602,6.090219712439,7.931533512141],[0.915961820564,6.090279904976,7.931487293002],[0.915969326663,6.090220370278,7.931533007021],[0.915961902151,6.090279257866,7.931487789892],[0.915969246398,6.090221006897,7.931532518193],[0.915961981121,6.090278631518,7.93148827084],[0.915969168695,6.090221623201,7.931532044965],[0.915962057584,6.090278025052,7.931488736521],[0.915969093446,6.090222220043,7.931531586679],[0.915962131645,6.090277437637,7.931489187575],[0.915969020548,6.090222798235,7.931531142715],[0.915962203404,6.090276868482,7.931489624606],[0.915968949904,6.090223358546,7.93153071248],[0.915962272955,6.090276316838,7.931490048192],[0.915968881423,6.090223901706,7.931530295415],[0.915962340388,6.090275781995,7.931490458877],[0.915968815017,6.090224428407,7.931529890988],[0.915962405788,6.090275263276,7.93149085718],[0.915968750603,6.090224939309,7.931529498692],[0.915962469236,6.090274760041,7.931491243594],[0.915968688103,6.090225435035,7.931529118048],[0.915962530808,6.090274271679,7.931491618588],[0.91596862744,6.090225916183,7.931528748599],[0.915962590579,6.090273797609,7.931491982607],[0.915968568544,6.090226383317,7.93152838991],[0.915962648617,6.09027333728,7.931492336075],[0.915968511347,6.090226836977,7.931528041567],[0.915962704989,6.090272890165,7.931492679396],[0.915968455784,6.090227277676,7.931527703176],[0.915962759758,6.090272455764,7.931493012956],[0.915968401794,6.090227705902,7.931527374362],[0.915962812985,6.090272033599,7.931493337119],[0.915968349317,6.090228122124,7.931527054767],[0.915962864726,6.090271623214,7.931493652237],[0.915968298298,6.090228526784,7.931526744048],[0.915962915036,6.090271224176,7.931493958642],[0.915968248683,6.090228920307,7.931526441881],[0.915962963969,6.09027083607,7.931494256653],[0.915968200421,6.090229303098,7.931526147955],[0.915963011573,6.0902704585,7.931494546573],[0.915968153463,6.090229675544,7.931525861972],[0.915963057896,6.090270091089,7.931494828693],[0.915968107763,6.090230038014,7.931525583649],[0.915963102984,6.090269733475,7.931495103291],[0.915968063276,6.090230390861,7.931525312714],[0.91596314688,6.090269385312,7.93149537063],[0.91596801996,6.090230734424,7.93152504891],[0.915963189626,6.090269046272,7.931495630966],[0.915967977774,6.090231069024,7.931524791986],[0.915963231262,6.090268716037,7.931495884539],[0.915967936679,6.090231394971,7.931524541707],[0.915963271826,6.090268394306,7.931496131583],[0.915967896638,6.090231712561,7.931524297846],[0.915963311354,6.090268080788,7.93149637232],[0.915967857614,6.090232022077,7.931524060183],[0.915963349881,6.090267775208,7.931496606963],[0.915967819574,6.09023232379,7.931523828512],[0.915963387441,6.090267477299,7.931496835715],[0.915967782486,6.090232617961,7.931523602633],[0.915963424067,6.090267186806,7.931497058772],[0.915967746316,6.090232904839,7.931523382353],[0.915963459788,6.090266903486,7.931497276322],[0.915967711036,6.090233184662,7.93152316749],[0.915963494634,6.090266627104,7.931497488545],[0.915967676617,6.090233457661,7.931522957868],[0.915963528633,6.090266357435,7.931497695612],[0.91596764303,6.090233724055,7.931522753317],[0.915963561814,6.090266094264,7.93149789769],[0.915967610249,6.090233984056,7.931522553674],[0.915963594201,6.090265837384,7.931498094938],[0.915967578249,6.090234237867,7.931522358785],[0.915963625821,6.090265586595,7.931498287507],[0.915967547005,6.090234485683,7.9315221685],[0.915963656696,6.090265341707,7.931498475547],[0.915967516493,6.09023472769,7.931521982674],[0.91596368685,6.090265102537,7.931498659196],[0.91596748669,6.09023496407,7.931521801169],[0.915963716306,6.090264868906,7.931498838591],[0.915967457575,6.090235194995,7.931521623853],[0.915963745085,6.090264640647,7.931499013862],[0.915967429127,6.090235420631,7.931521450598],[0.915963773208,6.090264417594,7.931499185134],[0.915967401326,6.09023564114,7.931521281279],[0.915963800693,6.090264199592,7.931499352529],[0.915967374151,6.090235856675,7.93152111578],[0.915963827561,6.090263986488,7.931499516162],[0.915967347585,6.090236067385,7.931520953986],[0.91596385383,6.090263778138,7.931499676146],[0.915967321609,6.090236273412,7.931520795788],[0.915963879517,6.0902635744,7.931499832587],[0.915967296206,6.090236474895,7.931520641079],[0.91596390464,6.09026337514,7.931499985591],[0.91596727136,6.090236671966,7.931520489757],[0.915963929214,6.090263180227,7.931500135256],[0.915967247053,6.090236864753,7.931520341725],[0.915963953257,6.090262989536,7.93150028168],[0.915967223272,6.090237053379,7.931520196888],[0.915963976782,6.090262802946,7.931500424954],[0.915967199999,6.090237237964,7.931520055155],[0.915963999805,6.09026262034,7.93150056517],[0.915967177222,6.090237418621,7.931519916437],[0.91596402234,6.090262441605,7.931500702413],[0.915967154926,6.090237595461,7.931519780649],[0.9159640444,6.090262266633,7.931500836767],[0.915967133098,6.090237768592,7.93151964771],[0.915964065999,6.090262095319,7.931500968311],[0.915967111725,6.090237938116,7.931519517541],[0.91596408715,6.090261927561,7.931501097125],[0.915967090793,6.090238104132,7.931519390065],[0.915964107865,6.090261763262,7.931501223283],[0.915967070292,6.090238266738,7.931519265208],[0.915964128155,6.090261602328,7.931501346858],[0.915967050209,6.090238426025,7.931519142899],[0.915964148033,6.090261444666,7.93150146792],[0.915967030534,6.090238582083,7.931519023069],[0.915964167509,6.09026129019,7.931501586535],[0.915967011254,6.090238734999,7.931518905652],[0.915964186595,6.090261138814,7.931501702771],[0.91596699236,6.090238884857,7.931518790583],[0.9159642053,6.090260990454,7.931501816689],[0.915966973842,6.090239031738,7.9315186778],[0.915964223635,6.090260845033,7.931501928352],[0.915966955688,6.09023917572,7.931518567243],[0.915964241609,6.090260702472,7.931502037819],[0.915966937891,6.090239316879,7.931518458854],[0.915964259231,6.090260562698,7.931502145146],[0.915966920441,6.090239455288,7.931518352576],[0.915964276512,6.090260425637,7.931502250389],[0.915966903328,6.090239591018,7.931518248355],[0.915964293459,6.090260291221,7.931502353601],[0.915966886544,6.090239724138,7.931518146139],[0.915964310081,6.090260159381,7.931502454835],[0.915966870081,6.090239854715,7.931518045875],[0.915964326387,6.090260030052,7.931502554141],[0.915966853931,6.090239982812,7.931517947515],[0.915964342384,6.090259903171,7.931502651567],[0.915966838085,6.090240108492,7.931517851011],[0.91596435808,6.090259778677,7.931502747161],[0.915966822537,6.090240231816,7.931517756317],[0.915964373483,6.09025965651,7.931502840969],[0.915966807278,6.090240352842,7.931517663387],[0.9159643886,6.090259536611,7.931502933033],[0.915966792301,6.090240471627,7.931517572177],[0.915964403437,6.090259418927,7.931503023398],[0.915966777601,6.090240588225,7.931517482647],[0.915964418003,6.090259303401,7.931503112105],[0.915966763169,6.090240702691,7.931517394754],[0.915964432303,6.090259189983,7.931503199194],[0.915966749,6.090240815076,7.931517308459],[0.915964446343,6.09025907862,7.931503284705],[0.915966735086,6.090240925429,7.931517223724],[0.915964460131,6.090258969264,7.931503368675],[0.915966721423,6.0902410338,7.931517140511],[0.915964473671,6.090258861866,7.931503451141],[0.915966708004,6.090241140237,7.931517058783],[0.915964486971,6.090258756381,7.931503532139],[0.915966694822,6.090241244783,7.931516978507],[0.915964500035,6.090258652762,7.931503611703],[0.915966681874,6.090241347485,7.931516899647],[0.915964512869,6.090258550967,7.931503689867],[0.915966669152,6.090241448385,7.93151682217],[0.915964525479,6.090258450952,7.931503766664],[0.915966656653,6.090241547525,7.931516746045],[0.91596453787,6.090258352676,7.931503842126],[0.91596664437,6.090241644946,7.93151667124],[0.915964550046,6.0902582561,7.931503916283],[0.915966632299,6.090241740688,7.931516597725],[0.915964562013,6.090258161184,7.931503989164],[0.915966620435,6.090241834788,7.93151652547],[0.915964573775,6.090258067891,7.9315040608],[0.915966608773,6.090241927284,7.931516454446],[0.915964585338,6.090257976183,7.931504131219],[0.915966597309,6.090242018213,7.931516384626],[0.915964596705,6.090257886025,7.931504200447],[0.915966586038,6.090242107609,7.931516315983],[0.915964607881,6.090257797383,7.931504268512],[0.915966574956,6.090242195506,7.931516248491],[0.91596461887,6.090257710222,7.931504335439],[0.915966564059,6.090242281939,7.931516182123],[0.915964629677,6.090257624509,7.931504401254],[0.915966553342,6.09024236694,7.931516116855],[0.915964640305,6.090257540213,7.931504465981],[0.915966542802,6.090242450539,7.931516052663],[0.915964650758,6.090257457303,7.931504529644],[0.915966532434,6.090242532767,7.931515989524],[0.91596466104,6.090257375749,7.931504592266],[0.915966522236,6.090242613656,7.931515927413],[0.915964671155,6.09025729552,7.93150465387],[0.915966512203,6.090242693232,7.93151586631],[0.915964681107,6.090257216589,7.931504714478],[0.915966502332,6.090242771525,7.931515806193],[0.915964690898,6.090257138928,7.931504774111],[0.915966492619,6.090242848562,7.93151574704],[0.915964700533,6.090257062509,7.931504832789],[0.915966483061,6.090242924369,7.931515688831],[0.915964710015,6.090256987306,7.931504890534],[0.915966473655,6.090242998974,7.931515631545],[0.915964719346,6.090256913294,7.931504947365],[0.915966464398,6.0902430724,7.931515575165],[0.915964728531,6.090256840447,7.931505003301],[0.915966455286,6.090243144673,7.93151551967],[0.915964737571,6.090256768742,7.93150505836],[0.915966446316,6.090243215817,7.931515465041],[0.915964746471,6.090256698154,7.931505112562],[0.915966437485,6.090243285855,7.931515411262],[0.915964755233,6.09025662866,7.931505165923],[0.915966428792,6.09024335481,7.931515358315],[0.915964763859,6.090256560238,7.931505218461],[0.915966420232,6.090243422704,7.931515306182],[0.915964772354,6.090256492867,7.931505270193],[0.915966411803,6.090243489559,7.931515254848],[0.915964780718,6.090256426523,7.931505321135],[0.915966403502,6.090243555396,7.931515204294],[0.915964788956,6.090256361188,7.931505371303],[0.915966395327,6.090243620236,7.931515154507],[0.915964797068,6.09025629684,7.931505420713],[0.915966387275,6.090243684098,7.931515105471],[0.915964805059,6.090256233459,7.93150546938],[0.915966379344,6.090243747002,7.93151505717],[0.915964812931,6.090256171027,7.931505517319],[0.915966371532,6.090243808967,7.931515009589],[0.915964820685,6.090256109524,7.931505564544],[0.915966363835,6.090243870012,7.931514962716],[0.915964828324,6.090256048933,7.93150561107],[0.915966356253,6.090243930154,7.931514916535],[0.915964835851,6.090255989235,7.93150565691],[0.915966348781,6.090243989413,7.931514871033],[0.915964843267,6.090255930412,7.931505702077],[0.91596634142,6.090244047804,7.931514826197],[0.915964850576,6.090255872448,7.931505746585],[0.915966334165,6.090244105345,7.931514782014],[0.915964857777,6.090255815327,7.931505790446],[0.915966327015,6.090244162052,7.931514738472],[0.915964864875,6.090255759031,7.931505833673],[0.915966319969,6.090244217941,7.931514695557],[0.915964871871,6.090255703545,7.931505876279],[0.915966313023,6.090244273027,7.931514653259],[0.915964878766,6.090255648853,7.931505918274],[0.915966306177,6.090244327327,7.931514611564],[0.915964885563,6.090255594941,7.93150595967],[0.915966299429,6.090244380855,7.931514570463],[0.915964892264,6.090255541794,7.93150600048],[0.915966292775,6.090244433625,7.931514529943],[0.91596489887,6.090255489397,7.931506040713],[0.915966286216,6.090244485653,7.931514489994],[0.915964905384,6.090255437737,7.931506080381],[0.915966279748,6.09024453695,7.931514450604],[0.915964911806,6.090255386799,7.931506119494],[0.915966273371,6.090244587532,7.931514411765],[0.915964918139,6.090255336569,7.931506158063],[0.915966267082,6.090244637412,7.931514373465],[0.915964924384,6.090255287036,7.931506196097],[0.91596626088,6.090244686602,7.931514335694],[0.915964930543,6.090255238187,7.931506233607],[0.915966254764,6.090244735115,7.931514298443],[0.915964936617,6.090255190007,7.931506270601],[0.915966248731,6.090244782963,7.931514261703],[0.915964942609,6.090255142487,7.93150630709],[0.915966242781,6.090244830159,7.931514225463],[0.915964948519,6.090255095613,7.931506343083],[0.915966236911,6.090244876714,7.931514189715],[0.915964954348,6.090255049373,7.931506378588],[0.915966231121,6.090244922641,7.931514154451],[0.9159649601,6.090255003758,7.931506413614],[0.915966225408,6.090244967949,7.93151411966],[0.915964965774,6.090254958754,7.931506448171],[0.915966219772,6.090245012651,7.931514085336],[0.915964971372,6.090254914352,7.931506482265],[0.915966214212,6.090245056756,7.93151405147],[0.915964976896,6.09025487054,7.931506515906],[0.915966208725,6.090245100276,7.931514018052],[0.915964982346,6.090254827309,7.931506549101],[0.91596620331,6.090245143221,7.931513985077],[0.915964987725,6.090254784648,7.931506581859],[0.915966197967,6.090245185601,7.931513952535],[0.915964993033,6.090254742547,7.931506614186],[0.915966192694,6.090245227426,7.93151392042],[0.915964998272,6.090254700996,7.931506646091],[0.915966187489,6.090245268705,7.931513888724],[0.915965003442,6.090254659986,7.931506677581],[0.915966182352,6.090245309448,7.931513857439],[0.915965008546,6.090254619508,7.931506708663],[0.915966177282,6.090245349664,7.931513826559],[0.915965013583,6.090254579552,7.931506739343],[0.915966172277,6.090245389362,7.931513796076],[0.915965018556,6.090254540109,7.93150676963],[0.915966167336,6.090245428552,7.931513765985],[0.915965023465,6.090254501171,7.931506799529],[0.915966162458,6.090245467241,7.931513736277],[0.915965028312,6.090254462729,7.931506829047],[0.915966157642,6.090245505438,7.931513706947],[0.915965033098,6.090254424774,7.93150685819],[0.915966152887,6.090245543152,7.931513677988],[0.915965037822,6.090254387299,7.931506886966],[0.915966148192,6.090245580391,7.931513649394],[0.915965042488,6.090254350295,7.931506915379],[0.915966143556,6.090245617162,7.93151362116],[0.915965047095,6.090254313755,7.931506943437],[0.915966138978,6.090245653473,7.931513593278],[0.915965051644,6.09025427767,7.931506971145],[0.915966134457,6.090245689333,7.931513565743],[0.915965056137,6.090254242034,7.931506998508],[0.915966129992,6.090245724748,7.931513538549],[0.915965060575,6.090254206839,7.931507025533],[0.915966125582,6.090245759725,7.931513511692],[0.915965064957,6.090254172077,7.931507052225],[0.915966121226,6.090245794273,7.931513485164],[0.915965069286,6.090254137742,7.93150707859],[0.915966116923,6.090245828397,7.931513458961],[0.915965073562,6.090254103826,7.931507104632],[0.915966112674,6.090245862106,7.931513433078],[0.915965077786,6.090254070323,7.931507130357],[0.915966108475,6.090245895405,7.931513407509],[0.915965081959,6.090254037227,7.931507155771],[0.915966104328,6.090245928301,7.93151338225],[0.915965086082,6.090254004529,7.931507180878],[0.91596610023,6.090245960801,7.931513357295],[0.915965090155,6.090253972225,7.931507205683],[0.915966096182,6.090245992911,7.931513332639],[0.915965094179,6.090253940308,7.93150723019],[0.915966092182,6.090246024637,7.931513308278],[0.915965098155,6.090253908772,7.931507254406],[0.915966088229,6.090246055986,7.931513284207],[0.915965102084,6.09025387761,7.931507278334],[0.915966084324,6.090246086962,7.931513260421],[0.915965105966,6.090253846817,7.931507301978],[0.915966080464,6.090246117573,7.931513236917],[0.915965109803,6.090253816387,7.931507325344],[0.91596607665,6.090246147824,7.931513213689],[0.915965113594,6.090253786314,7.931507348436],[0.915966072881,6.09024617772,7.931513190733],[0.915965117341,6.090253756593,7.931507371257],[0.915966069156,6.090246207267,7.931513168045],[0.915965121045,6.090253727218,7.931507393813],[0.915966065474,6.090246236471,7.931513145621],[0.915965124706,6.090253698184,7.931507416106],[0.915966061835,6.090246265336,7.931513123456],[0.915965128324,6.090253669486,7.931507438143],[0.915966058237,6.090246293869,7.931513101547],[0.9159651319,6.090253641118,7.931507459925],[0.915966054681,6.090246322073,7.931513079891],[0.915965135436,6.090253613076,7.931507481457],[0.915966051166,6.090246349955,7.931513058482],[0.915965138931,6.090253585354,7.931507502744],[0.915966047691,6.090246377518,7.931513037317],[0.915965142386,6.090253557948,7.931507523788],[0.915966044255,6.090246404768,7.931513016393],[0.915965145803,6.090253530853,7.931507544593],[0.915966040858,6.09024643171,7.931512995705],[0.91596514918,6.090253504064,7.931507565163],[0.9159660375,6.090246458348,7.931512975252],[0.91596515252,6.090253477576,7.931507585502],[0.915966034179,6.090246484686,7.931512955027],[0.915965155822,6.090253451385,7.931507605612],[0.915966030895,6.09024651073,7.93151293503],[0.915965159087,6.090253425487,7.931507625498],[0.915966027648,6.090246536483,7.931512915255],[0.915965162316,6.090253399878,7.931507645163],[0.915966024438,6.09024656195,7.9315128957],[0.915965165509,6.090253374552,7.931507664609],[0.915966021262,6.090246587136,7.931512876361],[0.915965168667,6.090253349506,7.931507683841],[0.915966018122,6.090246612043,7.931512857236],[0.91596517179,6.090253324736,7.931507702861],[0.915966015016,6.090246636677,7.931512838321],[0.915965174878,6.090253300238,7.931507721672],[0.915966011944,6.090246661041,7.931512819613],[0.915965177933,6.090253276007,7.931507740277],[0.915966008906,6.090246685139,7.931512801109],[0.915965180955,6.090253252041,7.931507758681],[0.915966005901,6.090246708975,7.931512782806],[0.915965183944,6.090253228334,7.931507776884],[0.915966002928,6.090246732553,7.931512764701],[0.915965186901,6.090253204883,7.93150779489],[0.915965999987,6.090246755877,7.931512746792],[0.915965189825,6.090253181686,7.931507812703],[0.915965997078,6.09024677895,7.931512729076],[0.915965192719,6.090253158737,7.931507830324],[0.915965994201,6.090246801776,7.931512711549],[0.915965195581,6.090253136033,7.931507847757],[0.915965991353,6.090246824358,7.931512694209],[0.915965198413,6.090253113572,7.931507865005],[0.915965988537,6.0902468467,7.931512677054],[0.915965201215,6.090253091349,7.931507882069],[0.91596598575,6.090246868804,7.93151266008],[0.915965203987,6.090253069361,7.931507898952],[0.915965982992,6.090246890676,7.931512643286],[0.91596520673,6.090253047605,7.931507915657],[0.915965980264,6.090246912317,7.931512626669],[0.915965209444,6.090253026078,7.931507932187],[0.915965977564,6.090246933731,7.931512610226],[0.91596521213,6.090253004776,7.931507948544],[0.915965974892,6.090246954922,7.931512593955],[0.915965214788,6.090252983696,7.93150796473],[0.915965972248,6.090246975891,7.931512577853],[0.915965217418,6.090252962836,7.931507980748],[0.915965969632,6.090246996643,7.931512561919],[0.915965220021,6.090252942192,7.9315079966],[0.915965967042,6.090247017181,7.931512546149],[0.915965222597,6.090252921761,7.931508012288],[0.91596596448,6.090247037506,7.931512530542],[0.915965225146,6.09025290154,7.931508027814],[0.915965961944,6.090247057623,7.931512515095],[0.915965227669,6.090252881527,7.931508043182],[0.915965959433,6.090247077534,7.931512499807],[0.915965230167,6.090252861718,7.931508058392],[0.915965956948,6.090247097241,7.931512484674],[0.915965232639,6.090252842111,7.931508073447],[0.915965954489,6.090247116749,7.931512469696],[0.915965235086,6.090252822703,7.93150808835],[0.915965952054,6.090247136058,7.931512454869],[0.915965237508,6.090252803491,7.931508103102],[0.915965949645,6.090247155172,7.931512440192],[0.915965239906,6.090252784473,7.931508117705],[0.915965947259,6.090247174094,7.931512425662],[0.915965242279,6.090252765646,7.931508132161],[0.915965944897,6.090247192827,7.931512411279],[0.915965244629,6.090252747008,7.931508146472],[0.915965942559,6.090247211371,7.931512397039],[0.915965246956,6.090252728556,7.931508160641],[0.915965940244,6.090247229731,7.931512382941],[0.915965249259,6.090252710288,7.931508174669],[0.915965937952,6.090247247909,7.931512368983],[0.915965251539,6.0902526922,7.931508188557],[0.915965935683,6.090247265907,7.931512355164],[0.915965253797,6.090252674292,7.931508202308],[0.915965933437,6.090247283727,7.931512341481],[0.915965256033,6.09025265656,7.931508215924],[0.915965931212,6.090247301372,7.931512327932],[0.915965258247,6.090252639002,7.931508229406],[0.915965929009,6.090247318843,7.931512314516],[0.915965260439,6.090252621616,7.931508242756],[0.915965926828,6.090247336144,7.931512301232],[0.915965262609,6.090252604399,7.931508255976],[0.915965924668,6.090247353277,7.931512288076],[0.915965264759,6.09025258735,7.931508269067],[0.915965922529,6.090247370243,7.931512275049],[0.915965266888,6.090252570466,7.931508282031],[0.91596592041,6.090247387045,7.931512262147],[0.915965268996,6.090252553745,7.93150829487],[0.915965918312,6.090247403685,7.93151224937],[0.915965271084,6.090252537186,7.931508307586],[0.915965916234,6.090247420165,7.931512236716],[0.915965273151,6.090252520785,7.931508320179],[0.915965914177,6.090247436487,7.931512224183],[0.915965275199,6.090252504541,7.931508332652],[0.915965912138,6.090247452653,7.93151221177],[0.915965277228,6.090252488453,7.931508345006],[0.91596591012,6.090247468665,7.931512199475],[0.915965279237,6.090252472517,7.931508357242],[0.91596590812,6.090247484525,7.931512187297],[0.915965281227,6.090252456732,7.931508369363],[0.915965906139,6.090247500235,7.931512175234],[0.915965283198,6.090252441096,7.931508381369],[0.915965904177,6.090247515797,7.931512163285],[0.915965285151,6.090252425608,7.931508393261],[0.915965902234,6.090247531212,7.931512151448],[0.915965287086,6.090252410265,7.931508405043],[0.915965900308,6.090247546483,7.931512139722],[0.915965289002,6.090252395066,7.931508416713],[0.915965898401,6.090247561611,7.931512128106],[0.9159652909,6.090252380008,7.931508428275],[0.915965896511,6.090247576599,7.931512116598],[0.915965292781,6.090252365091,7.93150843973],[0.915965894639,6.090247591447,7.931512105197],[0.915965294645,6.090252350312,7.931508451078],[0.915965892785,6.090247606157,7.931512093901],[0.915965296491,6.090252335669,7.931508462321],[0.915965890947,6.090247620732,7.93151208271],[0.91596529832,6.090252321162,7.931508473461],[0.915965889126,6.090247635173,7.931512071621],[0.915965300132,6.090252306788,7.931508484498],[0.915965887322,6.090247649481,7.931512060635],[0.915965301928,6.090252292545,7.931508495434],[0.915965885535,6.090247663658,7.931512049749],[0.915965303707,6.090252278433,7.931508506271],[0.915965883764,6.090247677706,7.931512038962],[0.91596530547,6.090252264449,7.931508517008],[0.915965882009,6.090247691626,7.931512028273],[0.915965307217,6.090252250592,7.931508527649],[0.91596588027,6.09024770542,7.931512017681],[0.915965308948,6.09025223686,7.931508538192],[0.915965878546,6.09024771909,7.931512007185],[0.915965310664,6.090252223252,7.931508548641],[0.915965876838,6.090247732636,7.931511996783],[0.915965312364,6.090252209767,7.931508558996],[0.915965875146,6.090247746061,7.931511986475],[0.915965314049,6.090252196403,7.931508569258],[0.915965873468,6.090247759365,7.931511976259],[0.915965315719,6.090252183158,7.931508579428],[0.915965871806,6.090247772551,7.931511966135],[0.915965317374,6.090252170031,7.931508589508],[0.915965870158,6.090247785619,7.9315119561],[0.915965319015,6.090252157021,7.931508599497],[0.915965868525,6.090247798572,7.931511946155],[0.91596532064,6.090252144126,7.931508609399],[0.915965866907,6.090247811409,7.931511936297],[0.915965322252,6.090252131345,7.931508619213],[0.915965865302,6.090247824134,7.931511926527],[0.915965323849,6.090252118677,7.93150862894],[0.915965863712,6.090247836746,7.931511916842],[0.915965325432,6.09025210612,7.931508638582],[0.915965862136,6.090247849248,7.931511907243],[0.915965327001,6.090252093673,7.931508648139],[0.915965860574,6.09024786164,7.931511897727],[0.915965328557,6.090252081335,7.931508657614],[0.915965859025,6.090247873925,7.931511888294],[0.915965330099,6.090252069104,7.931508667005],[0.915965857489,6.090247886102,7.931511878944],[0.915965331628,6.090252056979,7.931508676315],[0.915965855967,6.090247898174,7.931511869674],[0.915965333143,6.09025204496,7.931508685544],[0.915965854458,6.090247910142,7.931511860485],[0.915965334646,6.090252033044,7.931508694694],[0.915965852963,6.090247922007,7.931511851375],[0.915965336135,6.09025202123,7.931508703765],[0.91596585148,6.090247933769,7.931511842343],[0.915965337612,6.090252009518,7.931508712758],[0.915965850009,6.090247945431,7.931511833388],[0.915965339076,6.090251997907,7.931508721674],[0.915965848552,6.090247956993,7.93151182451],[0.915965340527,6.090251986394,7.931508730514],[0.915965847106,6.090247968456,7.931511815708],[0.915965341966,6.09025197498,7.931508739279],[0.915965845673,6.090247979822,7.931511806981],[0.915965343393,6.090251963662,7.931508747969],[0.915965844252,6.090247991092,7.931511798327],[0.915965344808,6.09025195244,7.931508756586],[0.915965842843,6.090248002266,7.931511789747],[0.915965346211,6.090251941313,7.93150876513],[0.915965841446,6.090248013347,7.931511781239],[0.915965347602,6.090251930279,7.931508773602],[0.915965840061,6.090248024334,7.931511772802],[0.915965348981,6.090251919338,7.931508782003],[0.915965838688,6.090248035229,7.931511764436],[0.915965350349,6.090251908489,7.931508790334],[0.915965837325,6.090248046033,7.93151175614],[0.915965351706,6.09025189773,7.931508798596],[0.915965835975,6.090248056747,7.931511747913],[0.915965353051,6.09025188706,7.931508806788],[0.915965834635,6.090248067372,7.931511739755],[0.915965354385,6.09025187648,7.931508814913],[0.915965833307,6.090248077909,7.931511731664],[0.915965355708,6.090251865986,7.93150882297],[0.915965831989,6.090248088359,7.93151172364],[0.91596535702,6.09025185558,7.931508830961],[0.915965830682,6.090248098723,7.931511715682],[0.915965358321,6.090251845259,7.931508838886],[0.915965829386,6.090248109001,7.93151170779],[0.915965359612,6.090251835022,7.931508846746],[0.915965828101,6.090248119195,7.931511699962],[0.915965360892,6.09025182487,7.931508854542],[0.915965826826,6.090248129306,7.931511692198],[0.915965362162,6.0902518148,7.931508862274],[0.915965825562,6.090248139335,7.931511684498],[0.915965363421,6.090251804812,7.931508869943],[0.915965824308,6.090248149282,7.93151167686],[0.91596536467,6.090251794906,7.93150887755],[0.915965823064,6.090248159148,7.931511669284],[0.915965365909,6.090251785079,7.931508885095],[0.91596582183,6.090248168935,7.931511661769],[0.915965367138,6.090251775332,7.931508892579],[0.915965820606,6.090248178643,7.931511654315],[0.915965368357,6.090251765664,7.931508900003],[0.915965819392,6.090248188272,7.931511646921],[0.915965369566,6.090251756073,7.931508907367],[0.915965818188,6.090248197825,7.931511639586],[0.915965370765,6.090251746559,7.931508914673],[0.915965816993,6.0902482073,7.93151163231],[0.915965371955,6.090251737121,7.93150892192],[0.915965815808,6.090248216701,7.931511625092],[0.915965373136,6.090251727758,7.931508929109],[0.915965814632,6.090248226026,7.931511617932],[0.915965374307,6.09025171847,7.931508936241],[0.915965813466,6.090248235278,7.931511610828],[0.915965375469,6.090251709255,7.931508943317],[0.915965812308,6.090248244456,7.93151160378],[0.915965376621,6.090251700113,7.931508950337],[0.91596581116,6.090248253562,7.931511596788],[0.915965377765,6.090251691043,7.931508957301],[0.915965810021,6.090248262596,7.931511589851],[0.915965378899,6.090251682045,7.931508964211],[0.915965808891,6.090248271559,7.931511582969],[0.915965380025,6.090251673117,7.931508971066],[0.91596580777,6.090248280452,7.93151157614],[0.915965381142,6.090251664259,7.931508977868],[0.915965806658,6.090248289276,7.931511569365],[0.91596538225,6.09025165547,7.931508984616],[0.915965805554,6.09024829803,7.931511562643],[0.915965383349,6.090251646749,7.931508991313],[0.915965804459,6.090248306717,7.931511555973],[0.91596538444,6.090251638096,7.931508997957],[0.915965803372,6.090248315336,7.931511549354],[0.915965385523,6.09025162951,7.93150900455],[0.915965802294,6.090248323889,7.931511542787],[0.915965386597,6.09025162099,7.931509011091],[0.915965801224,6.090248332376,7.931511536271],[0.915965387663,6.090251612536,7.931509017583],[0.915965800162,6.090248340797,7.931511529804],[0.915965388721,6.090251604147,7.931509024024],[0.915965799108,6.090248349154,7.931511523387],[0.91596538977,6.090251595823,7.931509030417],[0.915965798063,6.090248357447,7.93151151702],[0.915965390812,6.090251587561,7.93150903676],[0.915965797025,6.090248365677,7.9315115107],[0.915965391845,6.090251579363,7.931509043055],[0.915965795995,6.090248373844,7.931511504429],[0.915965392871,6.090251571227,7.931509049302],[0.915965794973,6.090248381948,7.931511498206],[0.915965393889,6.090251563153,7.931509055502],[0.915965793959,6.090248389992,7.93151149203],[0.915965394899,6.09025155514,7.931509061655],[0.915965792953,6.090248397975,7.9315114859],[0.915965395902,6.090251547188,7.931509067761],[0.915965791954,6.090248405897,7.931511479817],[0.915965396897,6.090251539295,7.931509073822],[0.915965790963,6.09024841376,7.931511473779],[0.915965397885,6.090251531462,7.931509079837],[0.915965789979,6.090248421564,7.931511467787],[0.915965398865,6.090251523687,7.931509085806],[0.915965789002,6.09024842931,7.931511461839],[0.915965399838,6.09025151597,7.931509091732],[0.915965788033,6.090248436998,7.931511455936],[0.915965400804,6.090251508311,7.931509097613],[0.915965787071,6.090248444628,7.931511450077],[0.915965401762,6.090251500709,7.93150910345],[0.915965786116,6.090248452202,7.931511444261],[0.915965402713,6.090251493163,7.931509109244],[0.915965785168,6.09024845972,7.931511438489],[0.915965403658,6.090251485673,7.931509114996],[0.915965784227,6.090248467182,7.931511432759],[0.915965404595,6.090251478238,7.931509120704],[0.915965783293,6.090248474589,7.931511427071],[0.915965405526,6.090251470858,7.931509126371],[0.915965782366,6.090248481942,7.931511421425],[0.915965406449,6.090251463533,7.931509131996],[0.915965781446,6.090248489241,7.931511415821],[0.915965407366,6.090251456261,7.93150913758],[0.915965780533,6.090248496487,7.931511410257],[0.915965408276,6.090251449042,7.931509143123],[0.915965779626,6.090248503679,7.931511404734],[0.91596540918,6.090251441875,7.931509148626],[0.915965778725,6.090248510819,7.931511399252],[0.915965410077,6.090251434761,7.931509154089],[0.915965777832,6.090248517908,7.931511393809],[0.915965410967,6.090251427698,7.931509159512],[0.915965776945,6.090248524945,7.931511388406],[0.915965411851,6.090251420687,7.931509164895],[0.915965776064,6.090248531931,7.931511383041],[0.915965412729,6.090251413726,7.93150917024],[0.915965775189,6.090248538867,7.931511377716],[0.9159654136,6.090251406815,7.931509175547],[0.915965774321,6.090248545752,7.931511372428],[0.915965414465,6.090251399954,7.931509180815],[0.915965773459,6.090248552589,7.931511367179],[0.915965415324,6.090251393142,7.931509186046],[0.915965772603,6.090248559376,7.931511361967],[0.915965416177,6.090251386379,7.931509191239],[0.915965771754,6.090248566115,7.931511356793],[0.915965417023,6.090251379664,7.931509196395],[0.91596577091,6.090248572806,7.931511351655],[0.915965417864,6.090251372997,7.931509201514],[0.915965770073,6.09024857945,7.931511346554],[0.915965418698,6.090251366377,7.931509206597],[0.915965769241,6.090248586046,7.931511341489],[0.915965419527,6.090251359805,7.931509211644],[0.915965768415,6.090248592595,7.93151133646],[0.91596542035,6.090251353278,7.931509216656],[0.915965767595,6.090248599099,7.931511331466],[0.915965421167,6.090251346798,7.931509221632],[0.915965766781,6.090248605556,7.931511326508],[0.915965421978,6.090251340363,7.931509226573],[0.915965765973,6.090248611969,7.931511321584],[0.915965422784,6.090251333973,7.931509231479],[0.91596576517,6.090248618336,7.931511316695],[0.915965423584,6.090251327628,7.931509236351],[0.915965764373,6.090248624659,7.93151131184],[0.915965424378,6.090251321328,7.931509241189],[0.915965763581,6.090248630937,7.931511307019],[0.915965425167,6.090251315071,7.931509245993],[0.915965762795,6.090248637172,7.931511302231],[0.91596542595,6.090251308858,7.931509250764],[0.915965762014,6.090248643364,7.931511297477],[0.915965426728,6.090251302688,7.931509255502],[0.915965761239,6.090248649513,7.931511292756],[0.915965427501,6.09025129656,7.931509260207],[0.915965760469,6.090248655619,7.931511288067],[0.915965428268,6.090251290475,7.931509264879],[0.915965759705,6.090248661683,7.931511283411],[0.91596542903,6.090251284432,7.93150926952],[0.915965758945,6.090248667705,7.931511278786],[0.915965429787,6.09025127843,7.931509274128],[0.915965758191,6.090248673686,7.931511274194],[0.915965430538,6.09025127247,7.931509278705],[0.915965757442,6.090248679626,7.931511269633],[0.915965431285,6.09025126655,7.93150928325],[0.915965756699,6.090248685526,7.931511265103],[0.915965432026,6.090251260671,7.931509287765],[0.91596575596,6.090248691385,7.931511260604],[0.915965432762,6.090251254831,7.931509292249],[0.915965755226,6.090248697205,7.931511256135],[0.915965433493,6.090251249032,7.931509296702],[0.915965754497,6.090248702984,7.931511251697],[0.91596543422,6.090251243271,7.931509301125],[0.915965753774,6.090248708725,7.931511247289],[0.915965434941,6.09025123755,7.931509305518],[0.915965753055,6.090248714427,7.931511242911],[0.915965435657,6.090251231867,7.931509309882],[0.915965752341,6.090248720091,7.931511238562],[0.915965436369,6.090251226223,7.931509314216],[0.915965751631,6.090248725716,7.931511234242],[0.915965437076,6.090251220616,7.931509318521],[0.915965750927,6.090248731304,7.931511229952],[0.915965437778,6.090251215048,7.931509322797],[0.915965750227,6.090248736854,7.93151122569],[0.915965438475,6.090251209516,7.931509327044],[0.915965749532,6.090248742367,7.931511221457],[0.915965439168,6.090251204021,7.931509331263],[0.915965748842,6.090248747844,7.931511217252],[0.915965439856,6.090251198563,7.931509335455],[0.915965748156,6.090248753284,7.931511213075],[0.91596544054,6.090251193141,7.931509339618],[0.915965747474,6.090248758688,7.931511208925],[0.915965441219,6.090251187755,7.931509343753],[0.915965746798,6.090248764056,7.931511204803],[0.915965441894,6.090251182405,7.931509347862],[0.915965746125,6.090248769388,7.931511200709],[0.915965442564,6.09025117709,7.931509351943],[0.915965745457,6.090248774686,7.931511196641],[0.915965443229,6.09025117181,7.931509355997],[0.915965744794,6.090248779948,7.9315111926],[0.915965443891,6.090251166564,7.931509360025],[0.915965744135,6.090248785176,7.931511188585],[0.915965444548,6.090251161353,7.931509364026],[0.91596574348,6.09024879037,7.931511184597],[0.9159654452,6.090251156177,7.931509368001],[0.915965742829,6.09024879553,7.931511180635],[0.915965445849,6.090251151034,7.93150937195],[0.915965742183,6.090248800656,7.931511176699],[0.915965446493,6.090251145924,7.931509375874],[0.915965741541,6.090248805749,7.931511172789],[0.915965447133,6.090251140848,7.931509379771],[0.915965740903,6.090248810809,7.931511168903],[0.915965447769,6.090251135804,7.931509383644],[0.915965740269,6.090248815836,7.931511165043],[0.915965448401,6.090251130794,7.931509387491],[0.915965739639,6.090248820831,7.931511161208],[0.915965449028,6.090251125815,7.931509391314],[0.915965739014,6.090248825793,7.931511157398],[0.915965449652,6.090251120869,7.931509395112],[0.915965738392,6.090248830723,7.931511153612],[0.915965450272,6.090251115955,7.931509398886],[0.915965737775,6.090248835622,7.931511149851],[0.915965450887,6.090251111072,7.931509402635],[0.915965737161,6.090248840489,7.931511146113],[0.915965451499,6.09025110622,7.931509406361],[0.915965736551,6.090248845325,7.9315111424],[0.915965452107,6.090251101399,7.931509410062],[0.915965735945,6.090248850131,7.93151113871],[0.915965452711,6.090251096609,7.93150941374],[0.915965735343,6.090248854905,7.931511135044],[0.915965453311,6.09025109185,7.931509417395],[0.915965734745,6.09024885965,7.931511131401],[0.915965453907,6.090251087121,7.931509421026],[0.915965734151,6.090248864364,7.931511127781],[0.915965454499,6.090251082421,7.931509424634],[0.91596573356,6.090248869048,7.931511124184],[0.915965455088,6.090251077752,7.93150942822],[0.915965732973,6.090248873703,7.93151112061],[0.915965455673,6.090251073112,7.931509431783],[0.91596573239,6.090248878328,7.931511117058],[0.915965456255,6.090251068501,7.931509435323],[0.915965731811,6.090248882925,7.931511113529],[0.915965456832,6.090251063919,7.931509438842],[0.915965731235,6.090248887492,7.931511110022],[0.915965457406,6.090251059366,7.931509442338],[0.915965730662,6.090248892031,7.931511106537],[0.915965457977,6.090251054841,7.931509445812],[0.915965730094,6.090248896542,7.931511103073],[0.915965458544,6.090251050345,7.931509449265],[0.915965729529,6.090248901024,7.931511099631],[0.915965459107,6.090251045876,7.931509452696],[0.915965728967,6.090248905479,7.931511096211],[0.915965459667,6.090251041436,7.931509456106],[0.915965728409,6.090248909906,7.931511092812],[0.915965460223,6.090251037022,7.931509459494],[0.915965727854,6.090248914305,7.931511089434],[0.915965460776,6.090251032637,7.931509462862],[0.915965727303,6.090248918677,7.931511086076],[0.915965461326,6.090251028278,7.931509466209],[0.915965726755,6.090248923022,7.93151108274],[0.915965461872,6.090251023946,7.931509469535],[0.915965726211,6.090248927341,7.931511079424],[0.915965462415,6.090251019641,7.931509472841],[0.91596572567,6.090248931633,7.931511076128],[0.915965462954,6.090251015362,7.931509476126],[0.915965725132,6.090248935898,7.931511072853],[0.91596546349,6.09025101111,7.931509479391],[0.915965724597,6.090248940138,7.931511069598],[0.915965464023,6.090251006883,7.931509482637],[0.915965724066,6.090248944351,7.931511066362],[0.915965464553,6.090251002683,7.931509485862],[0.915965723538,6.090248948539,7.931511063147],[0.915965465079,6.090250998508,7.931509489068],[0.915965723013,6.090248952702,7.931511059951],[0.915965465602,6.090250994358,7.931509492254],[0.915965722492,6.090248956839,7.931511056774],[0.915965466122,6.090250990233,7.931509495422],[0.915965721973,6.090248960951,7.931511053616],[0.915965466639,6.090250986134,7.931509498569],[0.915965721458,6.090248965038,7.931511050478],[0.915965467153,6.090250982059,7.931509501698],[0.915965720946,6.0902489691,7.931511047359],[0.915965467664,6.090250978009,7.931509504808],[0.915965720437,6.090248973138,7.931511044258],[0.915965468171,6.090250973983,7.931509507899],[0.915965719931,6.090248977152,7.931511041176],[0.915965468676,6.090250969981,7.931509510972],[0.915965719428,6.090248981142,7.931511038113],[0.915965469177,6.090250966004,7.931509514026],[0.915965718928,6.090248985107,7.931511035068],[0.915965469676,6.09025096205,7.931509517062],[0.91596571843,6.09024898905,7.931511032041],[0.915965470171,6.090250958119,7.93150952008],[0.915965717936,6.090248992968,7.931511029032],[0.915965470664,6.090250954213,7.93150952308],[0.915965717445,6.090248996863,7.931511026041],[0.915965471154,6.090250950329,7.931509526062],[0.915965716957,6.090249000735,7.931511023068],[0.91596547164,6.090250946468,7.931509529027],[0.915965716472,6.090249004584,7.931511020112],[0.915965472124,6.090250942631,7.931509531973],[0.915965715989,6.090249008411,7.931511017174],[0.915965472605,6.090250938816,7.931509534903],[0.91596571551,6.090249012215,7.931511014253],[0.915965473083,6.090250935023,7.931509537815],[0.915965715033,6.090249015996,7.93151101135],[0.915965473559,6.090250931253,7.93150954071],[0.915965714559,6.090249019755,7.931511008463],[0.915965474031,6.090250927505,7.931509543588],[0.915965714088,6.090249023492,7.931511005594],[0.915965474501,6.090250923779,7.931509546449],[0.91596571362,6.090249027207,7.931511002741],[0.915965474968,6.090250920075,7.931509549293],[0.915965713154,6.090249030901,7.931510999905],[0.915965475432,6.090250916392,7.931509552121],[0.915965712691,6.090249034572,7.931510997086],[0.915965475894,6.090250912731,7.931509554932],[0.915965712231,6.090249038223,7.931510994283],[0.915965476353,6.090250909091,7.931509557727],[0.915965711773,6.090249041852,7.931510991496],[0.915965476809,6.090250905472,7.931509560506],[0.915965711318,6.09024904546,7.931510988725],[0.915965477263,6.090250901875,7.931509563268],[0.915965710866,6.090249049048,7.931510985971],[0.915965477714,6.090250898298,7.931509566015],[0.915965710416,6.090249052614,7.931510983232],[0.915965478162,6.090250894742,7.931509568745],[0.915965709969,6.09024905616,7.931510980509],[0.915965478608,6.090250891206,7.93150957146],[0.915965709525,6.090249059686,7.931510977802],[0.915965479051,6.09025088769,7.93150957416],[0.915965709083,6.090249063191,7.931510975111],[0.915965479492,6.090250884195,7.931509576843],[0.915965708643,6.090249066676,7.931510972435],[0.91596547993,6.09025088072,7.931509579512],[0.915965708206,6.090249070141,7.931510969774],[0.915965480365,6.090250877265,7.931509582165],[0.915965707772,6.090249073587,7.931510967128],[0.915965480799,6.090250873829,7.931509584803],[0.91596570734,6.090249077012,7.931510964498],[0.915965481229,6.090250870413,7.931509587426],[0.915965706911,6.090249080419,7.931510961882],[0.915965481658,6.090250867017,7.931509590034],[0.915965706484,6.090249083806,7.931510959282],[0.915965482083,6.090250863639,7.931509592627],[0.915965706059,6.090249087173,7.931510956696],[0.915965482507,6.090250860281,7.931509595206],[0.915965705637,6.090249090522,7.931510954124],[0.915965482928,6.090250856942,7.93150959777],[0.915965705217,6.090249093852,7.931510951568],[0.915965483346,6.090250853622,7.93150960032],[0.9159657048,6.090249097163,7.931510949025],[0.915965483763,6.09025085032,7.931509602855],[0.915965704385,6.090249100455,7.931510946497],[0.915965484177,6.090250847037,7.931509605376],[0.915965703972,6.090249103729,7.931510943984],[0.915965484588,6.090250843772,7.931509607882],[0.915965703561,6.090249106984,7.931510941484],[0.915965484997,6.090250840526,7.931509610375],[0.915965703153,6.090249110221,7.931510938998],[0.915965485404,6.090250837298,7.931509612854],[0.915965702747,6.090249113441,7.931510936526],[0.915965485809,6.090250834088,7.931509615319],[0.915965702344,6.090249116642,7.931510934068],[0.915965486212,6.090250830895,7.93150961777],[0.915965701942,6.090249119825,7.931510931624],[0.915965486612,6.090250827721,7.931509620208],[0.915965701543,6.090249122991,7.931510929193],[0.91596548701,6.090250824564,7.931509622632],[0.915965701146,6.090249126139,7.931510926776],[0.915965487406,6.090250821425,7.931509625042],[0.915965700752,6.09024912927,7.931510924372],[0.915965487799,6.090250818303,7.931509627439],[0.915965700359,6.090249132383,7.931510921981],[0.915965488191,6.090250815198,7.931509629824],[0.915965699969,6.090249135479,7.931510919604],[0.91596548858,6.09025081211,7.931509632194],[0.91596569958,6.090249138559,7.931510917239],[0.915965488967,6.090250809039,7.931509634552],[0.915965699194,6.090249141621,7.931510914888],[0.915965489352,6.090250805985,7.931509636897],[0.91596569881,6.090249144666,7.931510912549],[0.915965489735,6.090250802948,7.931509639229],[0.915965698429,6.090249147695,7.931510910224],[0.915965490116,6.090250799928,7.931509641549],[0.915965698049,6.090249150708,7.931510907911],[0.915965490495,6.090250796924,7.931509643855],[0.915965697671,6.090249153703,7.93151090561],[0.915965490871,6.090250793936,7.931509646149],[0.915965697295,6.090249156683,7.931510903322],[0.915965491246,6.090250790965,7.931509648431],[0.915965696922,6.090249159646,7.931510901047],[0.915965491619,6.090250788009,7.9315096507],[0.91596569655,6.090249162594,7.931510898784],[0.915965491989,6.09025078507,7.931509652957],[0.915965696181,6.090249165525,7.931510896533],[0.915965492358,6.090250782147,7.931509655202],[0.915965695813,6.09024916844,7.931510894294],[0.915965492724,6.090250779239,7.931509657435],[0.915965695447,6.09024917134,7.931510892068],[0.915965493089,6.090250776347,7.931509659655],[0.915965695084,6.090249174224,7.931510889853],[0.915965493452,6.090250773471,7.931509661864],[0.915965694722,6.090249177093,7.931510887651],[0.915965493812,6.09025077061,7.931509664061],[0.915965694362,6.090249179946,7.93151088546],[0.915965494171,6.090250767764,7.931509666245],[0.915965694005,6.090249182784,7.931510883281],[0.915965494528,6.090250764934,7.931509668419],[0.915965693649,6.090249185607,7.931510881113],[0.915965494883,6.090250762119,7.93150967058],[0.915965693295,6.090249188414,7.931510878957],[0.915965495236,6.090250759319,7.931509672731],[0.915965692943,6.090249191207,7.931510876813],[0.915965495587,6.090250756533,7.931509674869],[0.915965692592,6.090249193985,7.93151087468],[0.915965495936,6.090250753763,7.931509676997],[0.915965692244,6.090249196748,7.931510872558],[0.915965496284,6.090250751007,7.931509679113],[0.915965691897,6.090249199496,7.931510870448],[0.91596549663,6.090250748266,7.931509681217],[0.915965691553,6.09024920223,7.931510868349],[0.915965496973,6.090250745539,7.931509683311],[0.91596569121,6.09024920495,7.93151086626],[0.915965497315,6.090250742827,7.931509685394],[0.915965690869,6.090249207655,7.931510864183],[0.915965497655,6.090250740129,7.931509687465],[0.91596569053,6.090249210346,7.931510862117],[0.915965497994,6.090250737445,7.931509689526],[0.915965690192,6.090249213023,7.931510860062],[0.91596549833,6.090250734775,7.931509691576],[0.915965689856,6.090249215685,7.931510858017],[0.915965498665,6.09025073212,7.931509693615],[0.915965689522,6.090249218334,7.931510855983],[0.915965498998,6.090250729478,7.931509695644],[0.91596568919,6.090249220969,7.93151085396],[0.91596549933,6.09025072685,7.931509697662],[0.91596568886,6.09024922359,7.931510851947],[0.915965499659,6.090250724235,7.931509699669],[0.915965688531,6.090249226198,7.931510849945],[0.915965499987,6.090250721635,7.931509701666],[0.915965688204,6.090249228792,7.931510847953],[0.915965500313,6.090250719047,7.931509703653],[0.915965687879,6.090249231372,7.931510845972],[0.915965500638,6.090250716473,7.931509705629],[0.915965687555,6.09024923394,7.931510844001],[0.915965500961,6.090250713913,7.931509707596],[0.915965687233,6.090249236494,7.93151084204],[0.915965501282,6.090250711366,7.931509709551],[0.915965686913,6.090249239034,7.931510840089],[0.915965501601,6.090250708832,7.931509711497],[0.915965686594,6.090249241562,7.931510838148],[0.915965501919,6.090250706311,7.931509713433],[0.915965686277,6.090249244076,7.931510836217],[0.915965502235,6.090250703802,7.931509715359],[0.915965685961,6.090249246578,7.931510834296],[0.91596550255,6.090250701307,7.931509717275],[0.915965685648,6.090249249067,7.931510832385],[0.915965502863,6.090250698825,7.931509719181],[0.915965685335,6.090249251543,7.931510830484],[0.915965503174,6.090250696355,7.931509721078],[0.915965685025,6.090249254006,7.931510828592],[0.915965503484,6.090250693898,7.931509722964],[0.915965684716,6.090249256457,7.93151082671],[0.915965503792,6.090250691453,7.931509724841],[0.915965684408,6.090249258896,7.931510824838],[0.915965504099,6.090250689021,7.931509726709],[0.915965684103,6.090249261322,7.931510822975],[0.915965504404,6.090250686601,7.931509728567],[0.915965683798,6.090249263735,7.931510821122],[0.915965504708,6.090250684194,7.931509730416],[0.915965683495,6.090249266137,7.931510819278],[0.91596550501,6.090250681798,7.931509732255],[0.915965683194,6.090249268526,7.931510817443],[0.91596550531,6.090250679415,7.931509734085],[0.915965682895,6.090249270903,7.931510815618],[0.915965505609,6.090250677044,7.931509735906],[0.915965682596,6.090249273269,7.931510813802],[0.915965505907,6.090250674684,7.931509737717],[0.9159656823,6.090249275622,7.931510811995],[0.915965506203,6.090250672337,7.93150973952],[0.915965682004,6.090249277963,7.931510810197],[0.915965506497,6.090250670001,7.931509741313],[0.915965681711,6.090249280293,7.931510808408],[0.91596550679,6.090250667677,7.931509743098],[0.915965681418,6.090249282611,7.931510806628],[0.915965507082,6.090250665365,7.931509744873],[0.915965681128,6.090249284918,7.931510804857],[0.915965507372,6.090250663064,7.93150974664],[0.915965680838,6.090249287213,7.931510803094],[0.91596550766,6.090250660775,7.931509748398],[0.91596568055,6.090249289496,7.931510801341],[0.915965507948,6.090250658497,7.931509750147],[0.915965680264,6.090249291769,7.931510799596],[0.915965508233,6.090250656231,7.931509751887],[0.915965679979,6.09024929403,7.93151079786],[0.915965508518,6.090250653975,7.931509753619],[0.915965679695,6.090249296279,7.931510796133],[0.915965508801,6.090250651731,7.931509755342],[0.915965679413,6.090249298518,7.931510794414],[0.915965509082,6.090250649498,7.931509757057],[0.915965679132,6.090249300745,7.931510792703],[0.915965509362,6.090250647276,7.931509758763],[0.915965678853,6.090249302962,7.931510791001],[0.915965509641,6.090250645065,7.931509760461],[0.915965678575,6.090249305167,7.931510789308],[0.915965509918,6.090250642865,7.93150976215],[0.915965678298,6.090249307362,7.931510787623],[0.915965510194,6.090250640676,7.931509763831],[0.915965678022,6.090249309546,7.931510785946],[0.915965510469,6.090250638497,7.931509765504],[0.915965677748,6.090249311719,7.931510784277],[0.915965510742,6.090250636329,7.931509767169],[0.915965677476,6.090249313882,7.931510782616],[0.915965511014,6.090250634172,7.931509768825],[0.915965677204,6.090249316034,7.931510780964],[0.915965511285,6.090250632025,7.931509770474],[0.915965676934,6.090249318176,7.931510779319],[0.915965511554,6.090250629889,7.931509772114],[0.915965676666,6.090249320307,7.931510777683],[0.915965511823,6.090250627763,7.931509773746],[0.915965676398,6.090249322428,7.931510776055],[0.915965512089,6.090250625647,7.931509775371],[0.915965676132,6.090249324538,7.931510774434],[0.915965512355,6.090250623542,7.931509776988],[0.915965675868,6.090249326638,7.931510772821],[0.915965512619,6.090250621447,7.931509778596],[0.915965675604,6.090249328728,7.931510771217],[0.915965512882,6.090250619362,7.931509780197],[0.915965675342,6.090249330808,7.931510769619],[0.915965513143,6.090250617287,7.931509781791],[0.915965675081,6.090249332878,7.93151076803],[0.915965513404,6.090250615222,7.931509783376],[0.915965674821,6.090249334938,7.931510766448],[0.915965513663,6.090250613167,7.931509784954],[0.915965674563,6.090249336988,7.931510764874],[0.915965513921,6.090250611121,7.931509786525],[0.915965674305,6.090249339029,7.931510763307],[0.915965514177,6.090250609086,7.931509788087],[0.915965674049,6.090249341059,7.931510761748],[0.915965514433,6.090250607061,7.931509789643],[0.915965673795,6.09024934308,7.931510760197],[0.915965514687,6.090250605045,7.931509791191],[0.915965673541,6.090249345091,7.931510758652],[0.91596551494,6.090250603038,7.931509792731],[0.915965673289,6.090249347092,7.931510757116],[0.915965515192,6.090250601042,7.931509794264],[0.915965673038,6.090249349084,7.931510755586],[0.915965515442,6.090250599054,7.93150979579],[0.915965672788,6.090249351067,7.931510754064],[0.915965515691,6.090250597077,7.931509797309],[0.915965672539,6.09024935304,7.931510752549],[0.91596551594,6.090250595108,7.93150979882],[0.915965672291,6.090249355004,7.931510751041],[0.915965516187,6.090250593149,7.931509800325],[0.915965672045,6.090249356958,7.93151074954],[0.915965516432,6.090250591199,7.931509801822],[0.9159656718,6.090249358903,7.931510748046],[0.915965516677,6.090250589259,7.931509803312],[0.915965671555,6.090249360839,7.93151074656],[0.915965516921,6.090250587327,7.931509804795],[0.915965671312,6.090249362766,7.93151074508],[0.915965517163,6.090250585405,7.931509806271],[0.915965671071,6.090249364684,7.931510743608],[0.915965517404,6.090250583491,7.93150980774],[0.91596567083,6.090249366593,7.931510742142],[0.915965517644,6.090250581587,7.931509809203],[0.91596567059,6.090249368493,7.931510740683],[0.915965517883,6.090250579692,7.931509810658],[0.915965670352,6.090249370384,7.931510739231],[0.915965518121,6.090250577805,7.931509812107],[0.915965670115,6.090249372266,7.931510737786],[0.915965518358,6.090250575927,7.931509813549],[0.915965669879,6.09024937414,7.931510736347],[0.915965518594,6.090250574058,7.931509814984],[0.915965669643,6.090249376004,7.931510734915],[0.915965518828,6.090250572198,7.931509816412],[0.915965669409,6.09024937786,7.93151073349],[0.915965519062,6.090250570346,7.931509817834],[0.915965669177,6.090249379708,7.931510732072],[0.915965519294,6.090250568503,7.931509819249],[0.915965668945,6.090249381547,7.93151073066],[0.915965519525,6.090250566668,7.931509820658],[0.915965668714,6.090249383377,7.931510729254],[0.915965519755,6.090250564842,7.93150982206],[0.915965668484,6.090249385199,7.931510727856],[0.915965519985,6.090250563025,7.931509823456],[0.915965668256,6.090249387012,7.931510726463],[0.915965520213,6.090250561216,7.931509824845],[0.915965668028,6.090249388817,7.931510725077],[0.91596552044,6.090250559415,7.931509826228],[0.915965667801,6.090249390614,7.931510723697],[0.915965520666,6.090250557622,7.931509827604],[0.915965667576,6.090249392402,7.931510722324],[0.915965520891,6.090250555838,7.931509828975],[0.915965667352,6.090249394183,7.931510720957],[0.915965521115,6.090250554061,7.931509830338],[0.915965667128,6.090249395955,7.931510719596],[0.915965521338,6.090250552293,7.931509831696],[0.915965666906,6.090249397719,7.931510718242],[0.91596552156,6.090250550533,7.931509833048],[0.915965666684,6.090249399475,7.931510716893],[0.91596552178,6.090250548781,7.931509834393],[0.915965666464,6.090249401223,7.931510715551],[0.915965522,6.090250547037,7.931509835732],[0.915965666245,6.090249402963,7.931510714215],[0.915965522219,6.090250545301,7.931509837065],[0.915965666026,6.090249404695,7.931510712885],[0.915965522437,6.090250543573,7.931509838392],[0.915965665809,6.090249406419,7.931510711561],[0.915965522654,6.090250541853,7.931509839713],[0.915965665592,6.090249408136,7.931510710243],[0.91596552287,6.09025054014,7.931509841028],[0.915965665377,6.090249409845,7.931510708931],[0.915965523085,6.090250538435,7.931509842337],[0.915965665162,6.090249411546,7.931510707625],[0.915965523299,6.090250536738,7.93150984364],[0.915965664949,6.090249413239,7.931510706325],[0.915965523512,6.090250535049,7.931509844937],[0.915965664736,6.090249414925,7.93151070503],[0.915965523724,6.090250533367,7.931509846229],[0.915965664525,6.090249416603,7.931510703742],[0.915965523935,6.090250531692,7.931509847515],[0.915965664314,6.090249418273,7.931510702459],[0.915965524145,6.090250530026,7.931509848794],[0.915965664105,6.090249419936,7.931510701182],[0.915965524354,6.090250528366,7.931509850069],[0.915965663896,6.090249421592,7.931510699911],[0.915965524563,6.090250526714,7.931509851337],[0.915965663688,6.09024942324,7.931510698645],[0.91596552477,6.09025052507,7.9315098526],[0.915965663481,6.090249424881,7.931510697385],[0.915965524976,6.090250523433,7.931509853857],[0.915965663275,6.090249426514,7.931510696131],[0.915965525182,6.090250521803,7.931509855108],[0.91596566307,6.090249428141,7.931510694882],[0.915965525386,6.09025052018,7.931509856354],[0.915965662866,6.09024942976,7.931510693639],[0.91596552559,6.090250518565,7.931509857595],[0.915965662663,6.090249431372,7.931510692401],[0.915965525793,6.090250516956,7.93150985883],[0.91596566246,6.090249432976,7.931510691169],[0.915965525995,6.090250515355,7.931509860059],[0.915965662259,6.090249434574,7.931510689943],[0.915965526196,6.090250513761,7.931509861283],[0.915965662059,6.090249436164,7.931510688721],[0.915965526396,6.090250512174,7.931509862502],[0.915965661859,6.090249437748,7.931510687505],[0.915965526595,6.090250510594,7.931509863715],[0.91596566166,6.090249439324,7.931510686295],[0.915965526793,6.090250509021,7.931509864923],[0.915965661462,6.090249440894,7.93151068509],[0.915965526991,6.090250507455,7.931509866125],[0.915965661265,6.090249442457,7.93151068389],[0.915965527187,6.090250505896,7.931509867323],[0.915965661069,6.090249444013,7.931510682695],[0.915965527383,6.090250504343,7.931509868515],[0.915965660874,6.090249445562,7.931510681505],[0.915965527578,6.090250502797,7.931509869702],[0.915965660679,6.090249447104,7.931510680321],[0.915965527772,6.090250501259,7.931509870883],[0.915965660486,6.09024944864,7.931510679142],[0.915965527965,6.090250499726,7.93150987206],[0.915965660293,6.090249450168,7.931510677968],[0.915965528158,6.090250498201,7.931509873231],[0.915965660101,6.090249451691,7.931510676799],[0.915965528349,6.090250496682,7.931509874397],[0.91596565991,6.090249453206,7.931510675636],[0.91596552854,6.09025049517,7.931509875559],[0.91596565972,6.090249454715,7.931510674477],[0.91596552873,6.090250493664,7.931509876715],[0.91596565953,6.090249456218,7.931510673323],[0.915965528919,6.090250492165,7.931509877866],[0.915965659342,6.090249457714,7.931510672175],[0.915965529107,6.090250490672,7.931509879012],[0.915965659154,6.090249459203,7.931510671031],[0.915965529294,6.090250489186,7.931509880153],[0.915965658967,6.090249460686,7.931510669892],[0.915965529481,6.090250487706,7.93150988129],[0.915965658781,6.090249462163,7.931510668758],[0.915965529667,6.090250486232,7.931509882421],[0.915965658595,6.090249463633,7.931510667629],[0.915965529852,6.090250484765,7.931509883548],[0.915965658411,6.090249465097,7.931510666505],[0.915965530036,6.090250483304,7.931509884669],[0.915965658227,6.090249466555,7.931510665386],[0.915965530219,6.09025048185,7.931509885786],[0.915965658044,6.090249468006,7.931510664271],[0.915965530402,6.090250480402,7.931509886899],[0.915965657862,6.090249469452,7.931510663162],[0.915965530584,6.090250478959,7.931509888006],[0.91596565768,6.090249470891,7.931510662057],[0.915965530765,6.090250477523,7.931509889109],[0.9159656575,6.090249472324,7.931510660956],[0.915965530945,6.090250476094,7.931509890206],[0.91596565732,6.09024947375,7.931510659861],[0.915965531124,6.09025047467,7.9315098913],[0.915965657141,6.090249475171,7.93151065877],[0.915965531303,6.090250473252,7.931509892388],[0.915965656962,6.090249476586,7.931510657683],[0.915965531481,6.09025047184,7.931509893472],[0.915965656785,6.090249477995,7.931510656602],[0.915965531658,6.090250470435,7.931509894552],[0.915965656608,6.090249479397,7.931510655525],[0.915965531835,6.090250469035,7.931509895627],[0.915965656432,6.090249480794,7.931510654452],[0.915965532011,6.090250467641,7.931509896697],[0.915965656256,6.090249482185,7.931510653384],[0.915965532186,6.090250466253,7.931509897763],[0.915965656082,6.09024948357,7.931510652321],[0.91596553236,6.090250464871,7.931509898824],[0.915965655908,6.090249484949,7.931510651262],[0.915965532533,6.090250463495,7.931509899881],[0.915965655735,6.090249486323,7.931510650207],[0.915965532706,6.090250462124,7.931509900933],[0.915965655562,6.09024948769,7.931510649157],[0.915965532878,6.090250460759,7.931509901981],[0.91596565539,6.090249489052,7.931510648111],[0.91596553305,6.0902504594,7.931509903024],[0.915965655219,6.090249490408,7.93151064707],[0.91596553322,6.090250458047,7.931509904064],[0.915965655049,6.090249491759,7.931510646033],[0.91596553339,6.090250456699,7.931509905098],[0.91596565488,6.090249493104,7.931510645],[0.915965533559,6.090250455357,7.931509906129],[0.915965654711,6.090249494443,7.931510643972],[0.915965533728,6.090250454021,7.931509907155],[0.915965654543,6.090249495777,7.931510642948],[0.915965533896,6.09025045269,7.931509908177],[0.915965654375,6.090249497105,7.931510641928],[0.915965534063,6.090250451364,7.931509909195],[0.915965654208,6.090249498427,7.931510640912],[0.915965534229,6.090250450045,7.931509910208],[0.915965654042,6.090249499744,7.931510639901],[0.915965534395,6.09025044873,7.931509911217],[0.915965653877,6.090249501056,7.931510638894],[0.91596553456,6.090250447421,7.931509912223],[0.915965653712,6.090249502362,7.931510637891],[0.915965534724,6.090250446118,7.931509913223],[0.915965653548,6.090249503663,7.931510636892],[0.915965534888,6.09025044482,7.93150991422],[0.915965653385,6.090249504959,7.931510635897],[0.915965535051,6.090250443527,7.931509915213],[0.915965653222,6.090249506249,7.931510634907],[0.915965535213,6.090250442239,7.931509916202],[0.91596565306,6.090249507534,7.93151063392],[0.915965535375,6.090250440957,7.931509917186],[0.915965652899,6.090249508813,7.931510632938],[0.915965535536,6.09025043968,7.931509918167],[0.915965652738,6.090249510087,7.931510631959],[0.915965535696,6.090250438409,7.931509919143],[0.915965652578,6.090249511356,7.931510630985],[0.915965535856,6.090250437142,7.931509920115],[0.915965652419,6.09024951262,7.931510630014],[0.915965536015,6.090250435881,7.931509921084],[0.91596565226,6.090249513879,7.931510629048],[0.915965536173,6.090250434625,7.931509922048],[0.915965652102,6.090249515133,7.931510628085],[0.915965536331,6.090250433374,7.931509923009],[0.915965651945,6.090249516381,7.931510627126],[0.915965536488,6.090250432128,7.931509923966],[0.915965651788,6.090249517624,7.931510626172],[0.915965536645,6.090250430887,7.931509924919],[0.915965651632,6.090249518863,7.931510625221],[0.9159655368,6.090250429651,7.931509925867],[0.915965651476,6.090249520096,7.931510624274],[0.915965536955,6.09025042842,7.931509926813],[0.915965651322,6.090249521324,7.931510623331],[0.91596553711,6.090250427195,7.931509927754],[0.915965651167,6.090249522548,7.931510622391],[0.915965537264,6.090250425974,7.931509928691],[0.915965651014,6.090249523766,7.931510621456],[0.915965537417,6.090250424758,7.931509929625],[0.915965650861,6.09024952498,7.931510620524],[0.91596553757,6.090250423547,7.931509930555],[0.915965650708,6.090249526188,7.931510619596],[0.915965537722,6.090250422341,7.931509931481],[0.915965650557,6.090249527392,7.931510618672],[0.915965537873,6.090250421139,7.931509932403],[0.915965650405,6.090249528591,7.931510617751],[0.915965538024,6.090250419943,7.931509933322],[0.915965650255,6.090249529785,7.931510616834],[0.915965538175,6.090250418751,7.931509934237],[0.915965650105,6.090249530974,7.931510615921],[0.915965538324,6.090250417564,7.931509935148],[0.915965649956,6.090249532158,7.931510615012],[0.915965538473,6.090250416382,7.931509936056],[0.915965649807,6.090249533338,7.931510614106],[0.915965538622,6.090250415205,7.93150993696],[0.915965649659,6.090249534513,7.931510613204],[0.91596553877,6.090250414032,7.931509937861],[0.915965649511,6.090249535684,7.931510612305],[0.915965538917,6.090250412864,7.931509938757],[0.915965649364,6.090249536849,7.93151061141],[0.915965539063,6.090250411701,7.931509939651],[0.915965649218,6.09024953801,7.931510610518],[0.91596553921,6.090250410542,7.93150994054],[0.915965649072,6.090249539167,7.93151060963],[0.915965539355,6.090250409388,7.931509941427],[0.915965648927,6.090249540319,7.931510608746],[0.9159655395,6.090250408238,7.931509942309],[0.915965648782,6.090249541466,7.931510607865],[0.915965539644,6.090250407093,7.931509943189],[0.915965648638,6.090249542609,7.931510606988],[0.915965539788,6.090250405953,7.931509944064],[0.915965648495,6.090249543747,7.931510606114],[0.915965539931,6.090250404817,7.931509944937],[0.915965648352,6.090249544881,7.931510605243],[0.915965540074,6.090250403685,7.931509945805],[0.915965648209,6.09024954601,7.931510604376],[0.915965540216,6.090250402558,7.931509946671],[0.915965648067,6.090249547135,7.931510603512],[0.915965540358,6.090250401436,7.931509947533],[0.915965647926,6.090249548255,7.931510602652],[0.915965540499,6.090250400318,7.931509948391],[0.915965647785,6.090249549371,7.931510601795],[0.915965540639,6.090250399204,7.931509949247],[0.915965647645,6.090249550483,7.931510600941],[0.915965540779,6.090250398094,7.931509950098],[0.915965647506,6.09024955159,7.931510600091],[0.915965540918,6.090250396989,7.931509950947],[0.915965647367,6.090249552693,7.931510599244],[0.915965541057,6.090250395889,7.931509951792],[0.915965647228,6.090249553792,7.931510598401],[0.915965541195,6.090250394792,7.931509952634],[0.91596564709,6.090249554886,7.93151059756],[0.915965541333,6.0902503937,7.931509953473],[0.915965646953,6.090249555976,7.931510596723],[0.91596554147,6.090250392612,7.931509954308],[0.915965646816,6.090249557062,7.93151059589],[0.915965541607,6.090250391528,7.93150995514],[0.915965646679,6.090249558143,7.931510595059],[0.915965541743,6.090250390449,7.931509955969],[0.915965646544,6.090249559221,7.931510594232],[0.915965541879,6.090250389373,7.931509956795],[0.915965646408,6.090249560294,7.931510593408],[0.915965542014,6.090250388302,7.931509957618],[0.915965646274,6.090249561363,7.931510592587],[0.915965542148,6.090250387235,7.931509958437],[0.915965646139,6.090249562428,7.931510591769],[0.915965542282,6.090250386172,7.931509959253],[0.915965646006,6.090249563489,7.931510590954],[0.915965542416,6.090250385113,7.931509960066],[0.915965645872,6.090249564546,7.931510590143],[0.915965542549,6.090250384059,7.931509960876],[0.91596564574,6.090249565598,7.931510589335],[0.915965542681,6.090250383008,7.931509961683],[0.915965645607,6.090249566647,7.93151058853],[0.915965542813,6.090250381961,7.931509962486],[0.915965645476,6.090249567692,7.931510587727],[0.915965542944,6.090250380919,7.931509963287],[0.915965645344,6.090249568732,7.931510586928],[0.915965543075,6.09025037988,7.931509964084],[0.915965645214,6.090249569769,7.931510586132],[0.915965543206,6.090250378846,7.931509964879],[0.915965645084,6.090249570801,7.93151058534],[0.915965543336,6.090250377815,7.93150996567],[0.915965644954,6.09024957183,7.93151058455],[0.915965543465,6.090250376788,7.931509966459],[0.915965644825,6.090249572855,7.931510583763],[0.915965543594,6.090250375765,7.931509967244],[0.915965644696,6.090249573876,7.931510582979],[0.915965543723,6.090250374746,7.931509968026],[0.915965644568,6.090249574893,7.931510582198],[0.915965543851,6.090250373731,7.931509968806],[0.91596564444,6.090249575906,7.93151058142],[0.915965543978,6.09025037272,7.931509969582],[0.915965644313,6.090249576915,7.931510580645],[0.915965544105,6.090250371713,7.931509970356],[0.915965644186,6.090249577921,7.931510579873],[0.915965544232,6.090250370709,7.931509971126],[0.91596564406,6.090249578922,7.931510579104],[0.915965544358,6.09025036971,7.931509971894],[0.915965643934,6.09024957992,7.931510578338],[0.915965544483,6.090250368714,7.931509972659],[0.915965643809,6.090249580914,7.931510577574],[0.915965544608,6.090250367722,7.93150997342],[0.915965643684,6.090249581904,7.931510576814],[0.915965544733,6.090250366733,7.931509974179],[0.915965643559,6.090249582891,7.931510576056],[0.915965544857,6.090250365748,7.931509974936],[0.915965643435,6.090249583874,7.931510575302],[0.915965544981,6.090250364767,7.931509975689],[0.915965643312,6.090249584853,7.93151057455],[0.915965545104,6.09025036379,7.931509976439],[0.915965643189,6.090249585829,7.931510573801],[0.915965545227,6.090250362816,7.931509977187],[0.915965643066,6.0902495868,7.931510573055],[0.915965545349,6.090250361846,7.931509977932],[0.915965642944,6.090249587769,7.931510572311],[0.915965545471,6.09025036088,7.931509978674],[0.915965642823,6.090249588733,7.931510571571],[0.915965545592,6.090250359917,7.931509979413],[0.915965642702,6.090249589694,7.931510570833],[0.915965545713,6.090250358958,7.93150998015],[0.915965642581,6.090249590652,7.931510570098],[0.915965545834,6.090250358002,7.931509980883],[0.915965642461,6.090249591605,7.931510569365],[0.915965545954,6.09025035705,7.931509981614],[0.915965642341,6.090249592556,7.931510568635],[0.915965546073,6.090250356102,7.931509982343],[0.915965642221,6.090249593502,7.931510567908],[0.915965546193,6.090250355157,7.931509983068],[0.915965642103,6.090249594446,7.931510567184],[0.915965546311,6.090250354215,7.931509983791],[0.915965641984,6.090249595385,7.931510566463],[0.915965546429,6.090250353277,7.931509984511],[0.915965641866,6.090249596322,7.931510565744],[0.915965546547,6.090250352343,7.931509985229],[0.915965641748,6.090249597254,7.931510565028],[0.915965546665,6.090250351412,7.931509985944],[0.915965641631,6.090249598184,7.931510564314],[0.915965546782,6.090250350484,7.931509986656],[0.915965641514,6.09024959911,7.931510563603],[0.915965546898,6.09025034956,7.931509987366],[0.915965641398,6.090249600032,7.931510562895],[0.915965547014,6.090250348639,7.931509988073],[0.915965641282,6.090249600951,7.931510562189],[0.91596554713,6.090250347722,7.931509988777],[0.915965641167,6.090249601867,7.931510561486],[0.915965547245,6.090250346808,7.931509989479],[0.915965641052,6.090249602779,7.931510560785],[0.91596554736,6.090250345897,7.931509990178],[0.915965640937,6.090249603688,7.931510560087],[0.915965547474,6.09025034499,7.931509990875],[0.915965640823,6.090249604594,7.931510559392],[0.915965547588,6.090250344086,7.931509991569],[0.915965640709,6.090249605496,7.931510558699],[0.915965547702,6.090250343185,7.931509992261],[0.915965640596,6.090249606395,7.931510558009],[0.915965547815,6.090250342288,7.93150999295],[0.915965640483,6.090249607291,7.931510557321],[0.915965547928,6.090250341393,7.931509993637],[0.91596564037,6.090249608184,7.931510556635],[0.91596554804,6.090250340502,7.931509994321],[0.915965640258,6.090249609073,7.931510555952],[0.915965548152,6.090250339615,7.931509995002],[0.915965640147,6.090249609959,7.931510555272],[0.915965548264,6.09025033873,7.931509995681],[0.915965640035,6.090249610842,7.931510554594],[0.915965548375,6.090250337849,7.931509996358],[0.915965639924,6.090249611722,7.931510553919],[0.915965548485,6.090250336971,7.931509997032],[0.915965639814,6.090249612598,7.931510553246],[0.915965548596,6.090250336096,7.931509997704],[0.915965639704,6.090249613471,7.931510552575],[0.915965548706,6.090250335225,7.931509998373],[0.915965639594,6.090249614341,7.931510551907],[0.915965548815,6.090250334356,7.93150999904],[0.915965639485,6.090249615208,7.931510551242],[0.915965548924,6.090250333491,7.931509999705],[0.915965639376,6.090249616072,7.931510550578],[0.915965549033,6.090250332628,7.931510000367],[0.915965639267,6.090249616933,7.931510549917],[0.915965549141,6.090250331769,7.931510001027],[0.915965639159,6.09024961779,7.931510549259],[0.915965549249,6.090250330913,7.931510001684],[0.915965639051,6.090249618645,7.931510548603],[0.915965549357,6.09025033006,7.931510002339],[0.915965638944,6.090249619497,7.931510547949],[0.915965549464,6.09025032921,7.931510002992],[0.915965638837,6.090249620345,7.931510547297],[0.915965549571,6.090250328363,7.931510003642],[0.915965638731,6.09024962119,7.931510546648],[0.915965549677,6.090250327519,7.93151000429],[0.915965638624,6.090249622033,7.931510546001],[0.915965549783,6.090250326678,7.931510004936],[0.915965638519,6.090249622872,7.931510545357],[0.915965549889,6.090250325841,7.931510005579],[0.915965638413,6.090249623708,7.931510544715],[0.915965549994,6.090250325006,7.93151000622],[0.915965638308,6.090249624542,7.931510544075],[0.915965550099,6.090250324174,7.931510006859],[0.915965638203,6.090249625372,7.931510543437],[0.915965550203,6.090250323345,7.931510007495],[0.915965638099,6.0902496262,7.931510542802],[0.915965550307,6.090250322519,7.93151000813],[0.915965637995,6.090249627024,7.931510542169],[0.915965550411,6.090250321696,7.931510008762],[0.915965637891,6.090249627846,7.931510541538],[0.915965550515,6.090250320876,7.931510009391],[0.915965637788,6.090249628665,7.931510540909],[0.915965550618,6.090250320058,7.931510010019],[0.915965637685,6.09024962948,7.931510540283],[0.91596555072,6.090250319244,7.931510010644],[0.915965637583,6.090249630293,7.931510539658],[0.915965550823,6.090250318433,7.931510011267],[0.915965637481,6.090249631103,7.931510539036],[0.915965550925,6.090250317624,7.931510011888],[0.915965637379,6.090249631911,7.931510538417],[0.915965551026,6.090250316818,7.931510012507],[0.915965637278,6.090249632715,7.931510537799],[0.915965551127,6.090250316015,7.931510013123],[0.915965637176,6.090249633516,7.931510537184],[0.915965551228,6.090250315215,7.931510013738],[0.915965637076,6.090249634315,7.93151053657],[0.915965551329,6.090250314418,7.93151001435],[0.915965636975,6.090249635111,7.931510535959],[0.915965551429,6.090250313623,7.93151001496],[0.915965636875,6.090249635904,7.93151053535],[0.915965551529,6.090250312832,7.931510015568],[0.915965636776,6.090249636695,7.931510534743],[0.915965551628,6.090250312043,7.931510016174],[0.915965636677,6.090249637482,7.931510534138],[0.915965551727,6.090250311256,7.931510016777],[0.915965636578,6.090249638267,7.931510533536],[0.915965551826,6.090250310473,7.931510017379],[0.915965636479,6.090249639049,7.931510532935],[0.915965551925,6.090250309692,7.931510017979],[0.915965636381,6.090249639828,7.931510532337],[0.915965552023,6.090250308914,7.931510018576],[0.915965636283,6.090249640605,7.93151053174],[0.915965552121,6.090250308139,7.931510019171],[0.915965636185,6.090249641379,7.931510531146],[0.915965552218,6.090250307366,7.931510019764],[0.915965636088,6.09024964215,7.931510530554],[0.915965552315,6.090250306596,7.931510020356],[0.915965635991,6.090249642919,7.931510529964],[0.915965552412,6.090250305829,7.931510020945],[0.915965635894,6.090249643685,7.931510529376],[0.915965552508,6.090250305065,7.931510021532],[0.915965635798,6.090249644448,7.93151052879],[0.915965552604,6.090250304303,7.931510022117],[0.915965635702,6.090249645209,7.931510528206],[0.9159655527,6.090250303543,7.9315100227],[0.915965635607,6.090249645967,7.931510527624],[0.915965552795,6.090250302787,7.931510023281],[0.915965635512,6.090249646722,7.931510527043],[0.91596555289,6.090250302032,7.93151002386],[0.915965635417,6.090249647475,7.931510526465],[0.915965552985,6.090250301281,7.931510024437],[0.915965635322,6.090249648225,7.931510525889],[0.91596555308,6.090250300532,7.931510025012],[0.915965635228,6.090249648973,7.931510525315],[0.915965553174,6.090250299786,7.931510025585],[0.915965635134,6.090249649718,7.931510524743],[0.915965553267,6.090250299042,7.931510026156],[0.91596563504,6.09024965046,7.931510524173],[0.915965553361,6.090250298301,7.931510026726],[0.915965634947,6.0902496512,7.931510523605],[0.915965553454,6.090250297562,7.931510027293],[0.915965634854,6.090249651938,7.931510523039],[0.915965553547,6.090250296826,7.931510027858],[0.915965634761,6.090249652673,7.931510522474],[0.915965553639,6.090250296092,7.931510028421],[0.915965634669,6.090249653405,7.931510521912],[0.915965553732,6.090250295361,7.931510028983],[0.915965634577,6.090249654135,7.931510521351],[0.915965553823,6.090250294632,7.931510029542],[0.915965634485,6.090249654862,7.931510520793],[0.915965553915,6.090250293906,7.9315100301],[0.915965634394,6.090249655587,7.931510520236],[0.915965554006,6.090250293182,7.931510030656],[0.915965634303,6.09024965631,7.931510519682],[0.915965554097,6.090250292461,7.93151003121],[0.915965634212,6.09024965703,7.931510519129],[0.915965554188,6.090250291742,7.931510031761],[0.915965634121,6.090249657747,7.931510518578],[0.915965554278,6.090250291026,7.931510032312],[0.915965634031,6.090249658463,7.931510518028],[0.915965554368,6.090250290312,7.93151003286],[0.915965633941,6.090249659175,7.931510517481],[0.915965554458,6.0902502896,7.931510033406],[0.915965633852,6.090249659886,7.931510516936],[0.915965554547,6.090250288891,7.931510033951],[0.915965633763,6.090249660594,7.931510516392],[0.915965554636,6.090250288185,7.931510034493],[0.915965633674,6.090249661299,7.93151051585],[0.915965554725,6.09025028748,7.931510035034],[0.915965633585,6.090249662002,7.93151051531],[0.915965554814,6.090250286778,7.931510035573],[0.915965633497,6.090249662703,7.931510514772],[0.915965554902,6.090250286079,7.93151003611],[0.915965633409,6.090249663402,7.931510514236],[0.91596555499,6.090250285381,7.931510036646],[0.915965633321,6.090249664098,7.931510513702],[0.915965555077,6.090250284686,7.931510037179],[0.915965633233,6.090249664792,7.931510513169],[0.915965555165,6.090250283994,7.931510037711],[0.915965633146,6.090249665483,7.931510512638],[0.915965555252,6.090250283303,7.931510038241],[0.915965633059,6.090249666172,7.931510512109],[0.915965555338,6.090250282615,7.93151003877],[0.915965632973,6.090249666859,7.931510511581],[0.915965555425,6.09025028193,7.931510039296],[0.915965632886,6.090249667544,7.931510511056],[0.915965555511,6.090250281246,7.931510039821],[0.9159656328,6.090249668226,7.931510510532],[0.915965555597,6.090250280565,7.931510040344],[0.915965632715,6.090249668906,7.93151051001],[0.915965555683,6.090250279886,7.931510040865],[0.915965632629,6.090249669584,7.931510509489],[0.915965555768,6.09025027921,7.931510041385],[0.915965632544,6.090249670259,7.931510508971],[0.915965555853,6.090250278535,7.931510041902],[0.915965632459,6.090249670932,7.931510508454],[0.915965555938,6.090250277863,7.931510042419],[0.915965632375,6.090249671603,7.931510507938],[0.915965556022,6.090250277193,7.931510042933],[0.91596563229,6.090249672272,7.931510507425],[0.915965556106,6.090250276526,7.931510043446],[0.915965632206,6.090249672939,7.931510506913],[0.91596555619,6.09025027586,7.931510043957],[0.915965632122,6.090249673603,7.931510506403],[0.915965556274,6.090250275197,7.931510044466],[0.915965632039,6.090249674265,7.931510505894],[0.915965556357,6.090250274536,7.931510044974],[0.915965631956,6.090249674925,7.931510505388],[0.91596555644,6.090250273877,7.93151004548],[0.915965631873,6.090249675583,7.931510504882],[0.915965556523,6.09025027322,7.931510045984],[0.91596563179,6.090249676239,7.931510504379],[0.915965556606,6.090250272566,7.931510046486],[0.915965631708,6.090249676892,7.931510503877],[0.915965556688,6.090250271913,7.931510046987],[0.915965631626,6.090249677544,7.931510503377],[0.91596555677,6.090250271263,7.931510047487],[0.915965631544,6.090249678193,7.931510502879],[0.915965556852,6.090250270615,7.931510047984],[0.915965631462,6.09024967884,7.931510502382],[0.915965556933,6.090250269969,7.931510048481],[0.915965631381,6.090249679485,7.931510501886],[0.915965557014,6.090250269325,7.931510048975],[0.9159656313,6.090249680128,7.931510501393],[0.915965557095,6.090250268683,7.931510049468],[0.915965631219,6.090249680769,7.931510500901],[0.915965557176,6.090250268043,7.931510049959],[0.915965631138,6.090249681407,7.93151050041],[0.915965557256,6.090250267405,7.931510050449],[0.915965631058,6.090249682044,7.931510499921],[0.915965557336,6.09025026677,7.931510050937],[0.915965630978,6.090249682678,7.931510499434],[0.915965557416,6.090250266136,7.931510051423],[0.915965630898,6.090249683311,7.931510498949],[0.915965557496,6.090250265505,7.931510051908],[0.915965630819,6.090249683941,7.931510498465],[0.915965557575,6.090250264876,7.931510052391],[0.91596563074,6.09024968457,7.931510497982],[0.915965557654,6.090250264248,7.931510052873],[0.915965630661,6.090249685196,7.931510497501],[0.915965557733,6.090250263623,7.931510053353],[0.915965630582,6.09024968582,7.931510497022],[0.915965557812,6.090250263,7.931510053832],[0.915965630504,6.090249686443,7.931510496544],[0.91596555789,6.090250262378,7.931510054309],[0.915965630425,6.090249687063,7.931510496068],[0.915965557968,6.090250261759,7.931510054784],[0.915965630347,6.090249687681,7.931510495593],[0.915965558046,6.090250261142,7.931510055258],[0.91596563027,6.090249688297,7.93151049512],[0.915965558123,6.090250260526,7.931510055731],[0.915965630192,6.090249688912,7.931510494648],[0.915965558201,6.090250259913,7.931510056202],[0.915965630115,6.090249689524,7.931510494178],[0.915965558278,6.090250259302,7.931510056671],[0.915965630038,6.090249690134,7.931510493709],[0.915965558355,6.090250258692,7.931510057139],[0.915965629961,6.090249690743,7.931510493242],[0.915965558431,6.090250258085,7.931510057605],[0.915965629885,6.090249691349,7.931510492776],[0.915965558508,6.090250257479,7.93151005807],[0.915965629809,6.090249691954,7.931510492312],[0.915965558584,6.090250256876,7.931510058534],[0.915965629733,6.090249692556,7.931510491849],[0.91596555866,6.090250256274,7.931510058996],[0.915965629657,6.090249693157,7.931510491388],[0.915965558735,6.090250255675,7.931510059456],[0.915965629582,6.090249693756,7.931510490928],[0.915965558811,6.090250255077,7.931510059915],[0.915965629506,6.090249694353,7.93151049047],[0.915965558886,6.090250254481,7.931510060373],[0.915965629431,6.090249694948,7.931510490013],[0.915965558961,6.090250253887,7.931510060829],[0.915965629357,6.090249695541,7.931510489558],[0.915965559035,6.090250253295,7.931510061284],[0.915965629282,6.090249696132,7.931510489104],[0.91596555911,6.090250252705,7.931510061737],[0.915965629208,6.090249696721,7.931510488652],[0.915965559184,6.090250252116,7.931510062189],[0.915965629134,6.090249697308,7.9315104882],[0.915965559258,6.09025025153,7.931510062639],[0.91596562906,6.090249697894,7.931510487751],[0.915965559331,6.090250250945,7.931510063088],[0.915965628986,6.090249698478,7.931510487303],[0.915965559405,6.090250250362,7.931510063535],[0.915965628913,6.09024969906,7.931510486856],[0.915965559478,6.090250249781,7.931510063981],[0.91596562884,6.09024969964,7.931510486411],[0.915965559551,6.090250249202,7.931510064426],[0.915965628767,6.090249700218,7.931510485967],[0.915965559624,6.090250248625,7.931510064869],[0.915965628694,6.090249700794,7.931510485524],[0.915965559697,6.09025024805,7.931510065311],[0.915965628622,6.090249701369,7.931510485083],[0.915965559769,6.090250247476,7.931510065752],[0.91596562855,6.090249701941,7.931510484643],[0.915965559841,6.090250246904,7.931510066191],[0.915965628478,6.090249702512,7.931510484205],[0.915965559913,6.090250246334,7.931510066628],[0.915965628406,6.090249703082,7.931510483768],[0.915965559984,6.090250245766,7.931510067065],[0.915965628334,6.090249703649,7.931510483332],[0.915965560056,6.090250245199,7.9315100675],[0.915965628263,6.090249704214,7.931510482898],[0.915965560127,6.090250244635,7.931510067933],[0.915965628192,6.090249704778,7.931510482465],[0.915965560198,6.090250244072,7.931510068366],[0.915965628121,6.09024970534,7.931510482033],[0.915965560269,6.090250243511,7.931510068796],[0.91596562805,6.090249705901,7.931510481603],[0.915965560339,6.090250242951,7.931510069226],[0.91596562798,6.090249706459,7.931510481174],[0.91596556041,6.090250242393,7.931510069654],[0.91596562791,6.090249707016,7.931510480746],[0.91596556048,6.090250241837,7.931510070081],[0.91596562784,6.090249707571,7.93151048032],[0.91596556055,6.090250241283,7.931510070507],[0.91596562777,6.090249708124,7.931510479895],[0.915965560619,6.090250240731,7.931510070931],[0.9159656277,6.090249708676,7.931510479472],[0.915965560689,6.09025024018,7.931510071354],[0.915965627631,6.090249709226,7.93151047905],[0.915965560758,6.090250239631,7.931510071775],[0.915965627562,6.090249709774,7.931510478629],[0.915965560827,6.090250239084,7.931510072196],[0.915965627493,6.090249710321,7.931510478209],[0.915965560896,6.090250238538,7.931510072615],[0.915965627424,6.090249710866,7.931510477791],[0.915965560964,6.090250237994,7.931510073032],[0.915965627356,6.090249711409,7.931510477374],[0.915965561033,6.090250237452,7.931510073449],[0.915965627288,6.09024971195,7.931510476958],[0.915965561101,6.090250236911,7.931510073864],[0.91596562722,6.09024971249,7.931510476543],[0.915965561169,6.090250236372,7.931510074278],[0.915965627152,6.090249713028,7.93151047613],[0.915965561237,6.090250235835,7.93151007469],[0.915965627084,6.090249713565,7.931510475718],[0.915965561304,6.090250235299,7.931510075102],[0.915965627017,6.090249714099,7.931510475307],[0.915965561371,6.090250234765,7.931510075512],[0.915965626949,6.090249714633,7.931510474898],[0.915965561439,6.090250234233,7.931510075921],[0.915965626882,6.090249715164,7.93151047449],[0.915965561505,6.090250233702,7.931510076328],[0.915965626816,6.090249715694,7.931510474083],[0.915965561572,6.090250233173,7.931510076734],[0.915965626749,6.090249716222,7.931510473677],[0.915965561639,6.090250232645,7.931510077139],[0.915965626683,6.090249716749,7.931510473273],[0.915965561705,6.090250232119,7.931510077543],[0.915965626616,6.090249717274,7.93151047287],[0.915965561771,6.090250231595,7.931510077946],[0.91596562655,6.090249717798,7.931510472468],[0.915965561837,6.090250231072,7.931510078347],[0.915965626485,6.09024971832,7.931510472067],[0.915965561903,6.090250230551,7.931510078747],[0.915965626419,6.09024971884,7.931510471667],[0.915965561968,6.090250230032,7.931510079146],[0.915965626354,6.090249719359,7.931510471269],[0.915965562034,6.090250229514,7.931510079544],[0.915965626288,6.090249719876,7.931510470872],[0.915965562099,6.090250228998,7.93151007994],[0.915965626223,6.090249720391,7.931510470476],[0.915965562164,6.090250228483,7.931510080336],[0.915965626159,6.090249720905,7.931510470081],[0.915965562228,6.09025022797,7.93151008073],[0.915965626094,6.090249721418,7.931510469688],[0.915965562293,6.090250227458,7.931510081123],[0.91596562603,6.090249721929,7.931510469296],[0.915965562357,6.090250226948,7.931510081514],[0.915965625965,6.090249722438,7.931510468905],[0.915965562421,6.090250226439,7.931510081905],[0.915965625901,6.090249722946,7.931510468515],[0.915965562485,6.090250225932,7.931510082294],[0.915965625837,6.090249723452,7.931510468126],[0.915965562549,6.090250225427,7.931510082682],[0.915965625774,6.090249723957,7.931510467738],[0.915965562612,6.090250224923,7.931510083069],[0.91596562571,6.09024972446,7.931510467352],[0.915965562676,6.09025022442,7.931510083455],[0.915965625647,6.090249724962,7.931510466967],[0.915965562739,6.090250223919,7.93151008384],[0.915965625584,6.090249725462,7.931510466583],[0.915965562802,6.09025022342,7.931510084223],[0.915965625521,6.090249725961,7.9315104662],[0.915965562865,6.090250222922,7.931510084606],[0.915965625458,6.090249726458,7.931510465818],[0.915965562927,6.090250222425,7.931510084987],[0.915965625396,6.090249726954,7.931510465437],[0.91596556299,6.09025022193,7.931510085367]];
+
+Initglist();
+r=10;
+p0=[0,0];
+p1=[r,0];
+Circledata("1",[p0,r],["Rng=[0,pi/2]","Msg=n"]);
+Setglist();
+;
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+Ketinit();
+Addglist();
+Setwindow([-1,11],[-1,11]);
+Slider("A",[0.25,-1],[12,-1]);
+
+
+strn="m<=48";
+strn=Textedit(51);//
+tmp=Strsplit(strn,"=");
+if((length(tmp)>1)&(length(tmp_2)>0),
+ n=parse(tmp_2);
+,
+ n=48;
+);
+m=round(n/12*A.x);
+
+strp="coeff=1";
+strp=Textedit(50);//
+tmp=Strsplit(strp,"=");
+if((length(tmp)>1)&(length(tmp_2)>0),
+ strp=tmp_2+"*";
+,
+ strp="";
+);
+
+size="Size=1.5";
+
+ak=strp+"fr((-1)^k,(2*k+1)^2)";
+akt=Totexform(ak);
+akc=Tocindyform(ak);
+
+str="\displaystyle \theta_m=\sum_{k=0}^m "+akt;
+Expr([11,11.5],"e",str,[size]);
+
+ctr=1;
+forall(0..min([m,100]),k,
+  tm=pL_(k+1)_1;
+  pP=[pL_(k+1)_2,pL_(k+1)_3];
+  if(mod(k,2)==0,
+    clr="Color=red";
+  ,
+    clr="Color=black";
+  );
+  Listplot(text(ctr),[p0,pP],["Msg=n",clr]);
+  ctr=ctr+1;
+);
+p2=Ptend("sg1");
+tmp=Assign("E="+akt,["k","1"]);
+Anglemark("1",[p1,p0,p2],[8,tmp,size,"Msg=n"]);
+Htickmark([10,"1"],[size]);
+Vtickmark([10,"1"],[size]);
+str="\displaystyle\theta_{"+text(m)+"}=";
+str=str+"\sum_{k=0}^{"+text(m)+"}"+Assign(akt,["s",s,"p",p]);
+Expr([11,7],"e",str,[size]);
+tm=pL_(m+1)_1;
+str="\theta_{"+text(m)+"}="+Sprintf(tm,10)+"=";
+str=str+Sprintf(tm*180/pi,4)+"^{\circ}";
+Expr([11,5],"e",str,[size]);
+
+tmp1=Sprintf(pL_(m)_1,10);
+tmp2=Sprintf(pL_(m+1)_1,10);
+if(mod(m,2)==0,
+  str=tmp1+"\le \theta_{\infty} \le "+tmp2;
+,
+  str=tmp2+"\le \theta_{\infty} \le "+tmp1;
+);
+Expr([11,3],"e",str,[size]);
+
+Windispg();
+
+;
+</script>
+    <script type="text/javascript">
+var cdy = CindyJS({
+  scripts: "cs*",
+  use: ["katex"],
+  defaultAppearance: {
+    dimDependent: 0.7,
+    fontFamily: "sans-serif",
+    lineSize: 1,
+    pointSize: 5.0,
+    textsize: 12.0
+  },
+  angleUnit: "°",
+  geometry: [
+    {name: "SW", type: "Free", pos: [4.0, 4.0, -4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "NE", type: "Free", pos: [4.0, 4.0, 0.36363636363636365], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "Text50", type: "EditableText", pos: [4.0, 2.8099999999999996, 0.33318910248712746], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "coeff=1", textsize: 18.0},
+    {name: "Text51", type: "EditableText", pos: [4.0, -0.16861826697892274, 0.31217540464810056], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "m<=48", textsize: 18.0},
+    {name: "A", type: "Free", pos: [1.0, -4.0, 4.0], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1, border: true }
+  ],
+  ports: [{
+    id: "CSCanvas",
+    width: 928,
+    height: 512,
+    transform: [{visibleRect: [-3.6159338750000005, 12.798305375000002, 24.231258125000004, -2.5656626250000003]}],
+    grid: 1.0,
+    snap: true,
+    background: "rgb(247,247,247)"
+  }],
+  csconsole: false,
+  use: ["katex"],
+  cinderella: {build: 1976, version: [3, 0, 1976]}
+});
+    </script>
+</head>
+<body>
+    <div id="CSCanvas"></div>
+</body>
+</html>
