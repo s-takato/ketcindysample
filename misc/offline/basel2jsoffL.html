@@ -1120,11 +1120,6 @@ Sprintf(value,dig):=(
   );
   vv;
 );
-Ptend(Fig):=(
-  regional(tmp);
-  if(isstring(Fig),tmp=parse(Fig),tmp=Fig);
-  tmp_(length(tmp)); // 15.04.12
-);
 Anglemark(plist):=Anglemark(plist,[]);
 Anglemark(Arg1,Arg2):=( // 2015.04.28 from
   regional(nm,plist,options,tmp);
@@ -1392,46 +1387,6 @@ Expr(listorg,options):=( //16.10.09
     list_(3*#)=str;
   );
   Letter(list,options);
-);
-Htickmark(arglist):=Htickmark(arglist,[]); //190203
-Htickmark(arglist,options):=( //190203
-  regional(nn,tmp,tmp1,tmp2,mark);
-  mark=MARKLEN/SCALEY;
-  tmp1=select(1..(length(arglist)),!isstring(arglist_#)); //180710from
-  forall(tmp1,nn,
-    Listplot("ht"+text(nn),
-        [[arglist_nn,mark],[arglist_nn,-mark]],append(options,"Msg=n"));//191101
-    if(nn+2<=length(arglist),
-      tmp=arglist_(nn+2);
-      if(!isstring(tmp),
-        Expr([[arglist_nn,0],"s1",arglist_(nn+1)],options); //190203
-      ,
-        Expr([[arglist_nn,0],arglist_(nn+1),arglist_(nn+2)],options); //190203
-      );
-    ,
-      Expr([[arglist_nn,0],"s1",arglist_(nn+1)],options); //190203
-    );
-  );//180710to
-);
-Vtickmark(arglist):=Vtickmark(arglist,[]); //190203
-Vtickmark(arglist,options):=( //190203
-  regional(nn,tmp,tmp1,tmp2,mark);
-  mark=MARKLEN/SCALEX;
-  tmp1=select(1..(length(arglist)),!isstring(arglist_#)); //180710from
-  forall(tmp1,nn,
-    Listplot("vt"+text(nn),
-         [[mark,arglist_nn],[-mark,arglist_nn]],append(options,"Msg=n")); //191101
-    if(nn+2<=length(arglist),
-      tmp=arglist_(nn+2);
-      if(!isstring(tmp),
-        Expr([[0,arglist_nn],"w1",arglist_(nn+1)],options); //190203
-      ,
-        Expr([[0,arglist_nn],arglist_(nn+1),arglist_(nn+2)],options); //190203
-      );
-    ,
-      Expr([[0,arglist_nn],"w1",arglist_(nn+1)],options); //190203
-    );
-  );//180710to//  tmp=MakeRarg(arglist);
 );
 Windispg():=(
   if(ADDAXES=="1", //181215from
@@ -1766,7 +1721,7 @@ Slider("A",[0.25,-1],[12,-1]);
 
 
 size="Size=1.5";
-strn="n=48";
+strn="n<=48";
 tmp=Strsplit(strn,"=");
 if((length(tmp)>1)&(length(tmp_2)>0),
  cn=parse(tmp_2)/48*4;
@@ -1779,21 +1734,21 @@ tmp=Strsplit(strk,"=");
 akc=Tocindyform(tmp_2);
 akt=Totexform(tmp_2);
 tmp="\displaystyle\theta=\sum_{k=1}^{"+text(n)+"}{"+akt+"}";
-Expr([11,7],"e",tmp,[size]);
-t=0;
+drawtext([11,7],"$"+tmp+"$",size->20); //
+
+tm=0;
 ctr=1;
 forall(1..n,k,
-  t=t+parse(akc);
-  pP=r*[cos(t),sin(t)];
-  Listplot(text(ctr),[p0,pP],["Msg=n"]);
+  t=parse(akc);
+  if(k==1,ts=t);
+  tm=tm+t;
+  pP=r*[cos(tm),sin(tm)];
+draw(p0,pP,color->[0,0,0]); // 
   ctr=ctr+1;
 );
-tmp=parse("sg"+text(ctr-1));
-tmp=tmp_2;
-tmp=arctan2(tmp_1,tmp_2);
-str="\theta="+format(tmp,4)+"=";
-str=str+format(tmp*180/pi,4)+"^{\circ}";
-Expr([11,3],"e",str,[size]);
+str="\theta="+format(tm,4)+"=";
+str=str+format(tm*180/pi,4)+"^{\circ}";
+drawtext([11,3],"$"+str+"$",size->20);//
 forall(1..(n-1),m,
   t1=0;
   forall(1..m,k,
@@ -1803,28 +1758,27 @@ forall(1..(n-1),m,
   pP=r*[cos(t1),sin(t1)];
   Listplot(text(ctr),[p0,pP],["Msg=n","Color=red"]);
   if(m==n-1,
-    Expr(pP,"ne",m,["Color=red"]);
+drawtext(pP,"$"+text(n)+"$",size->12,color->[1,0,0]);//
   );
   ctr=ctr+1;
 );
+str="\theta < "+Sprintf(tm,5)+"=";
+str=str+Sprintf(tm*180/pi,4)+"^{\circ}";
+drawtext([1,5],"$"+str+"$",size->20);//
 
-tmp=parse("sg"+text(ctr-1));
-tmp=tmp_2;
-tmp=arctan2(tmp_1,tmp_2);
-str="\theta<"+Sprintf(tmp,5)+"=";
-str=str+Sprintf(tmp*180/pi,4)+"^{\circ}";
-Expr([1,5],"e",str,[size]);
-
-p2=Ptend("sg1");
+p2=r*[cos(ts),sin(ts)];
 tmp=Assign("E="+akt,["k","1"]);
-Anglemark("1",[p1,p0,p2],[8,tmp,size,"Msg=n"]);
-Expr([11,5],"e","n="+text(n),[size]);
-Htickmark([10,"1"],[size]);
-Vtickmark([10,"1"],[size]);
+Anglemark("1",[p1,p0,p2],[8,"Msg=n"]);//
+tmp=Assign(akt,["k","1"]);
+drawtext(mag1,"$"+akt+"$",size->20);//
+
+drawtext([11,5],"$n="+text(n)+"$",size->20);//
+drawtext([10,0],"1",size->15,align->mid,yoffset->-20);//
+drawtext([0,10],"1",size->15,align->mid,xoffset->-20);//
 
 
 Windispg();
-
+;
 </script>
     <script type="text/javascript">
 var cdy = CindyJS({
@@ -1841,21 +1795,21 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [4.0, 4.0, -4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.36363636363636365], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [1.0, -4.0, 4.0], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1, border: true },
-    {name: "Text51", type: "EditableText", pos: [4.0, 3.818731117824773, 0.43237297313743506], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "n=48", textsize: 18.0}
+    {name: "A", type: "Free", pos: [1.0, -4.0, 4.0], color: [1.0, 0.0, 0.0], labeled: true, size: 6.0, border: true },
+    {name: "Text51", type: "EditableText", pos: [4.0, 3.818731117824773, 0.43237297313743506], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "n<=48", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 792,
-    height: 456,
-    transform: [{visibleRect: [-8.484687819283746, 13.128219181145274, 18.557053640968675, -2.4412683262727883]}],
+    width: 860,
+    height: 547,
+    transform: [{visibleRect: [-4.055680748502569, 12.67106824826042, 18.551389153705344, -1.708079701167169]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 1967, version: [3, 0, 1967]}
+  cinderella: {build: 1976, version: [3, 0, 1976]}
 });
     </script>
 </head>
