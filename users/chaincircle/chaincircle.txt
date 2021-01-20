@@ -1,0 +1,92 @@
+Ketinit();
+
+Seteditable(0,["n=8","Size=18","Width=100"]);//no ketjs on
+Setketcindyjs(["Label=[A,B]"]);
+preL=[
+ "<pf10/fp>Chain Circles",
+ "<pf5>_;Move A to change the big circle, 
+  and B to change the starting circle.<br>",
+ "_;Change n to change the number of circles.</font></p>"
+];
+Ketcindyjsmain(preL);
+Inspect(A,"ptsize",5.1);
+Inspect(B,"ptsize",5.1);//no ketjs off
+
+Addax("0");
+//Setunitlen("22mm");
+
+C.xy=0;
+A.y=0;
+
+nstr="n=8";
+//nstr=Textedit(0); //only ketjs
+tmp=Strsplit(nstr,"=");
+tmp=tmp_2;
+if(length(tmp)>0,
+ nall=parse(tmp);
+);
+
+rr(n):=(
+  regional(tmp);
+  tmp=R*(1+2*(tan(pi/n))^2);
+  tmp-sqrt(tmp^2-(R^2-p^2));
+);
+
+R=|B-A|;
+p=|C-A|;
+//r=|D-C|;
+r=rr(nall);
+
+s=R+r+p;
+a=(R+r-p)/s;
+b=(R-r-p)/s;
+c=(R-r+p)/s;
+d=sqrt(a*(a-b)*(b+1));
+h=sqrt(a*c/b);
+th=arctan(b*h/d);
+
+m0(pC,pA,pB):=(
+ regional(cs);
+ cs=Dotprod(pA-pC,pB-pC)/(|pA-pC|*|pB-pC|);
+ sqrt((1-cs)/(1+cs));
+);
+
+mk(m,k):=(
+ regional(eps);
+ eps=10^(-5);
+ if(|k*th-pi/2|>eps,
+   h*(m+h*tan(k*th))/(-m*tan(k*th)+h);
+ ,
+   h*h/(-m);
+ );
+);
+
+rk(m):=(
+ b*s*(m^2+h^2)/(2*(m^2+a));
+//  s*(b*m^2+a*c)/(2*(m^2+a));
+);
+
+center(m):=(
+ C+[a*s*(1-m^2)/(2*(m^2+a)),a*s*m/(m^2+a)];
+);
+
+Circledata("b",[A,R],["Msg=n"]);
+Circledata("s",[C,r],["Msg=n"]);
+
+m0=m0(C,A,B);
+if(B.y<0,m0=-m0);
+P0=center(m0);
+r0=rk(m0);
+//Pointdata("0",[P0],["Msg=n"]);
+Circledata("0",[P0,r0],["Msg=n"]);
+
+forall(1..(nall-1),
+  m=mk(m0,#);
+  r=rk(m);
+  pP=center(m);
+//  Pointdata(text(#),[pP],["Msg=n"]);
+  Circledata(text(#),[pP,r],["Msg=n"]);
+);
+
+Windispg();
+//Help("Ketcindyjsmain");
