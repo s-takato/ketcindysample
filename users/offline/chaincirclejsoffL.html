@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>tama-1MNR2.cdy</title>
+    <title>chaincircle.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -2323,6 +2323,7 @@ Addax("0");
 
 C.xy=0;
 A.y=0;
+A.x=max(A.x,0);
 
 nstr="n=8";
 nstr=Textedit(0); //
@@ -2341,7 +2342,6 @@ rr(n):=(
 R=|B-A|;
 p=|C-A|;
 r=rr(nall);
-
 s=R+r+p;
 a=(R+r-p)/s;
 b=(R-r-p)/s;
@@ -2349,19 +2349,25 @@ c=(R-r+p)/s;
 d=sqrt(a*(a-b)*(b+1));
 h=sqrt(a*c/b);
 th=arctan(b*h/d);
+eps=10^(-5);
 
 m0(pC,pA,pB):=(
  regional(cs);
- cs=Dotprod(pA-pC,pB-pC)/(|pA-pC|*|pB-pC|);
+ if(|pA-pC|<eps,
+   cs=0;
+ ,
+   cs=Dotprod(pA-pC,pB-pC)/(|pA-pC|*|pB-pC|);
+ );
  sqrt((1-cs)/(1+cs));
 );
 
 mk(m,k):=(
- regional(eps);
- eps=10^(-5);
  if(|k*th-pi/2|>eps,
    h*(m+h*tan(k*th))/(-m*tan(k*th)+h);
  ,
+   if(|m|<eps,
+     if(m>0,m=eps,m=-eps);
+   );
    h*h/(-m);
  );
 );
@@ -2376,11 +2382,11 @@ center(m):=(
 
 Circledata("b",[A,R],["Msg=n"]);
 Circledata("s",[C,r],["Msg=n"]);
-
 m0=m0(C,A,B);
 if(B.y<0,m0=-m0);
 P0=center(m0);
 r0=rk(m0);
+
 Circledata("0",[P0,r0],["Msg=n"]);
 
 forall(1..(nall-1),
@@ -2406,24 +2412,23 @@ var cdy = CindyJS({
   angleUnit: "°",
   geometry: [
     {name: "d", type: "RandomLine", color: [1.0, 1.0, 1.0], size: 0, border: true },
-    {name: "B", type: "Free", pos: [-2.392506101986073, -4.0, 1.1908485219487601], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1, border: true },
-    {name: "C", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "A", type: "Free", pos: [4.0, 0.0, 3.262619328433507], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1, border: true },
-    {name: "SW", type: "Free", pos: [-2.9881116752314107, -4.0, 0.7453239916986889], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [4.0, 3.2079249736991637, 0.5532222719382679], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "Text0", type: "EditableText", pos: [4.0, 3.9642885827454033, 0.839407684999105], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "n=8", textsize: 18.0}
+    {name: "B", type: "Free", pos: [-1.0, -4.0, 1.0], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1, border: true },
+    {name: "C", type: "Free", pos: [0.0, -0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "A", type: "Free", pos: [4.0, -0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1, border: true },
+    {name: "SW", type: "Free", pos: [-3.2, -4.0, 0.8], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "NE", type: "Free", pos: [4.0, 2.736842105262955, 0.5500631584111951], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "Text0", type: "EditableText", pos: [4.0, 3.016129032258064, 0.8006967749453354], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "n=8", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 910,
-    height: 591,
-    transform: [{visibleRect: [-7.290766905843531, 6.021992935977338, 11.04004172747556, -5.882960802804621]}],
+    width: 914,
+    height: 523,
+    transform: [{visibleRect: [-7.483401546459388, 5.207158276607676, 10.927982069863305, -5.328020751113077]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  use: ["katex"],
   cinderella: {build: 1976, version: [3, 0, 1976]}
 });
     </script>

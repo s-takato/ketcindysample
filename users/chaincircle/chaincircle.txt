@@ -17,6 +17,7 @@ Addax("0");
 
 C.xy=0;
 A.y=0;
+A.x=max(A.x,0);
 
 nstr="n=8";
 //nstr=Textedit(0); //only ketjs
@@ -36,7 +37,6 @@ R=|B-A|;
 p=|C-A|;
 //r=|D-C|;
 r=rr(nall);
-
 s=R+r+p;
 a=(R+r-p)/s;
 b=(R-r-p)/s;
@@ -44,19 +44,25 @@ c=(R-r+p)/s;
 d=sqrt(a*(a-b)*(b+1));
 h=sqrt(a*c/b);
 th=arctan(b*h/d);
+eps=10^(-5);
 
 m0(pC,pA,pB):=(
  regional(cs);
- cs=Dotprod(pA-pC,pB-pC)/(|pA-pC|*|pB-pC|);
+ if(|pA-pC|<eps,
+   cs=0;
+ ,
+   cs=Dotprod(pA-pC,pB-pC)/(|pA-pC|*|pB-pC|);
+ );
  sqrt((1-cs)/(1+cs));
 );
 
 mk(m,k):=(
- regional(eps);
- eps=10^(-5);
  if(|k*th-pi/2|>eps,
    h*(m+h*tan(k*th))/(-m*tan(k*th)+h);
  ,
+   if(|m|<eps,
+     if(m>0,m=eps,m=-eps);
+   );
    h*h/(-m);
  );
 );
@@ -72,11 +78,11 @@ center(m):=(
 
 Circledata("b",[A,R],["Msg=n"]);
 Circledata("s",[C,r],["Msg=n"]);
-
 m0=m0(C,A,B);
 if(B.y<0,m0=-m0);
 P0=center(m0);
 r0=rk(m0);
+
 //Pointdata("0",[P0],["Msg=n"]);
 Circledata("0",[P0,r0],["Msg=n"]);
 
