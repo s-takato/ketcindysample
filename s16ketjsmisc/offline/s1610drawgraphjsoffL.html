@@ -1588,7 +1588,7 @@ Addasterisk(strorg):=(
   str=replace(strorg,"  ","*");
   str=replace(str," ","*");
   str=replace(str,"pi","%");
-  funL=["sin","cos","tn","log","fr","sq"];
+  funL=["sin","cos","tan","log","fr","sq"];
   sgnL=["+","-","*","/","^"];
   numL=apply(0..9,text(#));
   tmp1=32..126;
@@ -1657,7 +1657,6 @@ Addasterisk(strorg):=(
   out=replace(out,"$","");
   out;
 );
-
 Bracket(str):=Bracket(str,"()");
 Bracket(str,br):=(
   regional(ph,pt,out,noL,ncL,nall,level,tmp);
@@ -2456,9 +2455,10 @@ Ketinit();
 Setwindow([-10.5,10.5],[-10.5,10.5]);
 Expr([13.5,3],"e","x=",["Size=2"]);
 Expr([20.3,3],"e",",",["Size=2"]);
-Letter([13.5,1.5],"e","Num=",["Size=2"]);
-Letter([13.5,0],"e","Exc=",["Size=2"]);
-Letter([13.5,-1.5],"e","Color=",["Size=2"]);
+Letter([13.5,1.4],"e","Num=",["Size=2"]);
+Letter([13.5,-0.3],"e","Exc=",["Size=2"]);
+Letter([13.5,-2],"e","Dis=",["Size=2"]);
+Letter([13.5,-3.5],"e","Color=",["Size=2"]);
 
 ww=round(20);
 hh=round(20);
@@ -2470,13 +2470,13 @@ tmp=((-10)..(10));
 forall(remove(tmp,[0]),
   htick=concat(htick,[#,text(#)]);
 );
-Htickmark(htick,["Size=1.5"]);
+Htickmark(htick,["Size=1"]);
 vtick=[];
 tmp=((-10)..(10));
 forall(remove(tmp,[0]),
  vtick=concat(vtick,[#,text(#)]);
 );
-Vtickmark(vtick,["Size=1.5"]);
+Vtickmark(vtick,["Size=1"]);
 Addax(1);
 
 fun=Textedit(5,"");
@@ -2500,17 +2500,18 @@ if(length(num)>0,
 exc=Textedit(9,"");
 if(length(exc)>0,
   exc="Ex=["+exc+"]";
-,
-  exc="";
 );
-
-col=Textedit(10,"blue");
+dis=Textedit(10,"");
+if(length(dis)>0,
+  dis="Dis="+dis;
+);
+col=Textedit(11,"blue");
 if(length(col)>0,
   col="Color="+col;
 );
 
 if(length(fun)>0,
-  Plotdata("1",cstr,"x"+rng,["dr,2",exc,num,col]);
+  Plotdata("1",cstr,"x"+rng,[exc,dis,num,col]);
   Expr([12,5.5],"e","y=\displaystyle "+tstr,["Size=2"]);
 );
 
@@ -2534,16 +2535,17 @@ var cdy = CindyJS({
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.38095238095238093], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text5", type: "EditableText", pos: [4.0, 2.8854979032206733, 0.35590538648362746], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, text: "y=", textsize: 30.0},
     {name: "Text6", type: "EditableText", pos: [4.0, 0.760729875625911, 0.2577299194861609], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "-10", textsize: 18.0},
-    {name: "Text8", type: "EditableText", pos: [4.0, 0.32319134402201005, 0.225609313652805], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "100", textsize: 18.0},
-    {name: "Text10", type: "EditableText", pos: [4.0, -0.3924061846551707, 0.22502505046985882], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "blue", textsize: 18.0},
-    {name: "Text9", type: "EditableText", pos: [4.0, -0.019538232031234126, 0.225609313652805], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, textsize: 18.0},
-    {name: "Text7", type: "EditableText", pos: [4.0, 0.5561719767361604, 0.1884271452685238], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "10", textsize: 18.0}
+    {name: "Text8", type: "EditableText", pos: [4.0, 0.27802259657635525, 0.21960244657001615], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "100", textsize: 18.0},
+    {name: "Text11", type: "EditableText", pos: [4.0, -0.8402472456814044, 0.2209391118767803], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "blue", textsize: 18.0},
+    {name: "Text9", type: "EditableText", pos: [4.0, -0.07309422647811736, 0.2202687514077381], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, textsize: 18.0},
+    {name: "Text7", type: "EditableText", pos: [4.0, 0.5561719767361604, 0.1884271452685238], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "10", textsize: 18.0},
+    {name: "Text10", type: "EditableText", pos: [4.0, -0.4614643041367009, 0.2202687514077381], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 884,
-    height: 548,
-    transform: [{visibleRect: [-13.274270580485025, 12.779957409602302, 27.41996403105333, -12.446785313387537]}],
+    width: 879,
+    height: 482,
+    transform: [{visibleRect: [-15.533340207769465, 13.084739958733502, 32.89858898102715, -13.472927696556567]}],
     grid: 0.5,
     background: "rgb(247,247,247)"
   }],
