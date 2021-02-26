@@ -1,48 +1,191 @@
-//ketlib
-pL=[];
-hintflg=0;
+////////////ketlib//////////////////
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
 
-//figures
+Initinput():=(
+ Subsedit(5,"y=");
+ Subsedit(6,"-10");
+ Subsedit(7,"10");
+ Subsedit(8,"100");
+ Subsedit(9,"");
+ Subsedit(10,"");
+ Subsedit(11,"red");
+);
+Funrngop(str):=(
+  regional(fun,ostr,rng,cst,tstr,x1,x2,op,rng,tmp);
+  tmp=Strsplit(str,"&");
+  fun=tmp_1;
+  ostr=tmp_2;
+  ostr=Replace(ostr," ","");
+  ostr=Strsplit(ostr,",");
+  x1=ostr_1; x2=ostr_2;
+  op=ostr_(3..(length(ostr)));
+  rng="";
+  if((length(x1)>0)&(length(x2)>0),
+   rng="=["+x1+","+x2+"]";
+  );
+  [fun,rng,op];
+);
 
+fL=[];
+nf=1;
+newflg=1;
+addflg=0;
+delflg=0;
+
+////////////figures//////////////////
 Ketinit();
-Setketcindyjs(["No=all","Fig=y"]);
-Setwindow([-6.5,6.5],[-6.5,6.5]);
 
-ww=round(10);
-hh=round(10);
-xL0=apply(1..ww,10);
-yL0=apply(1..hh,10);
-Tabledata(xL0,yL0,[],[0,"dr,0.5","Move=[-5,-5]"]);
+Setwindow([-10.5,10.5],[-10.5,10.5]);
+Setketcindyjs(["Grid=1","Label=[]"]);// no ketjs on
+Ketcindyjsmain(["<pf5/fp>_;Let's draw the graph of $y=f(x)$"]);
+Seteditable(5,["y=","Size=30","Width=300"]);
+Seteditable(6,["-10","Size=16","Width=100"]);
+Seteditable(7,["10","Size=16","Width=100"]);
+Seteditable(8,["100","Size=16","Width=100"]);
+Seteditable(9,["","Size=16","Width=100"]);
+Seteditable(10,["","Size=16","Width=100"]);
+Seteditable(11,["red","Size=16","Width=100"]);
+Seteditable(15,["","Size=15","Width=400"]);// no ketjs off
+
+size="Size=1.5";
+py=-0.4;dy=1.8;
+Expr([13.5,py],"e","x=",[size]);
+Letter([21.7,py],"e",",",[size]);py=py-dy;
+Letter([13.5,py],"e","Num=",[size]);py=py-dy;
+Letter([13.5,py],"e","Exc=",[size]);py=py-dy;
+Letter([13.5,py],"e","Dis=",[size]);py=py-dy;
+Letter([13.5,py],"e","Color=",[size]);py=py-dy;
+
 htick=[];
-tmp=((-5)..(5));
+tmp=((-10)..(10));
 forall(remove(tmp,[0]),
   htick=concat(htick,[#,text(#)]);
 );
-Htickmark(htick,["Size=1.5"]);
+Htickmark(htick,["Size=1"]);
 vtick=[];
-tmp=((-5)..(5));
+tmp=((-10)..(10));
 forall(remove(tmp,[0]),
  vtick=concat(vtick,[#,text(#)]);
 );
-Vtickmark(vtick,["Size=1.5"]);
-Addax(1);
+Vtickmark(vtick,["Size=1"]);
 
-str="y=x^2";
-//str=Textedit(52); //only ketjs
-tmp=Strsplit(str,"=");
-if(length(tmp)>0,
- if(length(tmp)==1,
-   fun=tmp_1;
- ,
-   fun=tmp_2;
- );
- if(length(fun)>0,
-   tmp=Tocindyform(fun);
-   Plotdata("1",tmp,"x",["dr,1.5","Num=100","Color=blue"]);
-   tmp=Totexform(fun);
-   Expr([0.1,5.1],"ne","y="+tmp,["Size=1.5"]);
- );
+if(newflg==1,
+ fL=[];
+ nf=1;
+ Initinput();
+ newflg=0;
+);
+if(addflg==1,
+ nf=nf+1;
+ Initinput();
+ addflg=0;
+);
+if(delflg==1,
+ nf=max([1,nf-1]);
+ fL=fL_(1..nf);
+ tmp=Funrngop(fL_nf);
+ fun=tmp_1;
+ rng=tmp_2;
+ op=tmp_3;
+ rng=substring(rng,2,length(rng)-1);
+ tmp=Strsplit(rng,",");
+ x1=tmp_1; x2=tmp_2;
+ Subsedit(5,"y="+fun);
+ Subsedit(6,x1);
+ Subsedit(7,x2);
+ op=apply(op,if(indexof(#,"=")>0,#,"="));
+ op=apply(op,Strsplit(#,"="));
+ op=apply(op,#_2);
+ Subsedit(8,op_1);
+ Subsedit(9,op_2);
+ Subsedit(10,op_3);
+ Subsedit(11,op_4);
+ delflg=0;
+);
+
+fun=Textedit(5,"");
+if(length(fun)>0,
+  fun=Addasterisk(fun);
+);
+x1=Textedit(6,"-10");
+x2=Textedit(7,"10");
+if((length(x1)>0)&(length(x2)>0),
+  x1=Tocindyform(x1);
+  x2=Tocindyform(x2);
+);
+num=Textedit(8,"100");
+if(length(num)>0,
+ num="Num="+num;
+);
+exc=Textedit(9,"");
+if(length(exc)>0,
+  if(indexof(exc,"[")==0,
+    exc="["+exc+"]";
+  );
+  exc=parse(exc);
+  exc=textformat(exc,6);
+  exc=replace(exc,"[[","[");
+  exc=replace(exc,"]]","]");
+  exc="Ex="+exc;
+);
+dis=Textedit(10,"");
+if(length(dis)>0,
+  dis="Dis="+dis;
+);
+col=Textedit(11,"red");
+if(length(col)>0,
+  col="Color="+col;
+);
+if(length(fun)>0,
+  tmp=[x1,x2,num,exc,dis,col];
+  tmp=text(tmp);
+  tmp=fun+"&"+substring(tmp,1,length(tmp)-1);
+  if(nf<=length(fL),
+    fL_nf=tmp;
+  ,
+    fL=concat(fL,[tmp]);
+  );
+);
+fstr="";
+texall="";
+ctr=1;
+forall(1..(length(fL)),
+  tmp=Funrngop(fL_#);
+  fun=tmp_1;
+  rng=tmp_2;
+  op=tmp_3;
+  cstr=Tocindyform(fun);
+  tstr=Totexform(fun);
+  texall=texall+tstr+",";
+  Plotdata(text(ctr)+"u",cstr+"+0.05","x"+rng,op);
+  Plotdata(text(ctr)+"d",cstr+"-0.05","x"+rng,op);
+  ctr=ctr+1;
+  fstr=fstr+fL_#+";";
+);
+Framedata2("1",[[-11,11],[11,14.5]],["nodisp"]);
+Shade(["fr1"],["Color=offwhite"]);
+Framedata2("2",[[-11,-14],[11,-11]],["nodisp"]);
+Shade(["fr2"],["Color=offwhite"]);
+
+Subsedit(15,fstr);
+if(length(texall)>0,
+  tmp=Indexall(texall,",");
+  tmp=select(tmp,#<40);
+  tmp=max(tmp);
+  if(tmp==length(texall),
+    tmp1=substring(texall,0,length(texall)-1);
+    tmp2="";
+  ,
+    tmp1=substring(texall,0,tmp);
+    tmp2=substring(texall,tmp,length(texall)-1);
+  );
+  Expr([12,5],"e","y=\displaystyle "+tmp1,["Size=1.8"]);
+  if(length(tmp2)>0,
+    Expr([12,3.5],"e","y=\displaystyle "+tmp2,["Size=1.8"]);
+  );
 );
 
 Windispg();
-Help("Setketcindyjs");
