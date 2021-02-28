@@ -3137,13 +3137,15 @@ if(length(num)>0,
 );
 exc=Textedit(9,"");
 if(length(exc)>0,
-  if(indexof(exc,"[")==0,
-    exc="["+exc+"]";
+  if(indexof(exc,"(")==0,
+    if(indexof(exc,"[")==0,
+      exc="["+exc+"]";
+    );
+    exc=parse(exc);
+    exc=textformat(exc,6);
+    exc=replace(exc,"[[","[");
+    exc=replace(exc,"]]","]");
   );
-  exc=parse(exc);
-  exc=textformat(exc,6);
-  exc=replace(exc,"[[","[");
-  exc=replace(exc,"]]","]");
   exc="Ex="+exc;
 );
 dis=Textedit(10,"");
@@ -3235,9 +3237,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 881,
-    height: 435,
-    transform: [{visibleRect: [-13.103556864248468, 14.575866624276385, 38.780639079135355, -11.042323200209383]}],
+    width: 877,
+    height: 472,
+    transform: [{visibleRect: [-13.103556864248468, 14.575866624276385, 38.545069517530884, -13.221341645050702]}],
     grid: 1,
     background: "rgb(247,247,247)"
   }],
