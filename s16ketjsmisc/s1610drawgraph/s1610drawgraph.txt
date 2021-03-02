@@ -38,6 +38,8 @@ delflg=0;
 ////////////figures//////////////////
 Ketinit();
 
+Ketinit();
+
 Setwindow([-10.5,10.5],[-10.5,10.5]);
 Setketcindyjs(["Grid=1","Label=[]"]);// no ketjs on
 Ketcindyjsmain(["<pf5/fp>_;Let's draw the graph of $y=f(x)$"]);
@@ -122,13 +124,15 @@ if(length(num)>0,
 );
 exc=Textedit(9,"");
 if(length(exc)>0,
-  if(indexof(exc,"[")==0,
-    exc="["+exc+"]";
+  if(indexof(exc,"(")==0,
+    if(indexof(exc,"[")==0,
+      exc="["+exc+"]";
+    );
+    exc=parse(exc);
+    exc=textformat(exc,6);
+    exc=replace(exc,"[[","[");
+    exc=replace(exc,"]]","]");
   );
-  exc=parse(exc);
-  exc=textformat(exc,6);
-  exc=replace(exc,"[[","[");
-  exc=replace(exc,"]]","]");
   exc="Ex="+exc;
 );
 dis=Textedit(10,"");
