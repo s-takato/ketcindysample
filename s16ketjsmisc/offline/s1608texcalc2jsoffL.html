@@ -140,7 +140,7 @@ LLcrd(pt):=(
 Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
 Putpoint(name,Ptinit,Pt):=(
   regional(ptstr); 
-    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
+    ptstr=name+".xy="+Textformat(Pcrd(Pt),10)+";";
     parse(ptstr);
     Ptpos(name,Pcrd([Pt_1,Pt_2])); //200529
 );
@@ -276,9 +276,203 @@ Indexall(str,key):=(
   );
   out;
 );
+Addasterisk(strorg):=(
+  regional(pL,sL,funL,fn,sgnL,numL,alphaL,
+      str0,str,f,k,n1,n2,sub,res,tmp,tmp1,tmp2,ctr,out,s,flg);
+  str0=replace(strorg,"  ","*");
+  funL=["sin","cos","tan","log"]; 
+  sgnL=["+","-"];
+  forall(funL,f,
+    str="";
+    res=str0;
+    ctr=1;
+    while((indexof(res,f)>0)&(ctr<100),
+      tmp1=indexof(res,f);
+      str=str+substring(res,0,tmp1+2);
+      res=substring(res,tmp1+2,length(res));
+      if(res_1==" ",
+        str=str+"(";
+        res=substring(res,1,length(res));
+        tmp=indexof(res," ");
+        if(tmp>0,
+          str=str+substring(res,0,tmp-1)+")";
+          res=substring(res,tmp,length(res));
+        ,
+          str=str+res+")";
+          res="";
+        );
+      );
+      if(res_1=="(",
+        tmp1=bracket(res,"()");
+        tmp1=select(tmp1,#_2==-1);
+        if(length(tmp1)>0,tmp1=tmp1_1_1,tmp1=0);
+        flg=0;
+        forall(sgnL,s,
+          if(flg==0,
+            tmp2=Getlevel(res,s);
+            if(length(tmp2)>0,
+              tmp2=select(tmp2,#_2==1);
+              if(length(tmp2)>0,tmp2=tmp2_1_1,tmp2=0);
+              if(tmp2<tmp1, //210302
+                res=substring(res,1,tmp1-1)+"))"+substring(res,tmp1,length(res));
+                str=str+"((";
+                flg=1;
+              );
+            );
+          );
+        );
+      );
+      ctr=ctr+1;
+    );
+    str0=str+res;
+  );
+  str=str0;
+  str=replace(str," ","*");
+  str=replace(str,"pi","%");
+  str=replace(str,"ex(","exp("); //210227from
+  tmp=Indexall(str,"e");
+  if(length(tmp)>0,
+    tmp1=substring(str,0,tmp_1-1);
+    forall(tmp,
+      if(!substring(str,#,#+3)!="xp(",
+        tmp1=tmp1+"exp(1)";
+      ,
+        tmp1=tmp1+"e";
+      );
+    );
+    str=tmp1+substring(str,tmp_(-1),length(str));;
+  );
+  funL=["sin","cos","tan","log","fr","sq","exp"]; //210227to
+  sgnL=["+","-","*","/","^"];
+  numL=append(apply(0..9,text(#)),"."); //210226
+  tmp1=32..126;
+  tmp=(65..90)++(97..122);
+  tmp1=remove(tmp1,tmp);
+  alphaL=apply(tmp,unicode(text(#),base->10));
+  alphaL=concat(alphaL,["%"]);
+  str="$"+str;
+  pL=Bracket(str);
+  pL=concat(pL,[[length(str),0]]);
+  pL=concat([[1,0]],pL);
+  out=[];
+  forall(1..(length(pL)-1),k,
+    tmp=pL_k; n1=tmp_1; l1=tmp_2;
+    tmp=pL_(k+1); n2=tmp_1; l2=tmp_2;
+    sub=substring(str,n1-1,n2);
+    out=append(out,sub);
+  );
+  forall(1..(length(pL)-1),k,
+    sub=out_k;
+    if(length(sub)>0,
+      res=sub_(-1);
+      sub=substring(sub,0,length(sub)-1);
+    ,
+      res=""
+    );
+    forall(funL,f,
+      tmp=indexof(sub,f);
+      if(tmp>0,
+        res=substring(f,0,length(f))+"(";
+        sub=substring(sub,0,tmp-1);
+      );
+    );
+    ctr=1;
+    while((length(sub)>0)&(ctr<200),
+      tmp1=sub_(-1);
+      tmp2=res_1;
+      sub=substring(sub,0,length(sub)-1);
+      if(contains(alphaL,tmp2),
+        tmp=concat(alphaL,numL);
+        tmp=concat(tmp,[")"]);
+        if(contains(tmp,tmp1),
+          res="*"+res;
+        );
+      );
+      if(contains(numL,tmp2),
+        tmp=concat(aphaL,[")"]);
+        if(contains(tmp,tmp1),
+          res="*"+res;
+        );
+      );
+      res=tmp1+res;
+      ctr=ctr+1;
+    );
+    out_k=substring(res,1,length(res));
+  );
+  res="";
+  forall(out,
+    res=res+#;
+  );
+  out=replace(res,"%","pi");
+  out=replace(out,"$","");
+  out;
+);
+Getlevel(str):=Getlevel(str,",");
+Getlevel(str,Arg):=Getlevel(str,Arg,"()");
+Getlevel(str,Arg,bra):=(
+  regional(nL,parL,n,tmp,tmp1,tmp2,out);
+  if(islist(Arg),
+    nL=Arg;
+  ,
+    nL=Indexall(str,Arg);
+  );
+  parL=Bracket(str,bra);
+  if(length(parL)==0,parL=[[0,0]]);
+  out=[];
+  forall(nL,n,
+    tmp2=select(parL,#_1<n);
+    tmp2=tmp2_(-1);
+    if(tmp2_2>=0,tmp=tmp2_2,tmp=-tmp2_2-1);
+    out=append(out,[n,tmp]);
+  );
+  out;
+);
+Bracket(str):=Bracket(str,"()");
+Bracket(str,br):=(
+  regional(ph,pt,out,noL,ncL,nall,level,tmp);
+  ph=substring(br,0,1);
+  pt=substring(br,1,2);
+  noL=Indexall(str,ph);
+  ncL=Indexall(str,pt); // 16.05.22until
+  nall=sort(concat(noL,ncL));
+  level=0;
+  out=[];
+  forall(nall,
+    if(contains(noL,#),
+      level=level+1;
+      tmp=[#,level];
+    ,
+      tmp=[#,-level];
+      level=level-1;
+    );
+    out=append(out,tmp);
+  );
+  out;
+);
 Totexform(str):=( //190514
-  regional(out,plv,flg,nn,tmp,tmp1,tmp2);
+  regional(funL,f,out,plv,flg,nn,tmp,tmp1,tmp2);
   out=replace(str,"pi","\pi"); //190715
+  out=replace(out,"exp(1)","e"); //210227
+  funL=["cos","sin","tan"]; //210303from
+  forall(funL,f,
+    tmp2="";
+    tmp1=indexof(out,f+"((-1,");
+    flg=1;
+    while((tmp1>0)&(flg<100),
+      if(tmp1>1,tmp=substring(out,0,tmp1-1),tmp="");
+      tmp2=tmp2+tmp+"\"+f+"^(-1)"; // 210303[2lines]
+      out="("+substring(out,tmp1+length(f+"((-1,")-1,length(out));
+      tmp=Bracket(out,"()");
+      tmp=select(tmp,#_2==-1);
+      tmp=tmp_1_1;
+      tmp2=tmp2+substring(out,0,tmp);
+      out=substring(out,tmp+1,length(out));
+      tmp1=indexof(out,f+"((-1,");
+      flg=flg+1;
+    );
+    if(length(tmp2)>0,out=tmp2+out);
+  ); //210303to
+  out=replace(out,f+"(-1,",f+"^(-1)(");
   tmp1=apply(0..9,text(#));  //190915from
   tmp2=Indexall(out,"*");
   forall(tmp2,
@@ -339,17 +533,17 @@ Totexform(str):=( //190514
   );
   out;
 );
-Totexformpart(str):=( //190514
+Totexformpart(str):=( //190515from
   regional(plv,funL,repL,flg,flgf,nall,nn,fun,funf,
       frL,fr,out,tmp,tmp1,tmp2,tmp3,tmp4);
   repL=[ //190515from
-    ["frac",["","{\frac{xx}{yy}}"]], //200730from
-    ["log",["{\log{xx}}","{\log_{xx} yy}"]],
-    ["sqrt",["{\sqrt{xx}}","{\sqrt[xx]{yy}}"]],
+    ["frac",["","\frac{xx}{yy}"]], //210228from
+    ["log",["\log{xx}","\log_{xx} yy"]],
+    ["sqrt",["\sqrt{xx}","\sqrt[xx]{yy}"]],
     ["pow",["","{xx}^{yy}"]],
-    ["sin",["{\sin{xx}}","{\sin^{xx}\!{yy}}"]], //200823[3lines]
-    ["cos",["{\cos{xx}}","{\cos^{xx}\!{yy}}"]],
-    ["tan",["{\tan{xx}}","{\tan^{xx}\!{yy}}"]]  //200730to
+    ["sin",["\sin{xx}","\sin^{xx}\!{yy}"]], //200823[3lines]
+    ["cos",["\cos{xx}","\cos^{xx}\!{yy}"]],
+    ["tan",["\tan{xx}","\tan^{xx}\!{yy}"]]  //210228to
   ];
   funL=apply(repL,substring(#_1,0,2)); //190515to
   out="";
@@ -405,28 +599,6 @@ Totexformpart(str):=( //190514
     ,
       out="";
     );
-  );
-  out;
-);
-Bracket(str):=Bracket(str,"()");
-Bracket(str,br):=(
-  regional(ph,pt,out,noL,ncL,nall,level,tmp);
-  ph=substring(br,0,1);
-  pt=substring(br,1,2);
-  noL=Indexall(str,ph);
-  ncL=Indexall(str,pt); // 16.05.22until
-  nall=sort(concat(noL,ncL));
-  level=0;
-  out=[];
-  forall(nall,
-    if(contains(noL,#),
-      level=level+1;
-      tmp=[#,level];
-    ,
-      tmp=[#,-level];
-      level=level-1;
-    );
-    out=append(out,tmp);
   );
   out;
 );
@@ -504,7 +676,7 @@ Expr(listorg,options):=( //16.10.09
         str=replace(str,"¥","\");
       ); 
     ,
-      str=format(str,5)
+      str=format(str,10)
     ); //200526to
     str="$"+str+"$"; //200526
     list_(3*#)=str;
@@ -551,7 +723,7 @@ Letter(list,options):=(
     Pos=list_Nj;
     Dir=list_(Nj+1);
     Str=list_(Nj+2);
-    if(!isstring(Str),Str=format(Str,5)); // 16.09.30,10.09
+    if(!isstring(Str),Str=format(Str,10)); // 16.09.30,10.09
     tmp=replace(Str,".xy","");
     tmp=replace(tmp,".x","(1)");
     Str=replace(tmp,".y","(2)");
@@ -612,7 +784,7 @@ Letter(list,options):=(
       ); // 
       Str=list_(Nj+2);  //17.10.17
       if(length(color)==4,color=Colorcmyk2rgb(color)); //200523
-      tmp="drawtext("+format(Pcrd(Pos),5)+","+Dqq(Str)+",offset->"+format([Off+Xmv,Off+Ymv],5)+","; //201004from
+      tmp="drawtext("+format(Pcrd(Pos),10)+","+Dqq(Str)+",offset->"+format([Off+Xmv,Off+Ymv],10)+","; //201004from
       tmp1="size->sz,color->colornow,align->aln,bold->bld,italics->ita";
       tmp1=Assign(tmp1,["sz",text(sz),"colornow",text(color),"aln",Dqq(aln),"bld",text(bld),"ita",text(ita)]);
       tmp=tmp+tmp1+");";
@@ -834,8 +1006,13 @@ DqDq(str):=(
   unicode("0022")+str+unicode("0022");
 );
 Tocindyform(str):=( //190521
-  regional(out,plv,flg,nn,tmp,tmp1);
+  regional(funL,out,plv,flg,nn,tmp,tmp1);
   out=str;
+  funL=["cos","sin","tan"]; //210302from
+  forall(funL,
+    out=replace(out,#+"((-1,","arc"+#+"((");
+    out=replace(out,#+"(-1,","arc"+#+"(");
+  ); //210302to
   out=replace(out,"\",""); //190712[4lines]
   out=replace(out,"   "," ");
   out=replace(out,"  "," "); 
@@ -1000,7 +1177,7 @@ Windispg(gcLorg):=( //190125
               if(indexof(opcindy,"size")==0, 
                 tmp3=tmp3+",size->"+text(typeL_2);
               ); //190124to
-              tmp="connect("+Textformat(Nk,5)+tmp3+");";//190125
+              tmp="connect("+Textformat(Nk,10)+tmp3+");";//190125
               parse(tmp);
             );
             if((tmp1==1)%(tmp1==2),
@@ -1011,7 +1188,7 @@ Windispg(gcLorg):=( //190125
               );
               tmp3=",dashtype->1"+tmp3;
               forall(1..(length(Nk)-1),
-                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],5)+tmp3+");";
+                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],10)+tmp3+");";
                 parse(tmp);
               );
               if(typeL_(-1)!=1,
@@ -1026,7 +1203,7 @@ Windispg(gcLorg):=( //190125
               );
               tmp3=",dashtype->3"+tmp3;
               forall(1..(length(Nk)-1),
-                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],5)+tmp3+");";
+                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],10)+tmp3+");";
                 parse(tmp);
               );
               if(typeL_3!=1,
@@ -1443,11 +1620,12 @@ pos=1;
 forall(0..2,
   str=Textedit(50+#,"");
   if(length(str)>0,
+    str=Addasterisk(str);
     tstr=Totexform(str);
     Expr([0.1,pos],"e",tstr,["Size=3"]);
     if(indexof(tstr,"?")==0,
       Subsedit(60+#,tstr);
-    ); 
+    );
     cstr=Tocindyform(str);
     if(indexof(cstr,"?")==0,
       tmp=parse(cstr);
@@ -1462,8 +1640,6 @@ forall(0..2,
 );
 
 Windispg();
-
-
 ;
 </script>
     <script type="text/javascript">
@@ -1490,23 +1666,22 @@ var cdy = CindyJS({
     {name: "Text60", type: "EditableText", pos: [4.0, 0.9567430025445293, 0.9901385293645613], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, textsize: 24.0},
     {name: "Text61", type: "EditableText", pos: [4.0, 0.366412213740458, 0.9901385293645613], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, textsize: 24.0},
     {name: "Text62", type: "EditableText", pos: [4.0, -0.25510204081632654, 0.9926643929598788], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, textsize: 24.0},
+    {name: "Text70", type: "EditableText", pos: [1.213279827018337, -3.3051415977396075, 4.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 600, textsize: 24.0},
     {name: "Text42", type: "Button", pos: [4.0, 1.8483690252494016, 1.1105765285515117], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=3;", text: "Rec", textsize: 18.0},
     {name: "Text39", type: "Button", pos: [4.0, 3.3762286989401615, 1.1203367874600947], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "newflg=1;", text: "New", textsize: 18.0},
     {name: "Text41", type: "Button", pos: [4.0, 2.299647347781426, 1.1041636219160753], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=2;", text: "Rec", textsize: 18.0},
-    {name: "Text40", type: "Button", pos: [4.0, 2.807794035029048, 1.1041636219160753], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0},
-    {name: "Text70", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 600, textsize: 24.0, dock: {corner: "LL", offset: [71.0, 23.0]}}
+    {name: "Text40", type: "Button", pos: [4.0, 2.807794035029048, 1.1041636219160753], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 753,
-    height: 483,
-    transform: [{visibleRect: [-0.44078999069448066, 3.918313931671523, 7.435069576071102, -1.1335322446203455]}],
+    width: 810,
+    height: 490,
+    transform: [{visibleRect: [-0.43406131742466364, 3.917011165675579, 8.037978853996481, -1.2080501725915338]}],
     grid: 0.5,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  use: ["katex"],
-  cinderella: {build: 1976, version: [3, 0, 1976]}
+  cinderella: {build: 1984, version: [3, 0, 1984]}
 });
     </script>
 </head>

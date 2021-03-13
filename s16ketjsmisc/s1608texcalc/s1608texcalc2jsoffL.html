@@ -140,7 +140,7 @@ LLcrd(pt):=(
 Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
 Putpoint(name,Ptinit,Pt):=(
   regional(ptstr); 
-    ptstr=name+".xy="+Textformat(Pcrd(Pt),5)+";";
+    ptstr=name+".xy="+Textformat(Pcrd(Pt),10)+";";
     parse(ptstr);
     Ptpos(name,Pcrd([Pt_1,Pt_2])); //200529
 );
@@ -313,7 +313,7 @@ Addasterisk(strorg):=(
             if(length(tmp2)>0,
               tmp2=select(tmp2,#_2==1);
               if(length(tmp2)>0,tmp2=tmp2_1_1,tmp2=0);
-              if(tmp2<tmp1,
+              if(tmp2<tmp1, //210302
                 res=substring(res,1,tmp1-1)+"))"+substring(res,tmp1,length(res));
                 str=str+"((";
                 flg=1;
@@ -450,9 +450,29 @@ Bracket(str,br):=(
   out;
 );
 Totexform(str):=( //190514
-  regional(out,plv,flg,nn,tmp,tmp1,tmp2);
+  regional(funL,f,out,plv,flg,nn,tmp,tmp1,tmp2);
   out=replace(str,"pi","\pi"); //190715
   out=replace(out,"exp(1)","e"); //210227
+  funL=["cos","sin","tan"]; //210303from
+  forall(funL,f,
+    tmp2="";
+    tmp1=indexof(out,f+"((-1,");
+    flg=1;
+    while((tmp1>0)&(flg<100),
+      if(tmp1>1,tmp=substring(out,0,tmp1-1),tmp="");
+      tmp2=tmp2+tmp+"\"+f+"^(-1)"; // 210303[2lines]
+      out="("+substring(out,tmp1+length(f+"((-1,")-1,length(out));
+      tmp=Bracket(out,"()");
+      tmp=select(tmp,#_2==-1);
+      tmp=tmp_1_1;
+      tmp2=tmp2+substring(out,0,tmp);
+      out=substring(out,tmp+1,length(out));
+      tmp1=indexof(out,f+"((-1,");
+      flg=flg+1;
+    );
+    if(length(tmp2)>0,out=tmp2+out);
+  ); //210303to
+  out=replace(out,f+"(-1,",f+"^(-1)(");
   tmp1=apply(0..9,text(#));  //190915from
   tmp2=Indexall(out,"*");
   forall(tmp2,
@@ -656,7 +676,7 @@ Expr(listorg,options):=( //16.10.09
         str=replace(str,"¥","\");
       ); 
     ,
-      str=format(str,5)
+      str=format(str,10)
     ); //200526to
     str="$"+str+"$"; //200526
     list_(3*#)=str;
@@ -703,7 +723,7 @@ Letter(list,options):=(
     Pos=list_Nj;
     Dir=list_(Nj+1);
     Str=list_(Nj+2);
-    if(!isstring(Str),Str=format(Str,5)); // 16.09.30,10.09
+    if(!isstring(Str),Str=format(Str,10)); // 16.09.30,10.09
     tmp=replace(Str,".xy","");
     tmp=replace(tmp,".x","(1)");
     Str=replace(tmp,".y","(2)");
@@ -764,7 +784,7 @@ Letter(list,options):=(
       ); // 
       Str=list_(Nj+2);  //17.10.17
       if(length(color)==4,color=Colorcmyk2rgb(color)); //200523
-      tmp="drawtext("+format(Pcrd(Pos),5)+","+Dqq(Str)+",offset->"+format([Off+Xmv,Off+Ymv],5)+","; //201004from
+      tmp="drawtext("+format(Pcrd(Pos),10)+","+Dqq(Str)+",offset->"+format([Off+Xmv,Off+Ymv],10)+","; //201004from
       tmp1="size->sz,color->colornow,align->aln,bold->bld,italics->ita";
       tmp1=Assign(tmp1,["sz",text(sz),"colornow",text(color),"aln",Dqq(aln),"bld",text(bld),"ita",text(ita)]);
       tmp=tmp+tmp1+");";
@@ -986,8 +1006,13 @@ DqDq(str):=(
   unicode("0022")+str+unicode("0022");
 );
 Tocindyform(str):=( //190521
-  regional(out,plv,flg,nn,tmp,tmp1);
+  regional(funL,out,plv,flg,nn,tmp,tmp1);
   out=str;
+  funL=["cos","sin","tan"]; //210302from
+  forall(funL,
+    out=replace(out,#+"((-1,","arc"+#+"((");
+    out=replace(out,#+"(-1,","arc"+#+"(");
+  ); //210302to
   out=replace(out,"\",""); //190712[4lines]
   out=replace(out,"   "," ");
   out=replace(out,"  "," "); 
@@ -1152,7 +1177,7 @@ Windispg(gcLorg):=( //190125
               if(indexof(opcindy,"size")==0, 
                 tmp3=tmp3+",size->"+text(typeL_2);
               ); //190124to
-              tmp="connect("+Textformat(Nk,5)+tmp3+");";//190125
+              tmp="connect("+Textformat(Nk,10)+tmp3+");";//190125
               parse(tmp);
             );
             if((tmp1==1)%(tmp1==2),
@@ -1163,7 +1188,7 @@ Windispg(gcLorg):=( //190125
               );
               tmp3=",dashtype->1"+tmp3;
               forall(1..(length(Nk)-1),
-                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],5)+tmp3+");";
+                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],10)+tmp3+");";
                 parse(tmp);
               );
               if(typeL_(-1)!=1,
@@ -1178,7 +1203,7 @@ Windispg(gcLorg):=( //190125
               );
               tmp3=",dashtype->3"+tmp3;
               forall(1..(length(Nk)-1),
-                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],5)+tmp3+");";
+                tmp="draw("+Textformat([Nk_#,Nk_(#+1)],10)+tmp3+");";
                 parse(tmp);
               );
               if(typeL_3!=1,
@@ -1615,7 +1640,6 @@ forall(0..2,
 );
 
 Windispg();
-
 ;
 </script>
     <script type="text/javascript">
@@ -1650,14 +1674,14 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 794,
-    height: 502,
-    transform: [{visibleRect: [-0.43406131742466364, 3.917011165675579, 7.87062991233878, -1.33356187883481]}],
+    width: 810,
+    height: 490,
+    transform: [{visibleRect: [-0.43406131742466364, 3.917011165675579, 8.037978853996481, -1.2080501725915338]}],
     grid: 0.5,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 1976, version: [3, 0, 1976]}
+  cinderella: {build: 1984, version: [3, 0, 1984]}
 });
     </script>
 </head>
