@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>quadratic3.cdy</title>
+    <title>quadratic4.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -1661,6 +1661,12 @@ number=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
+Expr([XMAX-0.6,0],"c","x",["Size=1.5"]);
+tmp="\dfrac{(x-b)^2}{(b)^2}+\dfrac{y^2}{a}=1";
+tmp=Assign(tmp,["b","\frac{a+1}{2}"]);
+Expr([-12,6],"e",tmp,["Size=1.5"]);
+tmp="\displaystyle\lim_{a \to \infty}y^2=4x";
+Expr([-12,4],"e",tmp,["Size=1.5"]);
 
 Putpoint("A",[A.x,0]);
 pB=[1,0];
@@ -1684,21 +1690,24 @@ if(s<XMAX+2,
 if((A.x>0)&(A.x<=XMAX-0.1),
   tmp="\dfrac{(x-b)^2}{b^2}+\dfrac{y^2}{aa}=1";
   tmp=Assign(tmp,["aa",A.x,"b",(A.x+1)/2]);
-  Expr([1,5],"e",tmp,["Size=1.5"]);
+  Expr([1,6],"e",tmp,["Size=1.5"]);
   tmp="[(a+1)/2*cos(t)+(a+1)/2,sqrt(a)*sin(t)]";
   tmp=Assign(tmp,["a",A.x]);
   Paramplot("1",tmp,"t=[0,2*pi]",["dr,2","Color=red"]);
 );
 if((A.x>XMAX-0.1)&(A.x<=XMAX+2),
   tmp="4x-y^2=0";
-  Expr([1,5],"e",tmp,["Size=1.5"]);
+  Expr([1,6],"e",tmp,["Size=1.5"]);
   tmp="[t^2/4,t]";
   Paramplot("1",tmp,"t=[-XMAX,XMAX]",["dr,2","Color=red"]);
 );
+Eps=10^(-1);
 if(A.x<0,
-  tmp="\dfrac{(x-b)^2}{(b^2}-\dfrac{y^2}{aa}=1";
+  tmp="\dfrac{(x-b)^2}{b^2}-\dfrac{y^2}{aa}=1";
   tmp=Assign(tmp,["aa",-A.x,"b",(A.x+1)/2]);
-  Expr([1,5],"e",tmp,["Size=1.5"]);
+  if(|A.x+1|<Eps,tmp="x=0");
+  if(|A.x|<Eps,tmp="y=0");
+  Expr([1,6],"e",tmp,["Size=1.5"]);
   tmp="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp=Assign(tmp,["a",A.x]);
   Paramplot("1",tmp,"t=[-5,5]",["dr,2","Color=red"]);
@@ -1736,13 +1745,14 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 882,
-    height: 510,
-    transform: [{visibleRect: [-15.044920831934938, 7.879312004778632, 15.025732585500457, -9.508480787615984]}],
+    height: 478,
+    transform: [{visibleRect: [-15.018279853038878, 7.858600467935213, 15.052373564396515, -8.438193561015034]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
+  use: ["katex"],
   cinderella: {build: 2004, version: [3, 0, 2004]}
 });
     </script>
