@@ -1944,6 +1944,7 @@ sinh(t):=(exp(t)-exp(-t))/2;
 
 ss=Animationparam(1,2,[0,1+46*2]);
 s=mod(ss-1,46)+1;
+
 flg=0;
 if((s<10)&(flg==0),a=s;g=1;flg=1);
 if((s<20)&(flg==0),a=100/(20-s);c=1/a;g=1.1;flg=1);
@@ -1978,10 +1979,12 @@ if(g==1,
   tmp="[(a+1)/2*cos(t)+(aa+1)/2,sqrt(a)*sin(t)]";
   tmp=Assign(tmp,["aa",a]);
   Paramplot("1",tmp,"t=[0,2*pi]",op);
-  tmp=Intersectcrvs("sgv","gp1");
-  tmp=sort(tmp,-#_2);
-  pP=tmp_1;
-  Listplot("r",[[1,0],pP,[a,0]],["dr,0.5"]);
+  if(a>=1,
+    tmp=Intersectcrvs("sgv","gp1");
+    tmp=sort(tmp,-#_2);
+    pP=tmp_1;
+    Listplot("r",[[1,0],pP,[a,0]],["dr,0.5"]);
+  );
 );
 if(g==1.1,
   tmp="$aa x^2-bb x+cc y^2=0$";
@@ -2024,8 +2027,9 @@ if(g==3.1,
   Listplot("r",[[1,0],pP,pA],["dr,0.5"]);
 );
 if(g==3,
+  a=re(a);
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp=Assign(tmp,["aa",a,"bb",a*(a+1),"cc",(a+1)^2/4]);
+  tmp=Assign(tmp,["aa",a,"bb",a*(a+1),"cc",re((a+1)^2/4)]);
   drawtext([1,py],tmp,size->18);
   tmp1="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp1,["a",a]);
@@ -2033,10 +2037,12 @@ if(g==3,
   tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp2,["a",a]);
   Paramplot("2",tmp2,"t=[-5,5]",op);
-  tmp=Intersectcrvs("sgv","gp2");
-  tmp=sort(tmp,-#_2);
-  pP=tmp_1;
-  Listplot("r",[[1,0],pP,pA],["dr,0.5"]);
+  if(a<-1,
+    tmp=Intersectcrvs("sgv","gp2");
+    tmp=sort(tmp,-#_2);
+    pP=tmp_1;
+    Listplot("r",[[1,0],pP,pA],["dr,0.5"]);
+  );
 );
 
 Windispg();
@@ -2065,9 +2071,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 960,
-    height: 473,
-    transform: [{visibleRect: [-18.33546391790316, 9.600304947066762, 18.800096944346777, -8.696695352770968]}],
+    width: 961,
+    height: 467,
+    transform: [{visibleRect: [-18.316341737786818, 9.574011784798811, 18.857902000361296, -8.490891259649855]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
