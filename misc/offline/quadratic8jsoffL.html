@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>quadratic7.cdy</title>
+    <title>quadratic8.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -1963,7 +1963,7 @@ pB=[1,0];
 pC=[0,0];
 drawtext([1,-0.5],"$1$",align->"mid",size->18);py=py-1.6;
 
-Pointdata("1",[pB,pC],["Color=blue","Size=6"]);
+Pointdata("1",[pB,pC],["Color=blue","Size=6","Msg=n"]);
 
 cosh(t):=(exp(t)+exp(-t))/2;
 sinh(t):=(exp(t)-exp(-t))/2;
@@ -1991,11 +1991,12 @@ if((s<54)&(flg==0),a=0;c=1/Eps;g=3;flg=1);
 if((s<64)&(flg==0),a=1/10*(s-54);c=1/a;g=1;flg=1);
 
 pA=[a,0];
-Pointdata("2",[a,0],["Color=red","Size=8"]);
+Pointdata("2",[a,0],["Color=red","Size=8","Msg=n"]);
 drawtext(pA-[0,0.5],"$a$",size->16,align->"mid");
 
 py=8.3;
-Op(n):=["dr,3","Color=red","Num="+text(n)];
+Op(n):=["dr,3","Color=blue","Msg=n","Num="+text(n)];
+Op2(clr):=["dr,0.5","Color="+clr,"Msg=n"];
 if(g==2,
  tmp="$a=\infty$"
 ,
@@ -2005,6 +2006,8 @@ if(g==2,
    tmp="$a="+format(a,2)+"$";
  );
 );
+
+
 
 if(g==1,
   tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
@@ -2021,11 +2024,17 @@ if(g==1,
   tmp=Assign(tmp,["aa",a]);
   Paramplot("1",tmp,"t=[0,2*pi]",Op(50));
   tmp=min([0.3*XMAX,(1+a)/2]);
-  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp"]);
+  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
   tmp=Intersectcrvs("sgv","gp1");
   tmp=sort(tmp,-#_2);
   pP=tmp_1;
-  Listplot("r",[[1,0],pP,[a,0]],["dr,0.5"]);
+  Listplot("r",[[1,0],pP,[a,0]],Op2("red"));
+  tmp=0.6*min([0.3*XMAX,(1+a)/2]);
+  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
+  tmp=Intersectcrvs("sgv","gp1");
+  tmp=sort(tmp,-#_2);
+  pP=tmp_1;
+  Listplot("r2",[[1,0],pP,[a,0]],Op2("red"));
 );
 if(g==1.1,
   tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
@@ -2038,18 +2047,23 @@ if(g==1.1,
   tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
-  if(a>20,op=append(op_(1..2),"Num=200"));
   tmp1=Assign("[(a+1)/(2*a)*(a-sqrt(a*(a-t^2))),t]",["a",a]);
   if(a<100,tmp=op(50),tmp=op(200));
   Paramplot("1",tmp1,"t=[-sqrt(a),sqrt(a)]",tmp);
   tmp2=Assign("[(a+1)/(2*a)*(a+sqrt(a*(a-t^2))),t]",["a",a]);
   Paramplot("2",tmp2,"t=[-sqrt(a),sqrt(a)]",tmp);
   tmp=min([0.3*XMAX,(1+a)/2]);
-  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp"]);
+  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
   tmp=Intersectcrvs("sgv","gp1");
   tmp=sort(tmp,-#_2);
   pP=tmp_1;
-  Listplot("r",[[1,0],pP,[a,0]],["dr,0.5"]);
+  Listplot("r",[[1,0],pP,[a,0]],Op2("red"));
+  tmp=0.6*min([0.3*XMAX,(1+a)/2]);
+  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
+  tmp=Intersectcrvs("sgv","gp1");
+  tmp=sort(tmp,-#_2);
+  pP=tmp_1;
+  Listplot("r2",[[1,0],pP,[a,0]],Op2("red"));
 );
 if(g==2,
   tmp="$a=\infty,\;c=0$";
@@ -2060,13 +2074,20 @@ if(g==2,
   tmp="[t^2/4,t]";
   Paramplot("1",tmp,"t=[-XMAX,XMAX]",Op(50));
   tmp=min([0.3*XMAX,(1+a)/2]);
-  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp"]);
+  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
   tmp=Intersectcrvs("sgv","gp1");
   tmp=sort(tmp,-#_2);
   pP=tmp_1;
-  Listplot("r",[[1,0],pP,[200,pP_2]],["dr,0.5"]);
-  Listplot("r1",[[-1,-8],[-1,8]],["dr,0.5"]);
-  Listplot("r2",[[-1,pP_2],pP],["dr,0.5"]);
+  Listplot("r0",[[-1,-8],[-1,8]],["dr,0.5","Msg=n"]);
+  Listplot("r1",[[1,0],pP,[200,pP_2]],Op2("red"));
+  Listplot("r2",[[-1,pP_2],pP],Op2("black"));
+  tmp=0.6*min([0.3*XMAX,(1+a)/2]);
+  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
+  tmp=Intersectcrvs("sgv","gp1");
+  tmp=sort(tmp,-#_2);
+  pP=tmp_1;
+  Listplot("r1b",[[1,0],pP,[200,pP_2]],Op2("red"));
+  Listplot("r2b",[[-1,pP_2],pP],Op2("black"));
 );
 if(g==3.1,
   tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
@@ -2076,7 +2097,7 @@ if(g==3.1,
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
+  tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format(re((c+1)^2)/4,2)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
   if(a<-10,op=append(op_(1..2),"Num=200"));
@@ -2087,12 +2108,18 @@ if(g==3.1,
   tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp2,["a",a]);
   Paramplot("2",tmp2,"t=[-5,5]",tmp);
-  tmp=2*sqrt(0.3*XMAX);
-  Listplot("v",[[XMIN,tmp],[XMAX,tmp]],["nodisp"]);
+  ry1=4.24; //from g==2
+  ry2=3.272727; //from g==2
+  Listplot("v",[[XMIN,ry1],[XMAX,ry1]],["nodisp"]);
   tmp=Intersectcrvs("sgv","gp2");
-  tmp=sort(tmp,#_1);
   pP=tmp_1;
-  Listplot("r",[[1,0],pP,pA],["dr,0.5"]);
+  Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+  Listplot("r2",[pA,pP],Op2("black"));
+  Listplot("v",[[XMIN,ry2],[XMAX,ry2]],["nodisp","Msg=n"]);
+  tmp=Intersectcrvs("sgv","gp2");
+  pP=tmp_1;
+  Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+  Listplot("r2b",[pA,pP],Op2("black"));
 );
 if(g==3,
   tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
@@ -2103,7 +2130,7 @@ if(g==3,
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
+  tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format(re((c+1)^2/4),2)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
   tmp1="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
@@ -2112,13 +2139,20 @@ if(g==3,
   tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp2,["a",a]);
   Paramplot("2",tmp2,"t=[-5,5]",Op(50));
-  tmp=2*sqrt(0.3*XMAX);
-  Listplot("v",[[XMIN,tmp],[XMAX,tmp]],["nodisp"]);
-  tmp=Intersectcrvs("sgv","gp2");
-  if(length(tmp)>0,
-    tmp=sort(tmp,#_1);
+  if(|a|>10^(-3),
+    if(a<-1,crv="gp2",crv="gp1");
+    ry1=4.24; //from g==2
+    ry2=3.272727; //from g==2
+    Listplot("v",[[XMIN,ry1],[XMAX,ry1]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv",crv);
     pP=tmp_1;
-    Listplot("r",[[1,0],pP,pA],["dr,0.5"]);
+    Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+    Listplot("r2",[pA,pP],["dr,0.5"]);
+    Listplot("v",[[XMIN,ry2],[XMAX,ry2]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv",crv);
+    pP=tmp_1;
+    Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+    Listplot("r2b",[pA,pP],Op2("black"));
   );
 );
 
@@ -2150,8 +2184,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 948,
-    height: 480,
-    transform: [{visibleRect: [-18.533798540252487, 9.88665902663311, 19.210971742051566, -9.22461706567274]}],
+    height: 500,
+    transform: [{visibleRect: [-16.782604204047534, 9.37793927109696, 17.62985999656236, -8.772094589984208]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
