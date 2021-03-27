@@ -2020,12 +2020,12 @@ if(g==1,
   tmp="[(a+1)/2*cos(t)+(aa+1)/2,sqrt(a)*sin(t)]";
   tmp=Assign(tmp,["aa",a]);
   Paramplot("1",tmp,"t=[0,2*pi]",Op(50));
-    tmp=min([0.3*XMAX,(1+a)/2]);
-    Listplot("v",[[tmp,-8],[tmp,8]],["nodisp"]);
-    tmp=Intersectcrvs("sgv","gp1");
-    tmp=sort(tmp,-#_2);
-    pP=tmp_1;
-    Listplot("r",[[1,0],pP,[a,0]],["dr,0.5"]);
+  tmp=min([0.3*XMAX,(1+a)/2]);
+  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp"]);
+  tmp=Intersectcrvs("sgv","gp1");
+  tmp=sort(tmp,-#_2);
+  pP=tmp_1;
+  Listplot("r",[[1,0],pP,[a,0]],["dr,0.5"]);
 );
 if(g==1.1,
   tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
@@ -2040,9 +2040,10 @@ if(g==1.1,
   drawtext([1,py],tmp,size->18);
   if(a>20,op=append(op_(1..2),"Num=200"));
   tmp1=Assign("[(a+1)/(2*a)*(a-sqrt(a*(a-t^2))),t]",["a",a]);
-  Paramplot("1",tmp1,"t=[-sqrt(a),sqrt(a)]",Op(50));
+  if(a<100,tmp=op(50),tmp=op(200));
+  Paramplot("1",tmp1,"t=[-sqrt(a),sqrt(a)]",tmp);
   tmp2=Assign("[(a+1)/(2*a)*(a+sqrt(a*(a-t^2))),t]",["a",a]);
-  Paramplot("2",tmp2,"t=[-sqrt(a),sqrt(a)]",Op(50));
+  Paramplot("2",tmp2,"t=[-sqrt(a),sqrt(a)]",tmp);
   tmp=min([0.3*XMAX,(1+a)/2]);
   Listplot("v",[[tmp,-8],[tmp,8]],["nodisp"]);
   tmp=Intersectcrvs("sgv","gp1");
@@ -2078,13 +2079,14 @@ if(g==3.1,
   tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
-  if(a<-20,op=append(op_(1..2),"Num=200"));
+  if(a<-10,op=append(op_(1..2),"Num=200"));
   tmp1="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp1,["a",a]);
-  Paramplot("1",tmp1,"t=[-5,5]",Op(100));
+  if(a<-10,tmp=Op(200),tmp=Op(50));
+  Paramplot("1",tmp1,"t=[-5,5]",tmp);
   tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp2,["a",a]);
-  Paramplot("2",tmp2,"t=[-5,5]",Op(100));
+  Paramplot("2",tmp2,"t=[-5,5]",tmp);
   tmp=2*sqrt(0.3*XMAX);
   Listplot("v",[[XMIN,tmp],[XMAX,tmp]],["nodisp"]);
   tmp=Intersectcrvs("sgv","gp2");
@@ -2147,9 +2149,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 953,
-    height: 487,
-    transform: [{visibleRect: [-18.172396110347808, 9.882559658742473, 18.402669345114624, -8.80795122983067]}],
+    width: 948,
+    height: 480,
+    transform: [{visibleRect: [-18.533798540252487, 9.88665902663311, 19.210971742051566, -9.22461706567274]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
