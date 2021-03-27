@@ -1213,6 +1213,17 @@ Dqq(str):=DqDq(str); //18.02.11
 DqDq(str):=(
   unicode("0022")+str+unicode("0022");
 );
+Op(n,object):=( //  16.05.25
+  regional(out);
+  if(islist(object),
+    out=object_n;
+  ,
+    if(isstring(object),
+      out=substring(object,n-1,n);
+    );
+  );
+  out;
+);
 Intersectcrvs(Gr1,Gr2):=Intersectcrvs(Gr1,Gr2,[]);
 Intersectcrvs(Gr1,Gr2,options):=(
   regional(tmp,tmp1,tmp2);
@@ -1939,8 +1950,8 @@ tmp=Assign(tmp,["b","\frac{a+1}{2}"]);
 drawtext([-12,py],tmp,size->18);py=py-1.6;
 tmp="$\Leftrightarrow\;ax^2-a(a+1)x+\frac{(a+1)^2}{4}y^2=0$";
 drawtext([-12,py],tmp,size->18);
-drawtext([-15,py],"$(c=\frac{1}{a})$",size->18);
 py=py-1.6;
+drawtext([-15,py],"$(c=\frac{1}{a})$",size->18);
 tmp="$\Leftrightarrow\;cx^2-(c+1)x+\frac{(c+1)^2}{4}y^2=0$";
 drawtext([-12,py],tmp,size->18);py=py-1.6;
 drawtext([-15,py],"$(c \to 0)$",size->18);
@@ -1984,7 +1995,7 @@ Pointdata("2",[a,0],["Color=red","Size=8"]);
 drawtext(pA-[0,0.5],"$a$",size->16,align->"mid");
 
 py=8.3;
-op=["dr,3","Color=red","Num=50"];
+Op(n):=["dr,3","Color=red","Num="+text(n)];
 if(g==2,
  tmp="$a=\infty$"
 ,
@@ -2008,7 +2019,7 @@ if(g==1,
   drawtext([1,py],tmp,size->18);
   tmp="[(a+1)/2*cos(t)+(aa+1)/2,sqrt(a)*sin(t)]";
   tmp=Assign(tmp,["aa",a]);
-  Paramplot("1",tmp,"t=[0,2*pi]",op);
+  Paramplot("1",tmp,"t=[0,2*pi]",Op(50));
     tmp=min([0.3*XMAX,(1+a)/2]);
     Listplot("v",[[tmp,-8],[tmp,8]],["nodisp"]);
     tmp=Intersectcrvs("sgv","gp1");
@@ -2029,9 +2040,9 @@ if(g==1.1,
   drawtext([1,py],tmp,size->18);
   if(a>20,op=append(op_(1..2),"Num=200"));
   tmp1=Assign("[(a+1)/(2*a)*(a-sqrt(a*(a-t^2))),t]",["a",a]);
-  Paramplot("1",tmp1,"t=[-sqrt(a),sqrt(a)]",op);
+  Paramplot("1",tmp1,"t=[-sqrt(a),sqrt(a)]",Op(50));
   tmp2=Assign("[(a+1)/(2*a)*(a+sqrt(a*(a-t^2))),t]",["a",a]);
-  Paramplot("2",tmp2,"t=[-sqrt(a),sqrt(a)]",op);
+  Paramplot("2",tmp2,"t=[-sqrt(a),sqrt(a)]",Op(50));
   tmp=min([0.3*XMAX,(1+a)/2]);
   Listplot("v",[[tmp,-8],[tmp,8]],["nodisp"]);
   tmp=Intersectcrvs("sgv","gp1");
@@ -2046,7 +2057,7 @@ if(g==2,
   tmp="$4x-y^2=0$";
   drawtext([1,py],tmp,size->18);
   tmp="[t^2/4,t]";
-  Paramplot("1",tmp,"t=[-XMAX,XMAX]",op);
+  Paramplot("1",tmp,"t=[-XMAX,XMAX]",Op(50));
   tmp=min([0.3*XMAX,(1+a)/2]);
   Listplot("v",[[tmp,-8],[tmp,8]],["nodisp"]);
   tmp=Intersectcrvs("sgv","gp1");
@@ -2070,10 +2081,10 @@ if(g==3.1,
   if(a<-20,op=append(op_(1..2),"Num=200"));
   tmp1="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp1,["a",a]);
-  Paramplot("1",tmp1,"t=[-5,5]",op);
+  Paramplot("1",tmp1,"t=[-5,5]",Op(100));
   tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp2,["a",a]);
-  Paramplot("2",tmp2,"t=[-5,5]",op);
+  Paramplot("2",tmp2,"t=[-5,5]",Op(100));
   tmp=2*sqrt(0.3*XMAX);
   Listplot("v",[[XMIN,tmp],[XMAX,tmp]],["nodisp"]);
   tmp=Intersectcrvs("sgv","gp2");
@@ -2095,10 +2106,10 @@ if(g==3,
   drawtext([1,py],tmp,size->18);
   tmp1="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp1,["a",a]);
-  Paramplot("1",tmp1,"t=[-5,5]",op);
+  Paramplot("1",tmp1,"t=[-5,5]",Op(50));
   tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp2,["a",a]);
-  Paramplot("2",tmp2,"t=[-5,5]",op);
+  Paramplot("2",tmp2,"t=[-5,5]",Op(50));
   tmp=2*sqrt(0.3*XMAX);
   Listplot("v",[[XMIN,tmp],[XMAX,tmp]],["nodisp"]);
   tmp=Intersectcrvs("sgv","gp2");
@@ -2136,9 +2147,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 956,
-    height: 481,
-    transform: [{visibleRect: [-18.172396110347808, 9.882559658742473, 18.51780596249803, -8.577677995063855]}],
+    width: 953,
+    height: 487,
+    transform: [{visibleRect: [-18.172396110347808, 9.882559658742473, 18.402669345114624, -8.80795122983067]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
