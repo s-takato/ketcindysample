@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>quadratic6.cdy</title>
+    <title>quadratic7.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -1936,21 +1936,21 @@ Ketinit();
 py=8.3;
 tmp="$\dfrac{(x-b)^2}{(b)^2}+\dfrac{y^2}{a}=1$";
 tmp=Assign(tmp,["b","\frac{a+1}{2}"]);
-drawtext([-12,py],tmp,size->18);py=py-2;
+drawtext([-12,py],tmp,size->18);py=py-1.6;
 tmp="$\Leftrightarrow\;ax^2-a(a+1)x+\frac{(a+1)^2}{4}y^2=0$";
 drawtext([-12,py],tmp,size->18);
 drawtext([-15,py],"$(c=\frac{1}{a})$",size->18);
-py=py-2;
+py=py-1.6;
 tmp="$\Leftrightarrow\;cx^2-(c+1)x+\frac{(c+1)^2}{4}y^2=0$";
-drawtext([-12,py],tmp,size->18);py=py-2;
+drawtext([-12,py],tmp,size->18);py=py-1.6;
 drawtext([-15,py],"$(c \to 0)$",size->18);
 tmp="$\Rightarrow\;-x+\frac{y^2}{4}=0$";
-drawtext([-12,py],tmp,size->18);py=py-2;
+drawtext([-12,py],tmp,size->18);py=py-1.6;
 
 pA=[1,0];
 pB=[1,0];
 pC=[0,0];
-drawtext([1,-0.5],"$1$",align->"mid",size->18);py=py-2;
+drawtext([1,-0.5],"$1$",align->"mid",size->18);py=py-1.6;
 
 Pointdata("1",[pB,pC],["Color=blue","Size=6"]);
 
@@ -1959,8 +1959,8 @@ sinh(t):=(exp(t)-exp(-t))/2;
 
 str=Textedit(0,"Speed=2");
 sp=parse(str);
-ss=Animationparam(1,sp,[0,1+46*2]);
-s=mod(ss-1,46)+1;
+ss=Animationparam(1,sp,[0,1+64*2]);
+s=mod(ss-1,64)+1;
 
 flg=0;
 if((s<10)&(flg==0),a=s;c=1/a;g=1;flg=1);
@@ -1970,14 +1970,14 @@ if((s<32)&(flg==0),a=-120/(22+s-43);c=1/a;g=3.1;flg=1);
 if((s<42)&(flg==0),a=s-43;c=1/a;g=3;flg=1);
 if((s<43)&(flg==0),a=-1;c=1/a;g=3;flg=1);
 Eps=10^(-3);
-if((s<44)&(flg==0),
-  a=s-44;
+if((s<53)&(flg==0),
+  a=1/10*(s-53);
   if(abs(a)<Eps,c=1/Eps,c=1/a);
   g=3;
   flg=1;
 );
-if((s<45)&(flg==0),a=0;c=1/Eps;g=3;flg=1);
-if((s<46)&(flg==0),a=s-45;c=1/a;g=1;flg=1);
+if((s<54)&(flg==0),a=0;c=1/Eps;g=3;flg=1);
+if((s<64)&(flg==0),a=1/10*(s-54);c=1/a;g=1;flg=1);
 
 pA=[a,0];
 Pointdata("2",[a,0],["Color=red","Size=8"]);
@@ -1994,13 +1994,14 @@ if(g==2,
    tmp="$a="+format(a,2)+"$";
  );
 );
-drawtext([1,py],tmp,size->18);py=py-2;
 
 if(g==1,
+  tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
+  drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
   tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format((a+1)^2/4,2)];
   tmp=Assign(tmp,tmp1);
-  drawtext([1,py],tmp,size->18);py=py-2;
+  drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
   tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
   tmp=Assign(tmp,tmp1);
@@ -2016,10 +2017,12 @@ if(g==1,
     Listplot("r",[[1,0],pP,[a,0]],["dr,0.5"]);
 );
 if(g==1.1,
+  tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
+  drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
   tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format((a+1)^2/4,2)];
   tmp=Assign(tmp,tmp1);
-  drawtext([1,py],tmp,size->18);py=py-2;
+  drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
   tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
   tmp=Assign(tmp,tmp1);
@@ -2037,6 +2040,9 @@ if(g==1.1,
   Listplot("r",[[1,0],pP,[a,0]],["dr,0.5"]);
 );
 if(g==2,
+  tmp="$a=0,\;c=\infty$";
+  drawtext([1,py],tmp,size->18);py=py-1.6;
+  py=py-1.6;
   tmp="$4x-y^2=0$";
   drawtext([1,py],tmp,size->18);
   tmp="[t^2/4,t]";
@@ -2051,10 +2057,12 @@ if(g==2,
   Listplot("r2",[[-1,pP_2],pP],["dr,0.5"]);
 );
 if(g==3.1,
+  tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
+  drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format((a+1)^2/4,2)];
+  tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format(re((a+1)^2/4),2)];
   tmp=Assign(tmp,tmp1);
-  drawtext([1,py],tmp,size->18);py=py-2;
+  drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
   tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
   tmp=Assign(tmp,tmp1);
@@ -2074,11 +2082,13 @@ if(g==3.1,
   Listplot("r",[[1,0],pP,pA],["dr,0.5"]);
 );
 if(g==3,
+  tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
+  drawtext([1,py],tmp,size->18);py=py-1.6;
   a=re(a);
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format((a+1)^2/4,2)];
+  tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format(re((a+1)^2/4),2)];
   tmp=Assign(tmp,tmp1);
-  drawtext([1,py],tmp,size->18);py=py-2;
+  drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
   tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
   tmp=Assign(tmp,tmp1);
@@ -2118,7 +2128,7 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [4.0, 1.6, -0.26666666666666666], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 1.6, 0.26666666666666666], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "Text0", type: "EditableText", pos: [4.0, 2.857142857142857, 0.38874033111046624], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 120, text: "Speed=2", textsize: 18.0},
+    {name: "Text0", type: "EditableText", pos: [4.0, 2.6490066225165565, 0.34511261700028584], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 120, text: "Speed=2", textsize: 18.0},
     {name: "Text71", type: "Button", pos: [-2.2857142857142856, -4.0, 0.5714285714285714], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 18.0},
     {name: "Text72", type: "Button", pos: [-1.1428571428571428, -4.0, 0.5714285714285714], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 18.0},
     {name: "Text73", type: "Button", pos: [0.32906132938961846, -4.0, 0.5737394904373195], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 18.0},
@@ -2126,9 +2136,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 944,
-    height: 469,
-    transform: [{visibleRect: [-18.41520431516683, 9.69726608880005, 17.839129101970787, -8.314685577129548]}],
+    width: 945,
+    height: 461,
+    transform: [{visibleRect: [-18.172396110347808, 9.882559658742473, 18.095638365425536, -7.810100545841139]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
