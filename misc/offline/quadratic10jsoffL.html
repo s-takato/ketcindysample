@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>quadratic9.cdy</title>
+    <title>quadratic10.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -1039,6 +1039,23 @@ Scaledata(nm,plist,rx,ry,optionorg):=(
   );
   PdL;
 );
+Sprintf(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(!islist(value),  // 17.03.12from
+    if(isstring(value),
+      vv=value;
+    ,
+      vv=Textformat(value,dig);
+    );  // 17.03.12from
+    if(indexof(vv,".")==0,vv=vv+".");
+    vv=vv+"0000000000000000";
+    tmp=indexof(vv,".")+dig;
+    vv=substring(vv,0,tmp);
+  ,
+    vv=apply(value,Sprintf(#,dig));
+  );
+  vv;
+);
 Paramplot(nm,funstr,variable):=Paramplot(nm,funstr,variable,[]);
 Paramplot(nm,funstr,variable,options):=(
   regional(name,Out,tmp,tmp1,tmp2,vname,func,str,Rng,Num,Msg,
@@ -2001,23 +2018,23 @@ if(g==2,
  tmp="$a=\infty$"
 ,
  if(a!=0,
-   tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
+   tmp="$a="+Sprintf(a,3)+",\;c="+Sprintf(c,3)+"$";
  ,
-   tmp="$a="+format(a,2)+"$";
+   tmp="$a="+Sprintf(a,3)+"$";
  );
 );
 
 
 
 if(g==1,
-  tmp="$a="+format(a,3)+",\;c="+format(c,3)+"$";
+  tmp="$a="+Sprintf(a,3)+",\;c="+Sprintf(c,3)+"$";
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,3),"bb",format(a*(a+1),3),"cc",format((a+1)^2/4,3)];
+  tmp1=["aa",Sprintf(a,3),"bb",Sprintf(a*(a+1),3),"cc",Sprintf((a+1)^2/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,3),"bb",format(c+1,3),"cc",format((c+1)^2/4,3)];
+  tmp1=["aa",Sprintf(c,3),"bb",Sprintf(c+1,3),"cc",Sprintf((c+1)^2/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
   tmp="[(a+1)/2*cos(t)+(aa+1)/2,sqrt(a)*sin(t)]";
@@ -2037,14 +2054,14 @@ if(g==1,
   Listplot("r2",[[1,0],pP,[a,0]],Op2("red"));
 );
 if(g==1.1,
-  tmp="$a="+format(a,3)+",\;c="+format(c,3)+"$";
+  tmp="$a="+Sprintf(a,3)+",\;c="+Sprintf(c,3)+"$";
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,3),"bb",format(a*(a+1),3),"cc",format((a+1)^2/4,3)];
+  tmp1=["aa",Sprintf(a,3),"bb",Sprintf(a*(a+1),3),"cc",Sprintf((a+1)^2/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,3),"bb",format(c+1,3),"cc",format((c+1)^2/4,3)];
+  tmp1=["aa",Sprintf(c,3),"bb",Sprintf(c+1,3),"cc",Sprintf((c+1)^2/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
   tmp1=Assign("[(a+1)/(2*a)*(a-sqrt(a*(a-t^2))),t]",["a",a]);
@@ -2090,14 +2107,14 @@ if(g==2,
   Listplot("r2b",[[-1,pP_2],pP],Op2("black"));
 );
 if(g==3.1,
-  tmp="$a="+format(a,3)+",\;c="+format(c,3)+"$";
+  tmp="$a="+Sprintf(a,3)+",\;c="+Sprintf(c,3)+"$";
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,3),"bb",format(a*(a+1),3),"cc",format(re((a+1)^2/4),3)];
+  tmp1=["aa",Sprintf(a,3),"bb",Sprintf(a*(a+1),3),"cc",Sprintf(re((a+1)^2/4),3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,3),"bb",format(c+1,3),"cc",format(re((c+1)^2)/4,3)];
+  tmp1=["aa",Sprintf(c,3),"bb",Sprintf(c+1,3),"cc",Sprintf(re((c+1)^2)/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
   tmp1="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
@@ -2127,19 +2144,21 @@ if(g==3.1,
 if(g==3,
   Eps=10^(-3);
   if(|a|>Eps,
-    tmp="$a="+format(a,3)+",\;c="+format(c,3)+"$";
+    tmp="$a="+Sprintf(a,3)+",\;c="+Sprintf(c,3)+"$";
   ,
     tmp="$a=0,\;c=\infty$";
   );
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,3),"bb",format(a*(a+1),3),"cc",format(re((a+1)^2/4),3)];
+  tmp1=["aa",Sprintf(a,3),"bb",Sprintf(a*(a+1),3),"cc",Sprintf(re((a+1)^2/4),3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
-  tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,3),"bb",format(c+1,3),"cc",format(re((c+1)^2/4),3)];
-  tmp=Assign(tmp,tmp1);
-  drawtext([1,py],tmp,size->18);
+  if(|a|>Eps,
+    tmp="$aa x^2-bb x+cc y^2=0$";
+    tmp1=["aa",Sprintf(c,3),"bb",Sprintf(c+1,3),"cc",Sprintf(re((c+1)^2/4),3)];
+    tmp=Assign(tmp,tmp1);
+    drawtext([1,py],tmp,size->18);
+  );
   if(|a|<Eps,
     Listplot("xax",[[2*XMIN,0],[2*XMAX,0]],["dr,3","Color=blue","Msg=n"]);
   ,
@@ -2196,9 +2215,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 953,
-    height: 501,
-    transform: [{visibleRect: [-16.788781321500082, 9.528767777067612, 17.805183217720625, -8.657566151735717]}],
+    width: 957,
+    height: 488,
+    transform: [{visibleRect: [-18.074642585998994, 9.595647948797371, 18.15034789525972, -8.876447510820448]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
