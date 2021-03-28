@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>quadratic8.cdy</title>
+    <title>quadratic9.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -2010,14 +2010,14 @@ if(g==2,
 
 
 if(g==1,
-  tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
+  tmp="$a="+format(a,3)+",\;c="+format(c,3)+"$";
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format((a+1)^2/4,2)];
+  tmp1=["aa",format(a,3),"bb",format(a*(a+1),3),"cc",format((a+1)^2/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
+  tmp1=["aa",format(c,3),"bb",format(c+1,3),"cc",format((c+1)^2/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
   tmp="[(a+1)/2*cos(t)+(aa+1)/2,sqrt(a)*sin(t)]";
@@ -2037,14 +2037,14 @@ if(g==1,
   Listplot("r2",[[1,0],pP,[a,0]],Op2("red"));
 );
 if(g==1.1,
-  tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
+  tmp="$a="+format(a,3)+",\;c="+format(c,3)+"$";
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format((a+1)^2/4,2)];
+  tmp1=["aa",format(a,3),"bb",format(a*(a+1),3),"cc",format((a+1)^2/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format((c+1)^2/4,2)];
+  tmp1=["aa",format(c,3),"bb",format(c+1,3),"cc",format((c+1)^2/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
   tmp1=Assign("[(a+1)/(2*a)*(a-sqrt(a*(a-t^2))),t]",["a",a]);
@@ -2090,69 +2090,82 @@ if(g==2,
   Listplot("r2b",[[-1,pP_2],pP],Op2("black"));
 );
 if(g==3.1,
-  tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
+  tmp="$a="+format(a,3)+",\;c="+format(c,3)+"$";
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format(re((a+1)^2/4),2)];
+  tmp1=["aa",format(a,3),"bb",format(a*(a+1),3),"cc",format(re((a+1)^2/4),3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format(re((c+1)^2)/4,2)];
+  tmp1=["aa",format(c,3),"bb",format(c+1,3),"cc",format(re((c+1)^2)/4,3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
-  if(a<-10,op=append(op_(1..2),"Num=200"));
   tmp1="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp1,["a",a]);
-  if(a<-10,tmp=Op(200),tmp=Op(50));
+  if(a<-20,tmp=Op(200),tmp=Op(50));
   Paramplot("1",tmp1,"t=[-5,5]",tmp);
   tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp2,["a",a]);
   Paramplot("2",tmp2,"t=[-5,5]",tmp);
   ry1=4.24; //from g==2
   ry2=3.272727; //from g==2
-  Listplot("v",[[XMIN,ry1],[XMAX,ry1]],["nodisp"]);
+  Listplot("v",[[XMIN,ry1],[XMAX,ry1]],["nodisp","Msg=n"]);
   tmp=Intersectcrvs("sgv","gp2");
-  pP=tmp_1;
-  Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
-  Listplot("r2",[pA,pP],Op2("black"));
+  if(length(tmp)>0,
+    pP=tmp_1;
+    Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+    Listplot("r2",[pA,pP],Op2("black"));
+  );
   Listplot("v",[[XMIN,ry2],[XMAX,ry2]],["nodisp","Msg=n"]);
   tmp=Intersectcrvs("sgv","gp2");
-  pP=tmp_1;
-  Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
-  Listplot("r2b",[pA,pP],Op2("black"));
+  if(length(tmp)>0,
+    pP=tmp_1;
+    Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+    Listplot("r2b",[pA,pP],Op2("black"));
+  );
 );
 if(g==3,
-  tmp="$a="+format(a,2)+",\;c="+format(c,2)+"$";
+  Eps=10^(-3);
+  if(|a|>Eps,
+    tmp="$a="+format(a,3)+",\;c="+format(c,3)+"$";
+  ,
+    tmp="$a=0,\;c=\infty$";
+  );
   drawtext([1,py],tmp,size->18);py=py-1.6;
-  a=re(a);
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(a,2),"bb",format(a*(a+1),2),"cc",format(re((a+1)^2/4),2)];
+  tmp1=["aa",format(a,3),"bb",format(a*(a+1),3),"cc",format(re((a+1)^2/4),3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);py=py-1.6;
   tmp="$aa x^2-bb x+cc y^2=0$";
-  tmp1=["aa",format(c,2),"bb",format(c+1,2),"cc",format(re((c+1)^2/4),2)];
+  tmp1=["aa",format(c,3),"bb",format(c+1,3),"cc",format(re((c+1)^2/4),3)];
   tmp=Assign(tmp,tmp1);
   drawtext([1,py],tmp,size->18);
-  tmp1="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
-  tmp2=Assign(tmp1,["a",a]);
-  Paramplot("1",tmp1,"t=[-5,5]",Op(50));
-  tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
-  tmp2=Assign(tmp2,["a",a]);
-  Paramplot("2",tmp2,"t=[-5,5]",Op(50));
-  if(|a|>10^(-3),
+  if(|a|<Eps,
+    Listplot("xax",[[2*XMIN,0],[2*XMAX,0]],["dr,3","Color=blue","Msg=n"]);
+  ,
+    tmp1="[(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
+    tmp2=Assign(tmp1,["a",a]);
+    Paramplot("1",tmp1,"t=[-5,5]",Op(50));
+    tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
+    tmp2=Assign(tmp2,["a",a]);
+    Paramplot("2",tmp2,"t=[-5,5]",Op(50));
     if(a<-1,crv="gp2",crv="gp1");
     ry1=4.24; //from g==2
     ry2=3.272727; //from g==2
     Listplot("v",[[XMIN,ry1],[XMAX,ry1]],["nodisp","Msg=n"]);
     tmp=Intersectcrvs("sgv",crv);
-    pP=tmp_1;
-    Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
-    Listplot("r2",[pA,pP],["dr,0.5"]);
+    if(length(tmp)>0,
+      pP=tmp_1;
+      Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+      Listplot("r2",[pA,pP],Op2("black"));
+    );
     Listplot("v",[[XMIN,ry2],[XMAX,ry2]],["nodisp","Msg=n"]);
     tmp=Intersectcrvs("sgv",crv);
-    pP=tmp_1;
-    Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
-    Listplot("r2b",[pA,pP],Op2("black"));
+    if(length(tmp)>0,
+      pP=tmp_1;
+      Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+      Listplot("r2b",[pA,pP],Op2("black"));
+    );
   );
 );
 
@@ -2183,9 +2196,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 948,
-    height: 500,
-    transform: [{visibleRect: [-16.782604204047534, 9.37793927109696, 17.62985999656236, -8.772094589984208]}],
+    width: 953,
+    height: 501,
+    transform: [{visibleRect: [-16.788781321500082, 9.528767777067612, 17.805183217720625, -8.657566151735717]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
