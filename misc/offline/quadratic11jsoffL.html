@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>quadratic10.cdy</title>
+    <title>quadratic11.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -1956,10 +1956,16 @@ Addax(param):=(
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 
-;
+rayflg=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
+
+if(rayflg==1,
+  drawtext([13,-5.5],"on",size->20,color->[1,0,0]);
+,
+  drawtext([13,-5.5],"off",size->20,color->[1,0,0]);
+);
 
 py=8.3;
 tmp="$\dfrac{(x-b)^2}{(b)^2}+\dfrac{y^2}{a}=1$";
@@ -2040,18 +2046,20 @@ if(g==1,
   tmp="[(a+1)/2*cos(t)+(aa+1)/2,sqrt(a)*sin(t)]";
   tmp=Assign(tmp,["aa",a]);
   Paramplot("1",tmp,"t=[0,2*pi]",Op(50));
-  tmp=min([0.3*XMAX,(1+a)/2]);
-  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
-  tmp=Intersectcrvs("sgv","gp1");
-  tmp=sort(tmp,-#_2);
-  pP=tmp_1;
-  Listplot("r",[[1,0],pP,[a,0]],Op2("red"));
-  tmp=0.6*min([0.3*XMAX,(1+a)/2]);
-  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
-  tmp=Intersectcrvs("sgv","gp1");
-  tmp=sort(tmp,-#_2);
-  pP=tmp_1;
-  Listplot("r2",[[1,0],pP,[a,0]],Op2("red"));
+  if(rayflg==1,
+    tmp=min([0.3*XMAX,(1+a)/2]);
+    Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv","gp1");
+    tmp=sort(tmp,-#_2);
+    pP=tmp_1;
+    Listplot("r",[[1,0],pP,[a,0]],Op2("red"));
+    tmp=0.6*min([0.3*XMAX,(1+a)/2]);
+    Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv","gp1");
+    tmp=sort(tmp,-#_2);
+    pP=tmp_1;
+    Listplot("r2",[[1,0],pP,[a,0]],Op2("red"));
+  );
 );
 if(g==1.1,
   tmp="$a="+Sprintf(a,3)+",\;c="+Sprintf(c,3)+"$";
@@ -2070,17 +2078,19 @@ if(g==1.1,
   tmp2=Assign("[(a+1)/(2*a)*(a+sqrt(a*(a-t^2))),t]",["a",a]);
   Paramplot("2",tmp2,"t=[-sqrt(a),sqrt(a)]",tmp);
   tmp=min([0.3*XMAX,(1+a)/2]);
-  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
-  tmp=Intersectcrvs("sgv","gp1");
-  tmp=sort(tmp,-#_2);
-  pP=tmp_1;
-  Listplot("r",[[1,0],pP,[a,0]],Op2("red"));
-  tmp=0.6*min([0.3*XMAX,(1+a)/2]);
-  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
-  tmp=Intersectcrvs("sgv","gp1");
-  tmp=sort(tmp,-#_2);
-  pP=tmp_1;
-  Listplot("r2",[[1,0],pP,[a,0]],Op2("red"));
+  if(rayflg==1,
+    Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv","gp1");
+    tmp=sort(tmp,-#_2);
+    pP=tmp_1;
+    Listplot("r",[[1,0],pP,[a,0]],Op2("red"));
+    tmp=0.6*min([0.3*XMAX,(1+a)/2]);
+    Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv","gp1");
+    tmp=sort(tmp,-#_2);
+    pP=tmp_1;
+    Listplot("r2",[[1,0],pP,[a,0]],Op2("red"));
+  );
 );
 if(g==2,
   tmp="$a=\infty,\;c=0$";
@@ -2091,20 +2101,22 @@ if(g==2,
   tmp="[t^2/4,t]";
   Paramplot("1",tmp,"t=[-XMAX,XMAX]",Op(50));
   tmp=min([0.3*XMAX,(1+a)/2]);
-  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
-  tmp=Intersectcrvs("sgv","gp1");
-  tmp=sort(tmp,-#_2);
-  pP=tmp_1;
-  Listplot("r0",[[-1,-8],[-1,8]],["dr,0.5","Msg=n"]);
-  Listplot("r1",[[1,0],pP,[200,pP_2]],Op2("red"));
-  Listplot("r2",[[-1,pP_2],pP],Op2("black"));
-  tmp=0.6*min([0.3*XMAX,(1+a)/2]);
-  Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
-  tmp=Intersectcrvs("sgv","gp1");
-  tmp=sort(tmp,-#_2);
-  pP=tmp_1;
-  Listplot("r1b",[[1,0],pP,[200,pP_2]],Op2("red"));
-  Listplot("r2b",[[-1,pP_2],pP],Op2("black"));
+  if(rayflg==1,
+    Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv","gp1");
+    tmp=sort(tmp,-#_2);
+    pP=tmp_1;
+    Listplot("r0",[[-1,-8],[-1,8]],["dr,0.5","Msg=n"]);
+    Listplot("r1",[[1,0],pP,[200,pP_2]],Op2("red"));
+    Listplot("r2",[[-1,pP_2],pP],Op2("black"));
+    tmp=0.6*min([0.3*XMAX,(1+a)/2]);
+    Listplot("v",[[tmp,-8],[tmp,8]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv","gp1");
+    tmp=sort(tmp,-#_2);
+    pP=tmp_1;
+    Listplot("r1b",[[1,0],pP,[200,pP_2]],Op2("red"));
+    Listplot("r2b",[[-1,pP_2],pP],Op2("black"));
+  );
 );
 if(g==3.1,
   tmp="$a="+Sprintf(a,3)+",\;c="+Sprintf(c,3)+"$";
@@ -2124,21 +2136,23 @@ if(g==3.1,
   tmp2="[-(a+1)/2*cosh(t)+(a+1)/2,sqrt(-a)*sinh(t)]";
   tmp2=Assign(tmp2,["a",a]);
   Paramplot("2",tmp2,"t=[-5,5]",tmp);
-  ry1=4.24; //from g==2
-  ry2=3.272727; //from g==2
-  Listplot("v",[[XMIN,ry1],[XMAX,ry1]],["nodisp","Msg=n"]);
-  tmp=Intersectcrvs("sgv","gp2");
-  if(length(tmp)>0,
-    pP=tmp_1;
-    Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
-    Listplot("r2",[pA,pP],Op2("black"));
-  );
-  Listplot("v",[[XMIN,ry2],[XMAX,ry2]],["nodisp","Msg=n"]);
-  tmp=Intersectcrvs("sgv","gp2");
-  if(length(tmp)>0,
-    pP=tmp_1;
-    Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
-    Listplot("r2b",[pA,pP],Op2("black"));
+  if(rayflg==1,
+    ry1=4.24; //from g==2
+    ry2=3.272727; //from g==2
+    Listplot("v",[[XMIN,ry1],[XMAX,ry1]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv","gp2");
+    if(length(tmp)>0,
+      pP=tmp_1;
+      Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+      Listplot("r2",[pA,pP],Op2("black"));
+    );
+    Listplot("v",[[XMIN,ry2],[XMAX,ry2]],["nodisp","Msg=n"]);
+    tmp=Intersectcrvs("sgv","gp2");
+    if(length(tmp)>0,
+      pP=tmp_1;
+      Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+      Listplot("r2b",[pA,pP],Op2("black"));
+    );
   );
 );
 if(g==3,
@@ -2169,21 +2183,23 @@ if(g==3,
     tmp2=Assign(tmp2,["a",a]);
     Paramplot("2",tmp2,"t=[-5,5]",Op(50));
     if(a<-1,crv="gp2",crv="gp1");
-    ry1=4.24; //from g==2
-    ry2=3.272727; //from g==2
-    Listplot("v",[[XMIN,ry1],[XMAX,ry1]],["nodisp","Msg=n"]);
-    tmp=Intersectcrvs("sgv",crv);
-    if(length(tmp)>0,
-      pP=tmp_1;
-      Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
-      Listplot("r2",[pA,pP],Op2("black"));
-    );
-    Listplot("v",[[XMIN,ry2],[XMAX,ry2]],["nodisp","Msg=n"]);
-    tmp=Intersectcrvs("sgv",crv);
-    if(length(tmp)>0,
-      pP=tmp_1;
-      Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
-      Listplot("r2b",[pA,pP],Op2("black"));
+    if(rayflg==1,
+      ry1=4.24; //from g==2
+      ry2=3.272727; //from g==2
+      Listplot("v",[[XMIN,ry1],[XMAX,ry1]],["nodisp","Msg=n"]);
+      tmp=Intersectcrvs("sgv",crv);
+      if(length(tmp)>0,
+        pP=tmp_1;
+        Listplot("r1",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+        Listplot("r2",[pA,pP],Op2("black"));
+      );
+      Listplot("v",[[XMIN,ry2],[XMAX,ry2]],["nodisp","Msg=n"]);
+      tmp=Intersectcrvs("sgv",crv);
+      if(length(tmp)>0,
+        pP=tmp_1;
+        Listplot("r1b",[[1,0],pP,pP+4*(pP-pA)],Op2("red"));
+        Listplot("r2b",[pA,pP],Op2("black"));
+      );
     );
   );
 );
@@ -2211,13 +2227,14 @@ var cdy = CindyJS({
     {name: "Text71", type: "Button", pos: [-2.2857142857142856, -4.0, 0.5714285714285714], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5128205128205128, script: "resetclock();\nplayanimation();\nAnimeflg=1;\nDirflg=1;\nsorg=Current;\n", text: "Play", textsize: 18.0},
     {name: "Text72", type: "Button", pos: [-1.1428571428571428, -4.0, 0.5714285714285714], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5213675213675214, script: "Animeflg=1-Animeflg;\nif(Animeflg==0,\n  pauseanimation();\n  sorg=sstart;\n,\n  resetclock();\n  playanimation();\n);\n", text: "Pause", textsize: 18.0},
     {name: "Text73", type: "Button", pos: [0.32906132938961846, -4.0, 0.5737394904373195], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.4700854700854701, script: "sorg=sstart;\nDirflg=-Dirflg;\nAnimeflg=1;\nresetclock();\nplayanimation();\n", text: "Rev", textsize: 18.0},
-    {name: "Text74", type: "Button", pos: [1.3909955014240025, -4.0, 0.5737394904373195], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 18.0}
+    {name: "Text74", type: "Button", pos: [1.3909955014240025, -4.0, 0.5737394904373195], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.5641025641025641, script: "stopanimation();\nAnimeflg=\"\";\nsstart=Current;\n", text: "Stop", textsize: 18.0},
+    {name: "Text11", type: "Button", pos: [4.0, -1.939799331103679, 0.3534210890105781], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.29, 0.29], fillalpha: 0.811965811965812, alpha: 0.811965811965812, script: "rayflg=1-rayflg;", text: "Ray", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 957,
-    height: 488,
-    transform: [{visibleRect: [-18.074642585998994, 9.595647948797371, 18.15034789525972, -8.876447510820448]}],
+    width: 969,
+    height: 484,
+    transform: [{visibleRect: [-18.074642585998994, 9.595647948797371, 18.604579750824094, -8.72503689229899]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
