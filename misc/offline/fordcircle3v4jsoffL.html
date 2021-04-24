@@ -69,37 +69,6 @@ Ketinit(work,strictsep):=( //200509
   CRmark=unicode("000d");//16.12.13
   Dq=unicode("0022");
   Fillstore(); //181212
-  Namecdy=Cindyname();//180608
-  tmp1=Indexall(Dircdy,"%"); //180329from
-  if(length(tmp1)>0,
-    tmp1=append(tmp1,length(Dircdy));
-    tmp2=substring(Dircdy,0,tmp1_1-1);
-    forall(1..(length(tmp1)-1),
-      tmp=substring(Dircdy,tmp1_#,tmp1_#+2);
-      tmp2=tmp2+unicode(tmp);
-      tmp2=tmp2+substring(Dircdy,tmp1_#+2,tmp1_(#+1)-1);
-    );
-    Dircdy=tmp2;
-  ); //180329to
-  if(iswindows(),  //17.12.01
-    Dircdy=replace(Dircdy,"/",pathsep());
-    if(substring(Dircdy,0,1)==pathsep(),
-      Dircdy=substring(Dircdy,1,length(Dircdy));
-    );
-  );
-  Userhome=Homehead+pathsep()+getname(); //190128
-  if(iswindows(),
-    Batparent="\kc.bat";
-  ,
-    if(ismacosx(), //181125from
-      Shellparent="/kc.command"; 
-      Mackc="open"; //190222
-    ,
-      Shellparent="/kc.sh"; 
-      Mackc="bash"; //190222
-    );  //181125to
-  );
-  Changework(Dircdy+pathsep()+work); //180329to,181001
   Fnametex=Fhead+".tex";
   FnameR=Fhead+".r";
   FnamebodyR=Fhead+"body.r";
@@ -119,25 +88,6 @@ Ketinit(work,strictsep):=( //200509
     Strictmove(#.name);
     Ptpos(#,#.xy); //200529
   ); //190917
-);
-Indexall(str,key):=(
-  regional(rest,out,flg,tmp,tmp1,);
-  out=[];
-  rest=str;
-  flg=0;
-  forall(1..(length(str)),
-    if(flg==0,
-      tmp=indexof(rest,key);
-      if(tmp>0,
-        tmp1=tmp+length(str)-length(rest);
-        out=append(out,tmp1);
-        rest=substring(rest,tmp,length(rest));
-      ,
-        flg=1;
-      );
-    );
-  );
-  out;
 );
 Setwindow():=Setwindow("Msg=y");
 Setwindow(str):=(
@@ -173,13 +123,21 @@ Setwindow(xrange,yrange,msg):=(
   Ptpos(SW,Pcrd([XMIN,YMIN])); //190927from
   Ptpos(NE,Pcrd([XMAX,YMAX]));
   Strictmove("SW"); Strictmove("NE");
-  layer(KETPICLAYER); 
-  autoclearlayer(KETPICLAYER,true);
-  drawpoly([Pcrd([XMIN,YMIN]), Pcrd([XMAX,YMIN]),
-        Pcrd([XMAX,YMAX]),Pcrd([XMIN,YMAX])],color->[1,1,1]); //190927to
-  if(Toupper(substring(msg,0,1))=="Y", 
-    println("Setwindow(["+XMIN+","+XMAX+"],["+YMIN+","+YMAX+"])");
+);
+Toupper(str):=(
+  regional(alphabet,out,tmp,tmp1);
+  alphabet="abcdefghijklmnopqrstuvwxyz";
+  out="";
+  forall(1..(length(str)),
+    tmp=substring(str,#-1,#);
+    tmp1=indexof(alphabet,tmp);
+    if(tmp1>0,
+      out=out+unicode(text(tmp1+64),base->10);
+    ,
+      out=out+tmp;
+    );
   );
+  out;
 );
 LLcrd(pt):=(
   regional(tmp);
@@ -267,21 +225,6 @@ Strictmove(pCorg,sep):=(
     );
   );
 );
-Toupper(str):=(
-  regional(alphabet,out,tmp,tmp1);
-  alphabet="abcdefghijklmnopqrstuvwxyz";
-  out="";
-  forall(1..(length(str)),
-    tmp=substring(str,#-1,#);
-    tmp1=indexof(alphabet,tmp);
-    if(tmp1>0,
-      out=out+unicode(text(tmp1+64),base->10);
-    ,
-      out=out+tmp;
-    );
-  );
-  out;
-);
 Setmarklen(ratio):=(
   MARKLEN=ratio*0.2;//16.11.01
 );
@@ -341,6 +284,25 @@ Strsplit(str,key):=( //180505
     start=#;
   );
   out=append(out,substring(str,start,length(str)));
+  out;
+);
+Indexall(str,key):=(
+  regional(rest,out,flg,tmp,tmp1,);
+  out=[];
+  rest=str;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      tmp=indexof(rest,key);
+      if(tmp>0,
+        tmp1=tmp+length(str)-length(rest);
+        out=append(out,tmp1);
+        rest=substring(rest,tmp,length(rest));
+      ,
+        flg=1;
+      );
+    );
+  );
   out;
 );
 Listplot(list):=Listplot(list,[]);
@@ -1528,12 +1490,12 @@ Drwxy(add,optionsorg):=(
   xrng=[XMIN,XMAX];  //190103
   yrng=[YMIN,YMAX];  //190103
   ax=AXSTYLE_1; //190901from
-  labelsize="Size=1.5"; //201012
+  labelsize=1.5; //210408
   forall(AXSTYLE_2,
     tmp=Strsplit(#,"=");
     tmp1=Toupper(substring(tmp_1,0,1));
     if(contains(["S","L"],tmp1), 
-      labelsize="Size="+tmp_2;
+      labelsize=parse(tmp_2);
       options=remove(options,[#]);
     );
   );  //190901to
@@ -1600,10 +1562,14 @@ Drwxy(add,optionsorg):=(
     Listplot("-axy"+text(AXCOUNT),tmp,tmp1); 
   );
   AXCOUNT=AXCOUNT+1;
-  tmp=[colorla,labelsize]; //190901from
-  Expr([[xrng_2,org_2],ax_3,ax_2],tmp);
-  Expr([[org_1,yrng_2],ax_5,ax_4],tmp);
-  Letter([org,ax_7,ax_6],tmp); //190901to
+tmp=labelsize*10*1.15; //
+tmp1=tmp*0.0352778*0.16;
+tmp2=tmp*0.0352778*0.16;
+drawtext([xrng_2,org_2-tmp2],"$"+ax_2+"$",size->tmp);
+drawtext([org_1-tmp1,yrng_2],"$"+ax_4+"$",size->tmp);
+if(indexof(AX_7,"e")>0,tmp1=0,tmp1=1.9*tmp1);
+If(indexof(AX_7,"n")>0,tmp2=0,tmp2=1.9*tmp2);
+drawtext(org-4*[tmp1,tmp2],ax_6,size->tmp);// 
   if(add==0, //190103
     Addax(0);
   );
@@ -1709,6 +1675,7 @@ Ketcindyjsscale=1;
 cvL=[[0,1,1],[1,5,4],[2,6,5],[3,113,94],[4,119,99],[5,232,193],[6,351,292],[7,1636,1361],[8,1987,1653],[9,19519,16238],[10,177658,147795]];
 mx=1.2020569031;
 
+
 fcc(p,q,s):=(
  [s*p/q,s/(2*q^2)];
 );
@@ -1782,8 +1749,9 @@ forall(1..N,n,
  tmp=cvL_n;
  p=tmp_2;
  q=tmp_3;
- Circledata(text(ctr),[[0,0],[fcr(p,q,s),0]],["Num=100","nodisp","Msg=n"]);
- Translatedata(text(ctr),"cr"+text(ctr),[s*(p/q-mx)+mx,fcr(p,q,s)],["Color="+colL_ctr,"Msg=n"]);
+ if(n<=3,Nm="Num=400",Nm="Num=100");
+ Circledata(text(ctr),[[0,0],[fcr(p,q,s),0]],[Nm,"nodisp"]);
+ Translatedata(text(ctr),"cr"+text(ctr),[s*(p/q-mx)+mx,fcr(p,q,s)],["Color="+colL_ctr]);
  ctr=ctr+1;
 );
 
@@ -1814,15 +1782,15 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 837,
-    height: 477,
-    transform: [{visibleRect: [-0.8223915084781123, 2.2857215947380984, 4.076837620320322, -0.5063122098459553]}],
+    height: 495,
+    transform: [{visibleRect: [-0.8223915084781123, 2.2857215947380984, 4.076837620320322, -0.6116719760566742]}],
     axes: true,
     grid: 0.3333,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2001, version: [3, 0, 2001]}
+  cinderella: {build: 2006, version: [3, 0, 2006]}
 });
     </script>
 </head>
