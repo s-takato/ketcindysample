@@ -67,6 +67,7 @@ isflippable():=(
   nr=internal(R);
   if((nq>0)&(nr>0),
     dg1=common(tL_nq,tL_nr);
+    dg1=sort(dg1);
     if(length(dg1)==2,
       Shade(["cr"+nq],["Color=cyan"]);
       Shade(["cr"+nr],["Color=cyan"]);
@@ -74,6 +75,7 @@ isflippable():=(
       tmp1=remove(tL_nq,dg1);
       tmp2=remove(tL_nr,dg1);
       dg2=concat(tmp1,tmp2);
+      dg2=sort(dg2);
       flipok=1;
     );
   );
