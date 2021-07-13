@@ -58,3 +58,24 @@ Mkcrfig():=(
     Listplot(text(#),sL_#);
   );
 );
+
+isflippable():=(
+  regional(nq,nr,flipok,tmp,tmp1,tmp2);
+  //global tL, Q, L
+  flipok=0;
+  nq=internal(Q);
+  nr=internal(R);
+  if((nq>0)&(nr>0),
+    dg1=common(tL_nq,tL_nr);
+    if(length(dg1)==2,
+      Shade(["cr"+nq],["Color=cyan"]);
+      Shade(["cr"+nr],["Color=cyan"]);
+      Pointdata("1",[Q,R],["Color=red","Size=3","notex"]);
+      tmp1=remove(tL_nq,dg1);
+      tmp2=remove(tL_nr,dg1);
+      dg2=concat(tmp1,tmp2);
+      flipok=1;
+    );
+  );
+  flipok;
+);
