@@ -2780,6 +2780,34 @@ isflippable():=(
   flipok;
 );
 
+Doflip():=(
+  regional(tmp,tmp1,tmp2);
+  if(flipok==1,
+    sL=remove(sL,[dg1]);
+    sL=concat(sL,[dg2]);
+    sL=apply(sL,sort(#));
+    sLg=apply(sL,all_#);
+    tmp1=select(tL,common(#,dg1)==dg1);
+    tL=remove(tL,tmp1);
+    tmp=remove(tmp1_1,dg2);
+    tmp2=apply(tmp,append(dg2,#));
+    tL=concat(tL,tmp2);
+    tL=apply(tL,sort(#));
+    tLg=apply(tL,all_#);
+    tmp=apply(tL,text(#));
+    tmp=apply(tmp,replace(#," ",""));
+    tmp=apply(tmp,replace(#,"[",""));
+    tmp=apply(tmp,replace(#,"]",""));
+    tmp=apply(tmp,replace(#,",","-"));
+    tmp1="";
+    forall(tmp,tmp1=tmp1+#+",");
+    tmp=substring(tmp1,0,length(tmp1)-1);
+    Subsedit(7,tmp);
+    Mkcrfig();
+  );
+);
+
+
 vL=[C,D,E,F,G,H,K,L,M,N,O,P];
 forall(vL,inspect(#,"labeled",false));
 
@@ -2811,25 +2839,7 @@ Mkcrfig();
 flipok=isflippable();
 if(flipflg==1,
   if(flipok==1,
-    sL=remove(sL,[dg1]);
-    sL=concat(sL,[dg2]);
-    sLg=apply(sL,all_#);
-    tmp1=select(tL,common(#,dg1)==dg1);
-    tL=remove(tL,tmp1);
-    tmp=remove(tmp1_1,dg2);
-    tmp2=apply(tmp,append(dg2,#));
-    tL=concat(tL,tmp2);
-    tLg=apply(tL,all_#);
-    tmp=apply(tL,text(#));
-    tmp=apply(tmp,replace(#," ",""));
-    tmp=apply(tmp,replace(#,"[",""));
-    tmp=apply(tmp,replace(#,"]",""));
-    tmp=apply(tmp,replace(#,",","-"));
-    tmp1="";
-    forall(tmp,tmp1=tmp1+#+",");
-    tmp=substring(tmp1,0,length(tmp1)-1);
-    Subsedit(7,tmp);
-    Mkcrfig();
+    Doflip();
   );
   flipflg=0;
 );
@@ -2861,28 +2871,28 @@ var cdy = CindyJS({
     {name: "B", type: "Free", pos: [4.0, 0.0, 0.8], color: [1.0, 0.0, 0.0], labeled: false, size: 0.0, border: true },
     {name: "C0", type: "CircleMP", color: [0.0, 0.0, 0.0], args: ["A", "B"], alpha: 0.10256410256410256, printname: "$C_{0, size: 3.0, border: true }$", size: 3.0, border: true },
     {name: "C", type: "PointOnCircle", pos: [-3.5229093995836243, -4.0, -1.0660373471445483], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "D", type: "PointOnCircle", pos: [0.28436507788244564, -4.0, -0.8020190396123797], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "E", type: "PointOnCircle", pos: [4.0, -2.547434900040675, -0.9484603222053151], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "F", type: "PointOnCircle", pos: [4.0, 2.361009155700733, -0.9289642454541014], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "G", type: "PointOnCircle", pos: [1.3737373737445846, -4.0, 0.8458641586454099], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "H", type: "PointOnCircle", pos: [4.0, -0.3665255693100597, 0.8033515044601104], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.049489572589672806, i: 8.00061228101902E-13, size: 3.0, border: true }, {r: 0.8000612281018276, i: 1.979582903587097E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "L", type: "PointOnCircle", pos: [4.0, 0.3888888891077716, 0.8037719718445395], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "M", type: "PointOnCircle", pos: [4.0, 0.666666666722763, 0.8110350040416072], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "N", type: "PointOnCircle", pos: [4.0, 0.9902912622226759, 0.8241523350457629], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "O", type: "PointOnCircle", pos: [4.0, 1.3461538461515727, 0.844088388203716], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "P", type: "PointOnCircle", pos: [4.0, 1.686274509787741, 0.868182508977459], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "D", type: "PointOnCircle", pos: [0.2843650778824469, -4.0, -0.8020190396123796], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "E", type: "PointOnCircle", pos: [4.0, -2.5474349000406837, -0.9484603222053161], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "F", type: "PointOnCircle", pos: [4.0, 2.3610091557008266, -0.9289642454541108], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "G", type: "PointOnCircle", pos: [1.3737373737445753, -4.0, 0.8458641586454093], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "H", type: "PointOnCircle", pos: [4.0, -0.36652556931006647, 0.8033515044601105], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.04948957258565412, i: 8.000612281017415E-13, size: 3.0, border: true }, {r: 0.8000612281018177, i: 1.979582903425977E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "L", type: "PointOnCircle", pos: [4.0, 0.3888888891077647, 0.8037719718445394], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "M", type: "PointOnCircle", pos: [4.0, {r: 0.6666666667225827, i: 1.521306668840759E-14, size: 3.0, border: true }, {r: 0.8110350040416012, i: 5.00202551517435E-16, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "N", type: "PointOnCircle", pos: [4.0, {r: 0.9902912622226826, i: 3.2682345698111923E-15, size: 3.0, border: true }, {r: 0.8241523350457632, i: 1.5708281101689371E-16, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "O", type: "PointOnCircle", pos: [4.0, 1.3461538461515818, 0.8440883882037166], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "P", type: "PointOnCircle", pos: [4.0, 1.6862745097878005, 0.8681825089774636], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
     {name: "Q", type: "Free", pos: [4.0, -0.0, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "R", type: "Free", pos: [4.0, 0.5714285714285714, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "Text6", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "6", textsize: 18.0, dock: {corner: "UL", offset: [159.0, -60.0]}},
-    {name: "Text7", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 400, text: "Dg=1-2-3,1-3-4,1-4-6,4-5-6", textsize: 18.0, dock: {corner: "UL", offset: [274.0, -60.0]}},
+    {name: "Text7", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 400, text: "1-2-3,1-3-4,1-4-6,4-5-6", textsize: 18.0, dock: {corner: "UL", offset: [274.0, -60.0]}},
     {name: "Text0", type: "Button", pos: [4.0, -1.4871794871794868, -0.54367899488099], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "flipflg=1;", text: "DoFlip", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
     width: 920,
-    height: 584,
-    transform: [{visibleRect: [-10.476122253175188, 7.7749618115899475, 11.911874199603378, -6.436548980173838]}],
+    height: 568,
+    transform: [{visibleRect: [-10.476122253175188, 7.7749618115899475, 11.911874199603378, -6.047192520125515]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],

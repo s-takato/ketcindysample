@@ -114,3 +114,32 @@ isflippable():=(
   );
   flipok;
 );
+
+Doflip():=(
+  regional(tmp,tmp1,tmp2);
+  //global sL,sLg,tL,tLg
+  if(flipok==1,
+    sL=remove(sL,[dg1]);
+    sL=concat(sL,[dg2]);
+    sL=apply(sL,sort(#));
+    sLg=apply(sL,all_#);
+    tmp1=select(tL,common(#,dg1)==dg1);
+    tL=remove(tL,tmp1);
+    tmp=remove(tmp1_1,dg2);
+    tmp2=apply(tmp,append(dg2,#));
+    tL=concat(tL,tmp2);
+    tL=apply(tL,sort(#));
+    tLg=apply(tL,all_#);
+    tmp=apply(tL,text(#));
+    tmp=apply(tmp,replace(#," ",""));
+    tmp=apply(tmp,replace(#,"[",""));
+    tmp=apply(tmp,replace(#,"]",""));
+    tmp=apply(tmp,replace(#,",","-"));
+    tmp1="";
+    forall(tmp,tmp1=tmp1+#+",");
+    tmp=substring(tmp1,0,length(tmp1)-1);
+    Subsedit(7,tmp);
+    Mkcrfig();
+  );
+);
+
