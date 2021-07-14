@@ -1,3 +1,28 @@
+Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22); //210629
+Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=(
+  regional(xL,yL,plt,prt,prb,row,col,name,tmp1,tmp2,pos);
+  xL=apply(0..nx,#/10*dx+plb_1);
+  yL=apply(0..ny,(ny-#)/10*dy+plb_2);
+  plt=[xL_1,yL_1]; prt=[xL_(-1),yL_1]; prb=[xL_(-1),yL_(-1)];
+  fillpoly([plb,plt,prt,prb,plb],color->clr);
+  forall(xL,draw([#,plb_2],[#,plt_2],color->0.5*[1,1,1]));
+  forall(yL,draw([plb_1,#],[prb_1,#],color->0.5*[1,1,1]));
+  if(length(nameL)>0,
+    forall(1..(length(yL)-1),row,
+      tmp1=yL_row;
+      tmp2=yL_(row+1);
+      pos=[0,(tmp1+tmp2)/2];
+      forall(1..(length(xL)-1),col,
+        name=nameL_row_col;
+        tmp1=xL_col;
+        tmp2=xL_(col+1);
+        pos_1=(tmp1+tmp2)/2;
+        drawtext(pos+nmove,name,align->"mid",size->sz);
+      );
+    );
+  );
+);
+
 incenter(plist):=(
   regional(pA,pB,pC,a,b,c,pI,tmp);
   pA=plist_1; pB=plist_2; pC=plist_3;
@@ -55,7 +80,7 @@ Mkcrfig():=(
     Circledata(text(#),[pI,r]);
   );
   forall(1..(length(sLg)),
-    Listplot(text(#),sLg_#);
+    Listplot(text(#),sLg_#,["Color=red"]);
   );
 );
 
@@ -63,7 +88,7 @@ Polygondata():=(
   regional(tmp,tmp1,tmp2);
   //global nall,all,tL,tLg,sL,sLg
   tmp=Textedit(6,"6");
-  subsedit(6,tmp);
+  subsedit(6,"N="+tmp);
   nall=parse(tmp);
   all=vL_(1..nall);
   tmp1=Textedit(7,"1-2-3,1-3-4,1-4-6,4-5-6");
