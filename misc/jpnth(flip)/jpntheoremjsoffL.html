@@ -579,6 +579,25 @@ Getlinestyle(str,name):=(
   );  //190818to
   Ltype;
 );
+Textedit(no):=(
+  regional(tmp,tmp1,tmp2);
+  tmp="Text"+text(no)+".currenttext";
+  tmp1=parse(tmp);
+  tmp1;
+);
+Textedit(n0,str):=Textedit(n0,str,"="); //210406from
+Textedit(n0,str,sep):=( //210208from
+  regional(tmp,tmp1,tmp2,out);
+  tmp1=str;
+tmp1=Textedit(n0); //
+  tmp2=tmp1;
+  if(length(sep)>0,
+    tmp=Strsplit(sep+tmp1,sep);
+    tmp2=tmp_(-1);
+  ); //210406to
+  if(length(tmp2)==0,out=str,out=tmp2);
+  out;
+); //210208to
 Shade(plist):=Shade(plist,[]); 
 Shade(Arg1,Arg2):=(
   if(!isstring(Arg1),
@@ -2183,25 +2202,16 @@ Strictmove(pCorg,sep):=(
 Addax(param):=(
   ADDAXES=text(param);
 );
-Textedit(no):=(
-  regional(tmp,tmp1,tmp2);
-  tmp="Text"+text(no)+".currenttext";
-  tmp1=parse(tmp);
-  tmp1;
+Subsedit(no,str):=(
+ regional(tmp,tmp1);
+ if(isstring(str),
+   tmp1=str;
+ ,
+   tmp1=text(str);
+ );
+ tmp="Text"+text(no); //210211[2lines]
+ parse(tmp).currenttext=tmp1;
 );
-Textedit(n0,str):=Textedit(n0,str,"="); //210406from
-Textedit(n0,str,sep):=( //210208from
-  regional(tmp,tmp1,tmp2,out);
-  tmp1=str;
-tmp1=Textedit(n0); //
-  tmp2=tmp1;
-  if(length(sep)>0,
-    tmp=Strsplit(sep+tmp1,sep);
-    tmp2=tmp_(-1);
-  ); //210406to
-  if(length(tmp2)==0,out=str,out=tmp2);
-  out;
-); //210208to
 Drwletter(pos,str):=Drwletter(pos,str,[]);
 Drwletter(pos,str,Arg):=(
   regional(sz,clr);
@@ -2692,7 +2702,7 @@ internal(pP):=(
 
 Mkcrfig():=(
   regional(pI,r,nk,nl,tmp1,tmp2);
-  global all,tL,sL,rL,cL,dg1,dg2,flipok;
+  global all,tL,sL,sLg,rL,cL,dg1,dg2,flipok;
   GCLIST=[];
   Circledata("0",[A,B],[]);
   Listplot("0",append(all,all_1));
@@ -2704,16 +2714,48 @@ Mkcrfig():=(
   );
   rL=[];
   cL=[];
-  forall(1..(length(tL)),
-    pI=incenter(tL_#);
-    r=inradius(tL_#);
+  forall(1..(length(tLg)),
+    pI=incenter(tLg_#);
+    r=inradius(tLg_#);
     rL=append(rL,r);
     cL=append(cL,pI);
     Circledata(text(#),[pI,r]);
   );
-  forall(1..(length(sL)),
-    Listplot(text(#),sL_#);
+  forall(1..(length(sLg)),
+    Listplot(text(#),sLg_#);
   );
+);
+
+Polygondata():=(
+  regional(tmp,tmp1,tmp2);
+  tmp=Textedit(6,"6");
+  subsedit(6,tmp);
+  nall=parse(tmp);
+  all=vL_(1..nall);
+  tmp1=Textedit(7,"1-2-3,1-3-4,1-4-6,4-5-6");
+  tmp=tokenize(tmp1,",");
+  if(nallnow!=nall,
+    if(length(tmp)!=nall-2,
+      tmp1="";
+      forall(2..(nall-1),
+        tmp1=tmp1+"1-"+text(#)+"-"+text(#+1)+",";
+      );
+      tmp1=substring(tmp1,0,length(tmp1)-1);
+      Subsedit(7,tmp1);
+    );
+    nallnow=nall;
+  );
+  tmp1=tokenize(tmp1,",");
+  tL=apply(tmp1,tokenize(#,"-"));
+  tLg=apply(tL,all_#);
+  sL=[];
+  forall(tL,
+    tmp=pairs(#);
+    tmp1=select(tmp,#_2!=#_1+1);
+    sL=concat(sL,tmp1);
+  );
+  sL=set(sL);
+  sLg=apply(sL,all_#);
 );
 
 isflippable():=(
@@ -2754,39 +2796,39 @@ Putpoint("A",[0,0]);
 Putpoint("B",[5,0]);
 
 if(initflg==1,
-  tmp=Textedit(6,"6");
-  nall=parse(tmp);
-  all=vL_(1..nall);
-  tmp=Textedit(7,"1-2-3,1-3-4,1-4-6,4-5-6");
-  tmp1=tokenize(tmp,",");
-  tmp2=apply(tmp1,tokenize(#,"-"));
-  tL=apply(tmp2,all_#);
-  sL=[];
-  forall(tmp2,
-    tmp=pairs(#);
-    tmp1=select(tmp,#_2!=#_1+1);
-    sL=concat(sL,tmp1);
-  );
-  sL=set(sL);
-  sL=apply(sL,all_#);
+  nall=6;
+  nallnow=6;
+  Subsedit(6,"N=6");
+  Subsedit(7,"1-2-3,1-3-4,1-4-6,4-5-6");
   Putpoint("Q",[-7,0]);
   Putpoint("R",[-7,-1]);
   initflg=0;
 );
 
+Polygondata();
 Mkcrfig();
 
 flipok=isflippable();
-
 if(flipflg==1,
   if(flipok==1,
     sL=remove(sL,[dg1]);
     sL=concat(sL,[dg2]);
+    sLg=apply(sL,all_#);
     tmp1=select(tL,common(#,dg1)==dg1);
     tL=remove(tL,tmp1);
     tmp=remove(tmp1_1,dg2);
     tmp2=apply(tmp,append(dg2,#));
     tL=concat(tL,tmp2);
+    tLg=apply(tL,all_#);
+    tmp=apply(tL,text(#));
+    tmp=apply(tmp,replace(#," ",""));
+    tmp=apply(tmp,replace(#,"[",""));
+    tmp=apply(tmp,replace(#,"]",""));
+    tmp=apply(tmp,replace(#,",","-"));
+    tmp1="";
+    forall(tmp,tmp1=tmp1+#+",");
+    tmp=substring(tmp1,0,length(tmp1)-1);
+    Subsedit(7,tmp);
     Mkcrfig();
   );
   flipflg=0;
@@ -2818,29 +2860,29 @@ var cdy = CindyJS({
     {name: "A", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 0.0, border: true },
     {name: "B", type: "Free", pos: [4.0, 0.0, 0.8], color: [1.0, 0.0, 0.0], labeled: false, size: 0.0, border: true },
     {name: "C0", type: "CircleMP", color: [0.0, 0.0, 0.0], args: ["A", "B"], alpha: 0.10256410256410256, printname: "$C_{0, size: 3.0, border: true }$", size: 3.0, border: true },
-    {name: "C", type: "PointOnCircle", pos: [-3.5229093996198273, -4.0, -1.066037347149334], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "D", type: "PointOnCircle", pos: [0.28436507789534454, -4.0, -0.8020190396125626], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "E", type: "PointOnCircle", pos: [4.0, -2.547434900044744, -0.9484603222057523], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "F", type: "PointOnCircle", pos: [4.0, 2.361009155702307, -0.9289642454542614], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "G", type: "PointOnCircle", pos: [1.3737373737445542, -4.0, 0.8458641586454076], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "H", type: "PointOnCircle", pos: [4.0, -0.3665255693068636, 0.803351504460052], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.04948957258988929, i: 8.000612281018804E-13, size: 3.0, border: true }, {r: 0.8000612281018281, i: 1.9795829035957017E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "L", type: "PointOnCircle", pos: [4.0, 0.38888888910287084, 0.8037719718444447], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "M", type: "PointOnCircle", pos: [4.0, 0.6666666667226278, 0.8110350040416028], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "N", type: "PointOnCircle", pos: [4.0, 0.990291262132679, 0.8241523350414374], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "O", type: "PointOnCircle", pos: [4.0, 1.3461538461515723, 0.844088388203716], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "P", type: "PointOnCircle", pos: [4.0, 1.6862745097868836, 0.8681825089773924], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "C", type: "PointOnCircle", pos: [-3.5229093995836243, -4.0, -1.0660373471445483], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "D", type: "PointOnCircle", pos: [0.28436507788244564, -4.0, -0.8020190396123797], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "E", type: "PointOnCircle", pos: [4.0, -2.547434900040675, -0.9484603222053151], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "F", type: "PointOnCircle", pos: [4.0, 2.361009155700733, -0.9289642454541014], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "G", type: "PointOnCircle", pos: [1.3737373737445846, -4.0, 0.8458641586454099], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "H", type: "PointOnCircle", pos: [4.0, -0.3665255693100597, 0.8033515044601104], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.049489572589672806, i: 8.00061228101902E-13, size: 3.0, border: true }, {r: 0.8000612281018276, i: 1.979582903587097E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "L", type: "PointOnCircle", pos: [4.0, 0.3888888891077716, 0.8037719718445395], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "M", type: "PointOnCircle", pos: [4.0, 0.666666666722763, 0.8110350040416072], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "N", type: "PointOnCircle", pos: [4.0, 0.9902912622226759, 0.8241523350457629], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "O", type: "PointOnCircle", pos: [4.0, 1.3461538461515727, 0.844088388203716], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "P", type: "PointOnCircle", pos: [4.0, 1.686274509787741, 0.868182508977459], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
     {name: "Q", type: "Free", pos: [4.0, -0.0, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "R", type: "Free", pos: [4.0, 0.5714285714285714, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "Text6", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "N=6", textsize: 18.0, dock: {corner: "UL", offset: [159.0, -60.0]}},
+    {name: "Text6", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "6", textsize: 18.0, dock: {corner: "UL", offset: [159.0, -60.0]}},
     {name: "Text7", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 400, text: "Dg=1-2-3,1-3-4,1-4-6,4-5-6", textsize: 18.0, dock: {corner: "UL", offset: [274.0, -60.0]}},
     {name: "Text0", type: "Button", pos: [4.0, -1.4871794871794868, -0.54367899488099], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "flipflg=1;", text: "DoFlip", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 907,
-    height: 564,
-    transform: [{visibleRect: [-10.476122253175188, 7.7749618115899475, 11.595522075814117, -5.949853405113434]}],
+    width: 920,
+    height: 584,
+    transform: [{visibleRect: [-10.476122253175188, 7.7749618115899475, 11.911874199603378, -6.436548980173838]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
