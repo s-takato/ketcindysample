@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>jpntheoremv2.cdy</title>
+    <title>jpntheoremv3.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -25,18 +25,6 @@
 
 <script id="csinit" type="text/x-cindyscript">
 Invert(x):=reverse(x);
-Crossprod(a,b):=(
-  regional(tmp1,tmp2,tmp3,Out);
-  if(length(a)==3,
-    tmp1=a_2*b_3-a_3*b_2;
-    tmp2=a_3*b_1-a_1*b_3;
-    tmp3=a_1*b_2-a_2*b_1;
-    Out=[tmp1,tmp2,tmp3];
-  ,
-    Out=a_1*b_2-a_2*b_1;
-  );
-  Out;
-);
 Circledata(cenrad):=Circledata(cenrad,[]);
 Circledata(para1,para2):=(
   regional(name,cenrad,options,str,n); 
@@ -1082,6 +1070,18 @@ Intersectpartseg(crv1org,crv2org,ii,jj,Eps1,Eps2,Dist):=(
     );
   );
   out;
+);
+Crossprod(a,b):=(
+  regional(tmp1,tmp2,tmp3,Out);
+  if(length(a)==3,
+    tmp1=a_2*b_3-a_3*b_2;
+    tmp2=a_3*b_1-a_1*b_3;
+    tmp3=a_1*b_2-a_2*b_1;
+    Out=[tmp1,tmp2,tmp3];
+  ,
+    Out=a_1*b_2-a_2*b_1;
+  );
+  Out;
 );
 Norm(v1):=(  // 16.09.01
   regional(out,tmp,tmp1,tmp2);
@@ -2872,22 +2872,26 @@ if(flipflg==1,
 
 flipok=isflippable();
 
+forall(1..(length(tL)),
+  tr=all_(tL_#);
+  tmp=Crossprod(tr_2-tr_1,tr_3-tr_1);
+  if(tmp>0,sgnL_#=1,sgnL_#=-1);
+);
+
 yps=4.7;
 ymv=0.7;
-tmp=[5.2,yps+0.5-ymv*10];
-Keytable(1,ymv*10,10,ymv*10,tmp,[1,1,1],[],0,18);
 forall(1..(length(tL)),
-  Drwletter([6.2,yps],format(rL_#,10),18);
-  if(sgnL_#==1,
-    Drwletter([5.4,yps],"+",20,[0,0,1]);
-  ,
-    Drwletter([5.4,yps],"-",20,[1,0,0]);
-  );
+  tmp=text(tL_#_1)+"-"+text(tL_#_2)+"-"+text(tL_#_3);
+  if(sgnL_#<0,sgn="-",sgn="");
+  tmp="$S_{"+tmp+"}="+sgn+format(rL_#,6)+"$";
+  Drwletter([6.2,yps],tmp,18);
   yps=yps-ymv;
 );
+
 tmp=apply(1..(nall-2),sgnL_#*rL_#);
-Drwletter([6.2,yps],format(sum(tmp),10),18);
-Drwletter([5.3,yps],"S=",18);
+tmp=sum(tmp);
+tmp="$S_{total}="+format(tmp,6)+"$";
+Drwletter([6.5,yps],tmp,18);
 
 Windispg();
 
@@ -2911,39 +2915,29 @@ var cdy = CindyJS({
     {name: "A", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 0.0, border: true },
     {name: "B", type: "Free", pos: [4.0, 0.0, 0.8], color: [1.0, 0.0, 0.0], labeled: false, size: 0.0, border: true },
     {name: "C0", type: "CircleMP", color: [0.0, 0.0, 0.0], args: ["A", "B"], alpha: 0.10256410256410256, printname: "$C_{0, size: 3.0, border: true }$", size: 3.0, border: true },
-    {name: "C", type: "PointOnCircle", pos: [-3.5229093995806657, -4.0, -1.0660373471441573], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "D", type: "PointOnCircle", pos: [0.28436507789934407, -4.0, -0.8020190396126191], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "E", type: "PointOnCircle", pos: [4.0, -2.5474348997317904, -0.9484603221721303], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "F", type: "PointOnCircle", pos: [4.0, 2.3610091556983273, -0.9289642454538568], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "G", type: "PointOnCircle", pos: [1.373737373752215, -4.0, 0.8458641586459055], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "H", type: "PointOnCircle", pos: [4.0, -0.36652556873170106, 0.8033515044495554], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.04948957258088558, i: 8.000612281017394E-13, size: 3.0, border: true }, {r: 0.8000612281018058, i: 1.9795829032352594E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "L", type: "PointOnCircle", pos: [4.0, 0.38888888913043046, 0.8037719718449781], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "M", type: "PointOnCircle", pos: [4.0, {r: 0.666666666715986, i: 8.110350040413625E-13, size: 3.0, border: true }, {r: 0.8110350040413843, i: 2.6666666668638733E-14, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "N", type: "PointOnCircle", pos: [4.0, 0.9902912622269635, 0.824152335045969], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "O", type: "PointOnCircle", pos: [4.0, 1.34615384614594, 0.8440883882033566], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "P", type: "PointOnCircle", pos: [4.0, 1.6862745097868732, 0.8681825089773916], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "C", type: "PointOnCircle", pos: [-2.7741935483874824, -4.0, -0.9735738255297282], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "D", type: "PointOnCircle", pos: [0.28436507789855014, -4.0, -0.802019039612608], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "E", type: "PointOnCircle", pos: [4.0, -2.5474348997277825, -0.9484603221716996], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "F", type: "PointOnCircle", pos: [4.0, 2.3610091556973987, -0.9289642454537623], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "G", type: "PointOnCircle", pos: [1.3737373737502283, -4.0, 0.8458641586457765], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "H", type: "PointOnCircle", pos: [4.0, -0.36652556873088954, 0.8033515044495406], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.04948957258087231, i: 8.000612281017419E-13, size: 3.0, border: true }, {r: 0.8000612281018058, i: 1.9795829032347348E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "L", type: "PointOnCircle", pos: [4.0, 0.388888889130943, 0.8037719718449879], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "M", type: "PointOnCircle", pos: [4.0, {r: 0.6666666667151756, i: 8.110350040413653E-13, size: 3.0, border: true }, {r: 0.8110350040413578, i: 2.6666666668607285E-14, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "N", type: "PointOnCircle", pos: [4.0, 0.9902912622280294, 0.8241523350460203], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "O", type: "PointOnCircle", pos: [4.0, 1.3461538461411504, 0.8440883882030511], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "P", type: "PointOnCircle", pos: [4.0, 1.6862745097847622, 0.8681825089772276], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
     {name: "Q", type: "Free", pos: [4.0, -0.0, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "R", type: "Free", pos: [4.0, 0.5714285714285714, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "Text6", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "N=6", textsize: 18.0, dock: {corner: "UL", offset: [159.0, -60.0]}},
     {name: "Text7", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 400, text: "1-2-3,1-3-4,1-4-6,4-5-6", textsize: 18.0, dock: {corner: "UL", offset: [274.0, -60.0]}},
-    {name: "Text0", type: "Button", pos: [4.0, -1.4871794871794868, -0.54367899488099], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "flipflg=1;", text: "DoFlip", textsize: 18.0},
-    {name: "Text31", type: "Button", pos: [4.0, 3.4690265486725664, 0.727317688970201], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_1=-sgnL_1;", text: "　", textsize: 9.0},
-    {name: "Text40", type: "Button", pos: [4.0, -1.1150442477876106, 0.727317688970201], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_10=-sgnL_10;", text: "　", textsize: 9.0},
-    {name: "Text32", type: "Button", pos: [4.0, 3.022222222222222, 0.7305502120322908], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_2=-sgnL_2;", text: "　", textsize: 9.0},
-    {name: "Text33", type: "Button", pos: [4.0, 2.4642857142857144, 0.733811596907435], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_3=-sgnL_3\n;", text: "\u0000　", textsize: 9.0},
-    {name: "Text37", type: "Button", pos: [4.0, 0.37500000000000006, 0.733811596907435], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_7=-sgnL_7;", text: "\u0000　", textsize: 9.0},
-    {name: "Text34", type: "Button", pos: [4.0, 1.8844444444444446, 0.7305502120322908], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_4=-sgnL_4;", text: "\u0000　", textsize: 9.0},
-    {name: "Text35", type: "Button", pos: [4.0, 1.4107142857142858, 0.733811596907435], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_5=-sgnL_5;", text: "\u0000　", textsize: 9.0},
-    {name: "Text36", type: "Button", pos: [4.0, 0.9066666666666667, 0.7305502120322908], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_6=-sgnL_6;", text: "\u0000　", textsize: 9.0},
-    {name: "Text38", type: "Button", pos: [4.0, -0.08928571428571429, 0.733811596907435], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_8=-sgnL_8;", text: "\u0000　", textsize: 9.0},
-    {name: "Text39", type: "Button", pos: [4.0, -0.5866666666666667, 0.7305502120322908], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "sgnL_9=-sgnL_9;", text: "\u0000　", textsize: 9.0}
+    {name: "Text0", type: "Button", pos: [4.0, -1.4871794871794868, -0.54367899488099], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "flipflg=1;", text: "DoFlip", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 919,
-    height: 572,
-    transform: [{visibleRect: [-10.117077408818394, 6.94683596472291, 10.601134833554982, -5.948503972858777]}],
+    width: 961,
+    height: 556,
+    transform: [{visibleRect: [-10.111118814694732, 6.932372431479665, 11.553954052466109, -5.602258696659177]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
