@@ -2722,7 +2722,7 @@ Mkcrfig():=(
     Circledata(text(#),[pI,r]);
   );
   forall(1..(length(sLg)),
-    Listplot(text(#),sLg_#,["Color=red"]);
+    Listplot(text(#),sLg_#,["Color=royalblue"]);
   );
 );
 
@@ -2861,7 +2861,7 @@ forall(1..(length(tL)),
   if(sgnL_#<0,
     if(addsgn==1,
       sgn="-";
-      Circledata(text(#),[tLg_#,tLg_#],["Color=yellow"]);
+      Circledata(text(#),[tLg_#,tLg_#],["Color=red"]);
     );
   );
   tmp=text(tL_#_1)+"-"+text(tL_#_2)+"-"+text(tL_#_3);
@@ -2901,19 +2901,19 @@ var cdy = CindyJS({
     {name: "A", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 0.0, border: true },
     {name: "B", type: "Free", pos: [4.0, 0.0, 0.8], color: [1.0, 0.0, 0.0], labeled: false, size: 0.0, border: true },
     {name: "C0", type: "CircleMP", color: [0.0, 0.0, 0.0], args: ["A", "B"], alpha: 0.10256410256410256, printname: "$C_{0, size: 3.0, border: true }$", size: 3.0, border: true },
-    {name: "C", type: "PointOnCircle", pos: [-2.7741935483874745, -4.0, -0.9735738255297272], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "", type: "OtherPointOnCircle", pos: [-2.7741935483874745, -4.0, 0.9735738255297272], color: [1.0, 1.0, 1.0], args: ["C"], pinned: true, size: 0.0},
-    {name: "D", type: "PointOnCircle", pos: [0.28436507789854193, -4.0, -0.8020190396126079], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "E", type: "PointOnCircle", pos: [4.0, -2.547434899728728, -0.9484603221718012], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "F", type: "PointOnCircle", pos: [4.0, 2.3610091556959203, -0.9289642454536121], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "G", type: "PointOnCircle", pos: [1.3737373737502463, -4.0, 0.8458641586457775], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "H", type: "PointOnCircle", pos: [4.0, -0.3665255687333386, 0.8033515044495854], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.049489572576813176, i: 8.000612281017515E-13, size: 3.0, border: true }, {r: 0.8000612281017957, i: 1.9795829030724184E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "L", type: "PointOnCircle", pos: [4.0, 0.3888888891321554, 0.8037719718450115], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "M", type: "PointOnCircle", pos: [4.0, {r: 0.666666666715196, i: 8.110350040413605E-13, size: 3.0, border: true }, {r: 0.8110350040413584, i: 2.6666666668607926E-14, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "N", type: "PointOnCircle", pos: [4.0, 0.9902912622130082, 0.8241523350452983], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "O", type: "PointOnCircle", pos: [4.0, 1.3461538461410887, 0.8440883882030472], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "P", type: "PointOnCircle", pos: [4.0, 1.6862745097847607, 0.8681825089772274], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "C", type: "PointOnCircle", pos: [-2.7741935483874958, -4.0, -0.9735738255297297], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "", type: "OtherPointOnCircle", pos: [-2.7741935483874958, -4.0, 0.9735738255297297], color: [1.0, 1.0, 1.0], args: ["C"], pinned: true, size: 0.0},
+    {name: "D", type: "PointOnCircle", pos: [0.28436507790905874, -4.0, -0.8020190396127571], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "E", type: "PointOnCircle", pos: [4.0, -2.5474348997287297, -0.9484603221718014], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "F", type: "PointOnCircle", pos: [4.0, 2.3610091556959434, -0.9289642454536144], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "G", type: "PointOnCircle", pos: [1.373737373750233, -4.0, 0.8458641586457768], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "H", type: "PointOnCircle", pos: [4.0, -0.36652556876405046, 0.8033515044501458], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.04948957257767416, i: 8.000612281017389E-13, size: 3.0, border: true }, {r: 0.8000612281017978, i: 1.979582903106821E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "L", type: "PointOnCircle", pos: [4.0, 0.38888888915646685, 0.803771971845482], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "M", type: "PointOnCircle", pos: [4.0, {r: 0.6666666667144083, i: 8.02163436411016E-13, size: 3.0, border: true }, {r: 0.8110350040413324, i: 2.6374971321709017E-14, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "N", type: "PointOnCircle", pos: [4.0, 0.9902912622140397, 0.8241523350453478], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "O", type: "PointOnCircle", pos: [4.0, 1.3461538461422797, 0.8440883882031232], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "P", type: "PointOnCircle", pos: [4.0, 1.686274509783878, 0.8681825089771589], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
     {name: "Q", type: "Free", pos: [4.0, -0.0, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "R", type: "Free", pos: [4.0, 0.5714285714285714, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "Text6", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "N=6", textsize: 18.0, dock: {corner: "UL", offset: [159.0, -60.0]}},

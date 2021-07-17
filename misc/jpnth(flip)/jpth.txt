@@ -55,7 +55,7 @@ Mkcrfig():=(
     Circledata(text(#),[pI,r]);
   );
   forall(1..(length(sLg)),
-    Listplot(text(#),sLg_#,["Color=red"]);
+    Listplot(text(#),sLg_#,["Color=royalblue"]);
   );
 );
 
