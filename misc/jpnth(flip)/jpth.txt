@@ -35,7 +35,7 @@ internal(pP):=(
 
 Mkcrfig():=(
   regional(pI,r,nk,nl,tmp1,tmp2);
-  global all,tL,sL,sLg,rL,cL,dg1,dg2,flipok;
+//  global all,tL,sL,sLg,rL,cL,dg1,dg2,flipok;
   GCLIST=[];
   Circledata("0",[A,B],[]);
   Listplot("0",append(all,all_1));
