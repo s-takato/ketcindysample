@@ -2864,7 +2864,7 @@ forall(1..(length(tL)),
     );
   );
   tmp=text(tL_#_1)+"-"+text(tL_#_2)+"-"+text(tL_#_3);
-  tmp="$S_{"+tmp+"}="+sgn+format(rL_#,6)+"$";
+  tmp="$R_{"+tmp+"}="+sgn+format(rL_#,6)+"$";
   Drwletter([6.2,yps],tmp,18);
   yps=yps-ymv;
 );
@@ -2875,7 +2875,7 @@ if(addsgn==1,
   tmp=apply(1..(nall-2),rL_#);
 );
 tmp=sum(tmp);
-tmp="$S_{total}="+format(tmp,6)+"$";
+tmp="$R_{total}="+format(tmp,6)+"$";
 Drwletter([6.5,yps],tmp,18);
 
 Windispg();
@@ -2900,18 +2900,18 @@ var cdy = CindyJS({
     {name: "A", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 0.0, border: true },
     {name: "B", type: "Free", pos: [4.0, 0.0, 0.8], color: [1.0, 0.0, 0.0], labeled: false, size: 0.0, border: true },
     {name: "C0", type: "CircleMP", color: [0.0, 0.0, 0.0], args: ["A", "B"], alpha: 0.10256410256410256, printname: "$C_{0, size: 3.0, border: true }$", size: 3.0, border: true },
-    {name: "C", type: "PointOnCircle", pos: [-2.774193548387491, -4.0, -0.9735738255297289], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "D", type: "PointOnCircle", pos: [0.2843650779090237, -4.0, -0.8020190396127566], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "E", type: "PointOnCircle", pos: [4.0, -2.547434899728734, -0.9484603221718019], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "C", type: "PointOnCircle", pos: [-2.7741935483874967, -4.0, -0.9735738255297299], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "D", type: "PointOnCircle", pos: [0.2843650779106291, -4.0, -0.8020190396127792], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "E", type: "PointOnCircle", pos: [4.0, -2.5474348997293346, -0.9484603221718664], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
     {name: "F", type: "PointOnCircle", pos: [4.0, 2.3610091556959203, -0.9289642454536121], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "G", type: "PointOnCircle", pos: [1.3737373737503193, -4.0, 0.8458641586457823], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "H", type: "PointOnCircle", pos: [4.0, -0.36652556876404413, 0.8033515044501457], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.0494895725777118, i: 8.000612281017413E-13, size: 3.0, border: true }, {r: 0.8000612281017979, i: 1.9795829031083324E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "L", type: "PointOnCircle", pos: [4.0, 0.3888888891564776, 0.8037719718454822], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "M", type: "PointOnCircle", pos: [4.0, {r: 0.6666666667143823, i: 8.110350040413607E-13, size: 3.0, border: true }, {r: 0.8110350040413317, i: 2.6666666668576264E-14, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "N", type: "PointOnCircle", pos: [4.0, 0.9902912622148478, 0.8241523350453867], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "O", type: "PointOnCircle", pos: [4.0, 1.3461538461422662, 0.8440883882031223], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
-    {name: "P", type: "PointOnCircle", pos: [4.0, 1.6862745097847445, 0.8681825089772263], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "G", type: "PointOnCircle", pos: [1.3737373737493659, -4.0, 0.8458641586457204], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "H", type: "PointOnCircle", pos: [4.0, -0.366525568765742, 0.8033515044501767], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "K", type: "PointOnCircle", pos: [4.0, {r: 0.04948957257766677, i: 8.000612281017411E-13, size: 3.0, border: true }, {r: 0.8000612281017978, i: 1.9795829031065307E-15, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "L", type: "PointOnCircle", pos: [4.0, 0.3888888891564723, 0.803771971845482], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "M", type: "PointOnCircle", pos: [4.0, {r: 0.6666666667143694, i: 8.110350040413603E-13, size: 3.0, border: true }, {r: 0.8110350040413312, i: 2.6666666668575744E-14, size: 3.0, border: true }], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "N", type: "PointOnCircle", pos: [4.0, 0.9902912622140063, 0.8241523350453462], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "O", type: "PointOnCircle", pos: [4.0, 1.3461538461422824, 0.8440883882031234], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
+    {name: "P", type: "PointOnCircle", pos: [4.0, 1.686274509783903, 0.8681825089771608], color: [1.0, 0.0, 0.0], args: ["C0"], size: 3.0, border: true },
     {name: "Q", type: "Free", pos: [4.0, -0.0, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "R", type: "Free", pos: [4.0, 0.5714285714285714, -0.5714285714285714], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "Text6", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 100, text: "N=6", textsize: 18.0, dock: {corner: "UL", offset: [159.0, -60.0]}},
@@ -2922,8 +2922,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 961,
-    height: 567,
-    transform: [{visibleRect: [-10.111118814694732, 6.932372431479665, 11.553954052466109, -5.850246003151133]}],
+    height: 536,
+    transform: [{visibleRect: [-10.111118814694732, 6.932372431479665, 11.553954052466109, -5.151372684855621]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
