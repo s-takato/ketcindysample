@@ -83,8 +83,8 @@ Polygondata():=(
   tL=apply(tmp1,tokenize(#,"-"));
   tLg=apply(tL,all_#);
   sL=[];
-  forall(tL,
-    tmp=pairs(#);
+  forall(tL,tr,
+    tmp=pairs(tr);
     tmp1=select(tmp,#_2!=#_1+1);
     sL=concat(sL,tmp1);
   );
