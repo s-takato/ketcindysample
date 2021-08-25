@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <title>tdistmx.cdy</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #CSConsole {
+            background-color: #FAFAFA;
+            border-top: 1px solid #333333;
+            bottom: 0px;
+            height: 200px;
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/KetCindyPlugin.js"></script>
+<script id="csinit" type="text/x-cindyscript">
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+Seteditable(0,["df=","Size=20","Width=150"]);// no ketjs
+Seteditable(2,["t=","Size=20","Width=150"]);// no ketjs
+
+dt(x,n):=(
+  coef_n*(1+x^2/n)^(-(n+1)/2);
+);
+
+ptg(x,n):=(
+  regional(y);
+  y=0.5+SCALEY*Integrate("dt(t,n)","t=[0,x]",["Num=100"]);
+  y;
+);
+
+dfnow=0;
+
+;
+</script>
+<script id="cskeytyped" type="text/x-cindyscript">
+kL=keydownlist();
+if(length(kL)>0,
+  if(kL==[17,70], //Ctr+f (Figures)
+    Viewtex();
+    kc();
+  );
+  if(kL==[16,17,80], //Ctr+Shift+p (Parent)
+    if(length(Shellparent)>0,
+      Makeshell(),Makebat();
+    );
+    WritetoSci(2);
+    kc();
+  );
+  if(kL==[17,74], //Ctr+j (Ketjsoff)
+    Mkketcindyjs(append(KETJSOP,"Web=n"));
+  );
+  if(kL==[16,17,74], //Ctr+Shift+j (Ketjson)
+    Mkketcindyjs(append(KETJSOP,"Web=yj"));
+  );
+);
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+Ketinit();
+Ketcindyjsmain(//no ketjs
+["<pf5/fp>_;p-value of $t-$distribution"],//no ketjs
+["<p><small>&copy;2021 Setsuo Takato</small></p>"]);//no ketjs
+
+cmdL=[ //no ketjs on
+  "gL:[]",[],
+  "for f:1 thru 50 do
+    gL:endcons(1/sqrt(f*%pi)*gamma((f+1)/2)/gamma(f/2),gL)",[],
+  "coef:float(gL)",[],
+  "coef",[]
+];
+CalcbyM("coef",cmdL,[]);
+coef=parse(coef);//no ketjs off
+
+Defvar("coef",coef);//no ketjs on
+Ketcindyjsdata(["coef",coef]);//no ketjs off
+
+tmp=Textedit(0,"5");
+df=parse(tmp);
+Subsedit(0,"df="+format(df,5));
+if(df!=dfnow,
+  fun1=Assign("dt(x,df)",["df",df]);
+  fun2=Assign("ptg(x,df)",["df",df]);
+  Plotdata("1",fun1,"x=[XMIN,XMAX]",["nodisp"]);
+  Plotdata("2",fun2,"x=[XMIN,XMAX]",["nodisp"]);
+  dfnow=df;
+);
+Subsedit(2,"t="+Sprintf(A.x,5));
+
+Setscaling(2);
+Setwindow([-3.5,3.5],[-0.1,1.1]);
+Setax([2,"t"]);
+Slider("A",[XMIN,0],[XMAX,0]);
+inspect(A,"ptsize",5.1);// no ketjs
+
+Listplot("gr1",gr1,["nodisp"]);
+Listplot("gr2",gr2);
+Listplot("1",[[XMIN,1],[XMAX,1]]);
+Listplot("v",[A.xy,[A.x,1]],["nodisp"]);
+tmp=Intersectcrvs("sggr2","sgv");
+pP=tmp_1;
+Listplot("s1",[[XMAX,0],[XMIN,0]],["nodisp"]);
+Listplot("s2",[[XMAX,1],[XMAX,0]],["nodisp"]);
+Enclosing("1",["sgv","sggr1","sgs2","sgs1"],["nodisp"]);
+Shade(["en1"],["Color=cyan"]);
+Listplot("2",[A.xy,pP,[0,pP_2]],["do,1,2","Color=red"]);
+Listplot("sggr1",gr1,["Color=blue"]);
+
+Htickmark([A.x,Sprintf(A.x,5)]);
+Vtickmark([pP_2,Sprintf(pP_2,5),1,"nw1","1"]);
+Expr([-2.5,0.5],"e","p="+Sprintf(1-pP_2,5),["Size=1.6"]);
+
+Windispg();
+;
+</script>
+    <script type="text/javascript">
+var cdy = CindyJS({
+  scripts: "cs*",
+  defaultAppearance: {
+    dimDependent: 0.7,
+    fontFamily: "sans-serif",
+    lineSize: 1,
+    pointSize: 5.0,
+    textsize: 12.0
+  },
+  angleUnit: "°",
+  geometry: [
+    {name: "SW", type: "Free", pos: [4.0, 0.2285714285714286, -1.1428571428571428], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "NE", type: "Free", pos: [4.0, 2.5142857142857147, 1.1428571428571428], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "A", type: "Free", pos: [4.0, 0.0, 3.1483454601676284], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1},
+    {name: "Text0", type: "EditableText", pos: [4.0, -2.68235294117647, -1.605038862046371], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "df=5", textsize: 20.0},
+    {name: "Text2", type: "EditableText", pos: [4.0, -2.0944881889763782, -1.611357912684349], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "t=1.27051", textsize: 20.0},
+    {name: "Text1", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.286, 0.286], fillalpha: 0.27272728085517883, script: "Viewtex();\nkc();", text: "Figure", textsize: 18.0, dock: {corner: "UL", offset: [10.0, -20.0]}},
+    {name: "Text12", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "if(length(Shellparent)>0,\n  Makeshell(),Makebat();\n);\nif(indexof(Libname,\"sci\")>0,\n  writetosci(2),writetoRS(2)\n);\nkc();", text: "Parent", textsize: 18.0, dock: {corner: "UL", offset: [77.0, -20.0]}},
+    {name: "Text3", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.929, 0.6], fillalpha: 0.27272728085517883, script: "Parafolder();", text: "ParaF", textsize: 18.0, dock: {corner: "UL", offset: [295.0, -20.0]}},
+    {name: "Text4", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.51, 0.949, 1.0], fillalpha: 0.27272728085517883, script: "Mkanimation();", text: "Anime", textsize: 18.0, dock: {corner: "UL", offset: [355.0, -20.0]}},
+    {name: "Text5", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 0.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkflipanime();", text: "Flip", textsize: 18.0, dock: {corner: "UL", offset: [423.0, -20.0]}},
+    {name: "Text21", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.5726495726495726, script: "Mkketcindyjs(append(KETJSOP,\"Web=y\"));", text: "Ketjson", textsize: 18.0, dock: {corner: "UL", offset: [144.0, -20.0]}},
+    {name: "Text22", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.4358974358974359, script: "Mkketcindyjs(append(KETJSOP,\"Web=n\"));", text: "Ketjsoff", textsize: 18.0, dock: {corner: "UL", offset: [218.0, -20.0]}}
+  ],
+  ports: [{
+    id: "CSCanvas",
+    width: 777,
+    height: 362,
+    transform: [{visibleRect: [-3.7284540997720117, 3.083426653939894, 3.86527810343337, -0.45445115501808264]}],
+    grid: 1.0,
+    background: "rgb(168,176,192)"
+  }],
+  csconsole: false,
+  use: ["katex"],
+  cinderella: {build: 2027, version: [3, 0, 2027]}
+});
+    </script>
+</head>
+<body>
+    <div id="CSCanvas"></div>
+</body>
+</html>
