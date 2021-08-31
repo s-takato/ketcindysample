@@ -113,199 +113,83 @@ Toupper(str):=(
   out;
 );
 Addasterisk(strorg):=(
-  regional(pL,sL,funL,fn,sgnL,numL,alphaL,type,res,res2,
-      str0,str,f,k,n1,n2,sub,tmp,tmp1,tmp2,ctr,out,s,flg,repL);
-  str0=replace(strorg,"  ","*");
-  str=str0;
-  repL=[];  //210405from
-  ctr=1;
-  tmp=indexof(str,"\"); //210514from
-  while((tmp>0)&(ctr<50),
-    res=substring(str,tmp,length(str));
-    str=substring(str,0,tmp-1);
-    tmp1="\";
-    flg=0;
-    while(flg==0,
-      flg=1;
-      if(length(res)>0,
-        tmp=Toupper(res_(1));
-        if((tmp>="A")&(tmp<="Z"),
-          tmp1=tmp1+res_(1);
-          res=substring(res,1,length(res));
-          flg=0;
-        );
-      );
-    );
-    if(substring(res,0,1)==" ",
-      res=substring(res,1,length(res));
-    );  //210514to
-    repL=append(repL,tmp1);
-    tmp="#"+text(length(repL))+"#";
-    str=str+tmp+res;
-    tmp=indexof(str,"\");
-    ctr=ctr+1;
-  );  //210405to
-  str=replace(str," ","*");
-  str=replace(str,"pi","%");
-  funL=["sin","cos","tan","log","fr","sq","exp"]; //210227to
+  regional(str,out,sgnL,numL,alphaL,numalpha,ctr,
+      pre,now,tmp,tmp1,tmp2);
+  str=Removespace(strorg);
+  str=replace(str,"  ","*");
   sgnL=["+","-","*","/","^"];
   numL=append(apply(0..9,text(#)),"."); //210226
   tmp1=32..126;
   tmp=(65..90)++(97..122);
   tmp1=remove(tmp1,tmp);
   alphaL=apply(tmp,unicode(text(#),base->10));
-  alphaL=concat(alphaL,["%"]);
-  str="$"+str;
-  pL=Bracket(str);
-  pL=concat(pL,[[length(str),0]]);
-  pL=concat([[1,0]],pL);
-  out=[];
-  forall(1..(length(pL)-1),k,
-    tmp=pL_k; n1=tmp_1; l1=tmp_2;
-    tmp=pL_(k+1); n2=tmp_1; l2=tmp_2;
-    sub=substring(str,n1-1,n2);
-    out=append(out,sub);
-  );
-  forall(1..(length(pL)-1),k,
-    sub=out_k;
-    if(length(sub)>0,
-      res=sub_(-1);
-      sub=substring(sub,0,length(sub)-1);
-    ,
-      res=""
+  numalpha=numL++alphaL;
+  out=""; pre="@";
+  while(length(str)>0,
+    now=str_1;
+    str=substring(str,1,length(str));
+    if(now=="#",
+      if(contains(numalpha++[")"],pre),out=out+"*");
+      tmp=indexof(str,"#");
+      out=out+"#"+substring(str,0,tmp-1);
+      str=substring(str,tmp,length(str));
+    );    
+    if(contains(numL,now),
+      if(contains(alphaL++[")"],pre),out=out+"*");
     );
-    forall(funL,f,
-      tmp=indexof(sub,f);
-      if(tmp>0,
-        res=substring(f,0,length(f))+"(";
-        sub=substring(sub,0,tmp-1);
-      );
+    if(contains(alphaL++["("],now),
+      if(contains(numalpha++[")"],pre),out=out+"*");
     );
-    ctr=1;
-    while((length(sub)>0)&(ctr<200),
-      tmp1=sub_(-1);
-      tmp2=res_1;
-      sub=substring(sub,0,length(sub)-1);
-      if(contains(alphaL,tmp2),
-        tmp=concat(alphaL,numL);
-        tmp=concat(tmp,[")"]);
-        if(contains(tmp,tmp1),
-          res="*"+res;
-        );
-      );
-      if(contains(numL,tmp2),
-        tmp=concat(aphaL,[")"]);
-        if(contains(tmp,tmp1),
-          res="*"+res;
-        );
-      );
-      res=tmp1+res;
-      ctr=ctr+1;
-    );
-    out_k=substring(res,1,length(res));
+    out=out+now;
+    pre=now;
   );
-  res="";
-  forall(out,
-    res=res+#;
-  );
-  out=replace(res,"%","pi");
-  out=replace(out,"$","");
-  forall(1..(length(repL)),n1,  //210405from
-    out=replace(out,"#"+text(n1)+"#",repL_n1);
-  ); //210405to
-  str0=out; //210716(moved)from
-  funL=["sin","cos","tan","log"]; 
-  sgnL=["-","+","*"];
-  forall(funL,f,
-    str="";
-    res=str0; res2="";
-    ctr=1;
-    while((indexof(res,f)>0)&(ctr<100),
-      tmp1=indexof(res,f);
-      str=str+substring(res,0,tmp1+2);
-      res=substring(res,tmp1+2,length(res));
-      if(res_1==" ",
-        str=str+"(";
-        res=substring(res,1,length(res));
-        tmp=indexof(res," ");
-        if(tmp>0,
-          str=str+substring(res,0,tmp-1)+")";
-          res=substring(res,tmp,length(res));
-        ,
-          str=str+res+")";
-          res="";
-        );
-      );
-      if(res_1=="(",
-        type=1;
-        tmp1=bracket(res,"()");
-        tmp=select(tmp1,#_2==-1); //210611from
-        if(length(tmp)>0,
-          tmp=tmp_1_1;
-          res2=substring(res,tmp,length(res));
-          res=substring(res,0,tmp);
-        ,
-          res2="";
-        );
-        tmp2=Indexall(res,","); //210611from
-        tmp2=Getlevel(res,",");
-        tmp2=select(tmp2,#_2==1);
-        if(length(tmp2)>0,
-          tmp2=tmp2_1_1;
-          str=str+substring(res,0,tmp2);
-          res="("+substring(res,tmp2,length(res));
-          tmp1=bracket(res,"()");
-          type=2;
-        );  //210611to
-        tmp1=select(tmp1,#_2==-1);
-        if(length(tmp1)>0,tmp1=tmp1_1_1,tmp1=0);
-        flg=0;
-        forall(sgnL,s,
-          if(flg==0,
-            tmp=substring(res,0,tmp1);
-            tmp2=Getlevel(tmp,s); //210405
-            if(length(tmp2)>0,
-              tmp2=select(tmp2,#_2==1);
-              if(length(tmp2)>0,tmp2=tmp2_1_1,tmp2=0);
-              if(tmp2<tmp1, //210302
-                if(type==2,
-                  res=substring(res,1,tmp1-1)+"))"+substring(res,tmp1,length(res)); //210611
-                  str=str+"("; //210611
-                ,
-                  res=substring(res,1,tmp1-1)+"))"+substring(res,tmp1,length(res)); //210611
-                  str=str+"(("; //210611
-                );
-                flg=1;
-              );
-            );
-          );
-        );
-        if((flg==0)&(type==2), //210611from
-          str=str+substring(res,1,tmp1);
-          res=substring(res,tmp1,length(res));
-        ); //210611to
-      );
-      res=res+res2;
-      ctr=ctr+1;
-    );
-    str0=str+res;
-  );
-  out=str0;
-  out=replace(out,")(",")*("); //210805
   out;
+);
+Removespace(str):=(
+  regional(tmp,flg,out);
+  tmp=length(str)+1;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      if((str_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(str,tmp-1,length(str));
+  flg=0;
+  tmp=0;
+  forall(reverse(1..(length(out))),
+    if(flg==0,
+      if((out_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(out,0,tmp);
 );
 Totexform(str):=( //210803from[renew]
   regional(plv,funL,repL,out,head,flg,rep,fun,pre,post,ctr,clv,nn,
       tmp,tmp1,tmp2,tmp3,tmp4);
+  tmp1="\displaystyle\int"; //210831from
+  tmp2="\displaystyle\lim";
+  tmp3="\displaystyle\sum"; //210831to
   repL=[ //190515from
     ["^(",["^{xx}"]], //210805
+    ["_(",["_{xx}"]], //210831
+    ["tfr(",["","\tfrac{xx}{yy}"]], //210831
     ["fr(",["","\frac{xx}{yy}"]], //210228from
     ["log(",["\log xx ","\log_{xx} yy"]], //210405
     ["sq(",["\sqrt{xx}","\sqrt[xx]{yy}"]],
     ["po(",["","{xx}^{yy}"]],
     ["sin(",["\sin xx ","\sin^{xx}\! yy "]], //200823[3lines]  //210405
     ["cos(",["\cos xx ","\cos^{xx}\! yy "]], //210405
-    ["tan(",["\tan xx ","\tan^{xx}\! yy "]]  //210228to  //210405
+    ["tan(",["\tan xx ","\tan^{xx}\! yy "]],  //210228to  //210405
+    ["lim(", ["",tmp2+"_{xx \to yy} ",tmp2+"_{xx \to yy} zz"]], //210831from
+    ["int(", [tmp1+" ",tmp1+"_{xx}^{yy} ",tmp1+" yy dzz ",tmp1+"_{xx}^{yy} zz dww "]],       
+    ["sum(", ["",tmp3+"_{xx}^[yy} ", tmp3+"_{xx}^[yy} zz"]] //210831to
   ];  
   out=replace(str,"pi","{\pi}"); //210805
   head="";
@@ -352,6 +236,25 @@ Totexform(str):=( //210803from[renew]
           tmp=replace(rep_2_2,"xx",tmp1);
           out=replace(tmp,"yy",tmp2);
         );
+        if(nn==3, //210831from
+          tmp1=substring(out,plv_1_1,clv_1_1-1);
+          tmp2=substring(out,clv_1_1,clv_2_1-1);
+          tmp3=substring(out,clv_2_1,length(out)-1);
+          tmp=replace(rep_2_3,"xx",tmp1);
+          tmp=replace(tmp,"yy",tmp2);
+          out=replace(tmp,"zz",tmp3);
+          println(out);
+        );
+        if(nn==4,
+          tmp1=substring(out,plv_1_1,clv_1_1-1);
+          tmp2=substring(out,clv_1_1,clv_2_1-1);
+          tmp3=substring(out,clv_2_1,clv_3_1-1);
+          tmp4=substring(out,clv_3_1,length(out)-1);
+          tmp=replace(rep_2_4,"xx",tmp1);
+          tmp=replace(tmp,"yy",tmp2);
+          tmp=replace(tmp,"zz",tmp3);
+          out=replace(tmp,"ww",tmp4);
+        );  //210831to
         out=pre+out+post;
         tmp=indexof(out,fun);
         ctr=ctr+1;
@@ -2688,31 +2591,6 @@ Letter(list,options):=(
     Nj=Nj+3;
   );
 );
-Removespace(str):=(
-  regional(tmp,flg,out);
-  tmp=length(str)+1;
-  flg=0;
-  forall(1..(length(str)),
-    if(flg==0,
-      if((str_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(str,tmp-1,length(str));
-  flg=0;
-  tmp=0;
-  forall(reverse(1..(length(out))),
-    if(flg==0,
-      if((out_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(out,0,tmp);
-);
 Lettermove(dir,str):=(
   regional(Suu,tmp,tmp1,out,nn);
   Suu="+-.0123456789";
@@ -2897,10 +2775,6 @@ Replacefun(str,name,repL):=(  //new 210604
 Morefunction(str):=( //new 210604
   regional(out,name,repL);
   out=str;
-  out=Replacefun(out,"tfr(",["\tfrac{","}{","}"]);
-  out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}"]); //210617from
-  out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}"]);
-  out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
   out=Replacematdet(out); //210606
   out;
 );
@@ -3590,7 +3464,7 @@ var cdy = CindyJS({
     {name: "Text25", type: "Button", pos: [4.0, -0.8125617673825116, 0.11678804079127947], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"sq(\";", text: "　", textsize: 18.0},
     {name: "Text90", type: "Button", pos: [4.0, -2.1519756838905773, 0.1303466108376547], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"log(\";", text: "　", textsize: 18.0},
     {name: "Text89", type: "Button", pos: [4.0, -2.44917469355627, 0.1473483084029454], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"=\";", text: "　", textsize: 18.0},
-    {name: "Text88", type: "Button", pos: [4.0, -2.7982606253798346, 0.1683501673870344], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"_\";", text: "　", textsize: 18.0},
+    {name: "Text88", type: "Button", pos: [4.0, -2.7982606253798346, 0.1683501673870344], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"_(\";", text: "　", textsize: 18.0},
     {name: "Text75", type: "Button", pos: [4.0, -0.9571090521182662, 0.07231593250478274], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==0,name=\"'\");if(Shift==1,name=\"sum(\");", text: "　", textsize: 18.0},
     {name: "Text91", type: "Button", pos: [4.0, -1.9318939764013099, 0.11622744191564245], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"pi\";", text: "　", textsize: 18.0},
     {name: "Text26", type: "Button", pos: [4.0, -0.736215635288536, 0.10581494859427691], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\")\";", text: "　", textsize: 18.0},
@@ -3686,8 +3560,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1041,
-    height: 480,
-    transform: [{visibleRect: [-28.60529954877182, 23.200376639378213, 77.55554476592145, -25.749868577771426]}],
+    height: 475,
+    transform: [{visibleRect: [-28.60529954877182, 23.200376639378213, 77.55554476592145, -25.239970190092784]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
