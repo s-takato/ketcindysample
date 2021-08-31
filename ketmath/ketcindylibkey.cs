@@ -184,10 +184,10 @@ Replacefun(str,name,repL):=(  //new 210604
 Morefunction(str):=( //new 210604
   regional(out,name,repL);
   out=str;
-  out=Replacefun(out,"tfr(",["\tfrac{","}{","}"]);
-  out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}"]); //210617from
-  out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}"]);
-  out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
+//  out=Replacefun(out,"tfr(",["\tfrac{","}{","}"]); //210831
+//  out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}"]); //210617from
+//  out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}"]);
+//  out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
 //  out=Replacefun(out,"e^(",["\exp{","}"]); //210612
   out=Replacematdet(out); //210606
   out;
