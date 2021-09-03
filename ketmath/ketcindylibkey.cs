@@ -91,7 +91,7 @@ Extractvar(strorg,mark):=(
 Replacematdet(str):=(
   regional(sym,out,rest,ctr,eL,np,nc,tmp,tmp1,tmp2,tmp3);
   out=str;
-  forall(["mat(","det("],sym,
+  forall(["mat(","det(","case("],sym,  //210902 case
     tmp=indexof(out,sym);
     ctr=0;
     while((tmp>0)&(ctr<20),
@@ -127,6 +127,10 @@ Replacematdet(str):=(
       if(sym=="det(",
         tmp2="\left|"+tmp2+"\right|";
       );
+      if(sym=="case(", //210902from
+        tmp2="\left\{"+tmp2+"\right.";
+      );
+
       out=out+tmp2+rest;
       tmp=indexof(out,sym);
       ctr=ctr+1;      
