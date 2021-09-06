@@ -1,0 +1,176 @@
+タイトル::
+
+\def\rad{\;\mathrm{rad}}
+\newcommand{\hako}[2][6mm]{\fbox{$\mathstrut$\Ctab{#1}{#2}}}
+\newcommand{\dint}{\displaystyle\int}
+\newcommand{\dlim}{\displaystyle\lim}
+
+
+\setmargin{25}{150}{15}{100}%
+
+\setcounter{page}{1}
+
+%%%%%%%%%%%%%
+new::KeTMathお試しパック
+%%repeat=8
+\slidepage
+
+enumerate::[(1)]
+item::CTAN\verb|>|ketcindy のrepositoryでketcindy-masterをダウンロードする．
+item::HowToUseJ.pdfに従ってインストールする．
+item::タブ区切りをサポートするアプリ(Excel, OpenOfficeなど)を用意する．
+
+item::otamesi.zipをダウンロードして解凍する．\\
+　mkanscsv.cdy, mkcard.cdy, mkscoremaxima.cdy\\
+　dataフォルダ\\
+　　　データサンプル，queans(+date).txt，students(+year).csv
+item::このスライドの6ページ以降に従って実行する．
+end
+
+%%%%%%%%%%%%
+new::数式の簡易記法1
+%%repeat=4,para
+\slidepage
+
+itemize
+item::文字定数(変数)は1文字とする．\vspace{-2mm}
+item::@と@で囲むとテキストになる（日本語は自動判定）
+item::\Ltab{4.5zw}{分数}$\frac{a}{b}\ \Longrightarrow$\ \verb|(a)/(b)|,\ \verb|fr(a,b)| \vspace{-2mm}
+item::\Ltab{4.5zw}{掛け算}$ab\ \Longrightarrow$\ \verb|ab|\vspace{-2mm}
+item::\Ltab{4.5zw}{べき乗}$a^b\ \Longrightarrow$\ \verb|a^(b)|\vspace{-2mm}
+item::\Ltab{4.5zw}{べき乗根}$\sqrt{a},\ \sqrt[3]{a}\ \Longrightarrow$\ \verb|sq(a), sq(3,a)|\vspace{-2mm}
+item::\Ltab{4.5zw}{三角関数}$\sin x, \sin^2x\ \Longrightarrow$\ \verb|sin(x), sin(2,x)|\vspace{-2mm}
+item::\Ltab{4.5zw}{円周率}$\pi \ \Longrightarrow$\ \verb|pi(x)|\vspace{-2mm}
+item::\Ltab{4.5zw}{対数関数}$\log x, \log_a x\ \Longrightarrow$\ \verb|log(x), log(s,x)|\vspace{-2mm}
+end
+
+%%%%%%%%%%%%
+new::数式の簡易記法2
+%%repeat=4,para
+\slidepage
+
+itemize
+item::\Ltab{4.5zw}{積分}$\dint x^2\,dx,\ \dint_a^b x^2\,dx \ \Longrightarrow$\ \verb|int()x^2dx, int(a,b)x^2dx|\vspace{-2mm}\\
+\phantom{\Ltab{4.5zw}{積分}$\dint x\,dx,\ \dint_a^b x\,dx \ \Longrightarrow$}\ または \verb|int(,x^2,x), int(a,b,x^2,x)|
+item::\Ltab{4.5zw}{極限}$\dlim_{x \to a}f(x) \ \Longrightarrow$\ \verb|lim(x,a)f(x)|\vspace{-2mm}
+item::\Ltab{4.5zw}{行列}$\begin{pmatrix}a&b\\c&d\end{pmatrix} \ \Longrightarrow$\ \verb|mat(a,b;c,d)|\vspace{-2mm}
+item::\Ltab{4.5zw}{行列式}$\left|\begin{array}{cc}a&b\\c&d\end{array}\right| \ \Longrightarrow$\ \verb|det(a,b;c,d)|\vspace{-2mm}
+end
+
+%%%%%%%%%%%%%
+new::準備
+%%repeat=3
+\slidepage
+
+enumerate::[(1)]
+item::学生リスト\verb|student.csv|を作成する．\\
+　　番号, 名前, 登録名(姓)，登録名(名)，メールアドレス\\
+　または\\
+　　番号, 学籍, 名前, ふりがな, 登録名(姓), 登録名(名), メールアドレス
+item::作業フォルダにmkanscsv.cdyとmkcard.cdyを入れる．
+item::サブフォルダ「data」を作成する．
+item::dataに次のファイルを入れる．\\
+　　学生リストstudent(+year).csv\\
+　　問題と正解のファイルqueans(+date).txt
+end
+
+%%%%%%%%%%%%%
+new::GCでのファイルの作成
+%repeat=3
+\slidepage
+
+layer::{120}{0}
+%[1]::\putnotese{50}{30}{\includegraphics[bb=0.00 0.00 983.00 388.00,width=80mm]{fig/situmon.pdf}}
+%[2]::\putnotese{50}{30}{\includegraphics[bb=0.00 0.00 913.00 600.00,width=75mm]{fig/gearcsv.pdf}}
+%[3]::\putnotese{50}{30}{\includegraphics[bb=0.00 0.00 882.00 591.00,width=75mm]{fig/kaitou.pdf}}
+%%\putnotese{50}{30}{\includegraphics[bb=0.00 0.00 983.00 388.00,width=75mm]{fig/situmon.pdf}}
+end
+
+enumerate::[(1)]
+%[1,-]::item::「質問」で作成する．\\
+%[1,-]::　例えば，\verb|08231不定積分の公式|
+%[2,-]::item::採点を選び，ギヤマークで「これらの成績をcsv形式」\\
+%[2,-]::　例えば　\verb|08231不定積分の公式.csv|ができる
+%[3,-]::item::回答のすべてを選択\\
+%[3,-]::textファイルで保存\\
+%[3,-]::　例えば，\verb|08231.txt|
+%[3,-]::item::(2)(3)のファイルを\\dataに入れる．
+end
+
+%%%%%%%%%%%%%
+new::一覧ファイルの作成
+%%repeat=3
+\slidepage
+
+layer::{120}{0}
+\putnotese{60}{-7}{\includegraphics[bb=0.00 0.00 825.00 373.00,width=65mm]{fig/ketgcdata.pdf}}
+end
+
+enumerate::[(1)]
+item::\verb|mkanscsv.cdy|を立ち上げる\vspace{-1mm}
+item::カーソルで枠を順に選びクリック\\
+head(以下 07121とする)表示\vspace{-1mm}
+item::\verb|Mkdata, Makecsv|を押すと，次のファイルがdataにできる．\\
+　\Ltab{35mm}{ans07121.csv}学生名や学生の答えを入れた一覧表(タブ区切り)\\
+　\Ltab{35mm}{}　・答えは8列(修正用)と10列の両方に入る．\\
+　\Ltab{35mm}{ansline07121.txt}すべてのデータを１行にしたファイル\vspace{-1mm}
+item::(2)(3)を繰り返す．\vspace{-1mm}
+item::すべてができたら，\verb|Makerec|を押すと，次のファイルがdataにできる．\\
+（後でrecord07121.csvなどを作成するときに用いる）\\
+　\Ltab{35mm}{rec0712.r}採点コメントを入れた１行データをタブ区切りに直す\\
+　\Ltab{35mm}{reckc0712...}上の実行バッチ(record0721.csvなどすべてを作成)
+end
+
+%%%%%%%%%%%%%
+new::採点コメントの追加
+%repeat=4
+\slidepage
+
+layer::{120}{0}
+%[1]::\putnotese{65}{2}{\includegraphics[bb=0.00 0.00 1043.00 487.00,width=65mm]{fig/ketmath1.pdf}}
+%[2]::\putnotese{65}{2}{\includegraphics[bb=0.00 0.00 1043.00 487.00,width=65mm]{fig/ketmath2.pdf}}
+%[3,-]::\putnotese{65}{2}{\includegraphics[bb=0.00 0.00 1043.00 487.00,width=65mm]{fig/ketmath3.pdf}}
+end
+
+enumerate::[(1)]
+item::ketmathtoffL.htmlを立ち上げる．\vspace{-2mm}
+item::ansline07121.txtのすべてを選択\\
+コピーして最下段の入力窓に入れる．\vspace{-2mm}\\
+%[2,-]::item::＜＞で学生番号を変える．\vspace{-2mm}
+%[2,-]::item::得点とコメント(2段目)を追加する．\\
+%[2,-]::　・得点はコメントの最後に：\hspace{-2mm}：(ダブル半角コロン)をつけて書いてもよい．\vspace{-2mm}
+%[2,-]::item::学生の答え(1段目)を入力ルールに合った数式に修正することもできる．\vspace{-2mm}
+%[3,-]::item::Recボタンを押すと最下段にすべてのデータ(1行形式)が入る．\vspace{-2mm}
+%[4,-]::item::すべてを選択してコピーする．\vspace{-2mm}
+%[4,-]::item::ansline07121.txtの2行目にペーストして保存する．\vspace{-2mm}
+%[4,-]::item::すべての問題番号で同様に行う．
+end
+
+%%%%%%%%%%%%%
+new::Maximaによる採点
+%%repeat=4
+\slidepage
+
+enumerate::[(1)]
+item::学生の答えをMaximaで通るように適宜修正する．\\
+　Maximaでのコメントは[ ]で囲めばよい．
+item::mkscoremaximaを立ち上げて，\verb|Mkdata, Makecsv|を押す\\
+　・score(+date+no).csv(タブ区切り)ができる．\\
+　・学生の答え/正解 を計算して，次の得点を出力する．\\
+　　　　1 $\Longrightarrow$ 10，未提出 $\Longrightarrow$ 0，その他 $\Longrightarrow$ 数式をそのまま
+item::score(+date+no).csvをタブ区切りで開く．
+end
+
+%%%%%%%%%%%%%
+new::結果ファイル(配付)の作成
+%%repeat=4
+\slidepage
+
+enumerate::[(1)]
+item::dataのreckc0712をダブルクリックするとすべての課題のcsvができる．\\
+　record071121.csv, ...
+item::mkcard.cdyを立ち上げて，Makedata,Makefileを順に押す．\\
+・dataにcardフォルダができる．\\
+・各学生に配付する結果ファイルが入る．
+end
+

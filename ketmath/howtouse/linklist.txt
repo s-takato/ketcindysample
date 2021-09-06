@@ -1,0 +1,25 @@
+タイトル::
+
+\def\rad{\;\mathrm{rad}}
+\newcommand{\hako}[2][6mm]{\fbox{$\mathstrut$\Ctab{#1}{#2}}}
+\newcommand{\dint}{\displaystyle\int}
+\newcommand{\dlim}{\displaystyle\lim}
+
+
+\setmargin{25}{150}{15}{100}%
+
+\setcounter{page}{1}
+
+%%%%%%%%%%%%%
+new::リンクリスト
+%%repeat=8
+\slidepage
+
+itemize
+item::Samples of KeTCindy\\
+\url{https://s-takato.github.io/ketcindysample/}
+item::KeTCindy Home\\
+\url{https://s-takato.github.io/ketcindyorg/indexj.html}
+item::katmath\\
+\url{https://s-takato.github.io/ketcindysample/ketmath/indexj.html}
+end
