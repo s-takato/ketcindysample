@@ -34,7 +34,7 @@ new::数式の簡易記法1
 
 itemize
 item::文字定数(変数)は1文字とする．\vspace{-2mm}
-item::@と@で囲むとテキストになる（日本語は自動判定）
+item::テキストにするには　tx(テキスト)
 item::\Ltab{4.5zw}{分数}$\frac{a}{b}\ \Longrightarrow$\ \verb|(a)/(b)|,\ \verb|fr(a,b)| \vspace{-2mm}
 item::\Ltab{4.5zw}{掛け算}$ab\ \Longrightarrow$\ \verb|ab|\vspace{-2mm}
 item::\Ltab{4.5zw}{べき乗}$a^b\ \Longrightarrow$\ \verb|a^(b)|\vspace{-2mm}
@@ -52,9 +52,10 @@ new::数式の簡易記法2
 itemize
 item::\Ltab{4.5zw}{積分}$\dint x^2\,dx,\ \dint_a^b x^2\,dx \ \Longrightarrow$\ \verb|int()x^2dx, int(a,b)x^2dx|\vspace{-2mm}\\
 \phantom{\Ltab{4.5zw}{積分}$\dint x\,dx,\ \dint_a^b x\,dx \ \Longrightarrow$}\ または \verb|int(,x^2,x), int(a,b,x^2,x)|
-item::\Ltab{4.5zw}{極限}$\dlim_{x \to a}f(x) \ \Longrightarrow$\ \verb|lim(x,a)f(x)|\vspace{-2mm}
+item::\Ltab{4.5zw}{極限}$\dlim_{x \to a}f(x) \ \Longrightarrow$\ \verb|lim(x,a)f(x)|\ または \verb|lim(x,a,f(x))|\vspace{-2mm}
 item::\Ltab{4.5zw}{行列}$\begin{pmatrix}a&b\\c&d\end{pmatrix} \ \Longrightarrow$\ \verb|mat(a,b;c,d)|\vspace{-2mm}
 item::\Ltab{4.5zw}{行列式}$\left|\begin{array}{cc}a&b\\c&d\end{array}\right| \ \Longrightarrow$\ \verb|det(a,b;c,d)|\vspace{-2mm}
+item::\Ltab{4.5zw}{場合分け}$\begin{cases}a&(b)\\c&(d)\end{cases} \ \Longrightarrow$\ \verb|case(a,(b);c,(d))|\vspace{-2mm}
 end
 
 %%%%%%%%%%%%%

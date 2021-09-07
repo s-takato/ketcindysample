@@ -35,14 +35,21 @@ Getlevel(str,Arg,bra):=(
     nL=Indexall(str,Arg);
   );
   parL=Bracket(str,bra);
-  if(length(parL)==0,parL=[[0,0]]);
-  out=[];
-  forall(nL,n,
-    tmp2=select(parL,#_1<n);
-    tmp2=tmp2_(-1);
-    if(tmp2_2>=0,tmp=tmp2_2,tmp=-tmp2_2-1);
-    out=append(out,[n,tmp]);
-  );
+  if(length(parL)==0, //210907from
+    out=apply(1..(lenght(nL)),0);
+  ,
+    out=[];
+    forall(nL,n,
+      if((n<parL_1_1)%(n>parL_(-1)_1),
+        tmp=0;
+      ,
+        tmp2=select(parL,#_1<n);
+        tmp2=tmp2_(-1);
+        if(tmp2_2>=0,tmp=tmp2_2,tmp=-tmp2_2-1);
+      );
+      out=append(out,[n,tmp]);
+    );
+  );  //210907to
   out;
 );
 Indexall(str,key):=(
@@ -121,6 +128,7 @@ Totexform(str):=( //210803from[renew]
   repL=[ //190515from
     ["^(",["^{xx}"]], //210805
     ["_(",["_{xx}"]], //210831
+    ["tx(",["\text{xx}"]], //210907
     ["tfr(",["","\tfrac{xx}{yy}"]], //210831
     ["fr(",["","\frac{xx}{yy}"]], //210228from
     ["log(",["\log xx ","\log_{xx} yy"]], //210405
@@ -2877,8 +2885,25 @@ Addat(str):=(
 );
 
 Sepchar(strorg):=(
-  regional(str,out,flg,err,tmp,tmp1,tmp2);
-  str=Addat(strorg);
+  regional(str,out,flg,sharp,tctr,err,tmp,tmp1,tmp2);
+  tmp1=strorg; //210907from
+  str="";
+  tctr=0;
+  sharp=[];
+  tmp=indexof(tmp1,"tx(");
+  while(tmp>0,
+    tctr=tctr+1;
+    tmp2=substring(tmp1,0,tmp+1);
+    tmp1=substring(tmp1,tmp+1,length(tmp1));
+    str=str+tmp2+"(#"+text(tctr)+")";
+    tmp=indexof(tmp1,")");
+    tmp2=substring(tmp1,1,tmp-1);
+    sharp=append(sharp,tmp2);
+    tmp1=substring(tmp1,tmp,length(tmp1));
+    tmp=indexof(tmp1,"tx(");
+  );
+  str=str+tmp1; //210907to
+  str=Addat(str); 
   err="";
   out=[];
   tmp1=Indexall(str,"@");
@@ -2911,6 +2936,9 @@ Sepchar(strorg):=(
       out=append(out,tmp2);
     );
   );
+  forall(1..(length(sharp)),tmp,  //210907from
+    out=apply(out,replace(#,"#"+tmp,sharp_tmp));
+  ); //210907to
   [out,err];
 );
 
@@ -3134,7 +3162,7 @@ Keyname():=(
   regional(nL,tmp1);
   nL=[
     ["°","＠","[","]","|","d","e","f","g","a","b","c","sin","sq",")","7","8","9","＋","lim","cas"],
-    ["$\times$","!","{","}","$\neq$","h","i","j","k","x","y","z","cos","fr",",","4","5","6","ー","int",""],
+    ["$\times$","!","{","}","$\neq$","h","i","j","k","x","y","z","cos","fr",",","4","5","6","ー","int","tx"],
     ["・",":",";","$\leq$","$\geq","l","m","n","o","r","s","t","tan","tfr","(","1","2","3","＊","'","$\infty$"],
     ["\","$\pm$","$\mp$","<",">","p","q","u","v","w","_","=","log","ln","^","0",".","sp","／","$\sum$","pi"]
   ];
@@ -3464,13 +3492,14 @@ var cdy = CindyJS({
     {name: "Text100", type: "Button", pos: [4.0, -0.008620689655172414, 0.09244145996481852], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 1.0, script: "npos=1;", text: "<<", textsize: 18.0},
     {name: "Text111", type: "Button", pos: [4.0, -1.929155313351499, 0.11687421641328556], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"ln(\";", text: "　", textsize: 18.0},
     {name: "Text112", type: "Button", pos: [4.0, -1.1923352747695635, 0.07192704902038459], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==0,name=\"sum(\");if(Shift==1,name=\"(circ)\");", text: "　", textsize: 18.0},
-    {name: "Text113", type: "Button", pos: [4.0, -0.463768115942029, 0.06746918252055685], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"case(\";", text: "　", textsize: 18.0}
+    {name: "Text113", type: "Button", pos: [4.0, -0.46526655896607433, 0.06768717664824847], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"case(\";", text: "　", textsize: 18.0},
+    {name: "Text54", type: "Button", pos: [4.0, -0.6838709677419355, 0.06757800378268677], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"tx(\";", text: "　", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1030,
-    height: 432,
-    transform: [{visibleRect: [-27.06549699139096, 22.387509857076477, 71.26770195440336, -18.85515222504309]}],
+    width: 1040,
+    height: 458,
+    transform: [{visibleRect: [-27.06549699139096, 22.387509857076477, 72.22239320630428, -21.33734947998547]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
