@@ -181,9 +181,9 @@ Totexform(str):=( //210803from[renew]
         if(nn==1,
           tmp1=substring(out,plv_1_1,length(out)-1);
           if(contains(parL,fun), //210901from
-            if((length(tmp1)>=2)&(tmp1!="{\pi}"),
-              if(tmp1_1!="(",tmp1="("+tmp1+")")
-            );
+            if(Addpar(tmp1), //210909from
+              tmp1="("+tmp1+")";
+            ); //210909to
           ); //210901to
           out=replace(rep_2_1,"xx",tmp1);
         );
@@ -191,9 +191,9 @@ Totexform(str):=( //210803from[renew]
           tmp1=substring(out,plv_1_1,clv_1_1-1);
           tmp2=substring(out,clv_1_1,length(out)-1);
           if(contains(parL,fun), //210901from
-            if((length(tmp2)>=2)&(tmp2!="{\pi}"),
-              if(tmp2_1!="(",tmp2="("+tmp2+")")
-            );
+           if(Addpar(tmp2), //210909from
+              tmp2="("+tmp2+")";
+            ); //210909to
           ); //210901to
           tmp=replace(rep_2_2,"xx",tmp1);
           out=replace(tmp,"yy",tmp2);
@@ -203,9 +203,9 @@ Totexform(str):=( //210803from[renew]
           tmp2=substring(out,clv_1_1,clv_2_1-1);
           tmp3=substring(out,clv_2_1,length(out)-1);
           if(contains(parL,fun), //210901from
-            if((length(tmp3)>=2)&(tmp3!="{\pi}"),
-              if(tmp3_1!="(",tmp3="("+tmp3+")")
-            );
+            if(Addpar(tmp3), //210909from
+              tmp3="("+tmp3+")";
+            ); //210909to
           ); //210901to
           tmp=replace(rep_2_3,"xx",tmp1);
           tmp=replace(tmp,"yy",tmp2);
@@ -217,9 +217,9 @@ Totexform(str):=( //210803from[renew]
           tmp2=substring(out,clv_1_1,clv_2_1-1);
           tmp3=substring(out,clv_2_1,clv_3_1-1);
           if(contains(parL,fun), //210901from
-            if((length(tmp3)>=2)&(tmp3!="{\pi}"),
-              if(tmp3_1!="(",tmp3="("+tmp3+")")
-            );
+            if(Addpar(tmp3), //210909from
+              tmp3="("+tmp3+")";
+            ); //210909to
           ); //210901to
           tmp4=substring(out,clv_3_1,length(out)-1);
           tmp=replace(rep_2_4,"xx",tmp1);
@@ -236,6 +236,22 @@ Totexform(str):=( //210803from[renew]
   out=head+out;
   out=replace(out,"*"," ");
   out;
+);
+Addpar(str):=(
+  regional(num,add,tmp);
+  if(length(str)==0,
+    add=(1==0);
+  ,
+    add=(length(str)>=2)&(str!="{\pi}");
+    num=apply(0..9,text(#));
+    tmp=apply(1..(length(str)),str_#);
+    tmp=sort(tmp);
+    add=add&(common(num,tmp)!=tmp);
+    tmp=Indexall(str,"^");
+    add=add&(length(tmp)!=1);
+    add=add&(str_1!="(");
+  );
+  add;
 );
 Listplot(list):=Listplot(list,[]);
 Listplot(Arg1,Arg2):=(
@@ -3583,8 +3599,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1061,
-    height: 464,
-    transform: [{visibleRect: [-27.02461454696802, 20.720416299304812, 71.33941987613, -22.296465861220614]}],
+    height: 504,
+    transform: [{visibleRect: [-27.02461454696802, 20.720416299304812, 71.33941987613, -26.00481777161074]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
