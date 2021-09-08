@@ -108,6 +108,8 @@ Text52
 funflg=1;name="-";
 Text53
 funflg=1;if(Shift==0,name="int(");if(Shift==1,name="det(");
+Text54
+funflg=1;name="tx(";
 Text55
 if(keytype!=4,keytype=4,keytype=1);
 Text56
@@ -149,7 +151,7 @@ funflg=1;name="n3";
 Text74
 funflg=1;name="*";
 Text75
-funflg=1;if(Shift==0,name="'");if(Shift==1,name="sum(");
+funflg=1;name="'";
 Text77
 if(keytype!=5,keytype=5,keytype=1);
 Text78
@@ -191,7 +193,7 @@ funflg=1;name="(sp)";
 Text96
 funflg=1;name="/";
 Text97
-funflg=1;if(Shift==0,name="(inf)");if(Shift==1,name="(circ)");
+funflg=1;name="(inf)";
 Text100
 npos=1;
 Text101
@@ -214,3 +216,9 @@ Text109
 Shift=0;
 Text110
 Shift=1;
+Text111
+funflg=1;name="ln(";
+Text112
+funflg=1;if(Shift==0,name="sum(");if(Shift==1,name="(circ)");
+Text113
+funflg=1;name="case(";
