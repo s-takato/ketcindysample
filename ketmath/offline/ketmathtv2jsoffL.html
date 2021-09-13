@@ -140,7 +140,9 @@ Totexform(str):=( //210803from[renew]
     ["tan(",["\tan xx ","\tan^{xx}\! yy "]],  //210228to  //210405
     ["lim(", ["",tmp2+"_{xx \to yy} ",tmp2+"_{xx \to yy} zz"]], //210831from
     ["int(", [tmp1+" ",tmp1+"_{xx}^{yy} ",tmp1+" yy dzz ",tmp1+"_{xx}^{yy} zz dww "]],       
-    ["sum(", ["",tmp3+"_{xx}^{yy} ", tmp3+"_{xx}^{yy} zz"]] //210831to
+    ["sum(", ["",tmp3+"_{xx}^{yy} ", tmp3+"_{xx}^{yy} zz"]], //210831to
+    ["diff(", ["d ","\frac{dxx}{dyy}"]], //210913
+    ["par(", ["\partial ","\frac{\partial xx}{\partial yy}"]] //210913
   ];
   parL=["log(","sin(","cos(","tan(","lim(","int(","sum("]; //210901
   out=replace(str,"pi","{\pi}"); //210805
@@ -3596,14 +3598,14 @@ var cdy = CindyJS({
     {name: "Text9", type: "Button", pos: [4.0, -1.2916666666666665, 0.06420513582546976], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0},
     {name: "Text111", type: "Button", pos: [4.0, -1.922497308934338, 0.1161083188232392], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"ln(\";", text: "　", textsize: 18.0},
     {name: "Text112", type: "Button", pos: [4.0, -1.185529372718221, 0.07159948767792182], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==0,name=\"sum(\");if(Shift==1,name=\"(circ)\");", text: "　", textsize: 18.0},
-    {name: "Text113", type: "Button", pos: [4.0, -0.463768115942029, 0.06746918252055685], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"Ld\",name=\"case(\");\n", text: "　", textsize: 18.0},
-    {name: "Text54", type: "Button", pos: [4.0, -0.675, 0.06741539261674324], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"{\\partial}\",name=\"tx(\");\n", text: "　", textsize: 18.0}
+    {name: "Text113", type: "Button", pos: [4.0, -0.463768115942029, 0.06746918252055685], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"diff(\",name=\"case(\");\n", text: "　", textsize: 18.0},
+    {name: "Text54", type: "Button", pos: [4.0, -0.675, 0.06741539261674324], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"par(\",name=\"tx(\");\n", text: "　", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
     width: 1061,
-    height: 472,
-    transform: [{visibleRect: [-27.02461454696802, 20.720416299304812, 71.33941987613, -23.03813624329864]}],
+    height: 492,
+    transform: [{visibleRect: [-27.02461454696802, 20.720416299304812, 71.33941987613, -24.892312198493702]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
