@@ -11,7 +11,7 @@ vecflg=0;
 nch=3;
 ch=2;
 posyL=[18,-3,-20];
-px=-15;
+px=-17;
 nt=4;
 tposL=apply(1..nt,[px,12-3.5*(#-1)]);
 
