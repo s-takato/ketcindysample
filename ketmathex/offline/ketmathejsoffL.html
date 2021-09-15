@@ -3446,8 +3446,10 @@ if(stok==1,
       if(tmp>1,tmp2=tmp2+quL_n_tmp);
       dt=append(dt,tmp2);
     );
+    ansL=dt;
     nqu=1;
     nqunow=nqu;
+    Subsedit(2,ansL_nqunow);
     choose=1;
     stok=0;
   );
@@ -3462,6 +3464,7 @@ if(choose==1,
     nqinc=0;
   );
   if(nqu!=nqunow,
+    Subsedit(2,ansL_nqunow);
     ansL_nqunow=Textedit(2,"","");
     Subsedit(2,ansL_nqu);
     nqunow=nqu;
@@ -3669,13 +3672,13 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1026,
-    height: 496,
-    transform: [{visibleRect: [-26.024670299217426, 23.050422265021147, 75.69461247029525, -26.123811900357303]}],
+    height: 513,
+    transform: [{visibleRect: [-26.024670299217426, 23.050422265021147, 75.69461247029525, -27.809219119735193]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2028, version: [3, 0, 2028]}
+  cinderella: {build: 2027, version: [3, 0, 2027]}
 });
     </script>
 </head>
