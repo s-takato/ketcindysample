@@ -3398,8 +3398,8 @@ if(startflg==1,
     inspect(parse(tmp),"ptsize",3);
     if(#==1,Putpoint(tmp,tposL_1));
     if(#==2,Putpoint(tmp,tposL_2));
-    if(#==3,Putpoint(tmp,tposL_1+[30,0]));
-    if(#==4,Putpoint(tmp,tposL_2+[30,0]));
+    if(#==3,Putpoint(tmp,tposL_1+[35,0]));
+    if(#==4,Putpoint(tmp,tposL_2+[35,0]));
   );
   startflg=0;
 ,
@@ -3408,8 +3408,8 @@ if(startflg==1,
     tmp1=parse(tmp+".xy");
     if(#==1,Putpoint(tmp,tposL_1,tmp1));
     if(#==2,Putpoint(tmp,tposL_2,[T1.x,T2.y]));
-    if(#==3,Putpoint(tmp,tposL_1+[30,0],tmp1));
-    if(#==4,Putpoint(tmp,tposL_2+[30,0],[T3.x,T4.y]));
+    if(#==3,Putpoint(tmp,tposL_1+[35,0],tmp1));
+    if(#==4,Putpoint(tmp,tposL_2+[35,0],[T3.x,T4.y]));
   );
   startflg=0;
 );
@@ -3432,7 +3432,7 @@ fillcircle(pos,0.5,color->[1,0,0]);
 
 if(stok==1,
   ch=2;
-  tmp=Textedit(3,"");
+  tmp=Textedit(3,"2");
   stno=parse(tmp);
   if((stno>=1)&(stno<=stall),
     st=stL_stno;
@@ -3464,7 +3464,6 @@ if(choose==1,
     nqinc=0;
   );
   if(nqu!=nqunow,
-    Subsedit(2,ansL_nqunow);
     ansL_nqunow=Textedit(2,"","");
     Subsedit(2,ansL_nqu);
     nqunow=nqu;
@@ -3561,8 +3560,8 @@ var cdy = CindyJS({
     {name: "Text32", type: "EditableText", pos: [4.0, -0.007641156983554508, 0.06409484295692208], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "問=", textsize: 18.0},
     {name: "T1", type: "Free", pos: [4.0, -2.823529411764706, -0.23529411764705882], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T2", type: "Free", pos: [4.0, -2.0, -0.23529411764705882], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T3", type: "Free", pos: [4.0, 3.6923076923076916, 0.3076923076923077], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T4", type: "Free", pos: [4.0, 2.6153846153846145, 0.3076923076923077], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T3", type: "Free", pos: [4.0, 2.6666666666666665, 0.2222222222222222], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T4", type: "Free", pos: [4.0, 1.8888888888888888, 0.2222222222222222], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "Text47", type: "Button", pos: [4.0, -1.2022727881401536, 0.11622744191564245], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "　", textsize: 18.0},
     {name: "Text101", type: "Button", pos: [4.0, 0.3119266055045871, 0.09253745976587309], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.5, script: "funflg=1;Delete();", text: "DEL", textsize: 18.0},
     {name: "Text24", type: "Button", pos: [4.0, -0.8934076684603043, 0.1299506266078815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"sin(\";", text: "　", textsize: 18.0},
@@ -3671,14 +3670,14 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1026,
-    height: 513,
-    transform: [{visibleRect: [-26.024670299217426, 23.050422265021147, 75.69461247029525, -27.809219119735193]}],
+    width: 1015,
+    height: 492,
+    transform: [{visibleRect: [-26.024670299217426, 23.050422265021147, 74.60405485775662, -25.7272454957978]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2027, version: [3, 0, 2027]}
+  cinderella: {build: 2035, version: [3, 0, 2035]}
 });
     </script>
 </head>
