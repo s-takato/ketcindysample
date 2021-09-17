@@ -14,8 +14,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibkey[20210629 loaded");
+println("ketcindylibkey[20210917 loaded");
 
+// 210917 Setkeypos added, Alltextkey changed (position)
 // 210706 Modifyfortex changed (\, removed)
 // 210629 Addasterisk debugged ( for e^ )
 //              Keytable changed
@@ -569,7 +570,7 @@ Dqq(str):=(
 ////%Alltextkey start////
 Alltextkey(make):=( //no ketjs on
 //help:Alltexkey(1);
-  regional(fname,txtkey,keyL,key,tmp,tmp1,tmp2,tmp3,fid);
+  regional(fname,txtkey,keyL,key,tmp,tmp1,tmp2,tmp3,tmp4,fid);
   fname="keylist";
   txtkey=remove(allelements(),allpoints());
 //  tmp=concat(1..5,[21,22]);
@@ -585,7 +586,8 @@ Alltextkey(make):=( //no ketjs on
     tmp=inspect(key,"text.text");
     tmp2=[Dqq(tmp),inspect(key,"textsize")];
     tmp3=[inspect(key,"colorfill"),inspect(key,"fillalpha")];
-    keyL=concat(keyL,[tmp1++tmp2++tmp3]);
+    tmp4=key.xy; //210917[2lines]
+    keyL=concat(keyL,[tmp1++tmp2++tmp3++tmp4]);
   );
   keyL=sort(keyL,[#_1]);
   if(make==0,
@@ -628,7 +630,7 @@ Alltextkey(make):=( //no ketjs on
 Setkeystyle():=Setkeystyle("keylist");  //no ketjs on
 Setkeystyle(fname):=(
 //help:Setkeystyle();
-  regional(keyL,button,key,tmp);
+  regional(keyL,button,key,tmp,tmp1);
   println(fname+".csv");
   if(!isexists(Dircdy,fname+".csv"),
     println("  File not found");
@@ -659,4 +661,20 @@ Setkeystyle(fname):=(
   );
 );  //no ketjs off
 ////%Setkeystyle end////
+
+////%Setkeypos start////
+Setkeypos():=Setkeypos("keylist");  //no ketjs on
+Setkeypos(fname):=(
+  regional(keyL,key,tmp,tmp1);
+  keyL=Readlines(Dircdy,fname+".csv");
+  keyL=apply(keyL,Strsplit(#,","));
+  forall(keyL,key,
+    tmp1=key_3;
+    if(tmp1==Dqq("　"),
+      tmp=key_2+".xy=["+key_7+","+key_8+"];";
+      parse(tmp);
+    );
+  );
+); //no ketjs off
+////%Setkeypos end////
 
