@@ -2630,7 +2630,7 @@ Ketcindyjsscale=1;
 
 setdirectory(Dircdy);
 
-println("ketcindylibkey[20210629 loaded");
+println("ketcindylibkey[20210917 loaded");
 
 
 ch=0;
@@ -3160,6 +3160,7 @@ Dqq(str):=(
 
 
 
+
 Shift=0;
 keytype=1;
 capflg=0;
@@ -3493,8 +3494,8 @@ var cdy = CindyJS({
     {name: "Text1", type: "EditableText", pos: [3.817258883248731, -4.0, -0.23585695636186368], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 850, textsize: 24.0},
     {name: "SW", type: "Free", pos: [4.0, 3.3849094889123466, -0.20065303812093022], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "T2", type: "Free", pos: [4.0, -2.0, -0.23529411764705882], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T3", type: "Free", pos: [4.0, 3.6923076923076925, 0.3076923076923077], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T4", type: "Free", pos: [4.0, 2.6153846153846154, 0.3076923076923077], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T3", type: "Free", pos: [4.0, 3.692307692307691, 0.3076923076923077], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T4", type: "Free", pos: [4.0, 2.6153846153846145, 0.3076923076923077], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "NE", type: "Free", pos: [4.0, 0.921883843038398, 0.06097159718654641], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "T1", type: "Free", pos: [4.0, -2.823529411764706, -0.23529411764705882], color: [0.0, 0.0, 0.0], size: 3.0, border: true },
     {name: "Text2", type: "EditableText", pos: [4.0, 0.962566844919786, -0.24846962782506493], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 850, textsize: 24.0},
@@ -3605,21 +3606,22 @@ var cdy = CindyJS({
     {name: "Text112", type: "Button", pos: [4.0, -1.185529372718221, 0.07159948767792182], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==0,name=\"sum(\");if(Shift==1,name=\"(circ)\");", text: "　", textsize: 18.0},
     {name: "Text113", type: "Button", pos: [4.0, -0.463768115942029, 0.06746918252055685], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"diff(\",name=\"case(\");\n", text: "　", textsize: 18.0},
     {name: "Text54", type: "Button", pos: [4.0, -0.675, 0.06741539261674324], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"par(\",name=\"tx(\");\n", text: "　", textsize: 18.0},
-    {name: "Text115", type: "Button", pos: [4.0, 0.5706521739130436, 0.05862208053629848], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.498, 0.0], fillalpha: 0.4188034188034188, script: "scoreflg=1;score=0;", text: "0", textsize: 18.0},
-    {name: "Text116", type: "Button", pos: [4.0, 0.3799185888738128, 0.058542539043033484], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.498, 0.0], fillalpha: 0.41025641025641024, script: "scoreflg=1;score=5;", text: "5", textsize: 18.0},
-    {name: "Text117", type: "Button", pos: [4.0, 0.18156808803301236, 0.05934780092808208], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.498, 0.0], fillalpha: 0.4358974358974359, script: "scoreflg=1;score=10;", text: "10", textsize: 18.0}
+    {name: "Text115", type: "Button", pos: [4.0, 0.5940594059405939, 0.061026663754901934], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.498, 0.0], fillalpha: 0.4188034188034188, script: "scoreflg=1;score=0;", text: "0", textsize: 18.0},
+    {name: "Text116", type: "Button", pos: [4.0, 0.39038189533239026, 0.061026663754901934], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.498, 0.0], fillalpha: 0.41025641025641024, script: "scoreflg=1;score=5;", text: "5", textsize: 18.0},
+    {name: "Text118", type: "Button", pos: [4.0, 0.5885558583106266, 0.05878181372577067], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.498, 0.0], fillalpha: 0.4358974358974359, script: "scoreflg=1;score=min([score+1,10]);", text: "+", textsize: 18.0},
+    {name: "Text117", type: "Button", pos: [4.0, 0.18156028368794325, 0.06119978904214989], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.498, 0.0], fillalpha: 0.4358974358974359, script: "scoreflg=1;score=10;", text: "10", textsize: 18.0},
+    {name: "Text119", type: "Button", pos: [4.0, 0.375, 0.05862208053629848], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.498, 0.0], fillalpha: 0.4358974358974359, script: "scoreflg=1;score=max([score-1,0]);", text: "-", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
     width: 1104,
-    height: 494,
-    transform: [{visibleRect: [-25.541273782811974, 21.091251490343826, 76.80923894395542, -24.706894602974195]}],
+    height: 506,
+    transform: [{visibleRect: [-25.541273782811974, 21.091251490343826, 76.80923894395542, -25.819400176091232]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  use: ["katex"],
-  cinderella: {build: 2028, version: [3, 0, 2028]}
+  cinderella: {build: 2035, version: [3, 0, 2035]}
 });
     </script>
 </head>
