@@ -1,3 +1,4 @@
+//   210623
 //   210910
 //   210619
 
@@ -23,6 +24,15 @@ Seteditable(2,["","Size=24","Width=850"]);
 Seteditable(3,["","Size=24","Width=800"]);
 Seteditable(10,["","Size=18","Width=50"]);
 Seteditable(32,["Sc=","Size=18","Width=80"]);
+Text101.xy=[43.7,3.6];
+Text102.xy=[43.7+4.3,3.6];
+Text103.xy=[43.7+2*4.3,3.6];
+Text104.xy=[43.7+3*4.3,3.6];
+Text105.xy=[43.7+4*4.3,3.6];
+Text100.xy=[43.5,0];
+Text106.xy=[47.3,0];
+Text107.xy=[55.5,0];
+Text108.xy=[58.1,0];
 // no ketjs off
 
 Keyname():=(
@@ -34,7 +44,7 @@ Keyname():=(
     ["\","$\pm$","$\mp$","<",">","p","q","u","v","w","_","=","log","ln","^","0",".","sp","／","$\sum$","pi"]
   ];
   if(Shift==1,
-    nL_1_21="$d$"; nL_2_21="$\partial$";
+    nL_1_21="$d$"; nL_2_21="$\partial$"; nL_4_21="[]";
   );
   if(Shift==2,
     nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$";
