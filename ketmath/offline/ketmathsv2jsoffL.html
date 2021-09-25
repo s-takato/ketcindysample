@@ -36,7 +36,9 @@ Getlevel(str,Arg,bra):=(
   );
   parL=Bracket(str,bra);
   if(length(parL)==0, //210907from
-    out=apply(1..(lenght(nL)),0);
+    tmp="("+str+")"; //210926from
+    tmp1=Getlevel(tmp);
+    out=apply(tmp1,[#_1-1,#_2-1]); //210926to
   ,
     out=[];
     forall(nL,n,
@@ -3190,7 +3192,7 @@ Keyname():=(
     ["\","$\pm$","$\mp$","<",">","p","q","u","v","w","_","=","log","ln","^","0",".","sp","／","$\sum$","pi"]
   ];
   if(Shift==1,
-    nL_1_21="$d$"; nL_2_21="$\partial$"; nL_4_21="[]";
+    nL_1_21="$d$"; nL_2_21="$\partial$"; nL_4_21="[]";  //210923
   );
   if(Shift==2,
     nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$";
@@ -3417,8 +3419,8 @@ var cdy = CindyJS({
     {name: "Text1", type: "EditableText", pos: [3.817258883248731, -4.0, -0.23585695636186368], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 850, textsize: 24.0},
     {name: "SW", type: "Free", pos: [4.0, 3.3849094889123466, -0.20065303812093022], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "T2", type: "Free", pos: [4.0, -2.0, -0.23529411764705882], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T3", type: "Free", pos: [4.0, 3.692307692307691, 0.3076923076923077], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T4", type: "Free", pos: [4.0, 2.6153846153846145, 0.3076923076923077], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T3", type: "Free", pos: [4.0, 3.6923076923076925, 0.3076923076923077], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T4", type: "Free", pos: [4.0, 2.6153846153846154, 0.3076923076923077], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "NE", type: "Free", pos: [4.0, 0.921883843038398, 0.06097159718654641], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "T1", type: "Free", pos: [4.0, -2.823529411764706, -0.23529411764705882], color: [0.0, 0.0, 0.0], size: 3.0, border: true },
     {name: "Text2", type: "EditableText", pos: [4.0, 0.962566844919786, -0.24846962782506493], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 850, textsize: 24.0},
@@ -3527,8 +3529,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1033,
-    height: 463,
-    transform: [{visibleRect: [-27.06549699139096, 22.387509857076477, 71.55410932997364, -21.814695105935925]}],
+    height: 435,
+    transform: [{visibleRect: [-27.06549699139096, 22.387509857076477, 71.55410932997364, -19.141559600613363]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
