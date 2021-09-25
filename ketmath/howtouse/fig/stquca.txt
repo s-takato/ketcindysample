@@ -1,8 +1,0 @@
-%%Title: stquca.pdf
-%%Creator: extractbb 20210318
-%%BoundingBox: 0 0 777 416
-%%HiResBoundingBox: 0.000000 0.000000 777.000000 416.000000
-%%PDFVersion: 1.4
-%%Pages: 1
-%%CreationDate: Thu Sep 23 20:00:04 2021
-
