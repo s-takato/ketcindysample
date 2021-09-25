@@ -1,4 +1,4 @@
-//   210923
+//   210623
 //   210910
 //   210619
 
@@ -9,9 +9,9 @@ greflg=0;
 boldflg=0;
 vecflg=0;
 
-nch=3;
+nch=2;
 ch=2;
-posyL=[18,-3,-20];
+posyL=[18,-3];
 px=-17;
 nt=4;
 tposL=apply(1..nt,[px,12-3.5*(#-1)]);
@@ -21,9 +21,8 @@ tposL=apply(1..nt,[px,12-3.5*(#-1)]);
  // no ketjs on 
 Seteditable(1,["","Size=24","Width=850"]);
 Seteditable(2,["","Size=24","Width=850"]);
-Seteditable(3,["","Size=24","Width=720"]);
-Seteditable(10,["","Size=18","Width=50"]);
-Seteditable(32,["Sc=","Size=18","Width=80"]);
+//Seteditable(3,["File=","Size=24","Width=300"]);
+//Seteditable(4,["","Size=24","Width=900"]);
 Text101.xy=[43.7,3.6]; //210923from
 Text102.xy=[43.7+4.3,3.6];
 Text103.xy=[43.7+2*4.3,3.6];
@@ -44,7 +43,7 @@ Keyname():=(
     ["\","$\pm$","$\mp$","<",">","p","q","u","v","w","_","=","log","ln","^","0",".","sp","／","$\sum$","pi"]
   ];
   if(Shift==1,
-    nL_1_21="$d$"; nL_2_21="$\partial$"; nL_4_21="[]"; //210923
+    nL_1_21="$d$"; nL_2_21="$\partial$"; nL_4_21="[]";  //210923
   );
   if(Shift==2,
     nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$";

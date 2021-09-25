@@ -1,6 +1,6 @@
-//   210923
-//   210910
-//   210619
+//  210823
+//  210910a
+//  210905
 
 Shift=0;
 keytype=1;
@@ -21,9 +21,9 @@ tposL=apply(1..nt,[px,12-3.5*(#-1)]);
  // no ketjs on 
 Seteditable(1,["","Size=24","Width=850"]);
 Seteditable(2,["","Size=24","Width=850"]);
-Seteditable(3,["","Size=24","Width=720"]);
+Seteditable(3,["Student=","Size=24","Width=600"]);
 Seteditable(10,["","Size=18","Width=50"]);
-Seteditable(32,["Sc=","Size=18","Width=80"]);
+Seteditable(32,["問=","Size=18","Width=80"]);
 Text101.xy=[43.7,3.6]; //210923from
 Text102.xy=[43.7+4.3,3.6];
 Text103.xy=[43.7+2*4.3,3.6];
@@ -47,7 +47,7 @@ Keyname():=(
     nL_1_21="$d$"; nL_2_21="$\partial$"; nL_4_21="[]"; //210923
   );
   if(Shift==2,
-    nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$";
+    nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$"; nL_4_21="[]"; //210923
   );
   if(keytype==2,
     tmp1=["D","E","F","G","A","B","C"]; forall(1..7,nL_1_(#+5)=tmp1_#);

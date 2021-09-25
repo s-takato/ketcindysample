@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>ketmathe.cdy</title>
+    <title>ketmathet.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -3193,7 +3193,7 @@ Keyname():=(
     nL_1_21="$d$"; nL_2_21="$\partial$"; nL_4_21="[]"; //210923
   );
   if(Shift==2,
-    nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$"; nL_4_21="[]"; //210923
+    nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$";
   );
   if(keytype==2,
     tmp1=["D","E","F","G","A","B","C"]; forall(1..7,nL_1_(#+5)=tmp1_#);
@@ -3299,6 +3299,7 @@ Pull():=(
 );
 
 StrpL=apply(1..3,"");
+StrL=apply(1..3,"");
 startflg=1;
 stok=0;
 choose=0;
@@ -3374,24 +3375,54 @@ Line2list(str):=(
 ;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
-Ketinit();
-
-date="0925";
 year="2021";
+
+Ketinit();
+Addax(0);
+
 tab=unicode("0009");
 
 if(startflg==1,
-  quline=""; caline="";
-  stline=""; ansline="";
-quline="Q1 次を微分せよ．;;[1]	y=x^2+3x, y'=	y=x^2-4x, y'=;;[2]	y=sin(2x), y'=	y=sin(3x), y'=;;Q2 F(x)=int(,,f(x),x)とするとき;;F'(x)=;;Q3 次の不定積分を求めよ．;;[1]	int(,,x^3,x)=;;[2]	int(,,e^x,x)=";
-caline="Q1 次を微分せよ．;;[1]	y'=2x+3	y'=2x-4;;[2]	y'=2cos(2x)	y'=3cos(3x);;Q2 F(x)=int(,,f(x),x)とするとき;;	F'(x)=f(x);;Q3 次の不定積分を求めよ．;;[1]	=fr(1,4)x^(4)+C;;[2]	=e^x+C";
-stline="ゆめちゃん	1	3	3	1	1	1	2	2;;ゆるナキン	1	2	2	1	1	1	2	2;;つるゴン	1	2	3	1	1	1	2	2;;安田朗	1	3	2	1	1	1	2	2;;とよのん	1	2	3	1	1	1	2	2";
-  quL=Line2list(quline);
-  quall=length(quL);
-  stL=Line2list(stline);
-  stall=length(stL);
-  ansL=apply(1..quall,"");
+quline="Q1 次を微分せよ．;;[1]	y=x^2+3x, y'=	y=x^2-4x, y'=;;[2]	y=sin(2x), y'=	y=sin(3x), y'=;;Q2 q F(x)=int(,,f(x),x)のとき//F'(x)=;;Q3 次の不定積分を求めよ．;;[1]	int(,,x^3,x)=;;[2]	int(,,e^x,x)=";
+caline="Q1 次を微分せよ．;;[1]	y'=2x+3	y'=2x-4;;[2]	y'=2cos(2x)	y'=3cos(3x);;	F'(x)=f(x);;Q3 次の不定積分を求めよ．;;[1]	=fr(1,4)x^(4)+C;;[2]	=e^x+C";
+stline="ゆめちゃん	1	2	2	1	1	2	2;;ゆるナキン	1	3	2	1	1	2	2;;つるゴン	1	3	2	1	1	2	2;;安田朗	1	3	2	1	1	2	2;;とよのん	1	2	2	1	1	2	2";
+ansline="12021092453700;;Q1 次を微分せよ．;;[1]y=x^2+3x, y'=;;[2]y=sin(3x), y'=;;Q2 q F(x)=int(,,f(x),x)のとき//F'(x)=;;Q3 次の不定積分を求めよ．;;[1]int(,,x^3,x)=;;[2]int(,,e^x,x)~CR22021092453715;;Q1 次を微分せよ．;;[1]y=x^2+3x, y'=;;[2]y=sin(3x), y'=;;Q2 q F(x)=int(,,f(x),x)のとき//F'(x)=;;Q3 次の不定積分を求めよ．;;[1]int(,,x^3,x)=;;[2]int(,,e^x,x)~CR32021092453729;;Q1 次を微分せよ．;;[1]y=x^2+3x, y'=;;[2]y=sin(2x), y'=;;Q2 q F(x)=int(,,f(x),x)のとき//F'(x)=;;Q3 次の不定積分を求めよ．;;[1]int(,,x^3,x)=;;[2]int(,,e^x,x)~CR42021092453747;;Q1 次を微分せよ．;;[1]y=x^2+3x, y'=;;[2]y=sin(2x), y'=;;Q2 q F(x)=int(,,f(x),x)のとき//F'(x)=;;Q3 次の不定積分を求めよ．;;[1]int(,,x^3,x)=;;[2]int(,,e^x,x)~CR52021092453762;;Q1 次を微分せよ．;;[1]y=x^2-4x, y'=;;[2]y=sin(3x), y'=;;Q2 q F(x)=int(,,f(x),x)のとき//F'(x)=;;Q3 次の不定積分を求めよ．;;[1]int(,,x^3,x)=;;[2]int(,,e^x,x)~";
   ch=3;
+  Subsedit(3,"");
+  quLL=Line2list(quline);
+  quall=length(quLL);
+  caLL=Line2list(caline);
+  stLL=Line2list(stline);
+  stall=length(stLL);
+  ansLL=tokenize(ansline,"CR");
+  StdataL=[];
+  forall(1..(length(ansLL)),sn,
+    ansL=tokenize(ansLL_sn,";;");
+    ansL=apply(ansL,if(isstring(#),#,format(#,6)));
+    stL=stLL_sn;
+    ansLL_sn=ansL;
+    if(length(ansL)>1,
+      tmp1=ansL_1;
+      tmp=indexof(tmp1,year);
+      if(tmp>0,
+        ansL=ansL_(2..(length(ansL)));
+        ansLL_sn=ansL;
+        stnoa=substring(tmp1,0,tmp-1);
+        stnoa=parse(stnoa);
+        yeara=substring(tmp1,tmp-1,tmp+3);
+        datea=substring(tmp1,tmp+3,tmp+7);
+        tmp1=substring(tmp1,tmp+7,length(tmp1));
+        timea=returntime(tmp1);
+        if((stnoa>=1)&(stnoa<=stall),
+          tmp=text(stnoa)+stL_1;
+          tmp1=tmp+datea+text(timea)+tab;
+        );
+      );
+    ,
+      tmp1=text(sn)+" "+stL_1+tab;
+    );
+    StdataL=append(StdataL,tmp1);
+  );
   forall(1..(length(tposL)),
     tmp="T"+text(#);
     Putpoint(tmp,tposL_#);
@@ -3401,6 +3432,8 @@ stline="ゆめちゃん	1	3	3	1	1	1	2	2;;ゆるナキン	1	2	2	1	1	1	2	2;;つる
     if(#==3,Putpoint(tmp,tposL_1+[35,0]));
     if(#==4,Putpoint(tmp,tposL_2+[35,0]));
   );
+  Subsedit(32,"問=");
+  stok=1;
   startflg=0;
 ,
   forall(1..(length(tposL)),
@@ -3411,15 +3444,12 @@ stline="ゆめちゃん	1	3	3	1	1	1	2	2;;ゆるナキン	1	2	2	1	1	1	2	2;;つる
     if(#==3,Putpoint(tmp,tposL_1+[35,0],tmp1));
     if(#==4,Putpoint(tmp,tposL_2+[35,0],[T3.x,T4.y]));
   );
-  startflg=0;
 );
+
 Putpoint("T1",tposL_1,T1.xy);
 Putpoint("T3",tposL_3,T3.xy);
 T2.x=T1.x;
 T4.x=T3.x;
-
-
-Addax(0);
 
 nameL=Keyname();
 poskey=[SW.x+2*3.5,SW.y-0.8];
@@ -3427,110 +3457,89 @@ Keytable(21,35.5,4,32.5,poskey,[1,1,0],nameL,[0,-0.5],22);
 Keytable(5,43,1,35,[43,2.2],[1,0,0]);
 
 pos=[-17.2,posyL_ch];
+
 drawcircle(pos,0.5,color->[1,0,0]);
 fillcircle(pos,0.5,color->[1,0,0]);
-
 if(stok==1,
-  ch=2;
-  tmp=Textedit(3,"","");
-  tmp=replace(tmp,"Student=","");
-  if(length(tmp)<10,
-    stno=parse(tmp);
-    if((stno>=1)&(stno<=stall),
-      st=stL_stno;
-      Subsedit(3,"Student="+text(stno)+" "+st_1);
-      tmp1=st_(2..(length(st)));
-      tmp1=apply(tmp1,parse(#));
-      dt=[];
-      forall(1..(length(tmp1)),n,
-        tmp=tmp1_n;
-        tmp2=quL_n_1;
-        if(tmp>1,tmp2=tmp2+quL_n_tmp);
-        dt=append(dt,tmp2);
-      );
-      ansL=dt;
-    );
-  ,
-    ansL=tokenize(tmp,";;");
-    tmp1=ansL_1;
-    if(!isstring(tmp1),tmp1=text(tmp1));
-    tmp=indexof(tmp1,year);
-    if(tmp>0,
-      ansL=ansL_(2..(length(ansL)));
-      stno=substring(tmp1,0,tmp-1);
-      stno=parse(stno);
-      yeara=substring(tmp1,tmp-1,tmp+3);
-      datea=substring(tmp1,tmp+3,tmp+7);
-      tmp1=substring(tmp1,tmp+7,length(tmp1));
-      timea=returntime(tmp1);
-      if((stno>=1)&(stno<=stall),
-        st=stL_stno;
-        tmp=text(stno)+" "+st_1+" "+text(timea);
-        Subsedit(3,"Student="+tmp);
-        tmp1=st_(2..(length(st)));
-        tmp1=apply(tmp1,parse(#));
-        dt=[];
-        forall(1..(length(tmp1)),n,
-          tmp=tmp1_n;
-          tmp2=quL_n_1;
-          if(tmp>1,tmp2=tmp2+quL_n_tmp);
-          dt=append(dt,tmp2);
-        );
-      );
-    );
-  );
-  nqu=1;
-  nqunow=nqu;
-  Subsedit(2,ansL_1);
-  StrL_ch=ansL_1;
-  npos=length(StrL_ch);
+  stnum=0;
+  stnumflg=0;
   choose=1;
   stok=0;
 );
 
-if(choose==1,
+if(abs(stnumflg)==1,
+  if(stnum>0,
+    StdataL_stnum=Textedit(3,"","");
+  );
+  if(stnumflg==1,
+    stnum=min([stnum+1,stall]);
+  ,
+    stnum=max([stnum-1,1]);
+  );
+  Subsedit(3,StdataL_stnum);
+  npos=length(StdataL_stnum);
+  stL=stLL_stnum;
+  caL=[];
+  forall(1..(length(caLL)),
+    tmp1=caLL_#;
+    tmp=parse(stL_(#+1));
+    tmp2=tmp1_1;
+    if(tmp>1,tmp2=tmp2+tmp1_tmp);
+    caL=append(caL,tmp2);
+  );
+  ansL=ansLL_stnum;
+  nqu=1;
+  nqunow=1;
+  stnumflg=0;
+);
+
+if((choose==1)&(stnum>0),
   Subsedit(10,text(nqu));
+  Subsedit(1,caL_nqu);
+  Subsedit(2,ansL_nqu);
+  if(npos==0,
+    tmp=Textedit(3,"","");
+    npos=length(tmp);
+  );
+  ansall=length(ansL);
   if(|nqinc|>0,
-    if(nqinc>0,nqu=min([nqu+1,quall]));
+    if(nqinc>0,nqu=min([nqu+1,ansall]));
     if(nqinc<0,nqu=max([nqu-1,1]));
     Subsedit(10,text(nqu));
     nqinc=0;
   );
   if(nqu!=nqunow,
-    ansL_nqunow=Textedit(2,"","");
-    Subsedit(2,ansL_nqu);
+    Subsedit(1,caL_nqu);
+    if(ansall>=nqu,
+      Subsedit(2,ansL_nqu);
+    );
     nqunow=nqu;
-    StrL_ch=ansL_nqu;
-    npos=length(StrL_ch);
   );
-  tmp=select(1..(length(dt)),substring(dt_#,0,1)=="Q");
+  tmp=select(1..(length(caL)),substring(caL_#,0,1)=="Q");
   tmp=select(tmp,#<=nqu);
   tmp=tmp_(-1);
-  tmp1=dt_tmp;
+  tmp1=caL_tmp;
   tmp=indexof(tmp1," ");
   tmp1=substring(tmp1,0,tmp-1);
   Subsedit(32,"問="+tmp1);
-  Subsedit(1,dt_nqu);
-);  
-
-if(recflg==1,
-  ansL_nqu=Textedit(2,"","");//210816from
-  out=text(stno)+tab+text(stno)+Getcurtime()+";;";//210924
-  str="";
-  forall(1..(length(ansL)),n,
-    str=str+ansL_n+";;";
-  );
-  out=out+substring(str,0,length(str)-2);
-  Subsedit(3,out);
-  recflg=0;
+  Subsedit(1,caL_nqu);
+  drawtext([60,-20.3],text(stnum),size->18);
+  StrL_1=Textedit(1,"","");
+  StrL_2=Textedit(1,"","");
 );
 
-forall(1..nch,
-  tmp=StrL_#;
-  StrL_#=Textedit(#,"","");
-  if(ch==#,
-    npos=npos+(length(StrL_#)-length(tmp));
+if(recflg==1,
+  StdataL_stnum=Textedit(3,"","");
+  out="";
+  forall(1..(length(StdataL)),
+    tmp=StdataL_#;
+    out=out+tmp;
+    if(#<length(ansLL),out=out+"CR");
   );
+  Subsedit(3,out);
+  stnum=0;
+  drawtext([60,-20.3],text(stnum),size->18);
+  recflg=0;
 );
 
 if(funflg==1,
@@ -3545,7 +3554,6 @@ if(funflg==1,
 );
 
 Dispposition([52,-1],npos,StrL_ch);
-
 tpL=[T1.xy,T3.xy,T5.xy];
 dyL=[T1.y-T2.y,T3.y-T4.y,T5.y-T6.y];
 
@@ -3590,7 +3598,7 @@ var cdy = CindyJS({
     {name: "SW", type: "Free", pos: [4.0, 3.3849094889123466, -0.20065303812093022], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 0.921883843038398, 0.06097159718654641], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text2", type: "EditableText", pos: [4.0, 0.962566844919786, -0.24846962782506493], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 850, textsize: 24.0},
-    {name: "Text3", type: "EditableText", pos: [-2.971428571428571, -4.0, 0.1921253926567651], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 600, text: "Student=", textsize: 24.0},
+    {name: "Text3", type: "EditableText", pos: [-3.057692307692308, -4.0, 0.19319341730256345], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 720, textsize: 24.0},
     {name: "Text10", type: "EditableText", pos: [4.0, 0.5431861323330754, 0.07415206592351577], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 50, textsize: 18.0},
     {name: "Text32", type: "EditableText", pos: [4.0, -0.007641156983554508, 0.06409484295692208], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "問=", textsize: 18.0},
     {name: "T1", type: "Free", pos: [4.0, -2.823529411764706, -0.23529411764705882], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
@@ -3696,18 +3704,19 @@ var cdy = CindyJS({
     {name: "Text100", type: "Button", pos: [4.0, 0.0, 0.09195402298850575], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 1.0, script: "npos=0;", text: "<<", textsize: 18.0},
     {name: "Text4", type: "Button", pos: [4.0, 0.4792626728110599, 0.0658876150901318], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, pinned: true, script: "nqinc=1;", text: ">", textsize: 18.0},
     {name: "Text5", type: "Button", pos: [4.0, 0.5745454545454545, 0.077986977133956], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1;", text: "<", textsize: 18.0},
-    {name: "Text9", type: "Button", pos: [4.0, -1.3948717948717948, 0.06896808967165927], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0},
+    {name: "Text9", type: "Button", pos: [4.0, -1.2363636363636363, 0.06060606060606061], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0},
     {name: "Text111", type: "Button", pos: [4.0, -1.922497308934338, 0.1161083188232392], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"ln(\";", text: "　", textsize: 18.0},
     {name: "Text112", type: "Button", pos: [4.0, -1.185529372718221, 0.07159948767792182], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==0,name=\"sum(\");if(Shift==1,name=\"(circ)\");", text: "　", textsize: 18.0},
     {name: "Text113", type: "Button", pos: [4.0, -0.463768115942029, 0.06746918252055685], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"diff(\",name=\"case(\");", text: "　", textsize: 18.0},
-    {name: "Text114", type: "Button", pos: [4.0, -1.5513307984790872, 0.07670405410251077], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "stok=1;", text: "OK", textsize: 18.0},
-    {name: "Text54", type: "Button", pos: [4.0, -0.6851211072664359, 0.06761244911511703], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"par(\",name=\"tx(\");", text: "　", textsize: 18.0}
+    {name: "Text114", type: "Button", pos: [4.0, -1.431578947368421, 0.07017543859649122], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "stnumflg=-1;", text: "<", textsize: 18.0},
+    {name: "Text54", type: "Button", pos: [4.0, -0.6851211072664359, 0.06761244911511703], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"par(\",name=\"tx(\");", text: "　", textsize: 18.0},
+    {name: "Text115", type: "Button", pos: [4.0, -1.295238095238095, 0.06349206349206349], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "stnumflg=1;", text: ">", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1032,
-    height: 494,
-    transform: [{visibleRect: [-26.024670299217426, 23.050422265021147, 76.28946207713452, -25.92552869807755]}],
+    width: 1028,
+    height: 493,
+    transform: [{visibleRect: [-24.772085191245395, 22.96429977291078, 73.33330543313883, -24.084297092674266]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
