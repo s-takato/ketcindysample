@@ -36,7 +36,9 @@ Getlevel(str,Arg,bra):=(
   );
   parL=Bracket(str,bra);
   if(length(parL)==0, //210907from
-    out=apply(1..(lenght(nL)),0);
+    tmp="("+str+")"; //210926from
+    tmp1=Getlevel(tmp);
+    out=apply(tmp1,[#_1-1,#_2-1]); //210926to
   ,
     out=[];
     forall(nL,n,
@@ -2000,10 +2002,6 @@ Inwindow(point,xrng,yrng):=(
   tmp=(x>xmin-Eps)&(x<xmax+Eps)&(y>ymin-Eps)&(y<ymax+Eps);
   if(tmp,true,false);
 );
-Dqq(str):=DqDq(str); //18.02.11
-DqDq(str):=(
-  unicode("0022")+str+unicode("0022");
-);
 Ketinit():=Ketinit("fig",0.3); //190831from
 Ketinit(Arg):=(//181001from
   if(isstring(Arg),
@@ -2150,6 +2148,10 @@ Strictmove(pCorg,sep):=(
       parse(tmp);
     );
   );
+);
+Dqq(str):=DqDq(str); //18.02.11
+DqDq(str):=(
+  unicode("0022")+str+unicode("0022");
 );
 Addax(param):=(
   ADDAXES=text(param);
@@ -3376,16 +3378,14 @@ Line2list(str):=(
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 
-date="0925";
 year="2021";
+
 tab=unicode("0009");
 
 if(startflg==1,
-  quline=""; caline="";
-  stline=""; ansline="";
-quline="Q1 次を微分せよ．;;[1]	y=x^2+3x, y'=	y=x^2-4x, y'=;;[2]	y=sin(2x), y'=	y=sin(3x), y'=;;Q2 F(x)=int(,,f(x),x)とするとき;;F'(x)=;;Q3 次の不定積分を求めよ．;;[1]	int(,,x^3,x)=;;[2]	int(,,e^x,x)=";
-caline="Q1 次を微分せよ．;;[1]	y'=2x+3	y'=2x-4;;[2]	y'=2cos(2x)	y'=3cos(3x);;Q2 F(x)=int(,,f(x),x)とするとき;;	F'(x)=f(x);;Q3 次の不定積分を求めよ．;;[1]	=fr(1,4)x^(4)+C;;[2]	=e^x+C";
-stline="ゆめちゃん	1	3	3	1	1	1	2	2;;ゆるナキン	1	2	2	1	1	1	2	2;;つるゴン	1	2	3	1	1	1	2	2;;安田朗	1	3	2	1	1	1	2	2;;とよのん	1	2	3	1	1	1	2	2";
+  tmp="="+Dqq("");
+  quline="quline"+tmp; caline="caline"+tmp;
+  stline="stline"+tmp; ansline="ansline"+tmp;
   quL=Line2list(quline);
   quall=length(quL);
   stL=Line2list(stline);
@@ -3705,9 +3705,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1032,
-    height: 494,
-    transform: [{visibleRect: [-26.024670299217426, 23.050422265021147, 76.28946207713452, -25.92552869807755]}],
+    width: 1018,
+    height: 469,
+    transform: [{visibleRect: [-26.024670299217426, 23.050422265021147, 74.90147966117625, -23.44698866958065]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
