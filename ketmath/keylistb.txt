@@ -168,7 +168,7 @@ funflg=1;name="=";
 Text90
 funflg=1;name="log(";
 Text91
-funflg=1;if(Shift==1,name="pi",name="[](");
+funflg=1; if(Shift==1,name="[](",name="pi");
 Text92
 funflg=1;name="^(";
 Text93

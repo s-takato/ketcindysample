@@ -14,8 +14,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibkey[20210917 loaded");
+println("ketcindylibkey[20211022 loaded"); // no ketjs
 
+// 211022 List2line, Line2list added
+// 211012 Keytable changed ( for (0,xL,0,yL,... ) )
 // 210917 Setkeypos added, Alltextkey changed (position)
 // 210706 Modifyfortex changed (\, removed)
 // 210629 Addasterisk debugged ( for e^ )
@@ -516,9 +518,27 @@ Addfunstr(name,npos,strnow):=(
 
 Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22); //210629
 Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=(
+  // Keytable(5,20,3,10,....)
+  // Keytable(0,dxL,0,dyL,...)
   regional(xL,yL,plt,prt,prb,row,col,name,tmp1,tmp2,pos);
-  xL=apply(0..nx,#/10*dx+plb_1);
-  yL=apply(0..ny,(ny-#)/10*dy+plb_2);
+  if(nx>0,  //211012from
+    xL=apply(0..nx,#/10*dx+plb_1);
+  ,
+    xL=[plb_1];
+    forall(dx,
+      tmp=xL_(-1)+#/10;
+      xL=append(xL,tmp);
+    );
+  );
+  if(ny>0,
+    yL=apply(0..ny,(ny-#)/10*dy+plb_2);
+  ,
+    yL=[plb_2];
+    forall(dy,
+      tmp=yL_(-1)+#/10;
+      yL=append(yL,tmp);
+    );
+  );  //211012to
   plt=[xL_1,yL_1]; prt=[xL_(-1),yL_1]; prb=[xL_(-1),yL_(-1)];
   fillpoly([plb,plt,prt,prb,plb],color->clr);
   forall(xL,draw([#,plb_2],[#,plt_2],color->[0,0,0]));
@@ -678,3 +698,49 @@ Setkeypos(fname):=(
 ); //no ketjs off
 ////%Setkeypos end////
 
+////%List2line start////
+List2line(stLL):=(
+  regional(tab,nn,nc,tmp,str,st,out);
+  tab=unicode("0009");
+  out="";
+  forall(1..(length(stLL)),nn,
+    st=stLL_nn;
+    str="";
+    forall(1..(length(st)),
+      tmp=st_#;
+      if(!isstring(tmp),tmp=format(tmp,10));
+      str=str+tmp+tab;
+    );
+    str=substring(str,0,length(str)-1);
+    out=out+str;
+    if(nn<length(stLL),out=out+"CR");
+  );
+  out;  
+);
+////%List2line endt////
+
+////%Line2list start////
+Line2list(strorg):=(
+  regional(tab,stL,st,nn,tL,mx,flg,tmp);
+  tab=unicode("0009");
+  str=replace(strorg,";;",tab);
+  flg=indexof(str,"::");
+  tL=[];
+  if(indexof(str,"CR")>0,
+    stL=tokenize(str,"CR");
+    forall(1..(length(stL)),nn,
+      st=stL_nn;
+      if(!isstring(st),st=format(st,10));
+      stL_nn=tokenize(st,tab);
+    );
+  ,
+    stL=tokenize(str,tab);
+    forall(1..(length(stL)),
+      tmp=stL_#;
+      if(indexof(tmp,"::")>0,tmp=tokenize(tmp,"::"));
+      stL_#=tmp;
+    );
+  );
+  stL;
+);
+////%Line2list end////
