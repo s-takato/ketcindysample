@@ -2,17 +2,25 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ketmath</title>
-<script src="offline/ketcindyjs/jquery.min.js"></script>
-<link rel="stylesheet" href="offline/ketcindyjs/katex/katex11.min.css" />
-<script src="offline/ketcindyjs/katex/katex11.min.js"></script>
-<script src="offline/ketcindyjs/auto-render11.min.js"></script>
+<title>KeTMath</title>
+<script src="ketcindyjs/jquery.min.js"></script>
+<link rel="stylesheet" href="ketcindyjs/katex/katex11.min.css" />
+<script src="ketcindyjs/katex/katex11.min.js"></script>
+<script src="ketcindyjs/auto-render11.min.js"></script>
 <script>$(document).ready(function(){renderMathInElement(document.body,{delimiters: [{left: "[[", right: "]]", display: true},{left: "$", right: "$", display: false}]})});</script>
 </head>
 <body>
 <div style="padding: 50px">
-<p><font size="10">&emsp;ketmath</font>
+<p><font size="10">&emsp;KeTMath</font>
 <font size="6">&emsp;&emsp;2021/10/29</font></p>
+<p><font size="6">KeTMathは簡易数式ルールとそれを$\TeX$で表示するシステムです．</br>
+例えば，次の行の左側が簡易数式です</br>
+&emsp;&emsp;fr(1,3)sin(3x) ＝＞$\frac{1}{3}\sin 3x$</br>
+すると，右側のように$\TeX$ に変換されて表示されます．</br>
+次の1をクリックすると，実際にKeTMathを使うことができます．</br>
+また，2はKeTMathを利用して課題のやりとりをするためのパッケージです．</br>
+詳しくは，3を見てください．
+</font></p>
 <!-- polytech -->
   <ol><font size="6">
     <li><font size="6"><a href="ketmathjsoffL.html">KeTMath</a></font></li>
@@ -23,4 +31,3 @@
 </div>
 </body>
 </html>
-ketmathex/indexj.html
