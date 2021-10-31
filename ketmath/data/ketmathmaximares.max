@@ -1,0 +1,9 @@
+writefile("/Users/takatoosetsuo/gitlocal/ketcindysample/ketmath/fig/ketmathmaximares.txt")$/*##*/
+powerdisp:false$/*##*/
+display2d:false$/*##*/
+linel:1000$/*##*/
+dtLL:(1)/(6)*x^6+C-((1)/(5)*x)$/*##*/
+res:ratsimp(dtLL)$/*##*/
+disp(res)$/*##*/
+closefile()$/*##*/
+quit()$/*##*/

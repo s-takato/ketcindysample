@@ -1,0 +1,260 @@
+Ketinit();
+Addax(0);
+Setwindow([-6.7,6],[-5,5]);
+
+xL=[60];
+yL=apply(1..10,10);
+Tabledata("1",xL,yL,[],
+   [0,"Setwin=n","Move=[0,-5]","Msg=n"]);
+mv=[0,-5];
+
+maximaflg=1;
+if(maximaflg==1,
+  setdirectory(Dirdata);
+  import("scoreline1030.txt");
+  shL=line2list(shline);
+  caL=Line2list(caline);
+  sqLL=Line2list(sqline);
+  sqLL=apply(sqLL,#_(2..(length(#))));
+  ansLL=Line2list(ansline);
+  StdataLL=apply(ansLL,#_(1..3));
+  sall=length(StdataLL);
+  ansLL=apply(ansLL,#_(4..(length(#))));
+  dataLL=[];
+  maxLL=[];
+  qall=length(shL);
+  forall(1..sall,ns,
+    stL=StdataLL_ns;
+    if(stL_3!="未提出",
+      dataL=[];
+      maxL=[];
+      sqL=sqLL_ns;
+      ansL=ansLL_ns;
+      forall(1..qall,kq,
+        ans=ansL_kq;
+        if(indexof(ans,"---")==0,
+          if(indexof(ans,"=")>0,
+            ans=Strsplit(ans,"=");
+            ans=ans_(-1);
+          );
+          ca=caL_kq;
+          tmp=sqL_kq;
+          tmp1=ca_1;
+          tmp2=ca_tmp;
+          if(!isstring(tmp2),tmp2=text(tmp2));
+          if(indexof(tmp2,"=")>0,
+            tmp2=Strsplit(tmp2,"=");
+            tmp2=tmp2_(-1);
+          );
+          if(length(ans)==0,tmp="",tmp="-("+ans+")");
+          dataL=append(dataL,tmp);
+          tmp=Tomaxform(tmp2+tmp);
+          maxL=append(maxL,tmp);
+        );
+      );
+      dataLL=append(dataLL,prepend(ns,dataL));
+      maxLL=append(maxLL,prepend(ns,maxL));
+    );
+  );
+  cmdL=[
+    "dtLL:"+maxLL,[],
+    "res:ratsimp(dtLL)",[],
+    "res",[]
+  ];
+  CalcbyM("res",cmdL,[]);
+println(res);
+);
+
+if(quelineflg==1,
+  tmp=Que2line(1);
+  flg=tmp_1; fname=tmp_2;
+  if(flg==1,
+    dispL=[[fname,size]];
+    posxy=posxy-[0,0.6];
+    if(okflg==1,
+      fout=replace(fname,"queans","quline");
+      setdirectory(Dirdata);
+      fid=openfile(fout);
+      tmp="quline="+Dqq(quline)+";";
+      println(fid,tmp);
+      tmp="shline="+Dqq(shline)+";";
+      println(fid,tmp);
+      tmp="caline="+Dqq(caline)+";";
+      println(fid,tmp);
+      closefile(fid);
+      dispL=append(dispL,[fout,clrb]);
+      okflg=0;
+      quelineflg=0;
+    );
+  );
+);
+
+if(tasklineflg==1,
+  if(length(numL)==0,
+    sqline="";
+  );
+  tmp=Taskline();
+  flg=tmp_1; numL=tmp_2;
+  dispL=[];
+  forall(numL,
+    dispL=append(dispL,[#,size]);
+  );
+  if((okflg==1)&(flg==2),
+    fname=numL_1;
+    fout=replace(fname,"queans","taskline");
+    setdirectory(Dirdata);
+    fid=openfile(fout);
+    tmp="quline="+Dqq(quline)+";";
+    println(fid,tmp);
+    tmp="shline="+Dqq(shline)+";";
+    println(fid,tmp);
+    tmp="sqline="+Dqq(sqline)+";";
+    println(fid,tmp);
+    closefile(fid);
+    dispL=append(dispL,[fout,clrb]);
+    fout2=replace(fout,"taskline","stans");
+    if(!isexists(Dirdata,fout2),
+      fid=openfile(fout2);
+      closefile(fid);
+      dispL=append(dispL,[fout2,clrb]);
+    );
+    reset=0;
+    stquelineflg=0;
+  );
+);
+
+if(inserttaskflg==1,
+  tmp=Inserttaskline();
+  flg=tmp_1;fhtml=tmp_2; out=tmp_3;
+  dispL=[];
+  forall(numL,
+    dispL=append(dispL,[#,size]);
+  );
+  if((okflg==1)&(flg==2),
+    tmp=replace(numL_2,"taskline","");
+    tmp=replace(tmp,".txt","");
+    fout=replace(numL_1,"org",tmp);
+    setdirectory(Dircdy);
+    fid=openfile(fout);
+    forall(out,println(fid,#));
+    closefile(fid);
+    dispL=append(dispL,[fout,clrb]);
+    insertflg=0;
+    okflg=0;
+  );
+);
+
+if(scorelineflg==1,
+  tmp=Scoreline();
+  flg=tmp_1; out=tmp_2;
+  dispL=[];
+  forall(numL,
+    dispL=append(dispL,[#_2,size]);
+  );
+  if((okflg==1)&(flg==1),
+    fname=numL_3_2;
+    fout=replace(fname,"stans","scoreline");
+    setdirectory(Dirdata);
+    fid=openfile(fout);
+    forall(out,
+      println(fid,#);
+    );
+    closefile(fid);
+    dispL=append(dispL,[fout,clrb]);
+    fout2=replace(fname,"stans","result");
+    if(!isexists(Dirdata,fout2),
+      fid=openfile(fout2);
+      closefile(fid);
+      dispL=append(dispL,[fout2,clrb]);
+    );
+    stanslineflg=0;
+    okflg=0;
+  );
+);
+
+if(insertscoreflg==1,
+  tmp=Insertscoreline();
+  flg=tmp_1;fhtml=tmp_2; out=tmp_3;
+  dispL=[];
+  forall(numL,
+    dispL=append(dispL,[numL_1,size]); 
+    posxy=posxy-[0,0.6];
+  );
+  if((okflg==1)&(flg==2),
+    tmp=replace(numL_2,"scoreline","");
+    tmp=replace(tmp,".txt","");
+    fout=replace(numL_1,"org",tmp);
+    setdirectory(Dircdy);
+    fid=openfile(fout);
+    forall(out,println(fid,#));
+    closefile(fid);
+    dispL=append(dispL,[fout,clrb]);
+    insertfullflg=0;
+    okflg=0;
+  );
+);
+
+if(mkcardflg==1,
+  tmp=Makecards();
+  date=tmp_1;
+  dtLL=tmp_2;
+  dispL=[];
+  forall(numL,
+    dispL=append(dispL,[#,size]);
+  );
+  if((okflg==1)&(length(numL)==2),
+    fout="alldata"+date+".txt";
+    setdirectory(Dirdata);
+    fid=openfile(fout);
+    forall(dtLL,dtL,
+      forall(dtL,
+        println(fid,#);
+      );
+      println(fid,"");
+    );
+    closefile(fid);
+    forall(1..(length(dtLL)),nd,
+      tmp="000"+text(nd);
+      tmp=substring(tmp,length(tmp)-2,length(tmp));
+      fname="st"+tmp+"task"+date+".txt";
+      setdirectory(Dirdata+"/card");
+      fid=openfile(fname);
+      println(fid,date+"の結果");
+      forall(dtLL_nd,
+        println(fid,#);
+      );
+      closefile(fid);
+    );
+    dispL=append(dispL,[fout,clrb]);
+    mkcardflg=0;
+    okflg=0;
+  );
+);
+
+if(tableflg==1,
+  tmp=Resulttable();
+  fname=tmp_1; fout=tmp_2; out=tmp_3;
+  if(length(fname)>0,
+    dispL=[];
+    dispL=append(dispL,[fname,size]);
+    if(okflg==1,
+      setdirectory(Dirdata);
+      fid=openfile(fout);
+      forall(out,
+        println(fid,#);
+      );
+      closefile(fid);
+      dispL=append(dispL,[fout,clrb]);
+      Letter(posxy,"e",fout,append(size,clrb));
+      tableflg=0;
+      okflg=0;
+    );
+  );
+);
+
+posxy=posxy0;
+forall(dispL,
+  Letter(posxy,"e",#_1,#_2);
+  posxy=posxy-[0,0.6];
+);
+Windispg();

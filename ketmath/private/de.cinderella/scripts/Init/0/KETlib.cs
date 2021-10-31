@@ -1,0 +1,630 @@
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+makedir(Dircdy,"data");
+Dirdata=Dircdy+"data";
+
+//Text2.xy=[7,-5];//OK
+//Text6.xy=[9,-5];//Rest
+//Text8.xy=[-5.5,4.2];//Que to Line
+Text9.xy=[-6.5,4.2];//Make taskline
+Text0.xy=[-6.5,2.8];//Taskline>>Kettask
+Text10.xy=[-6.5,1.4];// Make scoreline
+Text11.xy=[-6.5,0];// Scoreline>>Ketscore
+Text3.xy=[-6.5,-1.4];// Make Card
+Text7.xy=[-6.5,-2.8];// Line,Txt to Csv
+
+quline="";
+shline="";
+caline="";
+reset=0;
+numL=[];
+dispL=[];
+origin="";
+tab=unicode("0009");
+dcm="::";
+posxy0=[7,0];
+posxy=posxy0;
+mp=[-10,-10];
+size=["Size=1.2"];
+clrb=append(size,"Color=blue");
+
+
+Resetflg():=(
+  quelineflg=0;
+  tasklineflg=0;
+  inserttaskflg=0;
+  scorelineflg=0;
+  insertscoreflg=0;
+  mkcardflg=0;
+  tableflg=0;
+  mp=[-10,-10];
+  dispL=[];
+  numL=[];
+  okflg=0;
+);
+
+Resetflg();
+
+month(mon):=(
+  regional(out);
+  if(mon=="Jan",out="01");
+  if(mon=="Feb",out="02");
+  if(mon=="Mar",out="03");
+  if(mon=="Apr",out="04");
+  if(mon=="May",out="05");
+  if(mon=="Jun",out="06");
+  if(mon=="Jul",out="07");
+  if(mon=="Aug",out="08");
+  if(mon=="Sep",out="09");
+  if(mon=="Oct",out="10");
+  if(mon=="Nov",out="11");
+  if(mon=="Dec",out="12");
+  out;
+);
+
+Datetimestr():=(
+  regional(out,tmp,tmp1);
+  tmp1=apply(date(),text(#));;
+  out=tmp1_1;
+  tmp=tmp1_2;
+  if(length(tmp)==1,tmp="0"+tmp);
+  out=out+tmp;
+  tmp=tmp1_3;
+  if(length(tmp)==1,tmp="0"+tmp);
+  out=out+tmp;
+  tmp1=apply(time(),text(#));
+  tmp=tmp1_1;
+  if(length(tmp)==1,tmp="0"+tmp);
+  out=out+tmp;
+  tmp=tmp1_2;
+  if(length(tmp)==1,tmp="0"+tmp);
+  out=out+tmp;
+  tmp=tmp1_3;
+  if(length(tmp)==1,tmp="0"+tmp);
+  out=out+tmp;
+  substring(out,4,length(out));
+);
+
+Getcurtime():=Getcurtime(date(),time());
+Getcurtime(ymd,hms):=(
+  regional(out,tmp,tmp1);
+  out=text(ymd_1*10000+ymd_2*100+ymd_3);
+  tmp=text(hms_1*3600+hms_2*60+hms_3);
+  tmp1=substring("0000000",0,5-length(tmp));
+  out=out+tmp1+tmp;
+  out;
+);
+
+Returndatetime(ydtorg):=(
+  regional(ydt,year,date,time,out,tmp,tmp1);
+  ydt=ydtorg;
+  if(!isstring(ydt),ydt=text(ydt));
+  tmp=indexof(ydt,"202");
+  year=substring(ydt,tmp-1,tmp+3);
+  date=substring(ydt,tmp+3,tmp+7);
+  tmp=substring(ydt,tmp+7,length(ydt));
+  if(isstring(tmp),tmp=parse(tmp));
+  out=[floor(tmp/3600)];
+  tmp=mod(tmp,3600);
+  out=append(out,floor(tmp/60));
+  tmp=mod(tmp,60);
+  tmp1=append(out,tmp);
+  out="";
+  forall(tmp1,
+    out=out+text(#)+":";
+  );
+  out=substring(out,0,length(out)-1);
+  [year,date,out];
+);
+
+List2line(stLL):=(
+  regional(tab,nn,nc,tmp,str,st,out);
+  tab=unicode("0009");
+  out="";
+  forall(1..(length(stLL)),nn,
+    st=stLL_nn;
+    str="";
+    forall(1..(length(st)),
+      tmp=st_#;
+      if(!isstring(tmp),tmp=format(tmp,10));
+      str=str+tmp+tab;
+    );
+    str=substring(str,0,length(str)-1);
+    out=out+str;
+    if(nn<length(stLL),out=out+"CR");
+  );
+  out;  
+);
+
+Line2list(strorg):=(
+  regional(tab,stL,st,nn,tL,mx,flg,tmp);
+  tab=unicode("0009");
+  str=replace(strorg,";;",tab);
+  flg=indexof(str,"::");
+  tL=[];
+  if(indexof(str,"CR")>0,
+    stL=tokenize(str,"CR");
+    forall(1..(length(stL)),nn,
+      st=stL_nn;
+      if(!isstring(st),st=format(st,10));
+      stL_nn=tokenize(st,tab);
+    );
+  ,
+    stL=tokenize(str,tab);
+    forall(1..(length(stL)),
+      tmp=stL_#;
+      if(indexof(tmp,"::")>0,tmp=tokenize(tmp,"::"));
+      stL_#=tmp;
+    );
+  );
+  stL;
+);
+
+Tablepos(tb,mv):=(
+  regional(tmp,tmp1,tmp2,cl,rw);
+  //global mp:mouse().xy, Dirdata
+  tmp1=apply(tb_1,#_1+mv_1);
+  tmp2=apply(tb_2,#_2+mv_2);
+  cl=0;
+  if((mp_1>tmp1_1)&(mp_1<tmp1_(-1)),
+    tmp=select(1..(length(tmp1)),tmp1_#>mp_1);
+    cl=tmp_1-1;
+  );
+  rw=0;
+  if((mp_2<tmp2_1)&(mp_2>tmp2_(-1)),
+    tmp=select(1..(length(tmp2)),tmp2_#<mp_2);
+    rw=tmp_(1)-1;
+  );
+  [cl,rw];
+);
+
+MakefileL(dfL):=(
+  regional(out,tmp,dir,selectL,fL,se,s);
+  out=[];
+  forall(1..(length(dfL)/2),nn,
+    dir=dfL_(2*nn-1);
+    tmp=dfL_(2*nn);
+    if(!islist(tmp),tmp=[tmp]);
+    selectL=apply(tmp,Strsplit(#,"*"));
+    fL=Filelist(dir);
+    forall(selectL,se,
+      tmp=fL;
+      forall(se,s,
+        tmp=select(tmp,indexof(#,s)>0);
+      );
+      out=concat(out,tmp);
+    );
+  );
+  out;
+);
+
+Selectfile(out):=(
+  regional(cl,rw,tmp);
+  //global mp:mouse().xy
+//  out=MakefileL(dfL);
+  Putcol(1,"l2",out);
+  tmp=Tablepos(tb1,mv);
+  cl=tmp_1; rw=tmp_2;
+  if(cl*rw>0,
+    tmp=[rw,out_rw];
+  ,
+    tmp=[0,""];
+  );
+  tmp;
+);
+
+Mkquline(fname):=(
+  regional(dt,qsL,nq,nn,qs,ge,cs,ce,ss,se,
+       tmp,tmp1,tmp2,tmp3);
+  //global quline,shline,caline
+  quline="";shline="";caline="";
+  dt=Readlines(Dirdata,fname);
+  dt=append(dt,"");
+  tmp=select(1..(length(dt)),
+        substring(dt_#,0,1)=="Q");
+  qsL=apply(tmp,#+1);
+  forall(1..(length(qsL)),nq,
+    qs=qsL_nq;
+    tmp=select(qs..(length(dt)),dt_#=="");
+    ce=tmp_1-1;
+    tmp1=select(qs..ce,dt_#=="Sheet");
+    tmp2=select(qs..ce,dt_#=="Ans");
+    cs=tmp2_1+1;
+    tmp3=dt_(cs..ce);
+    if(length(tmp1)>0,
+      qe=tmp1_1-1;
+      ss=tmp1_1+1;
+      se=tmp2_1-1;
+      tmp1=dt_(qs..qe);
+      tmp2=dt_(ss..se);
+    ,
+      qe=tmp2_1-1;
+      tmp1=dt_(qs..qe);
+      tmp2=tmp1;
+    );
+    tmp1_1="Q"+nq+dcm+tmp1_1;
+    forall(2..(length(tmp1)),nn,
+      tmp=tmp1_nn;
+      if(substring(tmp,0,1)=="[",
+        qs=indexof(tmp,"]");
+        tmp1_nn=substring(tmp,0,qs)+dcm
+              +substring(tmp,qs,length(tmp));
+      ,
+        tmp1_nn=dcm+tmp;
+      );
+    );
+    if(indexof(tmp2_1,"[")>0,
+      tmp2=prepend("Q"+nq+"---",tmp2);
+    ,
+      tmp2_1="Q"+nq+tmp2_1;
+    );
+    if(indexof(tmp3_1,"[")>0,
+      tmp3=prepend("Q"+nq+dcm,tmp3);
+    ,
+      tmp3_1="Q"+nq+dcm+tmp3_1;
+    );
+    forall(1..(length(tmp3)),nn,
+      tmp=tmp3_nn;
+      if(substring(tmp,0,1)=="[",
+        qs=indexof(tmp,"]");
+        tmp3_nn=substring(tmp,0,qs)+dcm              
+              +substring(tmp,qs,length(tmp));
+      );
+    );
+    forall(tmp1,quline=quline+#+tab);
+    forall(tmp2,shline=shline+#+tab);      
+    forall(tmp3,caline=caline+#+tab);
+  );
+  quline=substring(quline,0,length(quline)-1);
+  shline=substring(shline,0,length(shline)-1);
+  caline=substring(caline,0,length(caline)-1);
+);
+
+Que2line(ch):=(
+  regional(fname,fL,dt,qsL,nq,gs,qe,ss,se,cs,ce,
+    flg,nn,tmp,tmp1,tmp2,tmp3);
+  //global Dirdata,posxy0,posxy,reset,mp
+  //      quline,shline,caline
+  dt=[];
+  fname=""; quline=""; shline=""; caline="";
+  posxy=posxy0;
+  if(ch==1,
+    tmp=MakefileL([Dirdata,"queans"]);
+    tmp=Selectfile(tmp);
+  ,
+    dir=Dirdata;
+    fL=Filelist(Dirdata);
+    tmp=select(fL,indexof(#,"queans")>0);
+    tmp=[1,tmp_1];
+  );
+  if(tmp_1>0,
+    fname=tmp_2;
+    Mkquline(fname);
+    flg=1;
+  );
+  [flg,fname];
+);
+
+Taskline():=(
+  regional(fname,dt,stL,ns,quL,nn,nc,col,
+     tmp,tmp1,tmp2,tmp3);
+  //global Dirdata,posxy0,posxy,reset,mp
+  //    size,sqline
+  dt=[];
+  fname="";
+  tmp=MakefileL([Dirdata,["queans","student"]]);
+  tmp=Selectfile(tmp);
+  if(tmp_1>0,
+    fname=tmp_2;
+    if(indexof(fname,"queans")>0,
+      numL=[fname];
+    );
+    if((indexof(fname,"student")>0)&(length(numL)==1),
+      numL=append(numL,fname);
+      setdirectory(Dirdata);
+      Mkquline(numL_1);
+      quL=Line2list(quline);
+      dt=Readlines(Dirdata,fname);
+      if(indexof(dt_1,tab)>0,tmp=tab,tmp=",");
+      dt=apply(dt,Strsplit(#,tmp));
+      tmp=dt_1;
+      tmp=select(1..(length(tmp)),
+            indexof(tmp_#,"名前")>0);
+      if(length(tmp)>0,
+        col=tmp_1;tmp=2;
+      ,
+        tmp=1;
+        if(length(dt_1)==1,
+          col=1;tmp=1;
+        ,
+          col=3;tmp=2;
+        );
+      );
+      dt=dt_(tmp..length(dt));
+      stL=apply(dt,#_[col]);
+      forall(1..(length(stL)),ns,
+        tmp1=stL_ns;
+        forall(1..(length(quL)),nq,
+          tmp2=quL_nq;
+          nn=length(tmp2);
+          if(nn>1,
+            tmp=random(nn-1);
+            nc=min([floor(tmp)+1,nn-1]);
+            nc=nc+1;
+            tmp1=append(tmp1,text(nc));
+          ,
+            tmp1=append(tmp1,"1");
+          );
+        );
+        stL_ns=tmp1;
+      );
+      sqline=List2line(stL);
+    );
+  );
+  [length(numL),numL];
+);
+
+Inserttaskline():=(
+  regional(cl,rw,out,fL,out,cl,rw,
+    fhtml,fline,hdata,hall,ldata,ls,le,
+    out,tmp,tmp1,tmp2);
+  //global mp,tb1,mv,reset,numL
+  fhtml="";
+  tmp=MakefileL(
+     [Dircdy,"kettaskorg*html",Dirdata,"taskline"]);
+  tmp=Selectfile(tmp);
+  if(tmp_1>0,
+    if(indexof(tmp_2,"kettask")>0,
+      numL=[tmp_2];
+    ,
+      if(length(numL)==1,
+        numL=append(numL,tmp_2);
+      );
+      if(length(numL)==2,
+        numL_2=tmp_2;
+      );
+    );
+  );
+  if(length(numL)==2,
+    fhtml=numL_1;
+    hdata=Readlines(Dircdy,fhtml);
+    hall=length(hdata);
+    fline=numL_2;
+    ldata=Readlines(Dirdata,fline);
+    ls=select(1..hall,indexof(hdata_#,"linestart")>0);
+    ls=ls_1;
+    le=select(1..hall,indexof(hdata_#,"lineend")>0);
+    le=le_1;
+    out=hdata_(1..ls);
+    out=concat(out,ldata);
+    out=concat(out,hdata_(le..hall));
+    [length(numL),fhtml,out];
+  ,
+    [length(numL),"",[]];
+  );
+);
+
+Scoreline():=(
+  regional(fname,dt,nn,shL,sqL,ansL,queL,stqL,
+     namL,out,flg,tmp,tmp1,tmp2,tmp3);
+  //global Dirdata,posxy0,posxy,reset,mp
+  //    numL,size,saline
+  flg=0;
+  saline="";
+  dt=[];
+  fname="";
+  tmp=MakefileL([Dirdata,
+       ["queans","taskline","stans"]]);
+  tmp=Selectfile(tmp);
+  if(tmp_1>0,
+    numL=append(numL,tmp);
+    numL=set(numL);
+    numL=sort(numL,[#_1]);
+  );
+  if(length(numL)>=3,
+    fname=numL_1_2;
+    Mkquline(fname);
+    out=["quline="+Dqq(quline)+";",
+         "shline="+Dqq(shline)+";",
+         "caline="+Dqq(caline)+";"];
+    fname=numL_2_2;
+    setdirectory(Dirdata);
+    import(fname);
+    out=append(out,"sqline="+Dqq(sqline)+";");
+    sqL=Line2list(sqline);
+    fname=numL_3_2;
+    tmp=Readlines(Dirdata,fname);
+    dt=apply(tmp,Strsplit(#,";;"));
+    ansL=[];
+    forall(1..(length(sqL)),nn,
+      tmp1=[text(nn),sqL_nn_1];
+      tmp=select(dt,#_1==text(nn));
+      if(length(tmp)>0,
+        tmp=tmp_1;
+        tmp2=tmp_(3..(length(tmp)));
+        tmp=Returndatetime(tmp_2);
+        tmp=tmp_2+tmp_3;
+        tmp2=prepend(tmp,tmp2);
+        tmp1=concat(tmp1,tmp2);
+      ,
+        tmp1=append(tmp1,"未提出");
+        tmp1=concat(tmp1,shL);
+      );
+      ansL=append(ansL,tmp1);
+    );
+    ansline=List2line(ansL);
+    tmp="ansline="+Dqq(ansline)+";";
+    out=append(out,tmp);
+    flg=1;
+  );
+  [flg,out];
+);
+
+Insertscoreline():=(
+  regional(cl,rw,out,fL,out,cl,rw,
+    fhtml,fline,hdata,hall,ldata,ls,le,
+    out,tmp,tmp1,tmp2);
+  //global mp,tb1,mv,reset,numL
+  fhtml="";
+  tmp=MakefileL(
+      [Dircdy,"ketscoreorg*html",Dirdata,"scoreline"]);
+  tmp=Selectfile(tmp);
+  if(tmp_1>0,
+    if(indexof(tmp_2,"ketscore")>0,
+      numL=[tmp_2];
+    ,
+      if(length(numL)==1,
+        numL=append(numL,tmp_2);
+      );
+      if(length(numL)==2,
+        numL_2=tmp_2;
+      );
+    );
+  );
+  if(length(numL)==2,
+    fhtml=numL_1;
+    hdata=Readlines(Dircdy,fhtml);
+    hall=length(hdata);
+    fline=numL_2;
+    ldata=Readlines(Dirdata,fline);
+    ls=select(1..hall,indexof(hdata_#,"linestart")>0);
+    ls=ls_1;
+    le=select(1..hall,indexof(hdata_#,"lineend")>0);
+    le=le_1;
+    out=hdata_(1..ls);
+    out=concat(out,ldata);
+    out=concat(out,hdata_(le..hall));
+    [length(numL),fhtml,out];
+  ,
+    [length(numL),"",[]];
+  );
+);
+
+Makecards():=(
+  regional(dtLL,dtL,fname1,fname2,fout,qu,ca,all,
+     quL,caL,shL,sqLL,sqL,scLL,scL,nn,nq,date,
+     tmp,tmp1,tmp2);
+  //global numL
+  date="";
+  dtLL=[];
+  makedir(Dirdata,"card");
+  tmp1=MakefileL([Dirdata,"scoreline*txt"]);
+  tmp2=MakefileL([Dirdata,".txt"]);
+  tmp2=select(tmp2,indexof(#,"queans")==0);
+  tmp2=select(tmp2,indexof(#,"stans")==0);
+  tmp2=select(tmp2,indexof(#,"student")==0);
+  tmp2=select(tmp2,indexof(#,"task")==0);
+  tmp2=select(tmp2,indexof(#,"score")==0);
+  tmp2=select(tmp2,indexof(#,"alldata")==0);
+  tmp=Selectfile(concat(tmp1,tmp2));
+  if(tmp_1>0,
+    if(indexof(tmp_2,"scoreline")>0,
+      numL=[tmp_2];
+    ,
+      if(length(numL)==1,
+        numL=append(numL,tmp_2);
+      );
+      if(length(numL)==2,
+        numL_2=tmp_2;
+      );
+    );
+  );
+  if(length(numL)==2,
+    tmp=replace(numL_1,"scoreline","");
+    date=replace(tmp,".txt","");
+    setdirectory(Dirdata);
+    import(numL_1);
+    quL=Line2list(quline);
+    caL=Line2list(caline);
+    shL=Line2list(shline);
+    shL=apply(shL,replace(#,"---",""));
+    sqLL=Line2list(sqline);
+    tmp=Readlines(Dirdata,numL_2);
+    scLL=Line2list(tmp_1);
+    forall(1..(length(sqLL)),nn,
+      scL=scLL_nn;
+      if(scL_3=="未提出",
+        dtL=[scL_1+" "+scL_2+" "+scL_3];
+      ,
+        dtL=[scL_1+" "+scL_2+" "+substring(scL_3,0,4)];
+        scL=scL_(4..(length(scL)));
+        sqL=sqLL_nn;
+        sqL=sqL_(2..(length(sqL)));
+        all=length(sqL);
+        qu=apply(1..all,quL_#_1+" "+quL_#_(sqL_#));
+        ca=apply(1..all,caL_#_(sqL_#));
+        forall(1..all,nq,
+          tmp1=qu_nq;
+          tmp2=replace(scL_nq,shL_nq,"");
+          if(substring(tmp1,0,1)=="Q",
+            if(length(ca_nq)>0,
+              tmp1=[tmp1,"　正解 "+ca_nq];
+            ,
+              tmp1=[tmp1];
+              tmp2="";
+            );
+          ,
+            tmp1=[tmp1,"　正解 "+ca_nq];
+          );
+          dtL=concat(dtL,tmp1);
+          if(length(tmp2)>0,
+            tmp3=Strsplit(tmp2,"::");
+            if(length(tmp3_2)==0,tmp3_2="0");
+            tmp2=["　答え "+tmp3_1,"　得点 "+tmp3_2];
+            dtL=concat(dtL,tmp2);
+          );
+        );
+      );
+      dtLL=append(dtLL,dtL);
+    );
+  );
+  [date,dtLL];
+);
+
+Resulttable():=(
+  regional(fname,fout,dt,out,tmp,tmp1,tmp2);
+  //global tab;
+  fname=""; fout=""; out=[];
+  tmp=MakefileL(
+       [Dirdata,["alldata*txt"]]);
+  tmp=Selectfile(tmp);
+  if(tmp_1>0,
+    fname=tmp_2;
+    tmp=replace(fname,"alldata","");
+    date=replace(tmp,".txt","");
+    fout="tablescore"+date+".csv";
+    dt=Readlines(Dirdata,fname);
+    dt=append(dt,"");
+    spL=select(1..(length(dt)),dt_#=="");
+    out=[];
+    ls=1; le=spL_1-1; ctr=1;
+    while((ls<=le)&(ctr<200),
+      tmp1=replace(dt_ls," ",",");
+      forall(ls..le,n,
+        tmp2=dt_n;
+        if(indexof(tmp2,"得点")>0,
+          tmp=indexof(tmp2," ");
+          tmp1=tmp1+","+substring(tmp2,tmp,length(tmp2));
+        );
+      );
+      out=append(out,tmp1);
+      ctr=ctr+1;
+      ls=le+2; le=spL_ctr-1;
+    );
+    tmp=apply(out,Indexall(#,","));
+    tmp=apply(tmp,length(#));
+    tmp1=max(tmp)-2;
+    tmp2="";
+    repeat(tmp1,tmp2=tmp2+",0");
+    forall(1..(length(out)),n,
+      tmp=out_n;
+      if(indexof(tmp,"未提出")>0,
+        out_n=out_n+tmp2;
+      );
+    );
+  );
+  [fname,fout,out];
+);

@@ -1,0 +1,1 @@
+mp=mouse().xy;
