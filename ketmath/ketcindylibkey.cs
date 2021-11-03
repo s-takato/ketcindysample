@@ -725,7 +725,7 @@ Line2list(strorg):=(
   tab=unicode("0009");
   str=replace(strorg,";;",tab);
   flg=indexof(str,"::");
-  tL=[];
+   tL=[];
   if(indexof(str,"CR")>0,
     stL=tokenize(str,"CR");
     forall(1..(length(stL)),nn,

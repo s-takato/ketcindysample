@@ -186,9 +186,7 @@ Totexform(str):=( //210803from[renew]
         if(nn==1,
           tmp1=substring(out,plv_1_1,length(out)-1);
           if(contains(parL,fun), //210901from
-            if(Addpar(tmp1), //210909from
-              tmp1="("+tmp1+")";
-            ); //210909to
+            tmp1=addpar(tmp1); //211029
           ); //210901to
           out=replace(rep_2_1,"xx",tmp1);
         );
@@ -196,9 +194,7 @@ Totexform(str):=( //210803from[renew]
           tmp1=substring(out,plv_1_1,clv_1_1-1);
           tmp2=substring(out,clv_1_1,length(out)-1);
           if(contains(parL,fun), //210901from
-           if(Addpar(tmp2), //210909from
-              tmp2="("+tmp2+")";
-            ); //210909to
+            tmp2=Addpar(tmp2); //211029
           ); //210901to
           tmp=replace(rep_2_2,"xx",tmp1);
           out=replace(tmp,"yy",tmp2);
@@ -208,9 +204,7 @@ Totexform(str):=( //210803from[renew]
           tmp2=substring(out,clv_1_1,clv_2_1-1);
           tmp3=substring(out,clv_2_1,length(out)-1);
           if(contains(parL,fun), //210901from
-            if(Addpar(tmp3), //210909from
-              tmp3="("+tmp3+")";
-            ); //210909to
+            tmp3=Addpar(tmp3); //211029
           ); //210901to
           tmp=replace(rep_2_3,"xx",tmp1);
           tmp=replace(tmp,"yy",tmp2);
@@ -222,9 +216,7 @@ Totexform(str):=( //210803from[renew]
           tmp2=substring(out,clv_1_1,clv_2_1-1);
           tmp3=substring(out,clv_2_1,clv_3_1-1);
           if(contains(parL,fun), //210901from
-            if(Addpar(tmp3), //210909from
-              tmp3="("+tmp3+")";
-            ); //210909to
+            tmp3=Addpar(tmp3); //211029
           ); //210901to
           tmp4=substring(out,clv_3_1,length(out)-1);
           tmp=replace(rep_2_4,"xx",tmp1);
@@ -243,23 +235,31 @@ Totexform(str):=( //210803from[renew]
   out;
 );
 Addpar(str):=(
-  regional(num,add,tmp);
-  if(length(str)==0,
-    add=(1==0);
-  ,
-    add=(length(str)>=2)&(str!="{\pi}");
-    num=apply(0..9,text(#));
-    tmp=apply(1..(length(str)),str_#);
-    tmp=sort(tmp);
-    add=add&(common(num,tmp)!=tmp);
-    tmp=Indexall(str,"^");
-    add=add&(length(tmp)!=1);
-    add=add&(str_1!="(");
-    forall(["+","-","/"], //210923from
-      add=add%(indexof(str,#)>0);
-    ); //210923to
+  regional(num,out,add,tmp);
+  out=str;
+  if(length(str)>0,
+    if(substring(str,0,1)=="!",
+      if(substring(str,1,2)!="!",
+        out=substring(str,1,length(str));
+      ,
+        out="("+substring(str,2,length(str))+")";
+      );
+    ,
+      add=(length(str)>=2)&(str!="{\pi}");
+      num=apply(0..9,text(#));
+      tmp=apply(1..(length(str)),str_#);
+      tmp=sort(tmp);
+      add=add&(common(num,tmp)!=tmp);
+      tmp=Indexall(str,"^");
+      add=add&(length(tmp)!=1);
+      add=add&(str_1!="(");
+      forall(["+","-","/"], //210923from
+        add=add%(indexof(str,#)>0);
+      ); //210923to
+      if(add,out="("+out+")");
+    );
   );
-  add;
+  out;
 );
 Listplot(list):=Listplot(list,[]);
 Listplot(Arg1,Arg2):=(
@@ -2641,6 +2641,7 @@ Ketcindyjsscale=1;
 aalinestart=1;
 ansline="";
 caline="";
+mrkline="";
 quline="";
 shline="";
 sqline="";
@@ -3216,7 +3217,7 @@ Line2list(strorg):=(
   tab=unicode("0009");
   str=replace(strorg,";;",tab);
   flg=indexof(str,"::");
-  tL=[];
+   tL=[];
   if(indexof(str,"CR")>0,
     stL=tokenize(str,"CR");
     forall(1..(length(stL)),nn,
@@ -3254,7 +3255,7 @@ tposL=apply(1..nt,[px,12-3.5*(#-1)]);
 Keyname():=(
   regional(nL,tmp1);
   nL=[
-    ["°","＠","[","]","|","d","e","f","g","a","b","c","sin","sq",")","7","8","9","＋","lim","cas"],
+    ["°","＠","[","]","|","d","e","f","g","a","b","c","sin","sq",")","7","8","9","＋","lim","case"],
     ["$\times$","!","{","}","$\neq$","h","i","j","k","x","y","z","cos","fr",",","4","5","6","ー","int","tx"],
     ["・",":",";","$\leq$","$\geq","l","m","n","o","r","s","t","tan","tfr","(","1","2","3","＊","'","$\infty$"],
     ["\","$\pm$","$\mp$","<",">","p","q","u","v","w","_","=","log","ln","^","0",".","sp","／","$\sum$","pi"]
@@ -3403,6 +3404,7 @@ Adddrw(str):=(
 
 quL=Line2list(quline);
 caL=Line2list(caline);
+mrkL=Strsplit(mrkline,tab);
 sqLL=Line2list(sqline);
 stall=length(sqLL);
 ansLL=Line2list(ansline);
@@ -3522,6 +3524,7 @@ if(stnum>0,
       Subsedit(2,ansL_nqu);
       StrL_2=ansL_nqu;
       npos=length(ansL_nqu);
+      fmark=mrkL_nqu;
       nqinc=0;
     );
     Subsedit(10,"q="+text(nqu));
@@ -3639,7 +3642,7 @@ var cdy = CindyJS({
     {name: "T2", type: "Free", pos: [4.0, -2.0, -0.23529411764705882], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T3", type: "Free", pos: [4.0, 2.6666666666666665, 0.2222222222222222], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T4", type: "Free", pos: [4.0, 1.8888888888888888, 0.2222222222222222], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T5", type: "Free", pos: [-2.84375000000002, -4.0, 0.16393678496562275], color: [0.0, 0.0, 1.0], labeled: false, size: 2.0, border: true },
+    {name: "T5", type: "Free", pos: [-2.8437500000000204, -4.0, 0.16393678496562275], color: [0.0, 0.0, 1.0], labeled: false, size: 2.0, border: true },
     {name: "Text47", type: "Button", pos: [4.0, -1.1758241758241759, 0.1152729779870136], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "　", textsize: 18.0},
     {name: "Text101", type: "Button", pos: [4.0, 0.3295194508009153, 0.09153318077803203], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.5, script: "funflg=1;name=\"Delete()\";", text: "DEL", textsize: 18.0},
     {name: "Text24", type: "Button", pos: [4.0, -0.8934076684603043, 0.1299506266078815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"sin(\";", text: "　", textsize: 18.0},
@@ -3750,13 +3753,13 @@ var cdy = CindyJS({
     {name: "Text118", type: "Button", pos: [4.0, 0.5236363636363637, 0.07272727272727272], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1000;", text: "<<", textsize: 18.0},
     {name: "Text4", type: "Button", pos: [4.0, 0.4270512882138652, 0.05892657957494774], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: ">", textsize: 18.0},
     {name: "Text119", type: "Button", pos: [4.0, 0.41587014603666067, 0.05660821209620594], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1000;", text: ">>", textsize: 18.0},
-    {name: "Text98", type: "Button", pos: [4.0, 0.1894372976518369, 0.05660821209620593], color: [0.0, 0.0, 0.0], fillcolor: [0.714, 1.0, 0.667], fillalpha: 0.27272728085517883, script: "score=\"10\";", text: "10", textsize: 18.0}
+    {name: "Text98", type: "Button", pos: [4.0, 0.1894372976518369, 0.05660821209620593], color: [0.0, 0.0, 0.0], fillcolor: [0.714, 1.0, 0.667], fillalpha: 0.27272728085517883, script: "score=fmark;", text: "full", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
     width: 1117,
-    height: 554,
-    transform: [{visibleRect: [-29.8800388273269, 26.162904810530254, 76.58249185887453, -26.639460453709308]}],
+    height: 538,
+    transform: [{visibleRect: [-29.8800388273269, 26.162904810530254, 76.58249185887453, -25.114482395536324]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
