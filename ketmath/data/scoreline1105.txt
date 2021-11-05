@@ -1,7 +1,0 @@
-quline="Q1::次の値を求めよ	[1]:: sin(15(deg))::sin(75(deg))	[2]:: cos(75(deg))::cos(15(deg))	Q2::加法定理を用いてsin(pi-x)=sin(x)を証明せよ．";
-shline="Q1---	[1]=	[2]=	Q2解=";
-caline="Q1::	[1]:: fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)	[2]:: fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)	Q2::sin(pi)cos(x)-cos(pi)sin(x)=sin(x)";
-mrkline="	5	5	10";
-mxscline="	1	1	-1	";
-sqline="ゆめちゃん	2	2	3	2CRゆるナキン	2	3	3	2CRつるゴン	2	2	3	2CR安田朗	2	2	3	2CRとよのん	2	3	3	2";
-ansline="1	ゆめちゃん	110514:27:17	Q1---	[1]=1	[2]=2	Q2解=sin(pi)cos(x)-cos(pi)sin(x)=sin(x)CR2	ゆるナキン	110515:5:12	Q1---	[1]=	[2]=	Q2解=CR3	つるゴン	110514:31:47	Q1---	[1]=fr(sq(6)-sq(2),4)	[2]=fr(sq(3),2)	Q2解=CR4	安田朗	未提出CR5	とよのん	未提出";

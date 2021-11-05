@@ -2640,7 +2640,6 @@ Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 aalinestart=1;
 ansline="";
-caline="";
 mrkline="";
 quline="";
 shline="";
@@ -3448,7 +3447,6 @@ dxL_13=40; dxL_14=37;
 dxL_20=40; dxL_21=37;
 
 Keytable(0,dxL,4,32.5,poskey,[1,1,0],nameL,[0,-0.5],22);
-Keytable(5,43,1,35,[43,2.2],[1,0,0]);
 
 Putpoint("T1",tposL_1,T1.xy);
 Putpoint("T3",tposL_3,T3.xy);
@@ -3493,7 +3491,10 @@ if(abs(stnuminc)>0,
   caL=caLL_stnum;
   ansL=ansLL_stnum;
   ansall=length(ansL);
-  npos=length(ansL_1);
+  tmp=ansL_nqu;
+  StrL_ch=tmp;
+  npos=length(tmp);
+  Subsedit(ch,tmp);
   tmp=text(StdataLL_stnum);
   tmp=substring(tmp,1,length(tmp)-1);
   Subsedit(32,"St="+tmp);
@@ -3758,8 +3759,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1117,
-    height: 538,
-    transform: [{visibleRect: [-29.8800388273269, 26.162904810530254, 76.58249185887453, -25.114482395536324]}],
+    height: 566,
+    transform: [{visibleRect: [-29.8800388273269, 26.162904810530254, 76.58249185887453, -27.783193997339048]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

@@ -10,7 +10,7 @@ Ans
 [2] fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)
 
 Q11052
-加法定理を用いてsin(pi-x)=sin(x)を証明せよ．
+加法定理を用いて//sin(pi-x)=sin(x)を証明せよ．
 Sheet
 解=  ::10::-1
 Ans
