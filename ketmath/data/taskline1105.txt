@@ -1,0 +1,5 @@
+quline="Q1::次の値を求めよ	[1]:: sin(15(deg))::sin(75(deg))	[2]:: cos(75(deg))::cos(15(deg))	Q2::加法定理を用いてsin(pi-x)=sin(x)を証明せよ．";
+shline="Q1---	[1]=	[2]=	Q2解=";
+sqline="ゆめちゃん	2	2	3	2CRゆるナキン	2	3	3	2CRつるゴン	2	2	3	2CR安田朗	2	2	3	2CRとよのん	2	3	3	2";
+mrkline="	5	5	10";
+mxscline="	1	1	-1	";

@@ -4,7 +4,7 @@
 \newcommand{\hako}[2][6mm]{\fbox{$\mathstrut$\Ctab{#1}{#2}}}
 \newcommand{\dint}{\displaystyle\int}
 \newcommand{\dlim}{\displaystyle\lim}
-\newcommand{\dc}{:\hspace{1mm}:}
+\newcommand{\dc}{:\hspace{0.1mm}:}
 
 
 \setmargin{25}{150}{15}{100}%
@@ -99,12 +99,12 @@ item::タイトル行　\verb|Q...|\\
 小問（番号は[1]...）\\
 Sheet\\
 解答欄の作成\\
-「\dc」の後に配点を書く\\
+「\dc」の後に配点を書く（Maximaでの採点をしない欄には，さらに\dc $-1$）\\
 Ans\\
 解答\\
-１行空白行をおく
-item::1つの問題に複数の選択肢を与えるときは: \hspace{-2mm}:(ダブルコロン)で区切る．
-item::ファイル名は\verb|queans1030(=date).txt|などとしてdataに入れる．
+１行空白行をおく\vspace{-2mm}
+item::1つの問題に複数の選択肢を与えるときは\dc で区切る．\vspace{-2mm}
+item::ファイル名は\verb|queans1030(=date).txt|などとしてdataに入れる．\vspace{-2mm}
 end
 
 %%%%%%%%%%%%%
@@ -113,19 +113,17 @@ new::問題と解答の作成例
 \slidepage
 
 itemize
-item::[]
-\begin{verbatim}
-Q09271
-次を求めよ，
-[1]int(,,x^4,x)::int(,,x^5,x)
-[2]int(0,2,x^4,x)::int(0,2,x^5,x)
-Sheet
-[1]=  ::10
-[2]=  ::10
-Ans
-[1]fr(1,5)x^5+C::fr(1,6)x^6+C
-[2]br(fr(1,5)x^5,0,2)=fr(32,5)::fr(32,5)
-\end{verbatim}
+item::[]Q11051\\
+次の値を求めよ\\
+$[1]$ sin(15(deg))\dc sin(75(deg))\\
+$[2]$ cos(75(deg)0\dc cos(15(deg))\\
+Sheet\\
+$[1]$= \ \ \dc 5\\
+$[2]$= \ \ \dc 5\\
+Ans\\
+$[1]$ fr(sq(6)-sq(2),4)\dc fr(sq(6)+sq(2),4)\\
+$[2]$ fr(sq(6)-sq(2),4)\dc fr(sq(6)+sq(2),4)\\
+　　(空白行)
 end
 
 %%%%%%%%%%%%%
@@ -134,43 +132,12 @@ new::問題と解答の作成例(続)
 \slidepage
 
 itemize
-item::[]
-\begin{verbatim}
-Q09272
-int(0,1,2x+1,x)を求めよ．::int(0,1,x+1,x)を求めよ．
-Sheet
-=  ::10
-Ans
-2::3
-Q09273
-sin(fr(pi),2)=1, sin(fr(pi))=0を用いて//次の定積分を求めよ．
-[1]int(0,tfr(pi,2),2cos(x),x) 
-[2]int(0,pi,3sin(x),x)
-Sheet
-[1]=  ::10
-[2]=  ::10
-\end{verbatim}
-end
-
-%%%%%%%%%%%%%
-new::問題と解答の作成例(続)
-%%repeat=3
-\slidepage
-
-itemize
-item::[]
-\begin{verbatim}
-Ans
-[1]2
-[2]6
-
-Q09274
-int(0,1,e^x,x)を計算せよ
-Sheet
-= ::10
-Ans
-e-1
-\end{verbatim}
+item::[]Q11052\\
+加法定理を用いてsin(pi-x)=sin(x)を証明せよ\\
+Sheet\\
+解=  \ \ \dc 10\dc-1\\
+Ans\\
+sin(pi)cos(x)-cos(pi)sin(x)=sin(x)
 end
 
 %%%%%%%%%%%%%

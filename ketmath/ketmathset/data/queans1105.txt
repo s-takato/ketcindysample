@@ -1,0 +1,17 @@
+Q11051
+次の値を求めよ
+[1] sin(15(deg))::sin(75(deg))
+[2] cos(75(deg))::cos(15(deg))
+Sheet
+[1]=  ::5
+[2]=  ::5
+Ans
+[1] fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)
+[2] fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)
+
+Q11052
+加法定理を用いてsin(pi-x)=sin(x)を証明せよ．
+Sheet
+解=  ::10::-1
+Ans
+sin(pi)cos(x)-cos(pi)sin(x)=sin(x)
