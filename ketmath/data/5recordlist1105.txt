@@ -1,0 +1,36 @@
+1 ゆめちゃん 1109
+Q1 次の値を求めよ
+[1]  sin(15(deg))
+　正解  fr(sq(6)-sq(2),4)
+　答え 2
+　得点 0
+[2]  cos(75(deg))
+　正解  fr(sq(6)-sq(2),4)
+　答え 3
+　得点 0
+Q2 加法定理を用いて//sin(pi-x)=sin(x)を証明せよ．
+　正解 sin(pi)cos(x)-cos(pi)sin(x)=sin(x)
+　答え sin(pi)cos(x)-cos(pi)sin(x)
+　得点 5
+
+2 ゆるナキン 1109
+Q1 次の値を求めよ
+[1] sin(75(deg))
+　正解 fr(sq(6)+sq(2),4)
+　答え fr(sq(6)-sq(2),4)
+　得点 5
+[2]  cos(75(deg))
+　正解  fr(sq(6)-sq(2),4)
+　答え fr(sq(6)-sq(2),4)
+　得点 5
+Q2 加法定理を用いて//sin(pi-x)=sin(x)を証明せよ．
+　正解 sin(pi)cos(x)-cos(pi)sin(x)=sin(x)
+　答え 
+　得点 0
+
+3 つるゴン 未提出
+
+4 安田朗 未提出
+
+5 とよのん 未提出
+

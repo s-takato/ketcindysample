@@ -16,6 +16,7 @@
 
 println("ketcindylibkey[20211022 loaded"); // no ketjs
 
+// 211109 Dispposition changed (length of seg, nonascii)
 // 211022 List2line, Line2list added
 // 211012 Keytable changed ( for (0,xL,0,yL,... ) )
 // 210917 Setkeypos added, Alltextkey changed (position)
@@ -486,23 +487,37 @@ Gettexform(str):=(
   strt;
 );
 
-Dispposition(pos,npos,str):=(
-  regional(tmp,tmp1,tmp2,dp,p1,p2,p3,p4);
-  dp=[0,3];
+Dispposition(pos,npos,str):=Dispposition(pos,3,npos,str);
+Dispposition(pos,len,npos,str):=(
+  regional(ascii,tmp,tmp1,tmp2,dp,p1,p2,p3,p4,n,ctr);
+  ascii=apply(32..126,unicode(text(#),base->10));
+  dp=[0,len];
   tmp=[0.1,0];
   p1=pos-tmp;  p2=pos+tmp;
   p3=p1+dp; p4=p2+dp;
   Listplot("-disp",[p1,p2,p4,p3,p1],["nodisp","Msg=n"]);
   Shade(["disp"],["Color=red"]);
-  if(length(str)>0,
-    tmp=max([0,npos-4]);
-    tmp1=substring(str,tmp,npos);
-    tmp=min([length(str),npos+4]);
-    tmp2=substring(str,npos,tmp);
+  if(length(str)>0, //211109from
+    n=npos;
+    ctr=0;
+    while((n>0)&(ctr<4),
+      tmp=substring(str,n-1,n);
+      if(contains(ascii,tmp),ctr=ctr+1,ctr=ctr+2);
+      n=n-1;
+    ); 
+    tmp1=substring(str,n,npos);
+    n=npos+1;
+    ctr=0;
+    while((n<=length(str))&(ctr<4),
+      tmp=substring(str,n-1,n);
+      if(contains(ascii,tmp),ctr=ctr+1,ctr=ctr+2);
+      n=n+1;
+    );  
+    tmp2=substring(str,npos,n-1);
     p1=pos+1/3*dp;
-    drawtext(p1,tmp1,size->24,align->"right");
-    drawtext(p1,tmp2,size->24,align->"left");
-  );
+    drawtext(p1,tmp1,size->22,align->"right");
+    drawtext(p1,tmp2,size->22,align->"left");
+  ); //211109to
 );
 
 Addfunstr(name,npos,strnow):=(
@@ -516,8 +531,9 @@ Addfunstr(name,npos,strnow):=(
   out;
 );
 
-Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22); //210629
-Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=(
+Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22,1); //210629
+Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz,1);
+Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz,shade):=(
   // Keytable(5,20,3,10,....)
   // Keytable(0,dxL,0,dyL,...)
   regional(xL,yL,plt,prt,prb,row,col,name,tmp1,tmp2,pos);
@@ -540,7 +556,9 @@ Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=(
     );
   );  //211012to
   plt=[xL_1,yL_1]; prt=[xL_(-1),yL_1]; prb=[xL_(-1),yL_(-1)];
-  fillpoly([plb,plt,prt,prb,plb],color->clr);
+  if(shade==1,
+    fillpoly([plb,plt,prt,prb,plb],color->clr);
+  );
   forall(xL,draw([#,plb_2],[#,plt_2],color->[0,0,0]));
   forall(yL,draw([plb_1,#],[prb_1,#],color->[0,0,0]));
   if(length(nameL)>0,
@@ -553,7 +571,7 @@ Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=(
         tmp1=xL_col;
         tmp2=xL_(col+1);
         pos_1=(tmp1+tmp2)/2;
-        drawtext(pos+nmove,name,align->"mid",size->sz);
+       drawtext(pos+nmove,name,align->"mid",size->sz);
       );
     );
   );

@@ -84,12 +84,12 @@ item::サブフォルダdataを作成する．
 item::学生リスト(txtまたはcsv)を作成してdataに入れる．\\
 ・txtの場合\\
 　　ファイル名は student2021.txtなどとして，1行ずつ名前を入れる．
-item::問題と正解のファイルqueans(+date).txtを作成してdataに入れる．\\
+item::問題と正解のファイルquestion(+date).txtを作成してdataに入れる．\\
 　詳細は次ページに記述
 end
 
 %%%%%%%%%%%%%
-new::問題と解答の作成(queans)
+new::問題と解答の作成(questiion.txt)
 %%repeat=3
 \slidepage
 
@@ -104,7 +104,7 @@ Ans\\
 解答\\
 １行空白行をおく\vspace{-2mm}
 item::1つの問題に複数の選択肢を与えるときは\dc で区切る．\vspace{-2mm}
-item::ファイル名は\verb|queans1030(=date).txt|などとしてdataに入れる．\vspace{-2mm}
+item::ファイル名は\verb|question1030(=date).txt|などとしてdataに入れる．\vspace{-2mm}
 end
 
 %%%%%%%%%%%%%
@@ -147,15 +147,15 @@ new::taskline.txtの作成
 
 itemize
 item::\verb|toolketmath.cdy|を立ち上げる．
-item::「Make Taskline」のボタンを押す．\\
-　queans, studentのファイルが表示される．
+item::「1.tasklineを作成」のボタンを押す．\\
+　question, studentのファイルが表示される．
 item::それらのファイルを順にクリック\\
 　右下にファイル名が表示される．
 item::OKボタンを押す．\\
-・tasklineのテキストファイルがdataに作成される．\\
-　　注）ファイル名にはquansの日付が付加される．\\
-・青字でtasklineのファイル名が表示される．\\
-・学生の解答を入れるstans(+date).txtというファイルができる
+・1taskline(+date).txtのファイルがdataに作成される．\\
+　　注）ファイル名にはquestionの日付が付加される．\\
+・青字で1tasklineのファイル名が表示される．\\
+・学生の解答を入れる2anssheet(+date).txtというファイルもできる
 item::\verb|toolketmath.cdy|は立ち上げたままにしておく．
 end
 
@@ -166,13 +166,13 @@ new::kettask.htmlの作成と出題
 
 itemize
 item::toolketmath.cdyを立ち上げる(終了した場合)．
-item::「Taskline\verb|>|Kettask」のボタンを押す．\\
-　kettaskuorg.htmlとtaskline(+date).txtのファイルが表示される．
+item::「2|Kettaskに組込」のボタンを押す．\\
+　kettaskorg.htmlと1taskline(+date).txtのファイルが表示される．
 item::それらのファイルを順にクリック\\
 　右下にファイル名が表示される．
 item::OKボタンを押す．\\
-・kettask(+date).htmoがDircdyに作成される．\\
-　　注）ketaskoroにtasklineを挿入した課題ファイルである．
+・kettask(+date).htmlがDircdyに作成される．\\
+　　注）ketaskorgに1tasklineを挿入した課題ファイルである．
 item::このファイルをwebサイトにおき，URLを学生に知らせる．\\
 ・これが出題になる．
 end
@@ -192,7 +192,7 @@ item::赤いボタンの上の窓にページ番号が表示される．\\
 ・「---」のあるページには入力できない．
 item::解答が終わったら，「Rec」ボタンを押すと欄3にすべての解答が入る．
 item::「すべてを選択」＞「コピー」\vspace{-2mm}
-item::提出用の欄などにペーストして送信する
+item::提出用の欄(メール)などにペーストして送信する
 end
 
 %%%%%%%%%%%%%
@@ -201,18 +201,18 @@ new::採点
 \slidepage
 
 itemize
-item::提出された解答をstans(+date).txtにコピーする．\\
+item::提出された解答を2anssheet(+date).txtにコピーする．\\
 ・GoogleClassroomのデータをそのままコピペしてもよい．\\
 ・不要な行の削除やソーティングはKeTMathが行う．\vspace{-2mm}
 item::toolketmath.cdyを立ち上げる\\
-・「Make Scoreline」のボタンを押す．\\
+・「3.scorelineを作成」のボタンを押す．\\
 ・表示されるファイルを順にクリックして，OKを押す．\\
-・scoreline(+date).txtとscoredata.txtができる．\\
-・「Scoreline\verb|>|Ketscore」を押してketscore(+date).htmlを作る．\vspace{-2mm}
+・3scoreline(+date).txtと4gradeline.txtができる．\\
+・「4.ketscoreに組込」を押してketscore(+date).htmlを作る．\vspace{-2mm}
 item::ketscore(+date).htmlを立ち上げる\\
 ・上の紫ボタンで学生番号，赤ボタンの上のボタンで問題番号を変える．\\
 ・ダブルコロンの後に点数をキーボードで入れる．\\
-・採点が済んだらRecを押し，欄3をscoredata.txtにコピペする\vspace{-2mm}
+・採点が済んだらRecを押し，欄3を4gradeline.txtにコピペする\vspace{-2mm}
 end
 
 %%%%%%%%%%%%%
@@ -221,8 +221,10 @@ new::配付用成績表と得点一覧ファイルの作成
 \slidepage
 
 itemize
-item::「Make card」で配付用成績表とalldata(+date).txtができる．
-item::「Make table」で得点データのcsvファイルtablescore(+date).csvができる．
+item::「5.成績表を作成」で個人成績表と全体5recordlist(+date).txtができる．
+item::「6.得点csvを作成」で得点データのcsvファイル\\
+\hspace*{3zw}6scoretable(+date).csv\\
+ができる．
 end
 
 
