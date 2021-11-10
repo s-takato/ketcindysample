@@ -99,7 +99,7 @@ item::タイトル行　\verb|Q...|\\
 小問（番号は[1]...）\\
 Sheet\\
 解答欄の作成\\
-「\dc」の後に配点を書く（Maximaでの採点をしない欄には，さらに\dc $-1$）\\
+「\dc」の後に配点を書く\\
 Ans\\
 解答\\
 １行空白行をおく\vspace{-2mm}
@@ -133,11 +133,12 @@ new::問題と解答の作成例(続)
 
 itemize
 item::[]Q11052\\
-加法定理を用いてsin(pi-x)=sin(x)を証明せよ\\
+sin(x-fr(pi,4))をsin(x),cos(x)で表せ．//　加法定理を用いよ．\\
 Sheet\\
-解=  \ \ \dc 10\dc-1\\
+=  \dc 10\\
 Ans\\
-sin(pi)cos(x)-cos(pi)sin(x)=sin(x)
+sin(x)cos(fr(pi,4))-cos(x)sin(fr(pi,4))//=fr(1,sq(2))(sin(x)-cos(x)) \\
+
 end
 
 %%%%%%%%%%%%%
@@ -166,15 +167,15 @@ new::kettask.htmlの作成と出題
 
 itemize
 item::toolketmath.cdyを立ち上げる(終了した場合)．
-item::「2|Kettaskに組込」のボタンを押す．\\
-　kettaskorg.htmlと1taskline(+date).txtのファイルが表示される．
+item::「2.kettaskに組込」のボタンを押す．\\
+　kettaskorg.htmlと1taskline(+date).txtが表示される．
 item::それらのファイルを順にクリック\\
 　右下にファイル名が表示される．
 item::OKボタンを押す．\\
 ・kettask(+date).htmlがDircdyに作成される．\\
 　　注）ketaskorgに1tasklineを挿入した課題ファイルである．
 item::このファイルをwebサイトにおき，URLを学生に知らせる．\\
-・これが出題になる．
+$\Longrightarrow$\ これが出題になる．
 end
 
 
@@ -188,7 +189,7 @@ item::配付されたリンク先をクリック
 item::欄3のStudent=の後に番号をキーボードで入力してOKを押す．
 item::名前を確認して解答用の欄2に答えを入力
 item::赤いボタンの上の窓にページ番号が表示される．\\
-・白い矢印を押してページ番号をを変えて．回答する．\\
+・白い矢印を押してページ番号を変えて．解答する．\\
 ・「---」のあるページには入力できない．
 item::解答が終わったら，「Rec」ボタンを押すと欄3にすべての解答が入る．
 item::「すべてを選択」＞「コピー」\vspace{-2mm}
@@ -207,12 +208,12 @@ item::提出された解答を2anssheet(+date).txtにコピーする．\\
 item::toolketmath.cdyを立ち上げる\\
 ・「3.scorelineを作成」のボタンを押す．\\
 ・表示されるファイルを順にクリックして，OKを押す．\\
-・3scoreline(+date).txtと4gradeline.txtができる．\\
+・3scoreline(+date).txtと4scoresheet.txtができる．\\
 ・「4.ketscoreに組込」を押してketscore(+date).htmlを作る．\vspace{-2mm}
 item::ketscore(+date).htmlを立ち上げる\\
-・上の紫ボタンで学生番号，赤ボタンの上のボタンで問題番号を変える．\\
+・上の紫ボタンで学生番号，灰色ボタンの上のボタンで問題番号を変える．\\
 ・ダブルコロンの後に点数をキーボードで入れる．\\
-・採点が済んだらRecを押し，欄3を4gradeline.txtにコピペする\vspace{-2mm}
+・採点が済んだらRecを押し，欄3を4scoresheet.txtにコピペする\vspace{-2mm}
 end
 
 %%%%%%%%%%%%%
@@ -221,10 +222,27 @@ new::配付用成績表と得点一覧ファイルの作成
 \slidepage
 
 itemize
-item::「5.成績表を作成」で個人成績表と全体5recordlist(+date).txtができる．
-item::「6.得点csvを作成」で得点データのcsvファイル\\
-\hspace*{3zw}6scoretable(+date).csv\\
+item::「5.成績表を作成」を押すと次ができる\\
+　　　サブフォルダcardに個人成績票\\
+　　　全体ファイル5recordlist(+date).txt
+item::「6.得点csvを作成」を押すと得点データのcsvファイル\\
+　　　6scoretable(+date).csv\\
 ができる．
+end
+
+%%%%%%%%%%%%%
+new::Maximaによる採点
+%%repeat=3
+\slidepage
+
+itemize
+item::「7.Maximaの採点」を押すと，Maximaが起動して採点表\\
+　　　7scoremax(+date).csv\\
+ができる
+item::Maximaで採点しない問題には，Sheetの最後に\dc と$-1$をつける\\
+　　　Sheet\\
+　　　[1]=  \dc 5\dc $-1$\\
+　　　[2]=  \dc 5\dc $-1$
 end
 
 

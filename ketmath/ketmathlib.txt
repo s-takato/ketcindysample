@@ -47,20 +47,20 @@ Seteditable(32,["Sc=","Size=18","Width=80"]);
 
 tmpy=4.5;
 Text101.xy=[47.tmpy];
-Text102.xy=[47.4+4.3,tmpy];
-Text103.xy=[47.4+2*4.3,tmpy];
-Text104.xy=[47.2+3*4.3,tmpy];
-Text105.xy=[47.2+4*4.3,tmpy];
-Text100.xy=[46.8,1.3];
-Text106.xy=[49.5,1.3];
-Text107.xy=[62.7,1.3];
-Text108.xy=[65.4,1.3];
-
+Text102.xy=[47.4+4.3+0.2,tmpy];
+Text103.xy=[47.4+2*4.3+0.2,tmpy];
+Text104.xy=[47.2+3*4.3+0.2,tmpy];
+Text105.xy=[47.2+4*4.3+0.2,tmpy];
+Text100.xy=[46.8-0.5,1];
+Text106.xy=[49.5,1];
+Text107.xy=[62.7,1];
+Text108.xy=[65.4,1];
 forall([101,102,103,104,105,100,106,107,108],
   tmp1="Text"+text(#);
   tmp="inspect("+tmp1+","+Dqq("text.text")+",　);";
   parse(tmp);
-  tmp="inspect("+tmp1+","+Dqq("textsize")+",16);";
+  if(contains([100,106,107,108],#),tmp=13,tmp=14);
+  tmp="inspect("+tmp1+","+Dqq("textsize")+","+text(14)+");";
   parse(tmp);
   tmp="inspect("+tmp1+","+Dqq("colorfill")+",0);";
   parse(tmp);

@@ -1,19 +1,19 @@
-1 ゆめちゃん 1109
+1 ゆめちゃん 1110
 Q1 次の値を求めよ
 [1]  sin(15(deg))
 　正解  fr(sq(6)-sq(2),4)
-　答え 2
+　答え 6
 　得点 0
 [2]  cos(75(deg))
 　正解  fr(sq(6)-sq(2),4)
 　答え 3
 　得点 0
-Q2 加法定理を用いて//sin(pi-x)=sin(x)を証明せよ．
-　正解 sin(pi)cos(x)-cos(pi)sin(x)=sin(x)
-　答え sin(pi)cos(x)-cos(pi)sin(x)
-　得点 5
+Q2 sin(x-fr(pi,4))をsin(x),cos(x)で表せ．//　加法定理を用いよ．
+　正解 sin(x)cos(fr(pi,4))-cos(x)sin(fr(pi,4))//=fr(1,sq(2))(sin(x)-cos(x)) 
+　答え fr(1,sq(2))(sin(x)-cos(x))
+　得点 10
 
-2 ゆるナキン 1109
+2 ゆるナキン 1110
 Q1 次の値を求めよ
 [1] sin(75(deg))
 　正解 fr(sq(6)+sq(2),4)
@@ -22,10 +22,10 @@ Q1 次の値を求めよ
 [2]  cos(75(deg))
 　正解  fr(sq(6)-sq(2),4)
 　答え fr(sq(6)-sq(2),4)
-　得点 5
-Q2 加法定理を用いて//sin(pi-x)=sin(x)を証明せよ．
-　正解 sin(pi)cos(x)-cos(pi)sin(x)=sin(x)
-　答え 
+　得点 0
+Q2 sin(x-fr(pi,4))をsin(x),cos(x)で表せ．//　加法定理を用いよ．
+　正解 sin(x)cos(fr(pi,4))-cos(x)sin(fr(pi,4))//=fr(1,sq(2))(sin(x)-cos(x)) 
+　答え sin(x)
 　得点 0
 
 3 つるゴン 未提出

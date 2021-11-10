@@ -10,8 +10,8 @@ Ans
 [2] fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)
 
 Q11052
-加法定理を用いて//sin(pi-x)=sin(x)を証明せよ．
+sin(x-fr(pi,4))をsin(x),cos(x)で表せ．//　加法定理を用いよ．
 Sheet
-解=  ::10::-1
+=  ::10
 Ans
-sin(pi)cos(x)-cos(pi)sin(x)=sin(x)
+sin(x)cos(fr(pi,4))-cos(x)sin(fr(pi,4))//=fr(1,sq(2))(sin(x)-cos(x)) 

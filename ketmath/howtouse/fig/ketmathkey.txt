@@ -1,8 +1,0 @@
-%%Title: ketmathkey.pdf
-%%Creator: extractbb 20210318
-%%BoundingBox: 0 0 949 460
-%%HiResBoundingBox: 0.000000 0.000000 949.000000 460.000000
-%%PDFVersion: 1.4
-%%Pages: 1
-%%CreationDate: Thu Sep 23 15:46:16 2021
-
