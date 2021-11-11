@@ -277,10 +277,10 @@ item::提出された解答をstans(+date).txtにコピーする．\\
 　・GoogleClassroomのデータをそのままコピペしてもよい．\\
 　・不要な行の削除やソーティングはKeTMathが行う．
 item::toolketmath.cdyを立ち上げて，「3.Scorelineを作成」を押す．\\
-　・queans, taskline, stansのファイル表示．
+　・question, 1taskline, 2anssheetのファイル表示．
 item::それらのファイルを順にクリックすると，右下にファイル名が表示される．
 item::OKボタンを押す．\\
-　・scorelineのテキストファイルがdataに作成される．\\
+　・3scorelineのテキストファイルがdataに作成される．\\
 　　　注）ファイル名にはquansの日付が付加される．\\
 　・採点結果を入れるresult(+date).txtというファイルができる
 end
@@ -298,10 +298,10 @@ item::OKボタンを押すと，ketscore(+date).htmlがDircdyに作成される�
 　　　注）ketscoreorgにscorelineを挿入した採点ファイル(html)である．
 item::ketscore(+date).htmlを立ち上げる\\
 　・上の紫ボタンで学生番号，赤ボタンの上のボタンで問題番号を変える．\\
-　・ダブルコロンの後に点数をキーボードで入れる．\\
-　・採点が済んだらRecを押し，欄3の内容をresult(+date).txtにコピペ．
-item::採点途中の場合も，result(+date).txtにコピペしておく．\\
-　・再開したら，欄3にresult(+date).txtの内容をコピーする．
+　・\dc の後に点数をキーボードで入れる．\\
+　・採点が済んだらRecを押し，欄3の内容を4.scoresheet(+date).txtにコピペ．
+item::採点途中の場合も，4scoresheet(+date).txtにコピペしておく．\\
+　・再開したら，欄3に4scoresheet(+date).txtの内容をコピーする．
 end
 
 %%%%%%%%%%%%%
@@ -337,7 +337,24 @@ itemize
 item::toolketmath.cdyを立ち上げる．
 item::「5.成績票を作成」より，次のファイルが作成される．\\
 　・data/cardに成績票(学生ごと)ファイル\\
-　・dataに全員の成績票をまとめたalldata(+date).txt
-item::「6.得点csvを作成」より，次のファイルが作成される．\\
-　・dataに得点データのcsvファイルtablescore(+date).csv
+　・dataに全員の成績票をまとめた5recordlist(+date).txt
+item::「6.得点csvを作成」より\\
+　dataに得点データのcsvファイル6scoretable1105(+date).csv\\
+が作成される．
 end
+
+%%%%%%%%%%%%%
+new::Maximaによる採点
+%%repeat=3
+\slidepage
+
+itemize
+item::Maximaで採点しない問題には，Sheetの最後に\dc と$-1$をつける\\
+　　　Sheet\\
+　　　[1]=  \dc 5\dc $-1$\\
+　　　[2]=  \dc 5\dc $-1$
+item::「7.Maximaの採点」を押すと，Maximaが起動して採点表\\
+　　　7scoremax(+date).csv\\
+ができる
+end
+
