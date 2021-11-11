@@ -1,0 +1,8 @@
+%%Title: kettask.pdf
+%%Creator: extractbb 20210318
+%%BoundingBox: 0 0 973 487
+%%HiResBoundingBox: 0.000000 0.000000 973.000000 487.000000
+%%PDFVersion: 1.4
+%%Pages: 1
+%%CreationDate: Thu Nov 11 09:56:01 2021
+

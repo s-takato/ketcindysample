@@ -4,8 +4,7 @@
 \newcommand{\hako}[2][6mm]{\fbox{$\mathstrut$\Ctab{#1}{#2}}}
 \newcommand{\dint}{\displaystyle\int}
 \newcommand{\dlim}{\displaystyle\lim}
-\newcommand{\dc}{:\hspace{0.1mm}:}
-
+\newcommand{\dc}{: \hspace{-1.4mm}:}
 
 \setmargin{25}{150}{15}{100}%
 
@@ -22,18 +21,19 @@ new::数式の簡易記法1
 \slidepage
 
 itemize
-item::文字定数(変数)は1文字とする．\vspace{-2mm}
-item::改行は　//\vspace{-2mm}
-item::アルファベットをテキストにするには　tx(テキスト)\vspace{-2mm}
-item::\Ltab{4.5zw}{分数}$\frac{a}{b}\ \Longrightarrow$\ \verb|(a)/(b)|,\ \verb|fr(a,b)| \vspace{-2mm}
-item::\Ltab{4.5zw}{掛け算}$ab\ \Longrightarrow$\ \verb|ab|\vspace{-2mm}
-item::\Ltab{4.5zw}{べき乗}$a^b\ \Longrightarrow$\ \verb|a^(b)|\\
-　・ bが1文字の場合は \verb|a^b|も可\vspace{-2mm}
+item::\Ltab{4.5zw}{分数}$\dfrac{a}{b}\ \Longrightarrow$\ \verb|fr(a,b)|,\ \verb|(a)/(b)|
+　　注)小さい分数 \verb|tfr(a,b)|\vspace{-2mm}
+item::\Ltab{4.5zw}{掛け算}$ab\ \Longrightarrow$\ \verb|ab|　　注)\verb|a*b|も可\vspace{-2mm}
+item::\Ltab{4.5zw}{べき乗}$a^b\ \Longrightarrow$\ \verb|a^(b)|　　注)bが1文字の場合は \verb|a^b|も可\vspace{-2mm}
 item::\Ltab{4.5zw}{べき乗根}$\sqrt{a},\ \sqrt[3]{a}\ \Longrightarrow$\ \verb|sq(a), sq(3,a)|\vspace{-2mm}
 item::\Ltab{4.5zw}{三角関数}$\sin x, \sin^2x\ \Longrightarrow$\ \verb|sin(x), sin(2,x)|\vspace{-2mm}
+item::\Ltab{4.5zw}{度}$60{}^{\circ}\ \Longrightarrow$\ \verb|60(deg)|\vspace{-2mm}
 item::\Ltab{4.5zw}{円周率}$\pi \ \Longrightarrow$\ \verb|pi|\vspace{-2mm}
-item::\Ltab{4.5zw}{対数関数}$\log x, \log_a x\ \Longrightarrow$\ \verb|log(x), log(a,x)|\\
-　・自然対数は　\verb|ln(x)|でもよい．\vspace{-2mm}
+item::\Ltab{4.5zw}{対数関数}$\log x, \log_a x, \ln x \Longrightarrow$\ \verb|log(x), log(a,x), ln(x)|\vspace{-2mm}
+item::\Ltab{4.5zw}{改行}//\vspace{-2mm}
+item::\Ltab{4.5zw}{スペース}\ (sp)　　注)\TeX の\verb|\;|を出力\vspace{-2mm}
+item::\Ltab{4.5zw}{立体}$100\text{m}\ \Longrightarrow$\ \verb|100tx(m)|\vspace{-2mm}
+%%item::\Ltab{4.5zw}{立体} $\text{cosh}\ x \ \Longrightarrow$\ \verb|tx(cosh)(sp)x|　注)\TeX 記号\verb|\cosh(sp)x|も可\vspace{-2mm}
 end
 
 %%%%%%%%%%%%
@@ -41,14 +41,45 @@ new::数式の簡易記法2
 %%repeat=4,para
 \slidepage
 
+layer::{120}{0}
+\putnotese{76}{22}{\small\fbox{%%
+\begin{tabular}{l}
+(\ ) は自動判定するが，強制的に\\
+　(\ )を外すとき式の先頭に !\\
+　(\ )をつけるとき式の先頭に !!\\
+　　　int(!x+y,x)
+\end{tabular}
+}}
+end
+
 itemize
-item::\Ltab{4.5zw}{積分}$\dint x^2\,dx,\ \dint_a^b x^2\,dx \ \Longrightarrow$\ \verb|int(,,x^2,x), int(a,b,x^2,x)|\vspace{-2mm}
+item::\Ltab{4.5zw}{積分}$\dint x^2\,dx,\ \dint_a^b x^2\,dx \ \Longrightarrow$\ \verb|int(x^2,x), int(a,b,x^2,x)|\vspace{-2mm}
 item::\Ltab{6zw}{ブラケット}$\Bigl[f(x)\Bigr]_a^b\  \Longrightarrow$\ \verb|br(f(x),a,b)|\vspace{-2mm}
-item::\Ltab{4.5zw}{極限}$\dlim_{x \to a}f(x) \ \Longrightarrow$\ \verb|lim(x,a)f(x)|\ または \verb|lim(x,a,f(x))|\vspace{-2mm}
+item::\Ltab{4.5zw}{極限}$\dlim_{x \to a}f(x) \ \Longrightarrow$\  \verb|lim(x,a,f(x))|\vspace{-2mm}
+item::\Ltab{4.5zw}{和}$\displaystyle\sum_{k=1}^{n}k^2 \ \Longrightarrow$\  \verb|sum(k=1,n,k^2)|\vspace{-2mm}
 item::\Ltab{7zw}{微分・偏微分}$\dfrac{dy}{dx},\ \dfrac{\partial z}{\partial x} \ \Longrightarrow$\ \verb|diff(y,x)|, \verb|par(z,x)|
 item::\Ltab{7zw}{行列・行列式}$\begin{pmatrix}a&b\\c&d\end{pmatrix},\ \left|\begin{array}{cc}a&b\\c&d\end{array}\right|
  \ \Longrightarrow$\ \verb|mat(a,b;c,d)|, \verb|det(a,b;c,d)|\vspace{-2mm}
-item::\Ltab{4.5zw}{場合分け}$\begin{cases}a&(b)\\c&(d)\end{cases} \ \Longrightarrow$\ \verb|case(a,(b);c,(d))|\vspace{-2mm}
+item::\Ltab{4.5zw}{場合分け}$\begin{cases}a&(x<0)\\c&(x \geq 0)\end{cases} \ \Longrightarrow$\ \verb|case(a,(x<0);c,(x(geq)0))|\vspace{-2mm}
+end
+
+%%%%%%%%%%%%
+new::数式の簡易記法3
+%%repeat=4,para
+\slidepage
+
+itemize
+item::\Ltab{8zw}{ドットなど}$\cdot,\ \times\ \Longrightarrow$\ \verb|(dot), (cross)|\vspace{-2mm}
+item::\Ltab{8zw}{複号}$\pm, \mp\ \Longrightarrow$\ \verb|(pm), (mp)|\vspace{-2mm}
+item::\Ltab{8zw}{不等号}$<, >, \leq, \geq\ \Longrightarrow$\ \verb|<, >, (leq), (geq)|\vspace{-2mm}
+item::\Ltab{8zw}{下添字}$a_n\ \Longrightarrow$\ \verb|a_n|\vspace{-2mm}
+item::全角文字を混ぜてもよい\\
+　$x^2+2x-3=0$の解は$x=1,-3\ \Longrightarrow$\ \verb|x^2+2x-3=0の解はx=1,-3|\vspace{-2mm}
+item::\Ltab{8zw}{ギリシャ文字}$\alpha, \beta\ \Longrightarrow$\ \verb|{\alpha},{\beta}|\vspace{-2mm}
+item::その他の\TeX 記号はそのまま書いて(sp)で区切る\\
+　$\sim, \subset, \in  \Longrightarrow$\ \verb|\sim(sp)\subset(sp)\in|\vspace{-2mm}
+item::Maxima数式に変換する場合，数式文字は1文字とする．\\
+　absin(x)\ $\Longrightarrow \ $(Maxima数式)　\verb|a*b*sin(x)| \vspace{-2mm}
 end
 
 %%%%%%%%%%%%
@@ -56,17 +87,34 @@ new::KeTMath(数式入力アプリ)
 %%repeat=4,para
 \slidepage
 
+itemize
+item::{\footnotesize\url{https://s-takato.github.io/ketcindysample/ketmath/offline/ketmathjsoffL.html}}\\
+　・samples of ketcindy  $>$ ketmath systemに行けばよい．
+item::キーボードにより簡易数式を入力することができる\\
+　・\TeX 数式（TeXボタンを押すとソースも）が表示される．
+
 layer::{120}{0}
-putnote::se{0}{5}::include[bb=0.00 0.00 949.00 460.00,width=64mm]::ketmathkey.pdf
-putnote::se{65}{5}::include[bb=0.00 0.00 949.00 460.00,width=64mm]::ketmathkeyG.pdf
+\putnotes{52}{2}{\includegraphics[bb=0.00 0.00 939.00 446.00,height=40mm]{fig/ketmathkey.pdf}}
+\arrowlineseg{12}{5}{10}{-135}
+\arrowlineseg{12}{24}{10}{135}
+\putnotec{5}{14}{\footnotesize 入力窓の切替}
+\arrowlineseg{14.5}{27}{8}{180}
+\arrowlineseg{14.5}{29}{8}{180}
+\putnotew{6}{26.5}{\scriptsize 大文字}
+\putnotew{6}{29.5}{\scriptsize ギリシャ}
+\arrowlineseg{90}{16}{8}{0}
+\arrowlineseg{90}{20}{8}{0}
+\putnotee{98}{16}{\scriptsize 入力文字の削除}
+\putnotee{98}{20}{\scriptsize 入力ポイントの移動}
+\arrowlineseg{12}{40}{3}{-90}
+\putnotes{12}{44}{\scriptsize TeXソース}
+\arrowlineseg{90}{27}{8}{0}
+\arrowlineseg{90}{30}{8}{0}
+\putnotee{98}{27}{\scriptsize 微積分}
+\putnotee{98}{30}{\scriptsize 線形代数}
+
 end
 
-\vspace{35mm}
-...
-
-itemize
-item::KeTMathのキーボードから入力した方が簡単で間違いが少ない．
-item::微積記号，線形代数記号や大文字，ギリシャ文字などの切り替えもできる．
 end
 
 %%%%%%%%%%%%%
@@ -81,15 +129,14 @@ new::準備
 
 enumerate::[(1)]
 item::サブフォルダdataを作成する．
-item::学生リスト(txtまたはcsv)を作成してdataに入れる．\\
-・txtの場合\\
-　　ファイル名は student2021.txtなどとして，1行ずつ名前を入れる．
+item::学生リスト(txt)を作成してdataに入れる．\\
+　ファイル名は student2021.txtなどとして，1行ずつ名前を入れる．
 item::問題と正解のファイルquestion(+date).txtを作成してdataに入れる．\\
-　詳細は次ページに記述
+　詳細は次ページ
 end
 
 %%%%%%%%%%%%%
-new::問題と解答の作成(questiion.txt)
+new::問題と解答の作成(question)
 %%repeat=3
 \slidepage
 
@@ -102,9 +149,9 @@ Sheet\\
 「\dc」の後に配点を書く\\
 Ans\\
 解答\\
-１行空白行をおく\vspace{-2mm}
-item::1つの問題に複数の選択肢を与えるときは\dc で区切る．\vspace{-2mm}
-item::ファイル名は\verb|question1030(=date).txt|などとしてdataに入れる．\vspace{-2mm}
+１行空白行をおく
+item::1つの問題に複数の選択肢を与えるときは\dc (ダブルコロン)で区切る．
+item::ファイル名は\verb|question1030(=date).txt|などとしてdataに入れる．
 end
 
 %%%%%%%%%%%%%
@@ -113,10 +160,10 @@ new::問題と解答の作成例
 \slidepage
 
 itemize
-item::[]Q11051\\
+item::[]Q10301\\
 次の値を求めよ\\
 $[1]$ sin(15(deg))\dc sin(75(deg))\\
-$[2]$ cos(75(deg)0\dc cos(15(deg))\\
+$[2]$ cos(75(deg)\dc cos(15(deg))\\
 Sheet\\
 $[1]$= \ \ \dc 5\\
 $[2]$= \ \ \dc 5\\
@@ -132,8 +179,8 @@ new::問題と解答の作成例(続)
 \slidepage
 
 itemize
-item::[]Q11052\\
-sin(x-fr(pi,4))をsin(x),cos(x)で表せ．//　加法定理を用いよ．\\
+item::[]Q10302\\
+sin(x-fr(pi,4))をsin(x),cos(x)で表せ．//　Hint : 加法定理を用いよ．\\
 Sheet\\
 =  \dc 10\\
 Ans\\
@@ -146,38 +193,62 @@ new::taskline.txtの作成
 %%repeat=3
 \slidepage
 
+layer::{120}{0}
+\putnotese{75}{7}{\includegraphics[bb=0.00 0.00 706.00 394.00,width=50mm]{fig/toolketmath.pdf}}
+end
+
 itemize
-item::\verb|toolketmath.cdy|を立ち上げる．
+item::toolketmath.cdyを立ち上げる．
 item::「1.tasklineを作成」のボタンを押す．\\
-　question, studentのファイルが表示される．
+　ファイルquestion,studentが表示
 item::それらのファイルを順にクリック\\
-　右下にファイル名が表示される．
+　下にファイル名が表示される．
 item::OKボタンを押す．\\
-・1taskline(+date).txtのファイルがdataに作成される．\\
+・1tasklineのテキストファイルがdataに作成される．\\
 　　注）ファイル名にはquestionの日付が付加される．\\
 ・青字で1tasklineのファイル名が表示される．\\
 ・学生の解答を入れる2anssheet(+date).txtというファイルもできる
-item::\verb|toolketmath.cdy|は立ち上げたままにしておく．
+item::toolketmath.cdyは立ち上げたままにしておく．
 end
 
 %%%%%%%%%%%%%
-new::kettask.htmlの作成と出題
+new::kettask.html(課題用)の作成
 %%repeat=3
 \slidepage
 
 itemize
 item::toolketmath.cdyを立ち上げる(終了した場合)．
 item::「2.kettaskに組込」のボタンを押す．\\
-　kettaskorg.htmlと1taskline(+date).txtが表示される．
+　・kettaskorg.htmlと1taskline(+date).txtのファイルが表示される．
 item::それらのファイルを順にクリック\\
-　右下にファイル名が表示される．
+　・右下にファイル名が表示される．
 item::OKボタンを押す．\\
-・kettask(+date).htmlがDircdyに作成される．\\
-　　注）ketaskorgに1tasklineを挿入した課題ファイルである．
-item::このファイルをwebサイトにおき，URLを学生に知らせる．\\
-$\Longrightarrow$\ これが出題になる．
+　・kettask(+date).htmlがカレントディレクトリに作成される．\\
+　　　注）ketaskorgに1tasklineを挿入した課題ファイル(html)である．
+item::このファイルをwebサイトにおき，リンク先を学生に知らせる．\\
+　・これが出題になる．
 end
 
+
+%%%%%%%%%%%%%
+new::kettaskの画面
+%%repeat=3
+\slidepage
+
+layer::{130}{0}
+\putnotes{60}{5}{\includegraphics[bb=0.00 0.00 973.00 487.00,width=120mm]{fig/kettask.pdf}}
+\arrowlineseg{107}{62}{4}{-90}
+\putnotes{107}{66}{\scriptsize 番号を入れてOK}
+\arrowlineseg{117}{14}{4}{0}
+\putnotee{121}{14}{\scriptsize 問題表示}
+\arrowlineseg{112}{24}{4}{0}
+\putnotee{116}{24}{\scriptsize ページ}
+\arrowlineseg{117}{37}{4}{0}
+\putnotee{121}{37}{\scriptsize 解答入力}
+\arrowlineseg{5}{63}{4}{-90}
+\putnotes{5}{67}{\scriptsize 答案を表示}
+
+end
 
 %%%%%%%%%%%%%
 new::学生による解答と提出
@@ -189,31 +260,72 @@ item::配付されたリンク先をクリック
 item::欄3のStudent=の後に番号をキーボードで入力してOKを押す．
 item::名前を確認して解答用の欄2に答えを入力
 item::赤いボタンの上の窓にページ番号が表示される．\\
-・白い矢印を押してページ番号を変えて．解答する．\\
+・白い矢印を押してページ番号をを変えて．回答する．\\
 ・「---」のあるページには入力できない．
 item::解答が終わったら，「Rec」ボタンを押すと欄3にすべての解答が入る．
 item::「すべてを選択」＞「コピー」\vspace{-2mm}
-item::提出用の欄(メール)などにペーストして送信する
+item::提出用の欄などにペーストして送信する
 end
 
 %%%%%%%%%%%%%
-new::採点
+new::scoreline.txtの作成
 %%repeat=3
 \slidepage
 
 itemize
-item::提出された解答を2anssheet(+date).txtにコピーする．\\
-・GoogleClassroomのデータをそのままコピペしてもよい．\\
-・不要な行の削除やソーティングはKeTMathが行う．\vspace{-2mm}
-item::toolketmath.cdyを立ち上げる\\
-・「3.scorelineを作成」のボタンを押す．\\
-・表示されるファイルを順にクリックして，OKを押す．\\
-・3scoreline(+date).txtと4scoresheet.txtができる．\\
-・「4.ketscoreに組込」を押してketscore(+date).htmlを作る．\vspace{-2mm}
+item::提出された解答をstans(+date).txtにコピーする．\\
+　・GoogleClassroomのデータをそのままコピペしてもよい．\\
+　・不要な行の削除やソーティングはKeTMathが行う．
+item::toolketmath.cdyを立ち上げて，「3.Scorelineを作成」を押す．\\
+　・queans, taskline, stansのファイル表示．
+item::それらのファイルを順にクリックすると，右下にファイル名が表示される．
+item::OKボタンを押す．\\
+　・scorelineのテキストファイルがdataに作成される．\\
+　　　注）ファイル名にはquansの日付が付加される．\\
+　・採点結果を入れるresult(+date).txtというファイルができる
+end
+
+%%%%%%%%%%%%%
+new::ketscore.html(採点用)の作成
+%%repeat=3
+\slidepage
+
+itemize
+item::toolketmath.cdyを立ち上げて，「4.ketscoreに組込」を押す．\\
+　・ketscoreorg.htmlとscoreline(+date).txtのファイルが表示される．
+item::それらのファイルを順にクリック
+item::OKボタンを押すと，ketscore(+date).htmlがDircdyに作成される．\\
+　　　注）ketscoreorgにscorelineを挿入した採点ファイル(html)である．
 item::ketscore(+date).htmlを立ち上げる\\
-・上の紫ボタンで学生番号，灰色ボタンの上のボタンで問題番号を変える．\\
-・ダブルコロンの後に点数をキーボードで入れる．\\
-・採点が済んだらRecを押し，欄3を4scoresheet.txtにコピペする\vspace{-2mm}
+　・上の紫ボタンで学生番号，赤ボタンの上のボタンで問題番号を変える．\\
+　・ダブルコロンの後に点数をキーボードで入れる．\\
+　・採点が済んだらRecを押し，欄3の内容をresult(+date).txtにコピペ．
+item::採点途中の場合も，result(+date).txtにコピペしておく．\\
+　・再開したら，欄3にresult(+date).txtの内容をコピーする．
+end
+
+%%%%%%%%%%%%%
+new::ketscoreの画面
+%%repeat=3
+\slidepage
+
+layer::{130}{0}
+\putnotese{3}{8}{\includegraphics[bb=0.00 0.00 1135.00 583.00,width=120mm]{fig/ketscore.pdf}}
+\arrowlineseg{100}{61}{4}{0}
+\putnotee{104}{61}{\scriptsize 問題表示}
+\arrowlineseg{106}{16}{4}{0}
+\putnotee{110}{16}{\scriptsize 正解表示}
+\arrowlineseg{118}{27}{4}{0}
+\putnotee{122}{27}{\scriptsize ページ}
+\arrowlineseg{118}{32}{4}{0}
+\putnotee{122}{32}{\scriptsize 満点入力}
+\arrowlineseg{106}{40}{4}{0}
+\putnotee{110}{40}{\scriptsize 採点入力}
+\arrowlineseg{8}{63}{6}{-90}
+\putnotes{8}{69}{\scriptsize 結果を欄3に表示}
+\arrowlineseg{64}{12}{4}{0}
+\putnotee{68}{12}{\scriptsize 学生を表示}
+
 end
 
 %%%%%%%%%%%%%
@@ -222,28 +334,10 @@ new::配付用成績表と得点一覧ファイルの作成
 \slidepage
 
 itemize
-item::「5.成績表を作成」を押すと次ができる\\
-　　　サブフォルダcardに個人成績票\\
-　　　全体ファイル5recordlist(+date).txt
-item::「6.得点csvを作成」を押すと得点データのcsvファイル\\
-　　　6scoretable(+date).csv\\
-ができる．
+item::toolketmath.cdyを立ち上げる．
+item::「5.成績票を作成」より，次のファイルが作成される．\\
+　・data/cardに成績票(学生ごと)ファイル\\
+　・dataに全員の成績票をまとめたalldata(+date).txt
+item::「6.得点csvを作成」より，次のファイルが作成される．\\
+　・dataに得点データのcsvファイルtablescore(+date).csv
 end
-
-%%%%%%%%%%%%%
-new::Maximaによる採点
-%%repeat=3
-\slidepage
-
-itemize
-item::「7.Maximaの採点」を押すと，Maximaが起動して採点表\\
-　　　7scoremax(+date).csv\\
-ができる
-item::Maximaで採点しない問題には，Sheetの最後に\dc と$-1$をつける\\
-　　　Sheet\\
-　　　[1]=  \dc 5\dc $-1$\\
-　　　[2]=  \dc 5\dc $-1$
-end
-
-
-
