@@ -10,7 +10,7 @@ Ans
 [2] fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)
 
 Q11052
-sin(x-fr(pi,4))をsin(x),cos(x)で表せ．//　加法定理を用いよ．
+sin(x-fr(pi,4))をsin(x),cos(x)で表せ．//　Hint) 加法定理を用いよ．
 Sheet
 =  ::10
 Ans

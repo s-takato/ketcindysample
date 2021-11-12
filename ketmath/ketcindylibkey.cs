@@ -14,8 +14,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibkey[20211022 loaded"); // no ketjs
+println("ketcindylibkey[20211112 loaded"); // no ketjs
 
+// 211111 Setkeystyle changed ( keyposition, only for exiisting text )
+// 211111 Alltextkey changed ( fname option )
 // 211109 Dispposition changed (length of seg, nonascii)
 // 211022 List2line, Line2list added
 // 211012 Keytable changed ( for (0,xL,0,yL,... ) )
@@ -606,14 +608,15 @@ Dqq(str):=(
 );
 
 ////%Alltextkey start////
-Alltextkey(make):=( //no ketjs on
+Alltextkey(make):=Alltextkey(make,"keylist");  //no ketjs on
+Alltextkey(make,fname):=(
 //help:Alltexkey(1);
-  regional(fname,txtkey,keyL,key,tmp,tmp1,tmp2,tmp3,tmp4,fid);
-  fname="keylist";
+  regional(txtkey,keyL,key,tmp,tmp1,tmp2,tmp3,tmp4,fid);
   txtkey=remove(allelements(),allpoints());
 //  tmp=concat(1..5,[21,22]);
 //  tmp=apply(tmp,parse("Text"+text(#)));
 //  txtkey=remove(txtkey,tmp);
+  println(fname+".csv");
   keyL=[];
   forall(txtkey,key,
     tmp=replace(key.name,"Text","");
@@ -668,33 +671,41 @@ Alltextkey(make):=( //no ketjs on
 Setkeystyle():=Setkeystyle("keylist");  //no ketjs on
 Setkeystyle(fname):=(
 //help:Setkeystyle();
-  regional(keyL,button,key,tmp,tmp1);
+  regional(keyL,button,key,tmp,tmp1,txtkey);
+  tmp=remove(allelements(),allpoints());
+  txtkey=apply(tmp,#.name);
   println(fname+".csv");
   if(!isexists(Dircdy,fname+".csv"),
     println("  File not found");
   ,
-    Setdirectory(Dircdy);
+//    Setdirectory(Dircdy);
     keyL=Readlines(Dircdy,fname+".csv");
     button=Readlines(Dircdy,fname+"b.txt");    
     forall(keyL,
       key=Strsplit(#,",");
-      tmp=substring(key_3,1,length(key_3)-1);
-      inspect(parse(key_2),"text.text",tmp);
-      inspect(parse(key_2),"textsize",key_4);
-      inspect(parse(key_2),"colorfill",key_5);
-      inspect(parse(key_2),"fillalpha",key_6);
-      tmp=select(1..(length(button)),indexof(button_#,key_2)>0);
-      tmp1=tmp_1+1;
-      tmp2="";
-      while(tmp1<=length(button),
-        if(indexof(button_tmp1,"Text")==0,
-          tmp2=tmp2+button_tmp1;
-        ,
-          tmp1=length(button);
+      if((contains(txtkey,key_2))&(key_3!=Dqq("")),
+        tmp=substring(key_3,1,length(key_3)-1);
+        inspect(parse(key_2),"text.text",tmp);
+        inspect(parse(key_2),"textsize",key_4);
+        inspect(parse(key_2),"colorfill",key_5);
+        inspect(parse(key_2),"fillalpha",key_6);
+        if(!contains([key_7,key_8],"NaN"), //211112from
+          tmp=key_2+".xy=["+key_7+","+key_8+"];";
+          parse(tmp);
+        ); //211112from
+        tmp=select(1..(length(button)),indexof(button_#,key_2)>0);
+        tmp1=tmp_1+1;
+        tmp2="";
+        while(tmp1<=length(button),
+          if(indexof(button_tmp1,"Text")==0,
+            tmp2=tmp2+button_tmp1;
+          ,
+            tmp1=length(button);
+          );
+          tmp1=tmp1+1;
         );
-        tmp1=tmp1+1;
+        inspect(parse(key_2),"button.script",tmp2);
       );
-      inspect(parse(key_2),"button.script",tmp2);
     );
   );
 );  //no ketjs off

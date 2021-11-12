@@ -221,4 +221,4 @@ funflg=1;if(Shift==0,name="sum(");if(Shift==1,name="(circ)");
 Text113
 funflg=1;if(Shift==1,name="diff(",name="case(");
 Text114
-stok=stok+1;
+recflg=1;
