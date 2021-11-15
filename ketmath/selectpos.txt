@@ -1,0 +1,66 @@
+
+//mp=mouse().xy;
+
+Maketable():=(
+  regional(xL,yL,mv);
+  xL=[60]; 
+  yL=apply(1..10,10);
+  Tabledata("1",xL,yL,[],
+      [0,"Setwin=n","Move=[0,-5]","Msg=n"]);
+  mv=[0,-5];
+  tb1;
+);
+
+Tablepos(tb,mv):=(
+  regional(tmp,tmp1,tmp2,cl,rw,mp);
+  //global Dirdata
+  mp=mouse().xy;
+  tmp1=apply(tb_1,#_1+mv_1);
+  tmp2=apply(tb_2,#_2+mv_2);
+  cl=0;
+  if((mp_1>tmp1_1)&(mp_1<tmp1_(-1)),
+    tmp=select(1..(length(tmp1)),tmp1_#>mp_1);
+    cl=tmp_1-1;
+  );
+  rw=0;
+  if((mp_2<tmp2_1)&(mp_2>tmp2_(-1)),
+    tmp=select(1..(length(tmp2)),tmp2_#<mp_2);
+    rw=tmp_(1)-1;
+  );
+  [cl,rw];
+);
+
+MakefileL(dfL):=(
+  regional(out,tmp,dir,selectL,fL,se,s);
+  out=[];
+  forall(1..(length(dfL)/2),nn,
+    dir=dfL_(2*nn-1);
+    tmp=dfL_(2*nn);
+    if(!islist(tmp),tmp=[tmp]);
+    selectL=apply(tmp,Strsplit(#,"*"));
+    fL=Filelist(dir);
+    forall(selectL,se,
+      tmp=fL;
+      forall(se,s,
+        tmp=select(tmp,indexof(#,s)>0);
+      );
+      out=concat(out,tmp);
+    );
+  );
+  out;
+);
+
+Selectfile(out):=(
+  regional(cl,rw,tmp);
+  //global mp:mouse().xy
+//  out=MakefileL(dfL);
+  Putcol(1,"l2",out);
+  tmp=Tablepos(tb1,mv);
+  cl=tmp_1; rw=tmp_2;
+  if(cl*rw>0,
+    tmp=[rw,out_rw];
+  ,
+    tmp=[0,""];
+  );
+  tmp;
+);

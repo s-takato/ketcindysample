@@ -1,0 +1,20 @@
+Q11141
+次の問いに答えよ．
+[1] sin(15(deg))::sin(75(deg))
+の値を求めよ．
+[2] sin(\alpha+\beta)を展開せよ．
+Sheet
+[1]=  ::5
+[2]=  ::5
+Ans
+[1] fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)
+[2] fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)
+
+Q11142
+sin(x-fr(pi,4))::sin(x-fr(pi,4))
+をsin(x),cos(x)で表せ．
+　Hint) 加法定理を用いよ．
+Sheet
+=  ::10
+Ans
+sin(x)cos(fr(pi,4))-cos(x)sin(fr(pi,4))//=fr(1,sq(2))(sin(x)-cos(x)) 
