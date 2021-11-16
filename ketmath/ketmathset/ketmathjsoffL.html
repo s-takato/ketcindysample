@@ -3276,7 +3276,7 @@ Keyname():=(
     nL_1_21="$d$"; nL_2_21="$\partial$"; nL_4_21="$[.]_{}^{}$"; //210923
   );
   if(Shift==2,
-    nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$"; nL_4_21="[]"; //210923
+    nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$"; nL_4_21="pi"; //210923
   );
   if(keytype==2,
     tmp1=["D","E","F","G","A","B","C"]; forall(1..7,nL_1_(#+5)=tmp1_#);
@@ -3618,7 +3618,7 @@ var cdy = CindyJS({
     {name: "Text109", type: "Button", pos: [4.0, -0.425, 0.0625], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, script: "if(Shift!=1,Shift=1,Shift=0);", text: "Cal", textsize: 14.0},
     {name: "Text100", type: "Button", pos: [4.0, 0.09829059829059829, 0.08547008547008547], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "npos=0;", text: "　", textsize: 13.0},
     {name: "Text111", type: "Button", pos: [4.0, -1.930835734870317, 0.11527377521613832], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"ln(\";", text: "　", textsize: 14.0},
-    {name: "Text112", type: "Button", pos: [4.0, -1.192170818505338, 0.07117437722419928], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==0,name=\"sum(\");if(Shift==1,name=\"(circ)\");", text: "　", textsize: 18.0},
+    {name: "Text112", type: "Button", pos: [4.0, -1.192170818505338, 0.07117437722419928], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift<=1,name=\"sum(\");if(Shift==2,name=\"(circ)\");", text: "　", textsize: 18.0},
     {name: "Text113", type: "Button", pos: [4.0, -0.45033112582781454, 0.06622516556291391], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"diff(\",name=\"case(\");", text: "　", textsize: 14.0},
     {name: "Text54", type: "Button", pos: [4.0, -0.6788079470198676, 0.06622516556291391], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"par(\",name=\"tx(\");", text: "　", textsize: 14.0},
     {name: "Text91", type: "Button", pos: [4.0, -1.109271523178808, 0.06622516556291391], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1; if(Shift==1,name=\"br(\",name=\"pi\");", text: "　", textsize: 14.0},
@@ -3627,8 +3627,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1057,
-    height: 493,
-    transform: [{visibleRect: [-29.729033991969356, 25.751564607108964, 78.0705849771957, -24.527727873305764]}],
+    height: 504,
+    transform: [{visibleRect: [-29.729033991969356, 25.751564607108964, 78.0705849771957, -25.649578212625364]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

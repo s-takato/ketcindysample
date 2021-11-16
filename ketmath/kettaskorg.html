@@ -36,7 +36,9 @@ Getlevel(str,Arg,bra):=(
   );
   parL=Bracket(str,bra);
   if(length(parL)==0, //210907from
-    out=apply(1..(lenght(nL)),0);
+    tmp="("+str+")"; //210926from
+    tmp1=Getlevel(tmp);
+    out=apply(tmp1,[#_1-1,#_2-1]); //210926to
   ,
     out=[];
     forall(nL,n,
@@ -139,10 +141,11 @@ Totexform(str):=( //210803from[renew]
     ["cos(",["\cos xx ","\cos^{xx}\! yy "]], //210405
     ["tan(",["\tan xx ","\tan^{xx}\! yy "]],  //210228to  //210405
     ["lim(", ["",tmp2+"_{xx \to yy} ",tmp2+"_{xx \to yy} zz"]], //210831from
-    ["int(", [tmp1+" ",tmp1+"_{xx}^{yy} ",tmp1+" yy dzz ",tmp1+"_{xx}^{yy} zz dww "]],       
+    ["int(", [tmp1+" ",tmp1+" xx dyy ",tmp1+" yy dzz ",tmp1+"_{xx}^{yy} zz dww "]],  //211027
     ["sum(", ["",tmp3+"_{xx}^{yy} ", tmp3+"_{xx}^{yy} zz"]], //210831to
     ["diff(", ["d ","\frac{dxx}{dyy}"]], //210913
-    ["par(", ["\partial ","\frac{\partial xx}{\partial yy}"]] //210913
+    ["par(", ["\partial ","\frac{\partial xx}{\partial yy}"]] ,//210913
+    ["br(", ["","","\Bigl[xx\Bigr]_{yy}^{zz}"]] //210923,1019
   ];
   parL=["log(","sin(","cos(","tan(","lim(","int(","sum("]; //210901
   out=replace(str,"pi","{\pi}"); //210805
@@ -183,9 +186,7 @@ Totexform(str):=( //210803from[renew]
         if(nn==1,
           tmp1=substring(out,plv_1_1,length(out)-1);
           if(contains(parL,fun), //210901from
-            if(Addpar(tmp1), //210909from
-              tmp1="("+tmp1+")";
-            ); //210909to
+            tmp1=addpar(tmp1); //211029
           ); //210901to
           out=replace(rep_2_1,"xx",tmp1);
         );
@@ -193,9 +194,7 @@ Totexform(str):=( //210803from[renew]
           tmp1=substring(out,plv_1_1,clv_1_1-1);
           tmp2=substring(out,clv_1_1,length(out)-1);
           if(contains(parL,fun), //210901from
-           if(Addpar(tmp2), //210909from
-              tmp2="("+tmp2+")";
-            ); //210909to
+            tmp2=Addpar(tmp2); //211029
           ); //210901to
           tmp=replace(rep_2_2,"xx",tmp1);
           out=replace(tmp,"yy",tmp2);
@@ -205,9 +204,7 @@ Totexform(str):=( //210803from[renew]
           tmp2=substring(out,clv_1_1,clv_2_1-1);
           tmp3=substring(out,clv_2_1,length(out)-1);
           if(contains(parL,fun), //210901from
-            if(Addpar(tmp3), //210909from
-              tmp3="("+tmp3+")";
-            ); //210909to
+            tmp3=Addpar(tmp3); //211029
           ); //210901to
           tmp=replace(rep_2_3,"xx",tmp1);
           tmp=replace(tmp,"yy",tmp2);
@@ -219,9 +216,7 @@ Totexform(str):=( //210803from[renew]
           tmp2=substring(out,clv_1_1,clv_2_1-1);
           tmp3=substring(out,clv_2_1,clv_3_1-1);
           if(contains(parL,fun), //210901from
-            if(Addpar(tmp3), //210909from
-              tmp3="("+tmp3+")";
-            ); //210909to
+            tmp3=Addpar(tmp3); //211029
           ); //210901to
           tmp4=substring(out,clv_3_1,length(out)-1);
           tmp=replace(rep_2_4,"xx",tmp1);
@@ -240,20 +235,31 @@ Totexform(str):=( //210803from[renew]
   out;
 );
 Addpar(str):=(
-  regional(num,add,tmp);
-  if(length(str)==0,
-    add=(1==0);
-  ,
-    add=(length(str)>=2)&(str!="{\pi}");
-    num=apply(0..9,text(#));
-    tmp=apply(1..(length(str)),str_#);
-    tmp=sort(tmp);
-    add=add&(common(num,tmp)!=tmp);
-    tmp=Indexall(str,"^");
-    add=add&(length(tmp)!=1);
-    add=add&(str_1!="(");
+  regional(num,out,add,tmp);
+  out=str;
+  if(length(str)>0,
+    if(substring(str,0,1)=="!",
+      if(substring(str,1,2)!="!",
+        out=substring(str,1,length(str));
+      ,
+        out="("+substring(str,2,length(str))+")";
+      );
+    ,
+      add=(length(str)>=2)&(str!="{\pi}");
+      num=apply(0..9,text(#));
+      tmp=apply(1..(length(str)),str_#);
+      tmp=sort(tmp);
+      add=add&(common(num,tmp)!=tmp);
+      tmp=Indexall(str,"^");
+      add=add&(length(tmp)!=1);
+      add=add&(str_1!="(");
+      forall(["+","-","/"], //210923from
+        add=add%(indexof(str,#)>0);
+      ); //210923to
+      if(add,out="("+out+")");
+    );
   );
-  add;
+  out;
 );
 Listplot(list):=Listplot(list,[]);
 Listplot(Arg1,Arg2):=(
@@ -765,7 +771,7 @@ Shade(nm,plistorg,options):=(
     );
   );//180613to
   if(flg==1,
-    println("    some data not defined properly");
+    println("    Shade : some data not defined properly");
  ,
     if(Noflg<2, //200512
       G2=Joincrvs("1",plist,["nodata"]);
@@ -840,7 +846,7 @@ Enclosing2(nm,plistorg,options):=(
     Fdata=plist_1;
     Gdata=plist_(length(plist));
     KL=Intersectcurvespp(Fdata,Gdata);
-    if(length(KL)==0,
+   if(length(KL)==0,
       tmp=parse(Gdata);
       tmp1=LLcrd(Op(length(tmp),tmp)); //18.02.02from
       tmp=parse(Fdata);
@@ -884,7 +890,7 @@ Enclosing2(nm,plistorg,options):=(
         AnsL=concat(AnsL,tmp1);
       ,  //200803to
         KL=Intersectcurvespp(Fdata,Gdata);
-        if(length(KL)==0,
+        if(length(KL)==0, 
           tmp2=Prepend(Op(length(tmp1),tmp),tmp2);
           Gdata=replace(Gdata,"(","");
           Gdata=replace(Gdata,")","");
@@ -901,6 +907,8 @@ Enclosing2(nm,plistorg,options):=(
           tmp=select(KL,(#_2>tmp1)%((#_2>t1)&(|#_1-p1|>Eps1))); //210411from
           if(length(tmp)>0,
             KL=tmp;
+          ,
+            KL=KL;  //211002,1014
           ); //210411to
           t2=KL_1_2;
           ss=KL_1_3;
@@ -927,7 +935,7 @@ Enclosing2(nm,plistorg,options):=(
       );
     );
     if(flg==0,
-      AnsL=apply(AnsL,Pcrd(#));
+      AnsL=apply(1..(length(AnsL)),Pcrd(AnsL_#));
     );
   );
   AnsL=Unscaling(AnsL); //201110
@@ -3272,7 +3280,7 @@ Keyname():=(
     nL_1_21="$d$"; nL_2_21="$\partial$"; nL_4_21="$[.]_{}^{}$"; //210923
   );
   if(Shift==2,
-    nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$"; nL_4_21="[]"; //210923
+    nL_1_20="mat"; nL_2_20="det"; nL_4_20="$\circ$"; nL_4_21="pi"; //210923
   );
   if(keytype==2,
     tmp1=["D","E","F","G","A","B","C"]; forall(1..7,nL_1_(#+5)=tmp1_#);
@@ -3815,7 +3823,7 @@ var cdy = CindyJS({
     {name: "Text5", type: "Button", pos: [4.0, 0.5288135593220339, 0.06779661016949153], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1;", text: "<", textsize: 18.0},
     {name: "Text9", type: "Button", pos: [-3.888888888888889, -4.0, 0.17505382699141142], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0},
     {name: "Text111", type: "Button", pos: [4.0, -1.9034090909090906, 0.11363636363636363], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"ln(\";", text: "　", textsize: 18.0},
-    {name: "Text112", type: "Button", pos: [4.0, -1.1795774647887325, 0.07042253521126761], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==0,name=\"sum(\");if(Shift==1,name=\"(circ)\");", text: "　", textsize: 18.0},
+    {name: "Text112", type: "Button", pos: [4.0, -1.1795774647887325, 0.07042253521126761], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift<=1,name=\"sum(\");if(Shift==2,name=\"(circ)\");", text: "　", textsize: 18.0},
     {name: "Text113", type: "Button", pos: [4.0, -0.4605263157894737, 0.06578947368421052], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"diff(\",name=\"case(\");", text: "　", textsize: 18.0},
     {name: "Text114", type: "Button", pos: [4.0, -1.3525641025641029, 0.06059555549702704], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "stok=stok+1;", text: "OK", textsize: 18.0},
     {name: "Text54", type: "Button", pos: [4.0, -0.6743421052631579, 0.06578947368421052], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"par(\",name=\"tx(\");", text: "　", textsize: 18.0}
@@ -3823,14 +3831,14 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1051,
-    height: 528,
-    transform: [{visibleRect: [-29.99077535310084, 25.75927265777797, 81.19195796650757, -30.096562920483912]}],
+    height: 512,
+    transform: [{visibleRect: [-29.99077535310084, 25.75927265777797, 81.19195796650757, -28.403961842354764]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2035, version: [3, 0, 2035]}
+  cinderella: {build: 2036, version: [3, 0, 2036]}
 });
     </script>
 </head>
