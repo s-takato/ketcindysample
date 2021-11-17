@@ -310,21 +310,21 @@ new::ketscoreの画面
 \slidepage
 
 layer::{130}{0}
-\putnotese{3}{8}{\includegraphics[bb=0.00 0.00 1135.00 583.00,width=120mm]{fig/ketscore.pdf}}
-\arrowlineseg{100}{61}{4}{0}
-\putnotee{104}{61}{\scriptsize 問題表示}
-\arrowlineseg{106}{16}{4}{0}
-\putnotee{110}{16}{\scriptsize 正解表示}
-\arrowlineseg{118}{27}{4}{0}
-\putnotee{122}{27}{\scriptsize ページ}
-\arrowlineseg{118}{32}{4}{0}
-\putnotee{122}{32}{\scriptsize 満点入力}
-\arrowlineseg{106}{40}{4}{0}
-\putnotee{110}{40}{\scriptsize 採点入力}
-\arrowlineseg{8}{63}{6}{-90}
-\putnotes{8}{69}{\scriptsize 結果を欄3に表示}
-\arrowlineseg{64}{12}{4}{0}
-\putnotee{68}{12}{\scriptsize 学生を表示}
+\putnotese{2}{9}{\includegraphics[bb=0.00 0.00 1104.00 564.00,width=115mm]{fig/ketscore.pdf}}
+\arrowlineseg{95}{60}{4}{0}
+\putnotee{99}{60}{\scriptsize 問題表示}
+\arrowlineseg{101}{16}{4}{0}
+\putnotee{105}{16}{\scriptsize 正解表示}
+\arrowlineseg{113}{27}{4}{0}
+\putnotee{118}{27}{\scriptsize ページ}
+\arrowlineseg{113}{32}{4}{0}
+\putnotee{118}{32}{\scriptsize 満点入力}
+\arrowlineseg{101}{40}{4}{0}
+\putnotee{105}{40}{\scriptsize 採点入力}
+\arrowlineseg{6}{63}{6}{-90}
+\putnotes{6}{69}{\scriptsize 結果を欄3に表示}
+\arrowlineseg{60}{12}{4}{0}
+\putnotee{64}{12}{\scriptsize 学生を表示}
 
 end
 

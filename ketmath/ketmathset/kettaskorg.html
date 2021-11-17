@@ -3563,7 +3563,7 @@ if(stfixed==0,
   tmp=replace(tmp,"Student=","");
 );
 
-if(stok==1,
+if((stok==1)&(stfixed==0),
   tmp=replace(StrL_ch,"Student=","");
   if(length(tmp)>0,
     stno=parse(tmp);
@@ -3831,8 +3831,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1051,
-    height: 512,
-    transform: [{visibleRect: [-29.99077535310084, 25.75927265777797, 81.19195796650757, -28.403961842354764]}],
+    height: 510,
+    transform: [{visibleRect: [-28.12046811955981, 24.394712538403102, 78.11740289241583, -27.157441806133125]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
