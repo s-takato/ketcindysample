@@ -245,7 +245,7 @@ Addpar(str):=(
         out="("+substring(str,2,length(str))+")";
       );
     ,
-      add=(length(str)>=2)&(str!="{\pi}");
+      add=(length(str)>=3)&(str!="{\pi}");
       num=apply(0..9,text(#));
       tmp=apply(1..(length(str)),str_#);
       tmp=sort(tmp);

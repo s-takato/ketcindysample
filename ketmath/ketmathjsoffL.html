@@ -245,7 +245,7 @@ Addpar(str):=(
         out="("+substring(str,2,length(str))+")";
       );
     ,
-      add=(length(str)>=2)&(str!="{\pi}");
+      add=(length(str)>=3)&(str!="{\pi}"); //211118
       num=apply(0..9,text(#));
       tmp=apply(1..(length(str)),str_#);
       tmp=sort(tmp);
@@ -3627,8 +3627,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1057,
-    height: 504,
-    transform: [{visibleRect: [-29.729033991969356, 25.751564607108964, 78.0705849771957, -25.649578212625364]}],
+    height: 490,
+    transform: [{visibleRect: [-29.729033991969356, 23.405877533986168, 78.0705849771957, -26.56745576297776]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
