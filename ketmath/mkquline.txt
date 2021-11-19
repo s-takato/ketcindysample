@@ -1,0 +1,123 @@
+Mkquline(fname):=(
+  regional(dt,qsL,nq,nn,qs,ge,cs,ce,ss,se,
+       tmp,tmp1,tmp2,tmp3,tmp4,tmp5,nall);
+  //global quline,shline,caline,mrkline,maxline
+  quline="";shline="";caline="";
+  mrkline=""; mxscline="";
+  dt=Readlines(Dirdata,fname);
+  dt=append(dt,"");
+  tmp=select(1..(length(dt)),
+        substring(dt_#,0,1)=="Q");
+  qsL=apply(tmp,#+1);
+  forall(1..(length(qsL)),nq,
+    qs=qsL_nq;
+    tmp=select(qs..(length(dt)),dt_#=="");
+    ce=tmp_1-1;
+    tmp1=select(qs..ce,dt_#=="Sheet");
+    tmp2=select(qs..ce,dt_#=="Ans");
+    cs=tmp2_1+1;
+    tmp3=dt_(cs..ce);
+    if(length(tmp1)>0,
+      qe=tmp1_1-1;
+      ss=tmp1_1+1;
+      se=tmp2_1-1;
+      tmp1=dt_(qs..qe);
+      tmp2=dt_(ss..se);
+    ,
+      qe=tmp2_1-1;
+      tmp1=dt_(qs..qe);
+      tmp2=tmp1;
+    );
+    if(indexof(tmp2_1,"[]")>0,
+      tmp2=prepend("Q"+nq+"---",tmp2);
+    ,
+      tmp2_1="Q"+nq+tmp2_1;
+    );
+    forall(1..(length(tmp2)),
+      if(indexof(tmp2_#,"---")>0,
+        tmp2_#=tmp2_#+":: :: ";
+      );
+      tmp=Strsplit(tmp2_#,"::");
+      if(length(tmp)==1,tmp=append(tmp,"10"));
+      if(length(tmp)==2,tmp=append(tmp,"1"));
+      shline=shline+Removespace(tmp_1)+tab;
+      mrkline=mrkline+Removespace(tmp_2)+tab;
+      mxscline=mxscline+Removespace(tmp_3)+tab;
+    );
+    if(indexof(tmp3_1,"[]")>0,
+      tmp3=prepend("Q"+nq+dcm,tmp3);
+    ,
+      tmp3_1="Q"+nq+dcm+tmp3_1;
+    );
+    forall(1..(length(tmp3)),nn,
+      tmp=tmp3_nn;
+      if(substring(tmp,0,1)=="[",
+        qs=indexof(tmp,"]");
+        tmp3_nn=substring(tmp,0,qs)+dcm              
+              +substring(tmp,qs,length(tmp));
+      );
+    );
+    forall(tmp3,caline=caline+#+tab);
+    
+println(68);
+println(caline);
+    
+        
+    tmp=select(1..(length(tmp1)),substring(tmp1_#,0,1)=="[");
+    if(length(tmp)==0,
+      tmp4=[];
+    ,
+      tmp=tmp_1;
+      tmp4=tmp1_(tmp..(length(tmp1)));
+      tmp1=tmp1_(1..(tmp-1));
+    );
+    tmp1=prepend("Q"+nq,tmp1);
+    nall=length(tmp1);
+    tmp=select(1..nall,indexof(tmp1_#,dcm)>0);
+    if(length(tmp)==0,
+      tmp5=tmp1_1+dcm;
+      forall(2..(nall-1),tmp5=tmp5+tmp1_#+"//");
+      tmp1=[tmp5+tmp1_nall];
+    ,
+      tmp=tmp_1;
+      tmp5=tmp1_1+dcm;
+      forall(2..(tmp-1),tmp5=tmp5+tmp1_#+"//");
+      tmp5=tmp5+tmp1_tmp+dcm;
+      forall((tmp+1)..(nall-1),tmp5=tmp5+tmp1_#+"//");
+      tmp1=[tmp5+tmp1_nall];
+    );
+
+//    while(length(tmp4)>0,
+//      tmp=select(tmp4,substring(#)=="[");
+//      if(length(tmp)>0,
+//      ,
+//      );
+//      tmp4=substring(tmp4,
+//    );
+  );
+  quline=substring(quline,0,length(quline)-1);
+  shline=substring(shline,0,length(shline)-1);
+  caline=substring(caline,0,length(caline)-1);
+  mrkline=substring(mrkline,0,length(mrkline)-1);
+  maxline=substring(maxline,0,length(maxline)-1);  
+);
+
+
+if(1==0, 
+
+    forall(2..(length(tmp1)),nn,
+      tmp=tmp1_nn;
+      if(substring(tmp,0,1)=="[",
+        qs=indexof(tmp,"]");
+        tmp1_nn=substring(tmp,0,qs)+dcm
+              +substring(tmp,qs,length(tmp));
+      ,
+        tmp1_nn=dcm+tmp;
+      );
+    );
+    forall(tmp1,quline=quline+#+tab);
+    ); 
+
+  
+
+  

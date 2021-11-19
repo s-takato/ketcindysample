@@ -1,0 +1,7 @@
+quline="Q1::次の値を求めよ	[1]:: sin(15(deg))::sin(75(deg))	[2]:: cos(75(deg))::cos(15(deg))	Q2::sin(x-fr(pi,4))をsin(x),cos(x)で表せ．//　Hint) 加法定理を用いよ．";
+shline="Q1---	[1]=	[2]=	Q2=";
+caline="Q1::	[1]:: fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)	[2]:: fr(sq(6)-sq(2),4)::fr(sq(6)+sq(2),4)	Q2::sin(x)cos(fr(pi,4))-cos(x)sin(fr(pi,4))//=fr(1,sq(2))(sin(x)-cos(x)) ";
+mrkline="	5	5	10";
+mxscline="	1	1	1	";
+sqline="ゆめちゃん	2	3	3	2CRゆるナキン	2	2	2	2CRつるゴン	2	3	3	2CR安田朗	2	2	3	2CRとよのん	2	2	2	2";
+ansline="1	ゆめちゃん	111914:12:35	Q1---	[1]=5	[2]=8	Q2=sin(x)CR2	ゆるナキン	111914:13:41	Q1---	[1]=fr(1,sq(2))sin(x)	[2]=	Q2=cos(x)CR3	つるゴン	未提出CR4	安田朗	未提出CR5	とよのん	未提出";
