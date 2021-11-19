@@ -1,9 +1,9 @@
-This is e-upTeX, Version 3.141592653-p3.9.0-u1.27-210218-2.6 (utf8.uptex) (TeX Live 2021) (preloaded format=uplatex 2021.3.22)  17 NOV 2021 10:07
+This is e-upTeX, Version 3.141592653-p3.9.0-u1.27-210218-2.6 (utf8.uptex) (TeX Live 2021) (preloaded format=uplatex 2021.3.22)  19 NOV 2021 14:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**howtoketmathLMS.tex
-(./howtoketmathLMS.tex
+**slide0main.tex
+(./slide0main.tex
 pLaTeX2e <2020-10-01u04>+2 (based on LaTeX2e <2020-10-01> patch level 4)
 L3 programming layer <2021-02-18>
 (/Applications/KeTTeX.app/texlive/texmf-dist/tex/uplatex/base/ujarticle.cls
@@ -351,33 +351,33 @@ File: l3backend-dvips.def 2021-03-18 L3 backend support: dvips
 \g__pdf_backend_annotation_int=\count289
 \g__pdf_backend_link_int=\count290
 \g__pdf_backend_link_sf_int=\count291
-) (./howtoketmathLMS.aux)
-\openout1 = `howtoketmathLMS.aux'.
+)
+No file slide0main.aux.
+\openout1 = `slide0main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for JY2/mc/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for JT2/mc/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-Package hyperref Info: Link coloring ON on input line 39.
-
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for JY2/mc/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for JT2/mc/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+Package hyperref Info: Link coloring ON on input line 14.
 (/Applications/KeTTeX.app/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
 
@@ -390,14 +390,17 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count292
 )
-LaTeX Info: Redefining \ref on input line 39.
-LaTeX Info: Redefining \pageref on input line 39.
-LaTeX Info: Redefining \nameref on input line 39.
- (./howtoketmathLMS.out) (./howtoketmathLMS.out)
+LaTeX Info: Redefining \ref on input line 14.
+LaTeX Info: Redefining \pageref on input line 14.
+LaTeX Info: Redefining \nameref on input line 14.
 \@outlinefile=\write3
-\openout3 = `howtoketmathLMS.out'.
+\openout3 = `slide0main.out'.
 
- (./fig/slide0.tex
+
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
+(./slide0.tex
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
 (Font)              scaled to size 13.85594pt on input line 1.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
@@ -418,121 +421,25 @@ LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <24.88> not available
 (Font)              Font shape `JY2/gt/m/n' tried instead on input line 5.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
 (Font)              scaled to size 23.94002pt on input line 5.
-) (./fig/slide0.tex) (./fig/slide0.tex) (./fig/slide0.tex)
-LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <10> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 62.
-LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 9.6222pt on input line 62.
-LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <10> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 62.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 9.6222pt on input line 62.
- [0
+) [1
 
-]
-LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <9> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 79.
-LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 8.65997pt on input line 79.
-LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <9> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 79.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 8.65997pt on input line 79.
- [1]
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 6.73553pt on input line 92.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 4.8111pt on input line 92.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 92.
+] (./slide0main.aux)
 
+Package rerunfilecheck Warning: File `slide0main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
 
-(/Applications/KeTTeX.app/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 92.
-
-
-(/Applications/KeTTeX.app/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <7> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 113.
-LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 6.73553pt on input line 113.
-LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <7> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 113.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 6.73553pt on input line 113.
-LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <5> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 113.
-LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 4.8111pt on input line 113.
-LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <5> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 113.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 4.8111pt on input line 113.
-
-[2]
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 5.77332pt on input line 135.
- [3] [4]
-LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <8> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 198.
-LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 198.
-LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <8> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 198.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 198.
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 198.
-File: fig/ketmathkey.pdf Graphic file (type pdf)
-<fig/ketmathkey.pdf>
-File: fig/ketmathkey.pdf Graphic file (type pdf)
-<fig/ketmathkey.pdf>
-File: fig/ketmathkey.pdf Graphic file (type pdf)
-<fig/ketmathkey.pdf>
-File: fig/ketmathkey.pdf Graphic file (type pdf)
-<fig/ketmathkey.pdf>
- [5] [6] [7] [8] [9] [10]
-File: fig/toolketmath.pdf Graphic file (type pdf)
-<fig/toolketmath.pdf>
-File: fig/toolketmath.pdf Graphic file (type pdf)
-<fig/toolketmath.pdf>
-File: fig/toolketmath.pdf Graphic file (type pdf)
-<fig/toolketmath.pdf>
-File: fig/toolketmath.pdf Graphic file (type pdf)
-<fig/toolketmath.pdf>
- [11] [12]
-File: fig/kettask.pdf Graphic file (type pdf)
-<fig/kettask.pdf>
-File: fig/kettask.pdf Graphic file (type pdf)
-<fig/kettask.pdf>
-File: fig/kettask.pdf Graphic file (type pdf)
-<fig/kettask.pdf>
-File: fig/kettask.pdf Graphic file (type pdf)
-<fig/kettask.pdf>
- [13] [14] [15] [16]
-File: fig/ketscore.pdf Graphic file (type pdf)
-<fig/ketscore.pdf>
-File: fig/ketscore.pdf Graphic file (type pdf)
-<fig/ketscore.pdf>
-File: fig/ketscore.pdf Graphic file (type pdf)
-<fig/ketscore.pdf>
-File: fig/ketscore.pdf Graphic file (type pdf)
-<fig/ketscore.pdf>
- [17]
-[18] [19] (./howtoketmathLMS.aux)
-Package rerunfilecheck Info: File `howtoketmathLMS.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+Package rerunfilecheck Info: Checksums for `slide0main.out':
+(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             After:  D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 9395 strings out of 480951
- 135525 string characters out of 5904181
- 554921 words of memory out of 5000000
- 26804 multiletter control sequences out of 15000+600000
- 418403 words of font info for 97 fonts, out of 8000000 for 9000
+ 9312 strings out of 480951
+ 134549 string characters out of 5904181
+ 497580 words of memory out of 5000000
+ 26775 multiletter control sequences out of 15000+600000
+ 407844 words of font info for 54 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 71i,11n,77p,285b,397s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 71i,5n,77p,287b,334s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on howtoketmathLMS.dvi (20 pages, 312868 bytes).
+Output written on slide0main.dvi (1 page, 1108 bytes).
