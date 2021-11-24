@@ -1,4 +1,4 @@
-タイトル::slide0
+タイトル::slideketmath
 
 \def\rad{\;\mathrm{rad}}
 \newcommand{\hako}[2][6mm]{\fbox{$\mathstrut$\Ctab{#1}{#2}}}
