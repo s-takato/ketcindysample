@@ -12,6 +12,10 @@ Text7
 ch=1;initflg=1;
 Text8
 ch=2;initflg=1;
+Text9
+recflg=1;
+Text10
+
 Text11
 if(keytype!=2,keytype=2,keytype=1);
 Text12
@@ -54,6 +58,8 @@ Text30
 funflg=1;name="+";
 Text31
 funflg=1;if(Shift<=1,name="lim(");if(Shift==2,name="mat(");
+Text32
+
 Text33
 if(keytype!=3,keytype=3,keytype=1);
 Text34
@@ -169,7 +175,7 @@ funflg=1;name="=";
 Text90
 funflg=1;name="log(";
 Text91
-funflg=1; if(Shift==1,name="br(",name="pi");
+unflg=1; if(Shift==1,name="br(",name="pi");
 Text92
 funflg=1;name="^(";
 Text93
@@ -182,6 +188,8 @@ Text96
 funflg=1;name="/";
 Text97
 funflg=1;name="(inf)";
+Text98
+score=fmark;
 Text100
 npos=0;
 Text101
@@ -210,5 +218,19 @@ Text112
 funflg=1;if(Shift<=1,name="sum(");if(Shift==2,name="(circ)");
 Text113
 funflg=1;if(Shift==1,name="diff(",name="case(");
-Text114
-texflg=1;
+Text115
+stnuminc=1;
+Text116
+stnuminc=-1;
+Text117
+stnuminc=1000;
+Text118
+stnuminc=-1000;
+Text119
+nqinc=1000;
+Text120
+nqinc=-1000;
+Text121
+nqinc=1;
+Text122
+nqinc=-1;
