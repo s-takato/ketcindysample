@@ -25,6 +25,87 @@
 
 <script id="csinit" type="text/x-cindyscript">
 Invert(x):=reverse(x);
+Assign(str):=( //190125from
+  regional(tmp);
+  tmp=[];
+  forall(VLIST,tmp=concat(tmp,[#_1,#_2]));
+  Assign(str,tmp);
+); //190125to
+Assign(funstr,vrL):=Assign(funstr,vrL,6);
+Assign(funstr,Arg1,Arg2):=( //190813from
+  regional(vrL,precise,nn,out,tmp);
+  if(islist(Arg1),
+    vrL=Arg1; precise=Arg2;
+    nn=length(vrL)/2;
+    out=funstr;
+    forall(1..nn,
+      out=Assign(out,vrL_(2*#-1),vrL_(2*#),precise);
+    );
+  , 
+    out=Assign(funstr,Arg1,Arg2,6);
+  );
+  out;
+); //190813to
+Assign(funstr,varname,rep,precision):=(
+  regional(repstr,ii,jj,tmp,tmp1,tmp2,Notvar,Flg);
+  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,precise)+")"); //190811to
+  tmp=[46];  // 12.20
+  tmp=concat(tmp,48..57);
+  tmp=concat(tmp,65..90);
+  tmp=concat(tmp,97..122);
+  Notvar=apply(tmp,unicode(text(#),base->10));
+  tmp2="";
+  forall(1..100,
+    ii=indexof(funstr,varname);
+    if(ii>0,
+      Flg=0;
+      if(ii>1,
+        tmp=substring(funstr,ii-2,ii-1);
+        if(contains(Notvar,tmp),
+          tmp2=tmp2+substring(funstr,0,ii);
+          funstr=substring(funstr,ii,length(funstr));
+          Flg=1;
+        );
+      );
+      if(Flg==0,
+        jj=ii-1+length(varname);
+        if(jj<length(funstr),
+          tmp=substring(funstr,jj,jj+1));
+          if(contains(Notvar,tmp),
+          tmp2=tmp2+substring(funstr,0,jj);
+          funstr=substring(funstr,jj,length(funstr));
+          Flg=1;
+        );
+      );
+      if(Flg==0,
+        tmp2=tmp2+substring(funstr,0,ii-1)+repstr;
+        funstr=substring(funstr,jj,length(funstr));
+      );
+    );
+  );
+  funstr=tmp2+funstr;
+  funstr;
+);
+Textformat(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(islist(value),
+    tmp1="[";
+    forall(value,
+      tmp1=tmp1+Textformat(#,dig)+",";
+    );
+    if(length(tmp1)>1, //18.01.29from
+      tmp1=substring(tmp1,0,length(tmp1)-1);
+    );
+    tmp1=tmp1+"]"; //18.01.29until
+  ,
+    if(ispoint(value) % isstring(value),
+      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
+    ,
+      tmp1=format(value,dig);
+    );
+  );
+  tmp1;
+);
 Integrate(Arg1,Arg2):=( //180708from
   if(isstring(Arg2),
     Integratefn(Arg1,Arg2,[]);
@@ -210,26 +291,6 @@ Strsplit(str,key):=( // 210422 renewed
   out=apply(tmp,if(!isstring(#),Textformat(#,10),#));
   out;
 );
-Textformat(value,dig):=(
-  regional(vv,tmp,tmp1);
-  if(islist(value),
-    tmp1="[";
-    forall(value,
-      tmp1=tmp1+Textformat(#,dig)+",";
-    );
-    if(length(tmp1)>1, //18.01.29from
-      tmp1=substring(tmp1,0,length(tmp1)-1);
-    );
-    tmp1=tmp1+"]"; //18.01.29until
-  ,
-    if(ispoint(value) % isstring(value),
-      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
-    ,
-      tmp1=format(value,dig);
-    );
-  );
-  tmp1;
-);
 Toupper(str):=(
   regional(alphabet,out,tmp,tmp1);
   alphabet="abcdefghijklmnopqrstuvwxyz";
@@ -295,67 +356,6 @@ Colorname2cmyk(name):=( //181212
     println("    "+name+" not found");
     code=Assign(name); //190323
   );
-);
-Assign(str):=( //190125from
-  regional(tmp);
-  tmp=[];
-  forall(VLIST,tmp=concat(tmp,[#_1,#_2]));
-  Assign(str,tmp);
-); //190125to
-Assign(funstr,vrL):=Assign(funstr,vrL,6);
-Assign(funstr,Arg1,Arg2):=( //190813from
-  regional(vrL,precise,nn,out,tmp);
-  if(islist(Arg1),
-    vrL=Arg1; precise=Arg2;
-    nn=length(vrL)/2;
-    out=funstr;
-    forall(1..nn,
-      out=Assign(out,vrL_(2*#-1),vrL_(2*#),precise);
-    );
-  , 
-    out=Assign(funstr,Arg1,Arg2,6);
-  );
-  out;
-); //190813to
-Assign(funstr,varname,rep,precision):=(
-  regional(repstr,ii,jj,tmp,tmp1,tmp2,Notvar,Flg);
-  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,precise)+")"); //190811to
-  tmp=[46];  // 12.20
-  tmp=concat(tmp,48..57);
-  tmp=concat(tmp,65..90);
-  tmp=concat(tmp,97..122);
-  Notvar=apply(tmp,unicode(text(#),base->10));
-  tmp2="";
-  forall(1..100,
-    ii=indexof(funstr,varname);
-    if(ii>0,
-      Flg=0;
-      if(ii>1,
-        tmp=substring(funstr,ii-2,ii-1);
-        if(contains(Notvar,tmp),
-          tmp2=tmp2+substring(funstr,0,ii);
-          funstr=substring(funstr,ii,length(funstr));
-          Flg=1;
-        );
-      );
-      if(Flg==0,
-        jj=ii-1+length(varname);
-        if(jj<length(funstr),
-          tmp=substring(funstr,jj,jj+1));
-          if(contains(Notvar,tmp),
-          tmp2=tmp2+substring(funstr,0,jj);
-          funstr=substring(funstr,jj,length(funstr));
-          Flg=1;
-        );
-      );
-      if(Flg==0,
-        tmp2=tmp2+substring(funstr,0,ii-1)+repstr;
-        funstr=substring(funstr,jj,length(funstr));
-      );
-    );
-  );
-  funstr=tmp2+funstr;
-  funstr;
 );
 Colorcmyk2rgb(clr):=(
   regional(clrnew,tmp,black);
@@ -752,305 +752,6 @@ Strictmove(pCorg,sep):=(
     );
   );
 );
-Addax(param):=(
-  ADDAXES=text(param);
-);
-Plotdata(name1,func,variable):=Plotdata(name1,func,variable,[]);
-Plotdata(name1,func,variable,options):=(
-  regional(Fn,Va,tmp,tmp1,tmp2,eqL,name,Vname,x1,x2,dx,
-         PdL,Num,Ec,Dc,Fun,Exfun,x,Ke,Eps,Pa,Msg,
-         Ltype,Noflg,Inflg,Outflg,opstr,opcindy,color,color4);
-  if(substring(name1,0,1)!="-",  //190420from
-    name="gr"+name1;
-  ,
-    name=substring(name1,1,length(name1));
-  ); //190420to
-  tmp=Divoptions(options);
-  Ltype=tmp_1;
-  Noflg=tmp_2;
-  Inflg=tmp_3;
-  Outflg=tmp_4;
-  opstr=tmp_(length(tmp)-1);
-  color=tmp_(length(tmp)-2); color4=Colorrgb2cmyk(color); //200629
-  opcindy=tmp_(length(tmp));
-  eqL=tmp_5;
-  Num=50;
-  Ec=[];
-  Exfun="";
-  Dc=1000;
-  Msg="Y";
- Msg="N"; //
-  forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(#,0,1));
-    if(tmp1=="N",
-      Num=parse(tmp_2);
-      opstr=opstr+","+Dqq(#);
-    );
-    if(tmp1=="E",
-      if(substring(tmp_2,0,1)=="[", //180817from
-        Ec=parse(tmp_2);
-        tmp1=replace(tmp_2,"[","c"+PaO());
-        tmp1=replace(tmp1,",",".0,");
-        tmp1=replace(tmp1,"]",".0)");
-        opstr=opstr+","+Dqq("Exc="+tmp1); //180817to
-      ,
-        Exfun=tmp_2; //200716
-        opstr=opstr+","+Dqq(#);
-      );
-    );
-    if(substring(#,0,1)=="D",
-      Dc=parse(tmp_2);
-      opstr=opstr+","+Dqq(#);
-    );
-    if(tmp1=="M", //190206from
-      Msg=Toupper(substring(tmp_2,0,1));
-    ); //190206to
-  );
-  if(Inflg==0 & Outflg==0,
-    Eps=10^(-3);
-    tmp=replace(func,LFmark,"");
-    tmp=tokenize(variable,"=");
-    Vname=tmp_1;
-    if(length(tmp)>1,
-      tmp=tmp_2;
-      tmp=parse(tmp);
-      x1=tmp_1;
-      x2=tmp_2;
-      ,
-      x1=XMIN;
-      x2=XMAX;
-    );
-    Ec=append(sort(Ec),10000);
-    Fun=Assign(func,Vname, "xx");
-    Exfun=Assign(Exfun,Vname, "xx");
-    PdL=[];
-    Ke=1;
-    forall(0..Num, 
-      xx=x1+#*(x2-x1)/Num; // differs from Scilab [ / Num-1]
-      if(length(Exfun)>0,
-        tmp=parse(Exfun);
-        if(abs(tmp)<Eps,
-          if(length(PdL)>0, //180817from
-            PdL=concat(PdL,["inf"]);
-          );
-        ,
-          tmp=[xx,parse(Fun)];
-          if(length(PdL)>0,
-            tmp1=PdL_(length(PdL));
-            if(Norm(tmp,tmp1)<Dc,
-              PdL=append(PdL,tmp);
-            ,
-              if(tmp1=="inf",
-                PdL=append(PdL,tmp);
-              ,
-                PdL=concat(PdL,[["inf"],tmp]);
-              );
-          );
-          ,
-            PdL=[tmp];
-          );
-        ); //180817to
-      ,
-        Pa=[];
-        if(xx-Ec_Ke<-Eps,
-          Pa=[xx,parse(Fun)];
-        );
-        if(abs(xx-Ec_Ke)<=Eps,
-          if(length(PdL)>0,
-            if(PdL_(length(PdL))_1!="inf",
-              Pa=["inf"];
-            );
-          );
-        );
-        if(xx-Ec_Ke>Eps,
-          Pa=[xx,parse(Fun)];
-          Ke=Ke+1;
-        );
-        if(length(Pa)>0,
-          if(Pa_1=="inf",
-            PdL=concat(PdL,[Pa]);
-          ,
-            if(length(PdL)==0,
-              PdL=[Pa];
-            ,
-              tmp=PdL_(length(PdL));
-              if(tmp_1=="inf",
-                PdL=concat(PdL,[Pa]);
-              ,
-                if(dist(tmp,Pa)<Dc,
-                  PdL=concat(PdL,[Pa]);
-                ,
-                  PdL=concat(PdL,[["inf"],Pa]);
-                );
-              );
-            );
-          );
-        );
-      );
-    );
-    tmp1=[];
-    tmp2=select(1..(length(PdL)),PdL_#==["inf"]);
-    tmp=1;
-    forall(tmp2,
-      if(#>tmp,
-        tmp1=concat(tmp1,[PdL_(tmp..(#-1))])
-      );
-      tmp=#+1;
-    );
-    if(tmp<length(PdL),
-      tmp1=concat(tmp1,[PdL_(tmp..(length(PdL)))]);
-    );
-    PdL=tmp1;
-    if(length(PdL)==1,
-      PdL=PdL_1;
-    );
-    if(Noflg<3,
-      if(Msg=="Y", //190206
-        println("generate Plotdata "+name);
-      );
-      if(Measuredepth(PdL)==1,
-        tmp1=apply(PdL,Pcrd(#));
-      ,
-        tmp1=[];
-        forall(PdL,tmp2,
-          tmp1=append(tmp1,apply(tmp2,Pcrd(#)));
-        );
-      );
-      tmp=name+"="+Textformat(tmp1,5)+";";
-      parse(tmp);
-    );
-    if(Noflg<3, //190818
-      if(isstring(Ltype),
-        Ltype=Getlinestyle(text(Noflg)+Ltype,name);
-     ,
-        if(Noflg==1,Ltype=0);
-      );
-      GCLIST=append(GCLIST,[name,Ltype,opcindy]);
-    );
-    PdL;
-  , 
-    if(Noflg<3, //190818
-      if(isstring(Ltype),
-        Ltype=Getlinestyle(text(Noflg)+Ltype,name);
-      ,
-        if(Noflg==1,Ltype=0);
-      );
-      if(Inflg==1,
-        GCLIST=append(GCLIST,[name,Ltype,opcindy]);
-      );
-    );
-  );
-);
-Colorrgb2cmyk(clr):=(
-  regional(clrnew,tmp,black);
-  if(length(clr)==3, //200618
-    tmp=apply(clr,1-#);
-    black=min(tmp);
-    if(black!=1, //181112from
-      tmp=apply(clr,(1-#-black)/(1-black));
-      clrnew=append(tmp,black);
-    ,
-      clrnew=[0,0,0,1];  //200618
-    ); //181112to
-  ,
-    clrnew=clr;
-  );
-  clrnew;
-);
-PaO():=PaO("");
-PaO(Arg):=(
-  regional(out);
-  if(isstring(Arg),
-    out="("+Arg;
-  ,
-    out="";
-    repeat(Arg,
-      out=out+"(";
-    );
-  );
-  out;
-);
-Dqq(str):=DqDq(str); //18.02.11
-DqDq(str):=(
-  unicode("0022")+str+unicode("0022");
-);
-Norm(v1):=(  // 16.09.01
-  regional(out,tmp,tmp1,tmp2);
-  out=0;
-  forall(1..(length(v1)),
-    out=out+(v1_#)^2;
-  );
-  out=sqrt(out);
-  out;
-);
-Norm(v1,v2):=(
-  Norm(v2-v1);
-);
-Getlinestyle(str,name):=(
-  regional(noflg,tmp,tmp1,tmp2,Dop,Ltype,subflg);
-  Ltype=-1;
-  Dop="";
-  tmp1=indexof(str,",");
-  if(tmp1>0,
-    Dop=","+substring(str,tmp1,length(str));
-  );
-  noflg=parse(substring(str,0,1));
-  if(substring(name,0,3)=="sub",subflg=1,subflg=0);  // 16.02.29
-  if(noflg<=1, //1900818from
-    tmp1=Toupper(substring(str,1,3));
-  ,
-    tmp1="NO";
-  ); //1900818to
-  tmp2=""; //190119from
-  tmp=indexof(str,",");
-  if(tmp>0,
-    tmp2=substring(str,tmp,length(str));
-  ); //190119to
-  if(tmp1=="DR",
-    if(length(tmp2)==0,tmp2="1"); //190125
-    Ltype=[0,tmp2];  //190119
-    if(noflg==0 & subflg==0, // 16.02.29
-    );
-  );
-  if(tmp1=="DA",
-    if(length(tmp2)==0,tmp2="1,1"); //190125
-    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
-    Ltype=[1,tmp2];  //190119
-    if(noflg==0 & subflg==0, // 16.02.29
-    );
-  );
-  if(tmp1=="ID",
-    if(length(tmp2)==0,tmp2="1,1"); //190125
-    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
-    Ltype=[2,tmp2];  //190119
-    if(noflg==0 & subflg==0, // 16.02.29
-    );
-  );
-  if(tmp1=="DO",
-    if(length(tmp2)==0,tmp2="1,1"); //190125
-    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
-    Ltype=[3,tmp2];  //190119
-    if(noflg==0 & subflg==0, // 16.02.29
-    );
-  );
-  if(tmp1=="DP",
-    if(length(tmp2)==0,tmp2="1"); //190125
-    Ltype=[0,tmp2];  //190119
-    tmp1=parse(name);
-    tmp2="";
-    forall(tmp1,
-      tmp2=tmp2+Textformat(#_1,5)+",";
-    );
-    tmp2=substring(tmp2,0,length(tmp2)-1);
-    if(noflg==0,
-    );
-  );
-  if(tmp1=="NO", //190818from
-    Ltype=[-1,"0"];
-  );  //190818to
-  Ltype;
-);
 Setscaling(sc):=(
   regional(tmp);
   tmp=format(sc,5);
@@ -1064,6 +765,9 @@ Setscaling(sc):=(
     Com0th("Setscaling("+tmp_1+","+tmp_2+")");
   );
   Setwindow("Msg=no");
+);
+Addax(param):=(
+  ADDAXES=text(param);
 );
 Setax(arglistorg):=(
   regional(arglist,st,nn,tmp,eqL); 
@@ -1200,6 +904,86 @@ Listplot(nm,list,options):=(
   );
   tmp1=apply(list,Lcrd(#));
   tmp1;
+);
+Colorrgb2cmyk(clr):=(
+  regional(clrnew,tmp,black);
+  if(length(clr)==3, //200618
+    tmp=apply(clr,1-#);
+    black=min(tmp);
+    if(black!=1, //181112from
+      tmp=apply(clr,(1-#-black)/(1-black));
+      clrnew=append(tmp,black);
+    ,
+      clrnew=[0,0,0,1];  //200618
+    ); //181112to
+  ,
+    clrnew=clr;
+  );
+  clrnew;
+);
+Getlinestyle(str,name):=(
+  regional(noflg,tmp,tmp1,tmp2,Dop,Ltype,subflg);
+  Ltype=-1;
+  Dop="";
+  tmp1=indexof(str,",");
+  if(tmp1>0,
+    Dop=","+substring(str,tmp1,length(str));
+  );
+  noflg=parse(substring(str,0,1));
+  if(substring(name,0,3)=="sub",subflg=1,subflg=0);  // 16.02.29
+  if(noflg<=1, //1900818from
+    tmp1=Toupper(substring(str,1,3));
+  ,
+    tmp1="NO";
+  ); //1900818to
+  tmp2=""; //190119from
+  tmp=indexof(str,",");
+  if(tmp>0,
+    tmp2=substring(str,tmp,length(str));
+  ); //190119to
+  if(tmp1=="DR",
+    if(length(tmp2)==0,tmp2="1"); //190125
+    Ltype=[0,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="DA",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
+    Ltype=[1,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="ID",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
+    Ltype=[2,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="DO",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
+    Ltype=[3,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="DP",
+    if(length(tmp2)==0,tmp2="1"); //190125
+    Ltype=[0,tmp2];  //190119
+    tmp1=parse(name);
+    tmp2="";
+    forall(tmp1,
+      tmp2=tmp2+Textformat(#_1,5)+",";
+    );
+    tmp2=substring(tmp2,0,length(tmp2)-1);
+    if(noflg==0,
+    );
+  );
+  if(tmp1=="NO", //190818from
+    Ltype=[-1,"0"];
+  );  //190818to
+  Ltype;
 );
 Putonseg(name,sgstr):=(
   regional(seg,p1,p2);
@@ -1372,6 +1156,10 @@ Lettermove(dir,str):=(
   );
   if(length(out)==0,out=0,out=parse(out));
   out;
+);
+Dqq(str):=DqDq(str); //18.02.11
+DqDq(str):=(
+  unicode("0022")+str+unicode("0022");
 );
 Textedit(no):=(
   regional(tmp,tmp1,tmp2);
@@ -1759,6 +1547,12 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 
+px=-2; py1=3.6; py2=3;
+Text4.xy=[px,py1];
+Text5.xy=[px,py2];
+Text6.xy=[px-0.5,py1];
+Text7.xy=[px-0.5,py2];
+px=px-0.6; py=[py1+0.1,py2+0.1];
 
 dnorm(x):=(
   1/sqrt(2*pi)*exp(-x^2/2);
@@ -1769,6 +1563,29 @@ pnorm(x):=(
   y=0.5+Integrate("dnorm(t)","t=[0,x]",
     ["Num=100"]);
   y;
+);
+pnorm(x,xpL):=(
+  regional(y,rng);
+  rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
+  y=xpL_2+Integrate("dnorm(t)",rng,["Num=10"]);
+  y;
+);
+
+findxp(x):=(
+  regional(flg,nn,tmp,out);
+  nn=length(xL);
+  out=[xL_1,pL_1];
+  flg=0;
+  while((flg==0)&(nn>0),
+    tmp=xL_nn;
+    if(tmp<x,
+      out=[tmp,pL_nn];
+      flg=1;
+    ,
+      nn=nn-1;
+    );
+  );
+  out;
 );
 
 A.x=1;
@@ -1781,26 +1598,35 @@ choice=1;
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 
+Setscaling(4);
+Setwindow([-3.5,3.5],[-0.1,1.1]);
 Addax(0);
+Setax(["","z","","",""," "]);
+drwxy();
+Slider("A",[XMIN,0],[XMAX,0]);
 
 if(startflg==1,
-  Plotdata("1","dnorm(x)","x=[XMIN,XMAX]",["nodisp"]);
+  xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);
+  pL=apply(xL,pnorm(#));
+  fun1=apply(xL,[#,dnorm(#)]);
   startflg=0;
 );
 
-Setscaling(4);
-Setwindow([-3.5,3.5],[-0.1,1.1]);
-Setax(["","z","","",""," "]);
-drwxy();
 
 Optg=["dr,2","Color=[0.64,0,0.95,0.4]"];
-Listplot("gr1",gr1,["dr,2","Color=blue"]);
-
+Listplot("-gr1",fun1,["dr,2","Color=blue"]);
 Optc=["Color=red","Size=2"];
+Expr([px,py_choice/SCALEY],"w","\bullet$",Optc);
+
 if(choice==1,
-  Expr([-6.1,1.1/SCALEY],"w","\bullet$",Optc);
-  tmp=Textedit(4,"1");
-  tt=parse(tmp);
+  tmp=Textedit(4,"z=1","");
+  if(substring(tmp,0,2)=="z=",
+    tmp=replace(tmp,"z=","");
+    tt=parse(tmp);
+  ,
+    tt=ttnow;
+    Subsedit(4,"z="+tt);
+  );
   if(tt!=ttnow,
     if((tt-XMIN)*(tt-XMAX)<0,
       Putpoint("A",[tt,0]);
@@ -1809,20 +1635,24 @@ if(choice==1,
     );
   );
 );
-Slider("A",[XMIN,0],[XMAX,0]);
 
 if(choice==2,
-  Expr([-6.1,0.6/SCALEY],"w","\bullet",Optc);
-  tmp=Textedit(5,"0.1759");
-  pp=parse(tmp);
+  tmp=Textedit(5,"p=0.1759","");
+  if(substring(tmp,0,2)=="p=",
+    tmp=replace(tmp,"p=","");
+    pp=parse(tmp);
+  ,
+    pp=pnorm(ttnow,findxp(ttnow));
+    Subsedit(5,"p="+Sprintf(pp,4));
+  );
   eps=10^(-6);
   x1=XMIN; x2=XMAX;
-  y1=1-pnorm(x1);
-  y2=1-pnorm(x2);
+  y1=1-pnorm(x1,findxp(x1));
+  y2=1-pnorm(x2,findxp(x2));
   ctr=1;
   while((|y2-y1|>eps)&(ctr<20),
     x=(x1+x2)/2;
-    y=1-pnorm(x);
+    y=1-pnorm(x,findxp(x));
     if(y>pp,
       x1=x; y1=y;
     ,
@@ -1836,8 +1666,7 @@ if(choice==2,
   Subsedit(4,"z="+Sprintf(A.x,4));
 );
 
-tmp=pnorm(A.x);
-pQ=[A.x,tmp];
+tmp=pnorm(A.x,findxp(A.x));
 pR=[A.x,1-tmp];
 Htickmark([A.x,Sprintf(A.x,4)]);
 Vtickmark([0.5,"0.5",1,"nw1","1"]);
@@ -1871,16 +1700,16 @@ var cdy = CindyJS({
     {name: "NE", type: "Free", pos: [-3.1818181818181817, -4.0, -0.9090909090909091], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text0", type: "EditableText", pos: [4.0, -1.4294294294294292, -0.38481541032558253], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "df=5", textsize: 20.0},
     {name: "A", type: "Free", pos: [4.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
-    {name: "Text4", type: "EditableText", pos: [4.0, -0.6666666666666666, -0.6666666666666666], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "z=1.0000", textsize: 20.0},
-    {name: "Text5", type: "EditableText", pos: [4.0, -0.3333333333333333, -0.6666666666666666], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "p=0.1587", textsize: 20.0},
-    {name: "Text6", type: "Button", pos: [2.380952380952381, -4.0, -0.9523809523809524], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=1;", text: "z-->p", textsize: 18.0},
-    {name: "Text7", type: "Button", pos: [1.4285714285714286, -4.0, -0.9523809523809524], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=2;", text: "p-->z", textsize: 18.0}
+    {name: "Text4", type: "EditableText", pos: [2.2222222222222223, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "z=1.0000", textsize: 20.0},
+    {name: "Text5", type: "EditableText", pos: [2.6666666666666665, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "p=0.1587", textsize: 20.0},
+    {name: "Text6", type: "Button", pos: [2.7777777777777777, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=1;", text: "z-p", textsize: 18.0},
+    {name: "Text7", type: "Button", pos: [3.3333333333333335, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=2;", text: "p-z", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 886,
-    height: 402,
-    transform: [{visibleRect: [-6.807979311430148, 5.203504187222827, 6.233901055979822, -0.7139178304959183]}],
+    width: 772,
+    height: 523,
+    transform: [{visibleRect: [-4.499659666234359, 5.204164112506071, 4.682126813939894, -1.0161394226378857]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
