@@ -1,0 +1,163 @@
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+//Seteditable(3,["df=","Size=20","Width=150"]);// no ketjs on
+Seteditable(4,["z=","Size=20","Width=150"]);
+Seteditable(5,["p=","Size=20","Width=150"]);// no ketjs off
+//Text3.xy=[-3.5,1.5];
+px=-2; py1=3.6; py2=3;
+Text4.xy=[px,py1];
+Text5.xy=[px,py2];
+Text6.xy=[px-0.5,py1];
+Text7.xy=[px-0.5,py2];
+px=px-0.6; py=[py1+0.1,py2+0.1];
+
+dnorm(x):=(
+  1/sqrt(2*pi)*exp(-x^2/2);
+);
+
+pnorm(x):=(
+  regional(y);
+  y=0.5+Integrate("dnorm(t)","t=[0,x]",
+    ["Num=100"]);
+  y;
+);
+pnorm(x,xpL):=(
+  regional(y,rng);
+  rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
+  y=xpL_2+Integrate("dnorm(t)",rng,["Num=10"]);
+  y;
+);
+
+findxp(x):=(
+  regional(flg,nn,tmp,out);
+  //global xL,pL
+  nn=length(xL);
+  out=[xL_1,pL_1];
+  flg=0;
+  while((flg==0)&(nn>0),
+    tmp=xL_nn;
+    if(tmp<x,
+      out=[tmp,pL_nn];
+      flg=1;
+    ,
+      nn=nn-1;
+    );
+  );
+  out;
+);
+
+A.x=1;
+axnow=1;
+ttnow=axnow;
+startflg=1;
+choice=1;
+
+
+
+
+Ketinit();
+
+Setscaling(4);
+Setwindow([-3.5,3.5],[-0.1,1.1]);
+Addax(0);
+Setax(["","z","","",""," "]);
+drwxy();
+inspect(A,"ptsize",5.1);// no ketjs
+Slider("A",[XMIN,0],[XMAX,0]);
+
+
+if(startflg==1,
+  xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);//no ketjs on
+  pL=apply(xL,pnorm(#));
+  Ketcindyjsdata(["xL",xL,"pL",pL]);//no ketjs off
+  fun1=apply(xL,[#,dnorm(#)]);
+//  Plotdata("1","dnorm(x)","x=[XMIN,XMAX]",["nodisp"]);
+//  Plotdata("2","pnorm(x)","x=[XMIN,XMAX]",["nodisp"]);
+//  Plotdata("3","1-pnorm(x)","x=[XMIN,XMAX]",["nodisp"]);
+  startflg=0;
+);
+
+
+Optg=["dr,2","Color=[0.64,0,0.95,0.4]"];
+Listplot("-gr1",fun1,["dr,2","Color=blue"]);
+//Listplot("gr2",gr2,["dr,2"]);
+//Listplot("gr3",gr3,Optg);
+//Listplot("h1",[[XMIN,1],[XMAX,1]]);
+Optc=["Color=red","Size=2"];
+Expr([px,py_choice/SCALEY],"w","\bullet$",Optc);
+
+if(choice==1,
+  tmp=Textedit(4,"z=1","");
+  if(substring(tmp,0,2)=="z=",
+    tmp=replace(tmp,"z=","");
+    tt=parse(tmp);
+  ,
+    tt=ttnow;
+    Subsedit(4,"z="+tt);
+  );
+  if(tt!=ttnow,
+    if((tt-XMIN)*(tt-XMAX)<0,
+      Putpoint("A",[tt,0]);
+      ttnow=tt;
+      axnow=tt;
+    );
+  );
+);
+
+if(choice==2,
+  tmp=Textedit(5,"p=0.1759","");
+  if(substring(tmp,0,2)=="p=",
+    tmp=replace(tmp,"p=","");
+    pp=parse(tmp);
+  ,
+    pp=pnorm(ttnow,findxp(ttnow));
+    Subsedit(5,"p="+Sprintf(pp,4));
+  );
+  eps=10^(-6);
+  x1=XMIN; x2=XMAX;
+  y1=1-pnorm(x1,findxp(x1));
+  y2=1-pnorm(x2,findxp(x2));
+  ctr=1;
+  while((|y2-y1|>eps)&(ctr<20),
+    x=(x1+x2)/2;
+    y=1-pnorm(x,findxp(x));
+    if(y>pp,
+      x1=x; y1=y;
+    ,
+      x2=x; y2=y;
+    );
+    ctr=ctr+1;
+  );
+  tt=x;
+  Putpoint("A",[tt,0]);
+  axnow=tt;
+  Subsedit(4,"z="+Sprintf(A.x,4));
+);
+
+tmp=pnorm(A.x,findxp(A.x));
+//pQ=[A.x,tmp];
+pR=[A.x,1-tmp];
+//Listplot("2",[A,pQ],["Color=red"]);
+//Listplot("3",[pQ,[0,pQ_2]],["do,1,2","Color=red"]);
+//Listplot("4",[pR,[0,pR_2]],append(Optg,"do,1,2"));
+Htickmark([A.x,Sprintf(A.x,4)]);
+//Vtickmark([pQ_2,Sprintf(pQ_2,2),
+//    pR_2,Sprintf(pR_2,2),1,"nw1","1"]);
+Vtickmark([0.5,"0.5",1,"nw1","1"]);
+pP=[A.x,dnorm(A.x)];
+pM=[XMAX,dnorm(XMAX)];
+Listplot("1",[pP,[A.x,0],[XMAX,0],pM],["dr,2"]);
+//Partcrv("1",pP,pM,"gr1",["nodisp"]);
+//Joincrvs("1",["sg1","part1"],["nodisp"]);
+//Shade(["join1"],["Color=cyan"]);
+
+if(choice==1,
+  Subsedit(4,"z="+Sprintf(A.x,4));
+  tmp="p="+Sprintf(pR_2,4);
+  Subsedit(5,tmp);
+);
+
+Windispg();
