@@ -1707,10 +1707,30 @@ if(choice==1,
 );
 
 if(choice==2,
-  Expr([bposx,bposy_2/SCALEY],"w","\bullet$",Optc);
-  tmp=Textedit(5,"0.1759");
-  pp=parse(tmp);
-  tt=qchi(pp,dfnow);
+  tmp=Textedit(5,"","");
+  if(substring(tmp,0,3)=="pr=",
+    tmp=replace(tmp,"pr=","");
+    pp=parse(tmp);
+  ,
+    pp=1-pchi(ttnow,df);
+    Subsedit(5,"pr="+Sprintf(pp,4));
+  );
+  eps=10^(-6);
+  x1=XMIN; x2=XMAX;
+  y1=1-pchi(x1,dfnow);
+  y2=1-pchi(x2,dfnow);
+  ctr=1;
+  while((|y2-y1|>eps)&(ctr<20),
+    x=(x1+x2)/2;
+    y=1-pchi(x,dfnow);
+    if(y>pp,
+      x1=x; y1=y;
+    ,
+      x2=x; y2=y;
+    );
+    ctr=ctr+1;
+  );
+  tt=x;
   Putpoint("A",[tt/sc,0]);
   axnow=tt;
   Subsedit(4,"x="+Sprintf(tt,4));
@@ -1718,10 +1738,30 @@ if(choice==2,
 );
 
 if(choice==3,
-  Expr([bposx,bposy_3/SCALEY],"w","\bullet$",Optc);
-  tmp=Textedit(6,"0.8241");
-  pp=parse(tmp);
-  tt=qchi(1-pp,df);
+  tmp=Textedit(6,"","");
+  if(substring(tmp,0,3)=="pl=",
+    tmp=replace(tmp,"pl=","");
+    pp=parse(tmp);
+  ,
+    pp=pchi(ttnow,df);
+    Subsedit(6,"pl="+Sprintf(pp,4));
+  );
+  eps=10^(-6);
+  x1=XMIN; x2=XMAX;
+  y1=pchi(x1,dfnow);
+  y2=pchi(x2,dfnow);
+  ctr=1;
+  while((|y2-y1|>eps)&(ctr<20),
+    x=(x1+x2)/2;
+    y=pchi(x,dfnow);
+    if(y<pp,
+      x1=x; y1=y;
+    ,
+      x2=x; y2=y;
+    );
+    ctr=ctr+1;
+  );
+  tt=x;
   Putpoint("A",[tt/sc,0]);
   axnow=tt;
   Subsedit(4,"x="+Sprintf(tt,4));
@@ -1774,8 +1814,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 656,
-    height: 446,
-    transform: [{visibleRect: [-0.9968468998891175, 5.472154797246552, 8.855997530378286, -1.2265778489413455]}],
+    height: 414,
+    transform: [{visibleRect: [-1.0125257863941526, 5.5021750097852795, 9.285410893831648, -0.9968277121864914]}],
     grid: 0.5,
     background: "rgb(247,247,247)"
   }],
