@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>pFs.cdy</title>
+    <title>pchis.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -755,6 +755,40 @@ Strictmove(pCorg,sep):=(
 Addax(param):=(
   ADDAXES=text(param);
 );
+Setscaling(sc):=(
+  regional(tmp);
+  tmp=format(sc,5);
+  if(!islist(sc),
+    SCALEX=1;
+    SCALEY=sc;
+    Com0th("Setscaling("+tmp+")");
+  ,
+    SCALEX=sc_1;
+    SCALEY=sc_2;
+    Com0th("Setscaling("+tmp_1+","+tmp_2+")");
+  );
+  Setwindow("Msg=no");
+);
+Setax(arglistorg):=(
+  regional(arglist,st,nn,tmp,eqL); 
+  tmp=Divoptions(arglistorg); //190901from
+  eqL=tmp_5;
+  arglist=remove(arglistorg,eqL);
+  if(length(arglist)==0,
+    arglist=["l","x","e","y","n","O","sw"];
+  ); //190901to
+  st=1; nn=1; 
+  if(isreal(arglist_1),
+    st=2;
+    nn=arglist_1;
+  );
+  forall(st..(length(arglist)),
+    tmp=arglist_#;
+    if(length(tmp)>0,AXSTYLE_1_nn=tmp);
+    nn=nn+1;
+  ); 
+  AXSTYLE=[AXSTYLE_1,eqL]; //190901,02
+);
 Slider(ptstr,p1,p2):=Slider(ptstr,p1,p2,[]);
 Slider(ptstr,p1,p2,options):=(//190120
   regional(pA,pB,pC,color,thick,sep,tmp,tmp1,tmp2);
@@ -984,40 +1018,6 @@ Putonseg(name,p1org,p2org,options):=(
     tmp=(p2_1-p1_1)/(p2_2-p1_2)*(p_2-p1_2)+p1_1;
     parse(name+".x="+tmp+";"); //190415
   ); //190120to
-);
-Setscaling(sc):=(
-  regional(tmp);
-  tmp=format(sc,5);
-  if(!islist(sc),
-    SCALEX=1;
-    SCALEY=sc;
-    Com0th("Setscaling("+tmp+")");
-  ,
-    SCALEX=sc_1;
-    SCALEY=sc_2;
-    Com0th("Setscaling("+tmp_1+","+tmp_2+")");
-  );
-  Setwindow("Msg=no");
-);
-Setax(arglistorg):=(
-  regional(arglist,st,nn,tmp,eqL); 
-  tmp=Divoptions(arglistorg); //190901from
-  eqL=tmp_5;
-  arglist=remove(arglistorg,eqL);
-  if(length(arglist)==0,
-    arglist=["l","x","e","y","n","O","sw"];
-  ); //190901to
-  st=1; nn=1; 
-  if(isreal(arglist_1),
-    st=2;
-    nn=arglist_1;
-  );
-  forall(st..(length(arglist)),
-    tmp=arglist_#;
-    if(length(tmp)>0,AXSTYLE_1_nn=tmp);
-    nn=nn+1;
-  ); 
-  AXSTYLE=[AXSTYLE_1,eqL]; //190901,02
 );
 Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
 Expr(list):=Expr(list,[]);
@@ -1547,58 +1547,63 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 
-px=3; py1=4; py2=py1-0.5; py3=py2-0.5; py4=py3-0.5; py5=py4-0.5;
-px=px-0.8; py=[py3+0.1,py4+0.1,py5+0.1];
+px=2; py1=3.6; py2=3; py3=2.4; py4=1.8;
+px=px-0.9; py=[py2+0.1,py3+0.1,py4+0.1];
 
-Ketinit();
+x995=[
+7.88,10.6,12.84,14.86,16.75,18.55,20.28,21.95,23.59,25.19,
+26.76,28.3,29.82,31.32,32.8,34.27,35.72,37.16,38.58,40,
+41.4,42.8,44.18,45.56,46.93,48.29,49.64,50.99,52.34,53.67,
+55,56.33,57.65,58.96,60.27,61.58,62.88,64.18,65.48,66.77,
+68.05,69.34,70.62,71.89,73.17,74.44,75.7,76.97,78.23,79.49,
+80.75,82,83.25,84.5,85.75,86.99,88.24,89.48,90.72,91.95
+]; //1--60
 
-beta(p,q):=(
+loggamma(s):=(
   regional(fun,out,tmp);
-  fun=Assign("t^(p-1)*(1-t)^(q-1)",["p",p,"q",q]);
-  tmp=Integrate(fun,"t=[0,1]",["Num=200"]);
-  tmp;
-);
-
-coef(m,n):=(
-  regional(tmp,out);
-  tmp=beta(m/2,n/2);
-  out=m^(m/2)*n^(n/2)/tmp;
+  out=0;
+  if(s>=30,
+    fun=Assign("x^(s-1)*exp(-x)",["s",s]);
+    out=Integrate(fun,"x=[0,100]",["Num=500"]);
+    out=log(re(out));
+  ,
+    out=loggamma(s+1)-log(s);
+  );
   out;
 );
 
-
-df(x,m,n):=(
-  regional(tmp,out);
-  out=coefmn*((x^(m/2-1))/(m*x+n)^((m+n)/2));
+coef(n):=(
+  -n/2*log(2)-loggamma(n/2)
 );
 
-pf(x,m,n):=(
-  regional(y,data,div);
-  div=100;
-  data=apply(0..div,[#/div,df(#/div,m,n)]);
-  y=Integrate(data,[0,1]);
-  div=max([50,|x-1|/0.1]);
-  data=apply(0..div,[1+(x-1)*#/div,df(1+(x-1)*#/div,m,n)]);
-  y=y+Integrate(data,[1,x]);
-  min([y,1]);
+dchi(x,n):=(
+  regional(out);
+  if(x>0,
+    out=(n/2-1)*log(x)-x/2+coefn;
+    out=exp(out);
+  ,
+    out=0;
+  );
+  out;
 );
-pf(x,m,n,xpL):=(
+
+pchi(x,n,xpL):=(
   regional(y,rng,fun);
-  fun=Assign("df(t,m,n)",["m",mf,"n",nf]);
   rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
+  fun=Assign("dchi(t,n)",["n",n]);
   y=xpL_2+Integrate(fun,rng,["Num=10"]);
   y;
 );
 
-makecxp(mf,nf):=(
+makecxp(df,sc):=(
   regional(tmp,fun,rng);
-  coefmn=coef(mf,nf);
-  xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);
-  if(mf==1,xL_1=10^(-10));
-  fun=Assign("df(t,m,n)",["m",mf,"n",nf]);
+  coefn=coef(df);
+  xL=apply(0..100,#/100*(XMAX*sc-XMIN)+XMIN);
+  if(df==1,xL_1=10^(-10));
+  fun=Assign("dchi(x,n)",["n",df]);
   pL=[0];
   forall(1..100,
-    rng=Assign("t=[t1,t2]",["t1",xL_#,"t2",xL_(#+1)]);
+    rng=Assign("x=[x1,x2]",["x1",xL_#,"x2",xL_(#+1)]);
     tmp=pL_(-1)+Integrate(fun,rng,["Num=20"]);
     pL=append(pL,tmp);
   );
@@ -1621,67 +1626,55 @@ findxp(x):=(
   out;
 );
 
-qf(pp,m,n):=(
-  regional(eps,x1,x2,x,y1,y2,y,ctr,tt,tmp);
-  eps=10^(-6);
-  x1=XMIN; x2=XMAX;
-  y1=1-pf(x1,m,n);
-  y2=1-pf(x2,m,n);
-  ctr=1;
-  while((|y2-y1|>eps)&(ctr<20),
-    x=(x1+x2)/2;
-    y=1-pf(x,m,n);
-    if(y>pp,
-      x1=x; y1=y;
-    ,
-      x2=x; y2=y;
-    );
-    ctr=ctr+1;
-  );
-  tt=x;
-  tt;
-);
 
-mfnow=0;
-nfnow=0;
+
+
+dfnow=0;
 axnow=A.x;
 ttnow=axnow;
 choice=1;
-;
+sc=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 
+
 Addax(0);
-Slider("A",[XMIN,0],[XMAX,0]);
-
-
-xmn=0; xmx=10;
+xmn=0; xmx=8;
 Setscaling(4);
 Setwindow([xmn,xmx],[-0.1,1.1]);
-Setax(["","f","","",""," "]);
+Setax(["","x","","",""," "]);
 drwxy();
-tmp=Textedit(0,"8");
-mf=parse(tmp);
-tmp=Textedit(3,"6");
-nf=parse(tmp);
+Slider("A",[XMIN,0],[XMAX-0.00001,0]);
+op=["dr,2"];
+opb=["dr,2","Color=blue"];
+opr=["dr,2","Color=red"];
+opg=["dr,2","Color=[0.64,0,0.95,0.4]"];
 
-if((mf!=mfnow)%(nf!=nfnow),
-  sc=1;
-  makecxp(mf,nf);
-  tmp1=apply(0..100,[#/100,df(#/100*sc,mf,nf)]);
+tmp=Textedit(3,"df=3","");
+if(substring(tmp,0,3)=="df=",
+  tmp=replace(tmp,"df=","");
+  df=parse(tmp);
+,
+  df=dfnow;
+  Subsedit(3,"df="+df);
+);
+
+if(df!=dfnow,
+  sc=ceil(x995_df/XMAX);
+  makecxp(df,sc);
+  tmp1=apply(0..100,[#/100,dchi(#/100*sc,df)]);
   tmp2=apply(0..50,
-    [1+#/50*(XMAX-1),df((1+#/50*(XMAX-1))*sc,mf,nf)]);
+    [1+#/50*(XMAX-1),dchi((1+#/50*(XMAX-1))*sc,df)]);
   fun1=concat(tmp1,tmp2);
   tt=Textedit(4,"");
   tt=parse(tt);
   ttnow=tt;
   Putpoint("A",[tt/sc,0]);
-  mfnow=mf;
-  nfnow=nf;
+  dfnow=df;
 );
-Subsedit(0,"df1="+text(mfnow));
-Subsedit(3,"df2="+text(nfnow));
+
+Subsedit(3,"df="+text(dfnow));
 
 op=["dr,2","Num=150"];
 opr=append(op,"Color=red");
@@ -1693,7 +1686,7 @@ Optc=["Color=red","Size=2"];
 Expr([px,py_choice/SCALEY],"w","\bullet$",Optc);
 
 if(choice==1,
-  tmp=Textedit(4,"2");
+  tmp=Textedit(4,"3");
   tt=parse(tmp);
   if(tt!=ttnow,
     if((tt/sc-XMIN)*(tt/sc-XMAX)<0,
@@ -1703,37 +1696,79 @@ if(choice==1,
     );
   );
 );
-
 if(choice==2,
-  Expr([bposx,bposy_2/SCALEY],"w","\bullet$",Optc);
-  tmp=Textedit(5,"0.2070");
-  pp=parse(tmp);
-  tt=qf(pp,mfnow,nfnow);
+  tmp=Textedit(5,"","");
+  if(substring(tmp,0,3)=="pr=",
+    tmp=replace(tmp,"pr=","");
+    pp=parse(tmp);
+  ,
+    pp=1-pchi(ttnow,df,findxp(ttnow));
+    Subsedit(5,"pr="+Sprintf(pp,4));
+  );
+  eps=10^(-6);
+  x1=XMIN; x2=XMAX;
+  y1=1-pchi(x1,dfnow,findxp(x1));
+  y2=1-pchi(x2,dfnow,findxp(x2));
+  ctr=1;
+  while((|y2-y1|>eps)&(ctr<20),
+    x=(x1+x2)/2;
+    y=1-pchi(x,dfnow,findxp(x));
+    if(y>pp,
+      x1=x; y1=y;
+    ,
+      x2=x; y2=y;
+    );
+    ctr=ctr+1;
+  );
+  tt=x;
   Putpoint("A",[tt/sc,0]);
   axnow=tt;
-  Subsedit(4,"f="+Sprintf(tt,4));
+  Subsedit(4,"x="+Sprintf(tt,4));
   Subsedit(6,"pl="+format(1-pp,4));
 );
 
 if(choice==3,
-  tmp=Textedit(6,"0.7930");
-  pp=parse(tmp);
-  tt=qf(1-pp,mfnow,nfnow);
+  tmp=Textedit(6,"","");
+  if(substring(tmp,0,3)=="pl=",
+    tmp=replace(tmp,"pl=","");
+    pp=parse(tmp);
+  ,
+    pp=pchi(ttnow,df,findxp(ttnow));
+    Subsedit(6,"pl="+Sprintf(pp,4));
+  );
+  eps=10^(-6);
+  x1=XMIN; x2=XMAX;
+  y1=pchi(x1,dfnow,findxp(x1));
+  y2=pchi(x2,dfnow,findxp(x2));
+  ctr=1;
+  while((|y2-y1|>eps)&(ctr<20),
+    x=(x1+x2)/2;
+    y=pchi(x,dfnow,findxp(x));
+    if(y<pp,
+      x1=x; y1=y;
+    ,
+      x2=x; y2=y;
+    );
+    ctr=ctr+1;
+  );
+  tt=x;
   Putpoint("A",[tt/sc,0]);
   axnow=tt;
   Subsedit(4,"x="+Sprintf(tt,4));
   Subsedit(5,"pr="+format(1-pp,4));
 );
 
-pD=[A.x,df(A.x/sc,mf,nf)];
-tmp=pf(A.x,mfnow,nfnow);
+tmp=pchi(sc*A.x,df,findxp(sc*A.x));
+
 pR=[A.x,1-tmp];
-Listplot("2",[A,pD],["Color=red"]);
 Htickmark([A.x,Sprintf(sc*A.x,4),XMAX,"s2",text(sc*XMAX)]);
 Vtickmark([0.5,"0.5",1,"nw1","1"]);
 
+pP=[A.x,dchi(sc*A.x,dfnow)];
+Listplot("1",[pP,[A.x,0]],opr);
+
 if(choice==1,
-  Subsedit(4,"f="+Sprintf(A.x,4));
+  Subsedit(4,"x="+Sprintf(sc*A.x,4));
   tmp="pr="+Sprintf(pR_2,4);
   Subsedit(5,tmp);
   tmp="pl="+Sprintf(1-pR_2,4);
@@ -1741,7 +1776,6 @@ if(choice==1,
 );
 
 Windispg();
-;
 </script>
     <script type="text/javascript">
 var cdy = CindyJS({
@@ -1757,23 +1791,22 @@ var cdy = CindyJS({
   angleUnit: "°",
   geometry: [
     {name: "SW", type: "Free", pos: [0.0, -1.6, 4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [4.0, 1.76, 0.4], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, 0.0, 2.0], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
-    {name: "Text3", type: "EditableText", pos: [-3.4285714285714284, -4.0, -1.1428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "df2=6", textsize: 20.0},
-    {name: "Text4", type: "EditableText", pos: [4.0, 4.0, 1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "f=2.0000", textsize: 20.0},
-    {name: "Text5", type: "EditableText", pos: [4.0, 3.3333333333333335, 1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "pr=0.2070", textsize: 20.0},
-    {name: "Text0", type: "EditableText", pos: [-3.0, -4.0, -1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "df1=8", textsize: 20.0},
-    {name: "Text6", type: "EditableText", pos: [4.0, 2.6666666666666665, 1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "pl=0.7930", textsize: 20.0},
-    {name: "Text7", type: "Button", pos: [-3.0666666666666664, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=1;", text: "f-p", textsize: 18.0},
-    {name: "Text8", type: "Button", pos: [-3.68, -4.0, -1.6], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=2;", text: "pr-f", textsize: 18.0},
-    {name: "Text9", type: "Button", pos: [4.0, 3.4782608695652177, 1.7391304347826089], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=3;", text: "pl-f", textsize: 18.0}
+    {name: "NE", type: "Free", pos: [4.0, 2.2, 0.5], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "A", type: "Free", pos: [4.0, 0.0, 2.6666666666666665], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
+    {name: "Text3", type: "EditableText", pos: [-2.2222222222222223, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "df=3", textsize: 20.0},
+    {name: "Text4", type: "EditableText", pos: [-2.6666666666666665, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "x=3.0000", textsize: 20.0},
+    {name: "Text5", type: "EditableText", pos: [-3.3333333333333335, -4.0, -1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "pr=0.3917", textsize: 20.0},
+    {name: "Text6", type: "EditableText", pos: [4.0, 3.6, 2.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "pl=0.6083", textsize: 20.0},
+    {name: "Text7", type: "Button", pos: [-1.5999999999999999, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=1;", text: "x-p", textsize: 18.0},
+    {name: "Text8", type: "Button", pos: [-2.0, -4.0, -1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=2;", text: "pr-x", textsize: 18.0},
+    {name: "Text9", type: "Button", pos: [-2.6666666666666665, -4.0, -2.2222222222222223], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=3;", text: "pl-x", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 840,
-    height: 447,
-    transform: [{visibleRect: [-0.5840350283283764, 5.111947045705676, 10.44044640528592, -0.7546520028962167]}],
-    grid: 1.0,
+    width: 660,
+    height: 409,
+    transform: [{visibleRect: [-1.0314440331851908, 5.350062609829109, 9.319904336736839, -1.064636607289238]}],
+    grid: 0.5,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
@@ -1784,5 +1817,8 @@ var cdy = CindyJS({
 </head>
 <body>
     <div id="CSCanvas"></div>
+<footer>
+<p><small>&emsp;&copy; 2021 Setsuo Takato</small></p>
+</footer>
 </body>
 </html>

@@ -50,10 +50,17 @@ ptg(x,n,xpL):=(
 );
 
 makecxp(df):=(
+  regional(tmp,fun,rng);
   //global coefn,xL,pL
   coefn=coef(df);
   xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);
-  pL=apply(xL,ptg(#,df));
+  fun=Assign("dt(t,n)",["n",df]);
+  pL=[0.5+Integrate(fun,"t=[0,XMIN]",["Num=100"])];
+  forall(1..100,
+    rng=Assign("t=[t1,t2]",["t1",xL_#,"t2",xL_(#+1)]);
+    tmp=pL_(-1)+Integrate(fun,rng,["Num=10"]);
+    pL=append(pL,tmp);
+  );
 );
 
 findxp(x):=(
