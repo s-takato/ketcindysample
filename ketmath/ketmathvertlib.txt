@@ -11,12 +11,12 @@ greflg=0;
 boldflg=0;
 vecflg=0;
 
-nch=3;
+nch=2;
 ch=2;
 //nt=4;
 px=15;
-tposL=[17.4,14.4,11.4,8.4];
-tposL=apply(1..4,[px+0.5,tposL_#]);
+dtpy=3.2;
+tposL=apply(1..4,[px+0.5,17.4-(#-1)*dtpy]);
 posyL=[23,-2.5,-34];
 
 //Setwindow([-20,65],[-17,15]);
@@ -49,6 +49,10 @@ Seteditable(32,["","Size=18","Width=80"]);
 Text1.xy=[px+1,posyL_1-1];
 Text2.xy=[px+1,posyL_2-1];
 Text3.xy=[px+1,posyL_3-1];
+inspect(T1,"ptsize",6);
+inspect(T2,"ptsize",6);
+inspect(T3,"ptsize",6);
+inspect(T4,"ptsize",6);
 // no ketjs off
 
 

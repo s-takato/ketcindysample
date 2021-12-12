@@ -2637,7 +2637,6 @@ Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 aalinestart=1;
 ansline="";
-caline="";
 mrkline="";
 quline="";
 shline="";
@@ -3257,11 +3256,11 @@ greflg=0;
 boldflg=0;
 vecflg=0;
 
-nch=3;
+nch=2;
 ch=2;
 px=15;
-tposL=[17.4,14.4,11.4,8.4];
-tposL=apply(1..4,[px+0.5,tposL_#]);
+dtpy=3.2;
+tposL=apply(1..4,[px+0.5,17.4-(#-1)*dtpy]);
 posyL=[23,-2.5,-34];
 
 
@@ -3534,6 +3533,11 @@ if(startflg==1,
   stnumflg=0;
   choose=1;
   startflg=0;
+,
+  T2.x=T1.x; T4.x=T3.x;
+  if(T1.y-T2.y<dtpy,T2.y=T1.y-dtpy);
+  if(T3.y-T4.y<dtpy,T4.y=T3.y-dtpy);
+
 );
 
 drawcircle([px,posyL_ch],0.5,color->[1,0,0]);
@@ -3649,7 +3653,6 @@ if(recflg==1,
   stnum=0;
   recflg=0;
 );
-
 if(funflg==1,
   if(contains(Manifun,name),
     parse(name+";");
@@ -3665,8 +3668,8 @@ if(funflg==1,
 
 Dispposition([50,-0.5],2.8,npos,StrL_ch);
 
-tpL=[T1.xy,T3.xy,T5.xy];
-dyL=[T1.y-T2.y,T3.y-T4.y, 3];
+tpL=[T1.xy,T3.xy];
+dyL=[T1.y-T2.y,T3.y-T4.y];
 
 texstr="";
 forall(1..nch,nc,
@@ -3682,7 +3685,7 @@ forall(1..nch,nc,
   ns=length(sL);
   forall(1..ns,nn,
     strt=Gettexform(sL_nn);
-    tmp=tp+[1,-0.2];
+    tmp=tp+[1.2,-0.2];
     Drwletter(tmp,strt,22);
     tp=tp-[0,dy];
     texstr=texstr+strt;
@@ -3711,10 +3714,10 @@ var cdy = CindyJS({
     {name: "Text2", type: "EditableText", pos: [4.0, -0.875, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "Text10", type: "EditableText", pos: [4.0, 0.04858965734006645, 0.1787004960615212], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 55, text: "q=", textsize: 18.0},
-    {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T2", type: "Free", pos: [4.0, 3.7161290322580647, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T3", type: "Free", pos: [4.0, 2.941935483870968, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T4", type: "Free", pos: [4.0, 2.167741935483871, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "Text32", type: "EditableText", pos: [-3.3961928698400765, -4.0, -0.15385224402595468], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, text: "St=", textsize: 18.0},
     {name: "Text47", type: "Button", pos: [4.0, -1.1714285714285715, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "___", textsize: 14.0},
     {name: "Text101", type: "Button", pos: [4.0, 0.3489217349164041, 0.0969227041434456], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;Delete();", text: "BS", textsize: 16.0},
@@ -3831,8 +3834,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 664,
-    height: 675,
-    transform: [{visibleRect: [5.81521414881828, 30.102721878747065, 74.79978923873847, -40.024669967180834]}],
+    height: 659,
+    transform: [{visibleRect: [5.766029996220738, 30.076859169475743, 74.75060508614092, -38.38825375862275]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

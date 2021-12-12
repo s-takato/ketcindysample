@@ -76,9 +76,9 @@ item::\Ltab{8zw}{下添字}$a_n\ \Longrightarrow$\ \verb|a_n|\vspace{-2mm}
 item::全角文字を混ぜてもよい\\
 　$x^2+2x-3=0$の解は$x=1,-3\ \Longrightarrow$\ \verb|x^2+2x-3=0の解はx=1,-3|\vspace{-2mm}
 item::\Ltab{8zw}{ギリシャ文字}$\alpha, \beta\ \Longrightarrow$\ \verb|{\alpha},{\beta}|\vspace{-2mm}
-item::その他の\TeX 記号はそのまま書いて(sp)で区切る\\
+item::その他の\TeX 記号はそのまま書いて(sp)やコンマで区切る\\
 　$\sim, \subset, \in  \Longrightarrow$\ \verb|\sim(sp)\subset(sp)\in|\vspace{-2mm}
-item::Maxima数式に変換する場合，数式文字は1文字とする．\\
+item::数式文字は1文字とする(特に，Maxima利用のとき)\\
 　absin(x)\ $\Longrightarrow \ $(Maxima数式)　\verb|a*b*sin(x)| \vspace{-2mm}
 end
 
@@ -88,8 +88,7 @@ new::KeTMath(数式入力アプリ)
 \slidepage
 
 itemize
-item::{\footnotesize\url{https://s-takato.github.io/ketcindysample/ketmath/offline/ketmathjsoffL.html}}\\
-　・samples of ketcindy  $>$ ketmath systemに行けばよい．
+item::samples of ketcindy  $>$ ketmath system
 item::キーボードにより簡易数式を入力することができる\\
 　・\TeX 数式（TeXボタンを押すとソースも）が表示される．
 

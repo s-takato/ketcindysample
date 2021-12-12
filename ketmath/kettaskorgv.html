@@ -3254,11 +3254,11 @@ greflg=0;
 boldflg=0;
 vecflg=0;
 
-nch=3;
+nch=2;
 ch=2;
 px=15;
-tposL=[17.4,14.4,11.4,8.4];
-tposL=apply(1..4,[px+0.5,tposL_#]);
+dtpy=3.2;
+tposL=apply(1..4,[px+0.5,17.4-(#-1)*dtpy]);
 posyL=[23,-2.5,-34];
 
 
@@ -3581,7 +3581,6 @@ if(startflg==1,
   forall(1..(length(tposL)),
     tmp="T"+text(#);
     Putpoint(tmp,tposL_#);
-    inspect(parse(tmp),"ptsize",3);
   );
   ch=3;
   Subsedit(3,"Student=");
@@ -3589,11 +3588,9 @@ if(startflg==1,
   npos=length(tmp);
   startflg=0;
 ,
-  forall(1..(length(tposL)),
-    tmp="T"+text(#);
-    tmp1=parse(tmp+".xy");
-    Putpoint(tmp,tposL_#,tmp1);
-  );
+  T2.x=T1.x; T4.x=T3.x;
+  if(T1.y-T2.y<dtpy,T2.y=T1.y-dtpy);
+  if(T3.y-T4.y<dtpy,T4.y=T3.y-dtpy);
 );
 
 nameL=Keyname();
@@ -3711,8 +3708,8 @@ if(funflg==1,
 
 Dispposition([50,-0.5],2.8,npos,StrL_ch);
 
-tpL=[T1.xy,T3.xy,T5.xy];
-dyL=[T1.y-T2.y,T3.y-T4.y,T5.y-T6.y];
+tpL=[T1.xy,T3.xy];
+dyL=[T1.y-T2.y,T3.y-T4.y];
 
 texstr="";
 forall(1..nch,nc,
@@ -3728,7 +3725,7 @@ forall(1..nch,nc,
   ns=length(sL);
   forall(1..ns,nn,
     strt=Gettexform(sL_nn);
-    tmp=tp+[1,-0.2];
+    tmp=tp+[1.2,-0.2];
     Drwletter(tmp,strt,22);
     tp=tp-[0,dy];
     texstr=texstr+strt;
@@ -3785,10 +3782,10 @@ var cdy = CindyJS({
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, text: "Student=", textsize: 24.0},
     {name: "Text10", type: "EditableText", pos: [4.0, 0.04953560371517028, 0.12393637053634336], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 45, textsize: 18.0},
     {name: "Text32", type: "EditableText", pos: [-2.5098039215686274, -4.0, -0.1568627450980392], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "問=", textsize: 18.0},
-    {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T2", type: "Free", pos: [4.0, 3.7161290322580647, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T3", type: "Free", pos: [4.0, 2.941935483870968, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
-    {name: "T4", type: "Free", pos: [4.0, 2.167741935483871, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.2737430167598267, -4.0, 0.11053512883793361], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text47", type: "Button", pos: [4.0, -1.1714285714285715, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "___", textsize: 14.0},
     {name: "Text101", type: "Button", pos: [4.0, 0.3489217349164041, 0.0969227041434456], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;Delete();", text: "BS", textsize: 16.0},
