@@ -144,14 +144,23 @@ Setax(["","f","","",""," "]);
 drwxy();
 inspect(A,"ptsize",5.1);// no ketjs
 tmp=Textedit(0,"8");
-mf=parse(tmp);
-tmp=Textedit(3,"6");
-nf=parse(tmp);
+if(length(tmp)>0,
+  mf=parse(tmp);
+);
+  tmp=Textedit(3,"6");
+if(length(tmp)>0,
+  nf=parse(tmp);
+);
 
 if((mf!=mfnow)%(nf!=nfnow),
   sc=1;
 //  sc=ceil(qf(0.025,mf,nf)/xmx);
-  makecxp(mf,nf);
+  if((mf==8)&(nf==6),
+    makecxp(mf,nf);//no ketjs
+    Ketcindyjsdata(["coefmn",coefmn,"xL",xL,"pL",pL]);//no ketjs
+  ,
+    makecxp(mf,nf);
+  );
   tmp1=apply(0..100,[#/100,df(#/100*sc,mf,nf)]);
   tmp2=apply(0..50,
     [1+#/50*(XMAX-1),df((1+#/50*(XMAX-1))*sc,mf,nf)]);

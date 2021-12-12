@@ -172,7 +172,12 @@ if(length(tmp)>0,
 
 if(df!=dfnow,
   sc=ceil(x995_df/XMAX);
-  makecxp(df,sc);
+  if(df==3,
+    makecxp(df,sc);//no ketjs
+    Ketcindyjsdata(["coefn",coefn,"xL",xL,"pL",pL]);//no ketjs
+  ,
+    makecxp(df,sc);
+  );
   tmp1=apply(0..100,[#/100,dchi(#/100*sc,df)]);
   tmp2=apply(0..50,
     [1+#/50*(XMAX-1),dchi((1+#/50*(XMAX-1))*sc,df)]);

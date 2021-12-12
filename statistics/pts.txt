@@ -127,7 +127,12 @@ if(length(tmp)>0,
 );
 df=parse(tmp);
 if(df!=dfnow,
-  makecxp(df);
+  if(df==5,
+    makecxp(df);//no ketjs
+    Ketcindyjsdata(["coefn",coefn,"xL",xL,"pL",pL]);//no ketjs
+  ,
+    makecxp(df);
+  );
   fun1=apply(xL,[#,dt(#,df)]);
 //  fun2=apply(-50..50,[#/50*XMAX,ptg(#/50*XMAX,df)]);
 //  fun3=apply(fun2,[#_1,1-#_2]);
