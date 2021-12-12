@@ -1547,8 +1547,8 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 
-px=3; py1=4; py2=py1-0.5; py3=py2-0.5; py4=py3-0.5; py5=py4-0.5;
-px=px-0.8; py=[py3+0.1,py4+0.1,py5+0.1];
+px=3.5; py=[3.6,3,2.4,1.8,1.2];
+px=px-1.3; py=apply(py,#+0.1);
 
 Ketinit();
 
@@ -1586,7 +1586,7 @@ pf(x,m,n,xpL):=(
   regional(y,rng,fun);
   fun=Assign("df(t,m,n)",["m",mf,"n",nf]);
   rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
-  y=xpL_2+Integrate(fun,rng,["Num=10"]);
+  y=xpL_2+Integrate(fun,rng,["Num=15"]);
   y;
 );
 
@@ -1599,20 +1599,25 @@ makecxp(mf,nf):=(
   pL=[0];
   forall(1..100,
     rng=Assign("t=[t1,t2]",["t1",xL_#,"t2",xL_(#+1)]);
-    tmp=pL_(-1)+Integrate(fun,rng,["Num=20"]);
+    tmp=pL_(-1)+Integrate(fun,rng,["Num=40"]);
     pL=append(pL,tmp);
   );
 );
 
 findxp(x):=(
-  regional(flg,nn,tmp,out);
+  regional(flg,nn,tmp,tmp1,out);
   nn=length(xL);
   out=[xL_1,pL_1];
   flg=0;
   while((flg==0)&(nn>0),
     tmp=xL_nn;
     if(tmp<x,
-      out=[tmp,pL_nn];
+      tmp1=xL_(nn+1);
+      if(|tmp-x|<|tmp1-x|,
+        out=[tmp,pL_nn];
+      ,
+        out=[tmp1,pL_(nn+1)];
+      );
       flg=1;
     ,
       nn=nn-1;
@@ -1673,27 +1678,33 @@ if((mf!=mfnow)%(nf!=nfnow),
   tmp2=apply(0..50,
     [1+#/50*(XMAX-1),df((1+#/50*(XMAX-1))*sc,mf,nf)]);
   fun1=concat(tmp1,tmp2);
-  tt=Textedit(4,"");
+  tt=Textedit(4,"","");
   tt=parse(tt);
   ttnow=tt;
   Putpoint("A",[tt/sc,0]);
   mfnow=mf;
   nfnow=nf;
 );
-Subsedit(0,"df1="+text(mfnow));
-Subsedit(3,"df2="+text(nfnow));
+Subsedit(0,text(mfnow));
+Subsedit(3,text(nfnow));
 
-op=["dr,2","Num=150"];
+op=["dr,2"];
 opr=append(op,"Color=red");
 opb=append(op,"Color=blue");
 opg=append(op,"Color=[0.64,0,0.95,0.4]");
 Listplot("-gr1",fun1,opb);
-
 Optc=["Color=red","Size=2"];
-Expr([px,py_choice/SCALEY],"w","\bullet$",Optc);
+Expr([px,py_(choice+2)/SCALEY],"w","\bullet$",Optc);
+tmp=px+0.7;
+Expr([tmp,py_1/SCALEY],"e","m=",["Size=1.3"]);
+Expr([tmp,py_2/SCALEY],"e","n=",["Size=1.3"]);
+Expr([tmp,py_3/SCALEY],"e","f=",["Size=1.3"]);
+Expr([tmp,py_4/SCALEY],"e","pr=",["Size=1.3"]);
+Expr([tmp,py_5/SCALEY],"e","pl=",["Size=1.3"]);
+
 
 if(choice==1,
-  tmp=Textedit(4,"2");
+  tmp=Textedit(4,"2","");
   tt=parse(tmp);
   if(tt!=ttnow,
     if((tt/sc-XMIN)*(tt/sc-XMAX)<0,
@@ -1711,8 +1722,8 @@ if(choice==2,
   tt=qf(pp,mfnow,nfnow);
   Putpoint("A",[tt/sc,0]);
   axnow=tt;
-  Subsedit(4,"f="+Sprintf(tt,4));
-  Subsedit(6,"pl="+format(1-pp,4));
+  Subsedit(4,Sprintf(tt,4));
+  Subsedit(6,format(1-pp,4));
 );
 
 if(choice==3,
@@ -1721,22 +1732,22 @@ if(choice==3,
   tt=qf(1-pp,mfnow,nfnow);
   Putpoint("A",[tt/sc,0]);
   axnow=tt;
-  Subsedit(4,"x="+Sprintf(tt,4));
-  Subsedit(5,"pr="+format(1-pp,4));
+  Subsedit(4,Sprintf(tt,4));
+  Subsedit(5,format(1-pp,4));
 );
 
 pD=[A.x,df(A.x/sc,mf,nf)];
 tmp=pf(A.x,mfnow,nfnow);
 pR=[A.x,1-tmp];
-Listplot("2",[A,pD],["Color=red"]);
+Listplot("2",[A,pD],opr);
 Htickmark([A.x,Sprintf(sc*A.x,4),XMAX,"s2",text(sc*XMAX)]);
 Vtickmark([0.5,"0.5",1,"nw1","1"]);
 
 if(choice==1,
-  Subsedit(4,"f="+Sprintf(A.x,4));
-  tmp="pr="+Sprintf(pR_2,4);
+  Subsedit(4,Sprintf(A.x,4));
+  tmp=Sprintf(pR_2,4);
   Subsedit(5,tmp);
-  tmp="pl="+Sprintf(1-pR_2,4);
+  tmp=Sprintf(1-pR_2,4);
   Subsedit(6,tmp);
 );
 
@@ -1759,20 +1770,20 @@ var cdy = CindyJS({
     {name: "SW", type: "Free", pos: [0.0, -1.6, 4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 1.76, 0.4], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "A", type: "Free", pos: [4.0, 0.0, 2.0], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
-    {name: "Text3", type: "EditableText", pos: [-3.4285714285714284, -4.0, -1.1428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "df2=6", textsize: 20.0},
-    {name: "Text4", type: "EditableText", pos: [4.0, 4.0, 1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "f=2.0000", textsize: 20.0},
-    {name: "Text5", type: "EditableText", pos: [4.0, 3.3333333333333335, 1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "pr=0.2070", textsize: 20.0},
-    {name: "Text0", type: "EditableText", pos: [-3.0, -4.0, -1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "df1=8", textsize: 20.0},
-    {name: "Text6", type: "EditableText", pos: [4.0, 2.6666666666666665, 1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "pl=0.7930", textsize: 20.0},
-    {name: "Text7", type: "Button", pos: [-3.0666666666666664, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=1;", text: "f-p", textsize: 18.0},
-    {name: "Text8", type: "Button", pos: [-3.68, -4.0, -1.6], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=2;", text: "pr-f", textsize: 18.0},
-    {name: "Text9", type: "Button", pos: [4.0, 3.4782608695652177, 1.7391304347826089], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=3;", text: "pl-f", textsize: 18.0}
+    {name: "Text3", type: "EditableText", pos: [4.0, 3.4285714285714284, 1.1428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "6", textsize: 20.0},
+    {name: "Text4", type: "EditableText", pos: [4.0, 2.742857142857143, 1.1428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "2.0000", textsize: 20.0},
+    {name: "Text5", type: "EditableText", pos: [4.0, 2.057142857142857, 1.1428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.2070", textsize: 20.0},
+    {name: "Text0", type: "EditableText", pos: [-3.8888888888888884, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "8", textsize: 20.0},
+    {name: "Text6", type: "EditableText", pos: [4.0, 1.3714285714285714, 1.1428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.7930", textsize: 20.0},
+    {name: "Text7", type: "Button", pos: [-3.833333333333333, -4.0, -1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=1;", text: "f-p", textsize: 18.0},
+    {name: "Text8", type: "Button", pos: [4.0, 3.130434782608696, 1.7391304347826089], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=2;", text: "pr-f", textsize: 18.0},
+    {name: "Text9", type: "Button", pos: [4.0, 2.086956521739131, 1.7391304347826089], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=3;", text: "pl-f", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
     width: 840,
-    height: 447,
-    transform: [{visibleRect: [-0.5840350283283764, 5.111947045705676, 10.44044640528592, -0.7546520028962167]}],
+    height: 468,
+    transform: [{visibleRect: [-0.5840350283283764, 5.111947045705676, 10.44044640528592, -1.0302640387365742]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],

@@ -3,16 +3,16 @@ Dircdy=loaddirectory;
 setdirectory(gethome());
 import("ketcindy.ini");
 
-px=-2; py1=3.6; py2=3; py3=2.4;
-Seteditable(3,["df=","Size=20","Width=100"]);// no ketjs on
-Seteditable(4,["t=","Size=20","Width=100"]);
-Seteditable(5,["p=","Size=20","Width=100"]);
-Text3.xy=[px,py1];
-Text4.xy=[px,py2];
-Text5.xy=[px,py3];
-Text6.xy=[px-0.5,py2];
-Text7.xy=[px-0.5,py3]; // no ketjs off
-px=px-0.6; py=[py2+0.1,py3+0.1];
+px=-2; py=[3.6,3,2.4];
+Seteditable(3,["","Size=20","Width=90"]);// no ketjs on
+Seteditable(4,["","Size=20","Width=90"]);
+Seteditable(5,["","Size=20","Width=90"]);
+Text3.xy=[px,py_1];
+Text4.xy=[px,py_2];
+Text5.xy=[px,py_3];
+Text6.xy=[px-1.1,py_2];
+Text7.xy=[px-1.1,py_3]; // no ketjs off
+px=px-1.2; py=apply(py,#+0.1);
 
 beta(p,q):=(
   regional(fun,out,tmp);
@@ -42,10 +42,10 @@ ptg(x,n):=(
   y=0.5+Integrate("dt(t,n)","t=[0,x]",["Num=100"]);
   y;
 );
-ptg(x,n,xpL):=(
+ptg(x,xpL,n):=(
   regional(y,rng);
   rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
-  y=xpL_2+Integrate("dnorm(t)",rng,["Num=10"]);
+  y=xpL_2+Integrate("dt(t,df)",rng,["Num=10"]);
   y;
 );
 
@@ -64,7 +64,7 @@ makecxp(df):=(
 );
 
 findxp(x):=(
-  regional(flg,nn,tmp,out);
+  regional(flg,nn,tmp,tmp1,out);
   //global xL,pL
   nn=length(xL);
   out=[xL_1,pL_1];
@@ -72,7 +72,12 @@ findxp(x):=(
   while((flg==0)&(nn>0),
     tmp=xL_nn;
     if(tmp<x,
-      out=[tmp,pL_nn];
+      tmp1=xL_(nn+1);
+      if(|tmp-x|<|tmp1-x|,
+        out=[tmp,pL_nn];
+      ,
+        out=[tmp1,pL_(nn+1)];
+      );
       flg=1;
     ,
       nn=nn-1;
@@ -85,7 +90,7 @@ A.x=1;
 dfnow=0;
 axnow=1;
 ttnow=axnow;
-ppnow=0.1759;
+ppnow=0.1816;
 choice=1;
 
 
@@ -113,47 +118,44 @@ opb=["dr,2","Color=blue"];
 opr=["dr,2","Color=red"];
 opg=["dr,2","Color=[0.64,0,0.95,0.4]"];
 
-tmp=Textedit(3,"df=5","");
-if(substring(tmp,0,3)=="df=",
-  tmp=replace(tmp,"df=","");
+tmp=Textedit(3,"5","");
+if(length(tmp)>0,
   df=parse(tmp);
 ,
   df=dfnow;
-  Subsedit(3,"df="+tt);
+  Subsedit(3,text(tt));
 );
 df=parse(tmp);
 if(df!=dfnow,
-  if(df==5,
-    //no ketjs on
-    makecxp(df);
-    Ketcindyjsdata(["coefn",coefn,"xL",xL,"pL",pL]);
-    //no ketjs off
-  ,
-    makecxp(df);
-  );
+  makecxp(df);
   fun1=apply(xL,[#,dt(#,df)]);
 //  fun2=apply(-50..50,[#/50*XMAX,ptg(#/50*XMAX,df)]);
 //  fun3=apply(fun2,[#_1,1-#_2]);
   pM=[XMAX,dt(XMAX,df)];
   dfnow=df;
 );
-Subsedit(3,"df="+text(dfnow));
+
+Subsedit(3,text(dfnow));
 
 Listplot("-gr1",fun1,opb);
 //Listplot("-gr2",fun2,opg);
 //Listplot("-gr3",fun3,op);
 //Listplot("h1",[[XMIN,1],[XMAX,1]]);
 Optc=["Color=red","Size=2"];
-Expr([px,py_choice/SCALEY],"w","\bullet$",Optc);
+Expr([px,py_(choice+1)/SCALEY],"w","\bullet$",Optc);
+tmp=px+0.6;
+Expr([tmp,py_1/SCALEY],"e","df=",["Size=1.3"]);
+Expr([tmp,py_2/SCALEY],"e","x=",["Size=1.3"]);
+Expr([tmp,py_3/SCALEY],"e","p=",["Size=1.3"]);
+
 
 if(choice==1,
-  tmp=Textedit(4,"t=1","");
-  if(substring(tmp,0,2)=="t=",
-    tmp=replace(tmp,"t=","");
+  tmp=Textedit(4,"1","");
+  if(length(tmp)>0,
     tt=parse(tmp);
   ,
     tt=ttnow;
-    Subsedit(4,"t="+tt);
+    Subsedit(4,text(tt));
   );
   if(tt!=ttnow,
     if((tt-XMIN)*(tt-XMAX)<0,
@@ -165,13 +167,13 @@ if(choice==1,
 );
 
 if(choice==2,
-  tmp=Textedit(5,"p=0.1816","");
-  if(substring(tmp,0,2)=="p=",
-    tmp=replace(tmp,"p=","");
+//  tmp=Textedit(5,"p=0.1816","");
+  tmp=Textedit(5,"","");
+  if(length(tmp)>0,
     pp=parse(tmp);
   ,
-    pp=ptg(ttnow,findxp(ttnow),df);
-    Subsedit(5,"p="+Sprintf(pp,4));
+    pp=1-ptg(ttnow,findxp(ttnow),df);
+    Subsedit(5,Sprintf(pp,4));
   );
   eps=10^(-6);
   x1=XMIN; x2=XMAX;
@@ -191,12 +193,9 @@ if(choice==2,
   tt=x;
   Putpoint("A",[tt,0]);
   axnow=tt;
-  Subsedit(4,"t="+Sprintf(A.x,4));
+  Subsedit(4,Sprintf(A.x,4));
 );
-
-println(105);
 tmp=ptg(A.x,findxp(A.x),df);
-println([107,tmp]);
 //pQ=[A.x,tmp];
 pR=[A.x,1-tmp];
 //Listplot("2",[A,pQ],["Color=red"]);
@@ -215,9 +214,10 @@ Listplot("1",[[A.x,0],pP],opr);
 //Joincrvs("1",["sg1","part1"],["nodisp"]);
 //Shade(["join1"],["Color=cyan"]);
 if(choice==1,
-  Subsedit(4,"t="+Sprintf(A.x,4));
-  tmp="p="+Sprintf(pR_2,4);
+  Subsedit(4,Sprintf(A.x,4));
+  tmp=Sprintf(pR_2,4);
   Subsedit(5,tmp);
 );
 
 Windispg();
+

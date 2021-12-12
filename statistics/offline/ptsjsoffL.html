@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>pchiv2s.cdy</title>
+    <title>pts.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -755,6 +755,40 @@ Strictmove(pCorg,sep):=(
 Addax(param):=(
   ADDAXES=text(param);
 );
+Setscaling(sc):=(
+  regional(tmp);
+  tmp=format(sc,5);
+  if(!islist(sc),
+    SCALEX=1;
+    SCALEY=sc;
+    Com0th("Setscaling("+tmp+")");
+  ,
+    SCALEX=sc_1;
+    SCALEY=sc_2;
+    Com0th("Setscaling("+tmp_1+","+tmp_2+")");
+  );
+  Setwindow("Msg=no");
+);
+Setax(arglistorg):=(
+  regional(arglist,st,nn,tmp,eqL); 
+  tmp=Divoptions(arglistorg); //190901from
+  eqL=tmp_5;
+  arglist=remove(arglistorg,eqL);
+  if(length(arglist)==0,
+    arglist=["l","x","e","y","n","O","sw"];
+  ); //190901to
+  st=1; nn=1; 
+  if(isreal(arglist_1),
+    st=2;
+    nn=arglist_1;
+  );
+  forall(st..(length(arglist)),
+    tmp=arglist_#;
+    if(length(tmp)>0,AXSTYLE_1_nn=tmp);
+    nn=nn+1;
+  ); 
+  AXSTYLE=[AXSTYLE_1,eqL]; //190901,02
+);
 Slider(ptstr,p1,p2):=Slider(ptstr,p1,p2,[]);
 Slider(ptstr,p1,p2,options):=(//190120
   regional(pA,pB,pC,color,thick,sep,tmp,tmp1,tmp2);
@@ -984,40 +1018,6 @@ Putonseg(name,p1org,p2org,options):=(
     tmp=(p2_1-p1_1)/(p2_2-p1_2)*(p_2-p1_2)+p1_1;
     parse(name+".x="+tmp+";"); //190415
   ); //190120to
-);
-Setscaling(sc):=(
-  regional(tmp);
-  tmp=format(sc,5);
-  if(!islist(sc),
-    SCALEX=1;
-    SCALEY=sc;
-    Com0th("Setscaling("+tmp+")");
-  ,
-    SCALEX=sc_1;
-    SCALEY=sc_2;
-    Com0th("Setscaling("+tmp_1+","+tmp_2+")");
-  );
-  Setwindow("Msg=no");
-);
-Setax(arglistorg):=(
-  regional(arglist,st,nn,tmp,eqL); 
-  tmp=Divoptions(arglistorg); //190901from
-  eqL=tmp_5;
-  arglist=remove(arglistorg,eqL);
-  if(length(arglist)==0,
-    arglist=["l","x","e","y","n","O","sw"];
-  ); //190901to
-  st=1; nn=1; 
-  if(isreal(arglist_1),
-    st=2;
-    nn=arglist_1;
-  );
-  forall(st..(length(arglist)),
-    tmp=arglist_#;
-    if(length(tmp)>0,AXSTYLE_1_nn=tmp);
-    nn=nn+1;
-  ); 
-  AXSTYLE=[AXSTYLE_1,eqL]; //190901,02
 );
 Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
 Expr(list):=Expr(list,[]);
@@ -1547,80 +1547,68 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 
-px=2; py1=3.6; py2=3; py3=2.4; py4=1.8;
-px=px-0.9; py=[py2+0.1,py3+0.1,py4+0.1];
+px=-2; py=[3.6,3,2.4];
+px=px-1.2; py=apply(py,#+0.1);
 
-x995=[
-7.88,10.6,12.84,14.86,16.75,18.55,20.28,21.95,23.59,25.19,
-26.76,28.3,29.82,31.32,32.8,34.27,35.72,37.16,38.58,40,
-41.4,42.8,44.18,45.56,46.93,48.29,49.64,50.99,52.34,53.67,
-55,56.33,57.65,58.96,60.27,61.58,62.88,64.18,65.48,66.77,
-68.05,69.34,70.62,71.89,73.17,74.44,75.7,76.97,78.23,79.49,
-80.75,82,83.25,84.5,85.75,86.99,88.24,89.48,90.72,91.95
-]; //1--60
-
-loggamma(s):=(
+beta(p,q):=(
   regional(fun,out,tmp);
-  out=0;
-  if(s>=30,
-    fun=Assign("x^(s-1)*exp(-x)",["s",s]);
-    out=Integrate(fun,"x=[0,100]",["Num=500"]);
-    out=log(re(out));
-  ,
-    out=loggamma(s+1)-log(s);
-  );
-  out;
+  tmp="(p+q)*(p+q+1)*(p+q+2)*(p+q+3)/(p*q*(p+1)*(q+1))";
+  tmp=tmp+"*t^(p+1)*(1-t)^(q+1)";
+  fun=Assign(tmp,["p",p,"q",q]);
+  out=Integrate(fun,"t=[0,1]",["Num=500"]);
 );
 
 coef(n):=(
-  -n/2*log(2)-loggamma(n/2)
-);
-
-dchi(x,n):=(
-  regional(out);
-  if(x>0,
-    out=(n/2-1)*log(x)-x/2+coefn;
-    out=exp(out);
-  ,
-    out=0;
-  );
+  regional(tmp,out);
+  tmp=beta(n/2,1/2);
+  out=1/(sqrt(n)*tmp);
   out;
 );
 
-pchi(x,n):=pchi(x,n,200,0);
-pchi(x,n,xpL):=(
-  regional(y,rng);
-  rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
-  y=xpL_2+Integrate("dnorm(t)",rng,["Num=10"]);
+
+dt(x,n):=(
+  coefn*(1+x^2/n)^(-(n+1)/2);
+);
+
+ptg(x,n):=(
+  regional(y);
+  y=0.5+Integrate("dt(t,n)","t=[0,x]",["Num=100"]);
   y;
 );
-pchi(x,n,div,x0):=(
-  regional(y,trng,data);
-  if(x0==0,
-    data=apply(0..div,[(x)*#/div,dchi((x)*#/div,n)]);
-    y=Integrate(data,[0,x]);
-  ,
-    data=apply(0..div,[1+(x-1)*#/div,dchi(1+(x-1)*#/div,n)]);
-    y=pchi1+Integrate(data,[1,x]);
-  );
+ptg(x,xpL,n):=(
+  regional(y,rng);
+  rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
+  y=xpL_2+Integrate("dt(t,df)",rng,["Num=10"]);
   y;
 );
 
 makecxp(df):=(
+  regional(tmp,fun,rng);
   coefn=coef(df);
   xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);
-  pL=apply(xL,pchi(#,df));
+  fun=Assign("dt(t,n)",["n",df]);
+  pL=[0.5+Integrate(fun,"t=[0,XMIN]",["Num=100"])];
+  forall(1..100,
+    rng=Assign("t=[t1,t2]",["t1",xL_#,"t2",xL_(#+1)]);
+    tmp=pL_(-1)+Integrate(fun,rng,["Num=10"]);
+    pL=append(pL,tmp);
+  );
 );
 
 findxp(x):=(
-  regional(flg,nn,tmp,out);
+  regional(flg,nn,tmp,tmp1,out);
   nn=length(xL);
   out=[xL_1,pL_1];
   flg=0;
   while((flg==0)&(nn>0),
     tmp=xL_nn;
     if(tmp<x,
-      out=[tmp,pL_nn];
+      tmp1=xL_(nn+1);
+      if(|tmp-x|<|tmp1-x|,
+        out=[tmp,pL_nn];
+      ,
+        out=[tmp1,pL_(nn+1)];
+      );
       flg=1;
     ,
       nn=nn-1;
@@ -1629,11 +1617,11 @@ findxp(x):=(
   out;
 );
 
-
-
+A.x=1;
 dfnow=0;
-axnow=A.x;
+axnow=1;
 ttnow=axnow;
+ppnow=0.1816;
 choice=1;
 ;
 </script>
@@ -1642,64 +1630,55 @@ Ketinit();
 
 
 Addax(0);
-xmn=0.000001; xmx=8;
+xmn=-3.5+0.00001; xmx=-xmn;
 Setscaling(4);
 Setwindow([xmn,xmx],[-0.1,1.1]);
-Setax(["","x","","",""," "]);
+Setax(["","t","","",""," "]);
 drwxy();
 Slider("A",[XMIN,0],[XMAX-0.00001,0]);
+
 op=["dr,2"];
 opb=["dr,2","Color=blue"];
 opr=["dr,2","Color=red"];
 opg=["dr,2","Color=[0.64,0,0.95,0.4]"];
 
-xmn=0.000001; xmx=8;
-Setscaling(4);
-Setwindow([xmn,xmx],[-0.1,1.1]);
-Setax(["","x","","",""," "]);
-drwxy();
-
-tmp=Textedit(3,"df=3","");
-if(substring(tmp,0,3)=="df=",
-  tmp=replace(tmp,"df=","");
+tmp=Textedit(3,"5","");
+if(length(tmp)>0,
   df=parse(tmp);
 ,
   df=dfnow;
-  Subsedit(3,"df="+df);
+  Subsedit(3,text(tt));
 );
-
+df=parse(tmp);
 if(df!=dfnow,
-  coefn=coef(df);
-  pchi1=pchi(1,df,2000,0);
-  sc=ceil(x995_df/XMAX);
-  tmp1=apply(0..100,[#/100,dchi(#/100*sc,df)]);
-  tmp2=apply(0..50,
-    [1+#/50*(XMAX-1),dchi((1+#/50*(XMAX-1))*sc,df)]);
-  fun1=concat(tmp1,tmp2);
-  tt=Textedit(4,"");
-  tt=parse(tt);
-  ttnow=tt;
-  Putpoint("A",[tt/sc,0]);
+  makecxp(df);
+  fun1=apply(xL,[#,dt(#,df)]);
+  pM=[XMAX,dt(XMAX,df)];
   dfnow=df;
 );
 
-Subsedit(3,"df="+text(dfnow));
+Subsedit(3,text(dfnow));
 
-op=["dr,2","Num=150"];
-opr=append(op,"Color=red");
-opb=append(op,"Color=blue");
-opg=append(op,"Color=[0.64,0,0.95,0.4]");
 Listplot("-gr1",fun1,opb);
-
 Optc=["Color=red","Size=2"];
-Expr([px,py_choice/SCALEY],"w","\bullet$",Optc);
+Expr([px,py_(choice+1)/SCALEY],"w","\bullet$",Optc);
+tmp=px+0.6;
+Expr([tmp,py_1/SCALEY],"e","df=",["Size=1.3"]);
+Expr([tmp,py_2/SCALEY],"e","x=",["Size=1.3"]);
+Expr([tmp,py_3/SCALEY],"e","p=",["Size=1.3"]);
+
 
 if(choice==1,
-  tmp=Textedit(4,"3");
-  tt=parse(tmp);
+  tmp=Textedit(4,"1","");
+  if(length(tmp)>0,
+    tt=parse(tmp);
+  ,
+    tt=ttnow;
+    Subsedit(4,text(tt));
+  );
   if(tt!=ttnow,
-    if((tt/sc-XMIN)*(tt/sc-XMAX)<0,
-      Putpoint("A",[tt/sc,0]);
+    if((tt-XMIN)*(tt-XMAX)<0,
+      Putpoint("A",[tt,0]);
       ttnow=tt;
       axnow=tt;
     );
@@ -1708,21 +1687,20 @@ if(choice==1,
 
 if(choice==2,
   tmp=Textedit(5,"","");
-  if(substring(tmp,0,3)=="pr=",
-    tmp=replace(tmp,"pr=","");
+  if(length(tmp)>0,
     pp=parse(tmp);
   ,
-    pp=1-pchi(ttnow,df);
-    Subsedit(5,"pr="+Sprintf(pp,4));
+    pp=1-ptg(ttnow,findxp(ttnow),df);
+    Subsedit(5,Sprintf(pp,4));
   );
   eps=10^(-6);
   x1=XMIN; x2=XMAX;
-  y1=1-pchi(x1,dfnow);
-  y2=1-pchi(x2,dfnow);
+  y1=1-ptg(x1,findxp(x1),dfnow);
+  y2=1-ptg(x2,findxp(x2),dfnow);
   ctr=1;
   while((|y2-y1|>eps)&(ctr<20),
     x=(x1+x2)/2;
-    y=1-pchi(x,dfnow);
+    y=1-ptg(x,findxp(x),dfnow);
     if(y>pp,
       x1=x; y1=y;
     ,
@@ -1731,57 +1709,20 @@ if(choice==2,
     ctr=ctr+1;
   );
   tt=x;
-  Putpoint("A",[tt/sc,0]);
+  Putpoint("A",[tt,0]);
   axnow=tt;
-  Subsedit(4,"x="+Sprintf(tt,4));
-  Subsedit(6,"pl="+format(1-pp,4));
+  Subsedit(4,Sprintf(A.x,4));
 );
-
-if(choice==3,
-  tmp=Textedit(6,"","");
-  if(substring(tmp,0,3)=="pl=",
-    tmp=replace(tmp,"pl=","");
-    pp=parse(tmp);
-  ,
-    pp=pchi(ttnow,df);
-    Subsedit(6,"pl="+Sprintf(pp,4));
-  );
-  eps=10^(-6);
-  x1=XMIN; x2=XMAX;
-  y1=pchi(x1,dfnow);
-  y2=pchi(x2,dfnow);
-  ctr=1;
-  while((|y2-y1|>eps)&(ctr<20),
-    x=(x1+x2)/2;
-    y=pchi(x,dfnow);
-    if(y<pp,
-      x1=x; y1=y;
-    ,
-      x2=x; y2=y;
-    );
-    ctr=ctr+1;
-  );
-  tt=x;
-  Putpoint("A",[tt/sc,0]);
-  axnow=tt;
-  Subsedit(4,"x="+Sprintf(tt,4));
-  Subsedit(5,"pr="+format(1-pp,4));
-);
-
-tmp=pchi(sc*A.x,df);
+tmp=ptg(A.x,findxp(A.x),df);
 pR=[A.x,1-tmp];
-Htickmark([A.x,Sprintf(sc*A.x,4),XMAX,"s2",text(sc*XMAX)]);
+Htickmark([A.x,Sprintf(A.x,4),XMAX,"s2",text(XMAX)]);
 Vtickmark([0.5,"0.5",1,"nw1","1"]);
-
-pP=[A.x,dchi(sc*A.x,dfnow)];
-Listplot("1",[pP,[A.x,0]],opr);
-
+pP=[A.x,dt(A.x,dfnow)];
+Listplot("1",[[A.x,0],pP],opr);
 if(choice==1,
-  Subsedit(4,"x="+Sprintf(sc*A.x,4));
-  tmp="pr="+Sprintf(pR_2,4);
+  Subsedit(4,Sprintf(A.x,4));
+  tmp=Sprintf(pR_2,4);
   Subsedit(5,tmp);
-  tmp="pl="+Sprintf(1-pR_2,4);
-  Subsedit(6,tmp);
 );
 
 Windispg();
@@ -1800,23 +1741,22 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "SW", type: "Free", pos: [4.0E-6, -1.6, 4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [4.0, 2.2, 0.5], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, 0.0, 2.6666666666666665], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
-    {name: "Text3", type: "EditableText", pos: [-2.2222222222222223, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "df=3", textsize: 20.0},
-    {name: "Text4", type: "EditableText", pos: [-2.6666666666666665, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "x=3.0000", textsize: 20.0},
-    {name: "Text5", type: "EditableText", pos: [-3.3333333333333335, -4.0, -1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "pr=0.3917", textsize: 20.0},
-    {name: "Text6", type: "EditableText", pos: [4.0, 3.6, 2.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 110, text: "pl=0.6083", textsize: 20.0},
-    {name: "Text7", type: "Button", pos: [-1.5999999999999999, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=1;", text: "x-p", textsize: 18.0},
-    {name: "Text8", type: "Button", pos: [-2.0, -4.0, -1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=2;", text: "pr-x", textsize: 18.0},
-    {name: "Text9", type: "Button", pos: [-2.6666666666666665, -4.0, -2.2222222222222223], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=3;", text: "pl-x", textsize: 18.0}
+    {name: "SW", type: "Free", pos: [4.0, 0.45714416326903795, -1.1428604081725948], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "NE", type: "Free", pos: [-3.181809090909091, -4.0, -0.9090909090909091], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "Text0", type: "EditableText", pos: [4.0, -1.4294294294294292, -0.38481541032558253], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "df=5", textsize: 20.0},
+    {name: "A", type: "Free", pos: [4.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
+    {name: "Text3", type: "EditableText", pos: [2.2222222222222223, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "5", textsize: 20.0},
+    {name: "Text4", type: "EditableText", pos: [2.6666666666666665, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "1.0000", textsize: 20.0},
+    {name: "Text5", type: "EditableText", pos: [3.3333333333333335, -4.0, -1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.1816", textsize: 20.0},
+    {name: "Text6", type: "Button", pos: [4.0, -3.8709677419354835, -1.2903225806451613], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=1;", text: "t-p", textsize: 18.0},
+    {name: "Text7", type: "Button", pos: [4.0, -3.0967741935483866, -1.2903225806451613], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "choice=2;", text: "p-t", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 656,
-    height: 414,
-    transform: [{visibleRect: [-1.0125257863941526, 5.5021750097852795, 9.285410893831648, -0.9968277121864914]}],
-    grid: 0.5,
+    width: 594,
+    height: 450,
+    transform: [{visibleRect: [-3.983711619562112, 5.215649330485522, 3.970320992269466, -0.8101329512050681]}],
+    grid: 1.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,

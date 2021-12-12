@@ -1,0 +1,311 @@
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+px=3.5; py=[3.6,3,2.4,1.8];
+Seteditable(3,["","Size=20","Width=90"]); //no ketjs on
+Seteditable(4,["","Size=20","Width=90"]);
+Seteditable(5,["","Size=20","Width=90"]);
+Seteditable(6,["","Size=20","Width=90"]);
+Text3.xy=[px,py_1];
+Text4.xy=[px,py_2];
+Text5.xy=[px,py_3];
+Text6.xy=[px,py_4];
+Text7.xy=[px-1.6,py_2];
+Text8.xy=[px-1.6,py_3];
+Text9.xy=[px-1.6,py_4]; //no ketjs off
+px=px-1.8; py=apply(py,#+0.1);
+
+//Ketinit();
+x995=[
+7.88,10.6,12.84,14.86,16.75,18.55,20.28,21.95,23.59,25.19,
+26.76,28.3,29.82,31.32,32.8,34.27,35.72,37.16,38.58,40,
+41.4,42.8,44.18,45.56,46.93,48.29,49.64,50.99,52.34,53.67,
+55,56.33,57.65,58.96,60.27,61.58,62.88,64.18,65.48,66.77,
+68.05,69.34,70.62,71.89,73.17,74.44,75.7,76.97,78.23,79.49,
+80.75,82,83.25,84.5,85.75,86.99,88.24,89.48,90.72,91.95
+]; //1--60
+
+loggamma(s):=(
+  regional(fun,out,tmp);
+  out=0;
+  if(s>=30,
+    fun=Assign("x^(s-1)*exp(-x)",["s",s]);
+    out=Integrate(fun,"x=[0,100]",["Num=2000"]);
+    out=log(re(out));
+  ,
+    out=loggamma(s+1)-log(s);
+  );
+  out;
+);
+
+coef(n):=(
+  -n/2*log(2)-loggamma(n/2)
+);
+
+dchi(x,n):=(
+  regional(out);
+  //global coefn
+  if(x>0,
+    out=(n/2-1)*log(x)-x/2+coefn;
+    out=exp(out);
+  ,
+    out=0;
+  );
+  out;
+);
+
+pchi(x,n,xpL):=(
+  regional(y,rng,fun);
+  rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
+  fun=Assign("dchi(t,n)",["n",n]);
+  y=xpL_2+Integrate(fun,rng,["Num=15"]);
+  y;
+);
+
+makecxp(df,sc):=(
+  regional(tmp,fun,rng);
+  //global coefn,xL,pL
+  coefn=coef(df);
+  xL=apply(0..100,#/100*(XMAX*sc-XMIN)+XMIN);
+  if(df==1,xL_1=10^(-10));
+  fun=Assign("dchi(x,n)",["n",df]);
+  pL=[0];
+  forall(1..100,
+    rng=Assign("x=[x1,x2]",["x1",xL_#,"x2",xL_(#+1)]);
+    tmp=pL_(-1)+Integrate(fun,rng,["Num=50"]);
+    pL=append(pL,tmp);
+  );
+);
+
+findxp(x):=(
+  regional(flg,nn,tmp,tmp1,out);
+  //global xL,pL
+  nn=length(xL);
+  out=[xL_1,pL_1];
+  flg=0;
+  while((flg==0)&(nn>0),
+    tmp=xL_nn;
+    if(tmp<x,
+      tmp1=xL_(nn+1);
+      if(|tmp-x|<|tmp1-x|,
+        out=[tmp,pL_nn];
+      ,
+        out=[tmp1,pL_(nn+1)];
+      );
+      flg=1;
+    ,
+      nn=nn-1;
+    );
+  );
+  out;
+);
+
+igamma(x,nu):=( // no ketjs on
+  regional(n,a,m,k,fL,tmp,out);
+  if(isinteger(nu),
+    if(nu==1,
+      out=1-exp(-x);
+    ,
+      out=(nu-1)*igamma(x,nu-1)-x^(nu-1)*exp(-x);
+    );
+  ,
+    n=floor(nu); a=nu-n;
+    m=30;
+    fL=[0.1,0];
+    k=m;
+    while(k>0,
+      tmp=(a+k+x)/((a+k-1)*x)*fL_1-1/((a+k-1)*x)*fL_2;
+      fL=prepend(tmp,fL);
+      k=k-1;
+    );
+    tmp=0;
+    forall(0..m,tmp=tmp+fL_(#+1)/factorial(#));
+    
+    out=x^a/a*fL_(n+1)/tmp;
+  );
+  out;
+);// no ketjs off
+
+
+prn(val):=println(format(val,6));//no ketjs
+
+dfnow=0;
+axnow=A.x;
+ttnow=axnow;
+choice=1;
+sc=1;
+
+
+
+Ketinit();
+
+//Ketcindyjsmain(//no ketjs
+//["<pf5/fp>_;$t$分布の$p$値","<pf4/fp>_;_;$df$は自由度"],//no ketjs
+//["<p><small>&copy;2021 Setsuo Takato</small></p>"]);//no ketjs
+Ketcindyjsbody([],//no ketjs on
+["<footer>","<p><small>_;&copy; 2021 Setsuo Takato</small></p>","</footer>"]);
+// no ketjs off
+
+Addax(0);
+xmn=0; xmx=8;
+Setscaling(4);
+Setwindow([xmn,xmx],[-0.1,1.1]);
+Setax(["","x","","",""," "]);
+drwxy();
+Slider("A",[XMIN,0],[XMAX-0.00001,0]);
+inspect(A,"ptsize",5.1);// no ketjs
+
+op=["dr,2"];
+opb=["dr,2","Color=blue"];
+opr=["dr,2","Color=red"];
+opg=["dr,2","Color=[0.64,0,0.95,0.4]"];
+
+tmp=Textedit(3,"3","");
+if(length(tmp)>0,
+  df=parse(tmp);
+,
+  df=dfnow;
+  Subsedit(3,text(df));
+);
+
+if(df!=dfnow,
+  sc=ceil(x995_df/XMAX);
+  makecxp(df,sc);
+  tmp1=apply(0..100,[#/100,dchi(#/100*sc,df)]);
+  tmp2=apply(0..50,
+    [1+#/50*(XMAX-1),dchi((1+#/50*(XMAX-1))*sc,df)]);
+  fun1=concat(tmp1,tmp2);
+//  fun2=apply(0..100,[#/100*XMAX,pchi(#/100*XMAX*sc,df)]);
+//  fun3=apply(fun2,[#_1,1-#_2]);
+//  pM=[XMAX,dchi(sc*XMAX,df)];
+  tt=Textedit(4,"");
+  tt=parse(tt);
+  ttnow=tt;
+  Putpoint("A",[tt/sc,0]);
+  dfnow=df;
+);
+
+Subsedit(3,text(dfnow));
+
+op=["dr,2","Num=150"];
+opr=append(op,"Color=red");
+opb=append(op,"Color=blue");
+opg=append(op,"Color=[0.64,0,0.95,0.4]");
+Listplot("-gr1",fun1,opb);
+//Listplot("-gr2",fun2,opg);
+//Listplot("-gr3",fun3,op);
+//Listplot("h1",[[XMIN,1],[XMAX,1]]);
+
+Optc=["Color=red","Size=2"];
+Expr([px,py_(choice+1)/SCALEY],"w","\bullet",Optc);
+tmp=px+1;
+Expr([tmp,py_1/SCALEY],"e","df=",["Size=1.3"]);
+Expr([tmp,py_2/SCALEY],"e","x=",["Size=1.3"]);
+Expr([tmp,py_3/SCALEY],"e","pr=",["Size=1.3"]);
+Expr([tmp,py_4/SCALEY],"e","pl=",["Size=1.3"]);
+
+
+if(choice==1,
+  tmp=Textedit(4,"3");
+  tt=parse(tmp);
+  if(tt!=ttnow,
+    if((tt/sc-XMIN)*(tt/sc-XMAX)<0,
+      Putpoint("A",[tt/sc,0]);
+      ttnow=tt;
+      axnow=tt;
+    );
+  );
+);
+if(choice==2,
+  tmp=Textedit(5,"","");
+  if(substring(tmp,0,3)=="pr=",
+    tmp=replace(tmp,"pr=","");
+    pp=parse(tmp);
+  ,
+    pp=1-pchi(ttnow,df,findxp(ttnow));
+    Subsedit(5,Sprintf(pp,4));
+  );
+  eps=10^(-6);
+  x1=XMIN; x2=XMAX;
+  y1=1-pchi(x1,dfnow,findxp(x1));
+  y2=1-pchi(x2,dfnow,findxp(x2));
+  ctr=1;
+  while((|y2-y1|>eps)&(ctr<20),
+    x=(x1+x2)/2;
+    y=1-pchi(x,dfnow,findxp(x));
+    if(y>pp,
+      x1=x; y1=y;
+    ,
+      x2=x; y2=y;
+    );
+    ctr=ctr+1;
+  );
+  tt=x;
+  Putpoint("A",[tt/sc,0]);
+  axnow=tt;
+  Subsedit(4,Sprintf(tt,4));
+  Subsedit(6,format(1-pp,4));
+);
+
+if(choice==3,
+  tmp=Textedit(6,"","");
+  if(substring(tmp,0,3)=="pl=",
+    tmp=replace(tmp,"pl=","");
+    pp=parse(tmp);
+  ,
+    pp=pchi(ttnow,df,findxp(ttnow));
+    Subsedit(6,Sprintf(pp,4));
+  );
+  eps=10^(-6);
+  x1=XMIN; x2=XMAX;
+  y1=pchi(x1,dfnow,findxp(x1));
+  y2=pchi(x2,dfnow,findxp(x2));
+  ctr=1;
+  while((|y2-y1|>eps)&(ctr<20),
+    x=(x1+x2)/2;
+    y=pchi(x,dfnow,findxp(x));
+    if(y<pp,
+      x1=x; y1=y;
+    ,
+      x2=x; y2=y;
+    );
+    ctr=ctr+1;
+  );
+  tt=x;
+  Putpoint("A",[tt/sc,0]);
+  axnow=tt;
+  Subsedit(4,Sprintf(tt,4));
+  Subsedit(5,format(1-pp,4));
+);
+
+tmp=pchi(sc*A.x,df,findxp(sc*A.x));
+//pQ=[A.x,tmp];
+pR=[A.x,1-tmp];
+//Listplot("1",[A,pQ],["Color=red"]);
+//Listplot("2b",[A,pR],["Color=red"]);
+//Listplot("3",[pQ,[0,pQ_2]],
+//   ["do,1.5,2","Color=[0.64,0,0.95,0.4]"]);
+//Listplot("4",[pR,[0,pR_2]],["do,1.5,2"]);
+Htickmark([A.x,Sprintf(sc*A.x,4),XMAX,"s2",text(sc*XMAX)]);
+//Vtickmark([pQ_2,Sprintf(pQ_2,2),
+//    pR_2,Sprintf(pR_2,2),1,"nw1","1"]);
+Vtickmark([0.5,"0.5",1,"nw1","1"]);
+
+pP=[A.x,dchi(sc*A.x,dfnow)];
+Listplot("1",[pP,[A.x,0]],opr);
+//Partcrv("1",pP,pM,"gr1",["nodisp"]);
+//Joincrvs("1",["sg1","part1"],["nodisp"]);
+//Shade(["join1"],["Color=cyan"]);
+
+if(choice==1,
+  Subsedit(4,Sprintf(sc*A.x,4));
+  tmp=Sprintf(pR_2,4);
+  Subsedit(5,tmp);
+  tmp=Sprintf(1-pR_2,4);
+  Subsedit(6,tmp);
+);
+
+Windispg();
+//Help("Textedi");
