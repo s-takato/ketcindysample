@@ -41,9 +41,9 @@ dxL2=apply(1..9,35.5);
 dxL3=[40,40];
 
  // no ketjs on 
-Seteditable(1,["","Size=24","Width=500"]);
-Seteditable(2,["","Size=24","Width=500"]);
-Seteditable(3,["","Size=24","Width=500"]);
+Seteditable(1,["","Size=24","Width=600"]);
+Seteditable(2,["","Size=24","Width=600"]);
+Seteditable(3,["","Size=24","Width=600"]);
 Seteditable(10,["","Size=18","Width=50"]);
 Seteditable(32,["","Size=18","Width=80"]);
 Text1.xy=[px+1,posyL_1-1];
