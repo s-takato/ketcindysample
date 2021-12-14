@@ -2634,9 +2634,10 @@ Lettermove(dir,str):=(
   out;
 );
 Ketcindyjsfigure=0;
-Ketcindyjsscale=1;
+Ketcindyjsscale=1.1;
 aalinestart=1;
 ansline="";
+caline="";
 mrkline="";
 quline="";
 shline="";
@@ -3507,7 +3508,7 @@ forall(1..stall,nn,
 );
 </script>
 <script id="csdraw" type="text/x-cindyscript">
-Ketinit();
+Ketinit(1.6);
 Addax(0);
 
 nameL=Keyname();
@@ -3710,7 +3711,7 @@ var cdy = CindyJS({
   geometry: [
     {name: "Text1", type: "EditableText", pos: [-2.909090909090909, -4.0, -0.18181818181818182], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "SW", type: "Free", pos: [1.6160536892179627, -4.0, 0.10943946239011136], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [4.0, 1.4187779433680887, 0.05869009380421625], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "NE", type: "Free", pos: [4.0, 1.5060240963855234, 0.06183125485721977], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text2", type: "EditableText", pos: [4.0, -0.875, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "Text10", type: "EditableText", pos: [4.0, 0.04858965734006645, 0.1787004960615212], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 55, text: "q=", textsize: 18.0},
@@ -3833,9 +3834,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 664,
-    height: 659,
-    transform: [{visibleRect: [5.766029996220738, 30.076859169475743, 74.75060508614092, -38.38825375862275]}],
+    width: 631,
+    height: 743,
+    transform: [{visibleRect: [9.401803384828714, 29.08226228364115, 65.32548362204821, -36.68164740298457]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

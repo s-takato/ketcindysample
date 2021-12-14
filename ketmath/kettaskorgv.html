@@ -2634,7 +2634,7 @@ Lettermove(dir,str):=(
   out;
 );
 Ketcindyjsfigure=0;
-Ketcindyjsscale=1;
+Ketcindyjsscale=1.1;
 aalinestart=1;
 quline="";
 shline="";
@@ -3575,7 +3575,7 @@ forall(1..stall,ns,
 ;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
-Ketinit(1.5);
+Ketinit(1.6);
 
 if(startflg==1,
   forall(1..(length(tposL)),
@@ -3891,13 +3891,13 @@ var cdy = CindyJS({
     {name: "Text113", type: "Button", pos: [4.0, -1.4784756527875793, 0.07057163020465773], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"diff(\",name=\"case(\");", text: "___", textsize: 14.0},
     {name: "Text54", type: "Button", pos: [4.0, -1.6972477064220184, 0.07057163020465773], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==1,name=\"par(\",name=\"tx(\");", text: "___", textsize: 14.0},
     {name: "Text9", type: "Button", pos: [2.0463597779954292, -4.0, 0.1305909239307868], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0},
-    {name: "Text114", type: "Button", pos: [4.0, -2.008524590163934, 0.06557377049180328], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "stok=stok+1", text: "OK", textsize: 18.0}
+    {name: "Text114", type: "Button", pos: [4.0, -1.1971830985915493, 0.07047790085077273], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "stok=stok+1", text: "OK", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 645,
-    height: 675,
-    transform: [{visibleRect: [7.643990355315619, 28.72741473402929, 72.09332080209437, -38.719558989343824]}],
+    width: 650,
+    height: 743,
+    transform: [{visibleRect: [7.643990355315619, 28.72741473402929, 66.69756290422451, -38.719558989343824]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
