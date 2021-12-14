@@ -2634,7 +2634,7 @@ Lettermove(dir,str):=(
   out;
 );
 Ketcindyjsfigure=0;
-Ketcindyjsscale=1;
+Ketcindyjsscale=1.1;
 
 setdirectory(Dircdy);
 
@@ -3438,7 +3438,7 @@ Adddrw(str):=(
 ;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
-Ketinit();
+Ketinit(1.6);
 
 if(startflg==1,
   forall(1..(length(tposL)),
@@ -3543,13 +3543,13 @@ var cdy = CindyJS({
   geometry: [
     {name: "Text1", type: "EditableText", pos: [-2.909090909090909, -4.0, -0.18181818181818182], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "SW", type: "Free", pos: [1.3066340373353202, -4.0, 0.12399350705030004], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "NE", type: "Free", pos: [4.0, 1.2121813562879975, 0.05943944052463921], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "T2", type: "Free", pos: [4.0, 3.6645161290322577, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "NE", type: "Free", pos: [4.0, 1.2482283926417441, 0.06193892465555292], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false, printname: "T1"},
     {name: "Text2", type: "EditableText", pos: [4.0, -0.875, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
-    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.686, 0.686], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.686, 0.686], labeled: false, size: 6.0, border: false},
     {name: "Text47", type: "Button", pos: [4.0, -1.1714285714285715, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "___", textsize: 14.0},
     {name: "Text101", type: "Button", pos: [4.0, 0.3489217349164041, 0.0969227041434456], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;Delete();", text: "BS", textsize: 16.0},
     {name: "Text24", type: "Button", pos: [4.0, -0.8745980707395499, 0.12861736334405144], color: [1.0, 1.0, 1.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, alpha: 0.27, text_fontfamily: "monospace", script: "funflg=1;name=\"sin(\";", text: "____", textsize: 14.0},
@@ -3655,9 +3655,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 681,
-    height: 675,
-    transform: [{visibleRect: [5.455523182090828, 27.577919938826113, 73.62453762252852, -39.990486444867635]}],
+    width: 636,
+    height: 743,
+    transform: [{visibleRect: [8.958445090062735, 25.468249653947986, 63.178144169185884, -37.85060307686192]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
