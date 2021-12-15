@@ -11,7 +11,7 @@ nqinc=1;
 Text5
 nqinc=-1;
 Text6
-"Mkketcindyjs(append(KETJSOP,"+Dqq("Web=y")+"));");
+Mkketcindyjs(append(KETJSOP,"Web=y"));
 Text7
 ch=1;initflg=1;
 Text8
@@ -107,7 +107,7 @@ funflg=1;name="-";
 Text53
 funflg=1;if(Shift<=1,name="int(");if(Shift==2,name="det(");
 Text54
-funflg=1;if(Shift==1,name="par(",name="tx(");
+funflg=1;name="(inf)";
 Text55
 if(keytype!=4,keytype=4,keytype=1);
 Text56
@@ -179,7 +179,7 @@ funflg=1;name="=";
 Text90
 funflg=1;name="log(";
 Text91
-funflg=1; if(Shift==1,name="br(",name="pi");
+funflg=1; if(Shift==0,name="tx("); if(Shift==1,name="par(");if(Shift==2,name="(circ)");
 Text92
 funflg=1;name="^(";
 Text93
@@ -191,7 +191,7 @@ funflg=1;name="(sp)";
 Text96
 funflg=1;name="/";
 Text97
-funflg=1;name="(inf)";
+funflg=1;if(Shift==1,name="diff(",name="case(");
 Text100
 npos=0;
 Text101
@@ -217,8 +217,8 @@ if(Shift!=2,Shift=2,Shift=0);
 Text111
 funflg=1;name="ln(";
 Text112
-funflg=1;if(Shift<=1,name="sum(");if(Shift==2,name="(circ)");
+funflg=1;if(Shift==1,name="br(",name="sum(");
 Text113
-funflg=1;if(Shift==1,name="diff(",name="case(");
+ffunflg=1; name="pi";
 Text114
 stok=stok+1
