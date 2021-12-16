@@ -1,8 +1,5 @@
 year="202"
 numset=c(as.character(0:9),c("/","-"))
-
-setwd("/Users/takatoosetsuo/gitlocal/ketcindysample/ketmath") #######
-
 tmp=getwd()
 ans = readline(paste(tmp,"(y/n)"))
 if(ans=="y"){
