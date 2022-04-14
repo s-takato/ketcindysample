@@ -1,21 +1,9 @@
-<!-- Copyright (C)  2014  Setsuo Takato, KETCindy Japan project team
-* This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version. 
-* This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-* You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>
- -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     
-    <title>kettaskvert.cdy</title>
+    <title>kettaskorgv.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -812,7 +800,7 @@ Enclosing2(nm,plist):=Enclosing2(nm,plist,[]);
 Enclosing2(nm,plistorg,options):=(
   regional(name,plist,AnsL,Start,Eps,Eps1,Eps2,flg,Fdata,Gdata,KL,
       t1,t2,tst,ss,ii,nn,nxtno,Ltype,Noflg,realL,eqL,opstr,opcindy,
-      tmp,tmp1,tmp2,color,color4,p1,p2);
+      tmp,tmp1,tmp2,tmp3,tmp4,color,color4,p1,p2);
   if(substring(nm,0,1)=="-",  //201110from
     name=substrin(nm,1,length(nm));
   ,
@@ -899,7 +887,12 @@ Enclosing2(nm,plistorg,options):=(
       tmp1=parse(Fdata); //200803from
       tmp2=parse(Gdata);
       if(|tmp2_1-tmp1_(-1)|<Eps,
-        AnsL=concat(AnsL,tmp1);
+        if(nn<length(plist), //211217from
+          AnsL=concat(AnsL,tmp1);
+        ,
+          tmp3=Partcrv("",AnsL_(-1),tmp2_1,tmp1,["nodata"]);
+          AnsL=concat(AnsL,tmp3);
+        );  //211217fto
       ,  //200803to
         KL=Intersectcurvespp(Fdata,Gdata);
         if(length(KL)==0, 
@@ -1595,6 +1588,7 @@ Nearestpt(pt,plotstr):=(
     );
     dtL=append(dtL,dt);
   );
+  dtL=select(dtL,length(#)>=3); //220115
   dtL=sort(dtL,[#_3,#_2]);
   dtL_1;
 );
@@ -2065,10 +2059,7 @@ Ketinit(work,strictsep):=( //200509
   LFmark=unicode("000a"); Bs=unicode("005c");
   CRmark=unicode("000d");//16.12.13
   Dq=unicode("0022");
-  Fnametex=Fhead+".tex";
-  FnameR=Fhead+".r";
-  FnamebodyR=Fhead+"body.r";
-  Fnameout=Fhead+".txt";  // 17.10.13to
+  Changework(Dircdy+pathsep()+work); //180329to,181001
   ArrowlineNumber=1;  // 15.01.05
   ArrowheadNumber=1;
   BezierNumber=1; //15.01.03
@@ -3586,7 +3577,9 @@ forall(1..stall,ns,
   stquLL=append(stquLL,[name,qu,sh]);
 );
 
+
 ;
+
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit(1.6);
@@ -3775,7 +3768,9 @@ forall(1..nch,
 );
 
 Windispg();
+
 ;
+
 </script>
     <script type="text/javascript">
 var cdy = CindyJS({
@@ -3902,22 +3897,22 @@ var cdy = CindyJS({
     {name: "Text5", type: "Button", pos: [4.0, 0.05333333333333334, 0.13333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1;", text: "<", textsize: 18.0},
     {name: "Text111", type: "Button", pos: [4.0, -1.8971428571428572, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"ln(\";", text: "___", textsize: 14.0},
     {name: "Text112", type: "Button", pos: [4.0, -2.3520427644138984, 0.07636502481863307], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==1,name=\"br(\",name=\"sum(\");", text: "____", textsize: 14.0},
-    {name: "Text113", type: "Button", pos: [4.0, -1.4608327452364152, 0.07057163020465773], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "ffunflg=1; name=\"pi\";", text: "___", textsize: 14.0},
+    {name: "Text113", type: "Button", pos: [4.0, -1.4608327452364152, 0.07057163020465773], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1; name=\"pi\";", text: "___", textsize: 14.0},
     {name: "Text54", type: "Button", pos: [4.0, -1.6937191249117856, 0.07057163020465773], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"(inf)\";", text: "___", textsize: 14.0},
     {name: "Text9", type: "Button", pos: [2.0463597779954292, -4.0, 0.1305909239307868], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0},
     {name: "Text114", type: "Button", pos: [4.0, -1.1893805309734515, 0.0708521197933432], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "stok=stok+1", text: "OK", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 650,
-    height: 743,
-    transform: [{visibleRect: [7.643990355315619, 28.72741473402929, 66.69756290422451, -38.719558989343824]}],
+    width: 682,
+    height: 733,
+    transform: [{visibleRect: [7.643990355315619, 28.72741473402929, 69.59528473826573, -37.820266006365514]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2036, version: [3, 0, 2036]}
+  cinderella: {build: 2039, version: [3, 0, 2039]}
 });
     </script>
 </head>
