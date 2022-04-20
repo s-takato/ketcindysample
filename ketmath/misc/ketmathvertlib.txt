@@ -1,83 +1,60 @@
-//   220412
 //   211112
 //   211020
 //   210923
 //   210619
 //   210910
 
-Kettaskinit():=(
-  Shift=0;
-  keytype=1;
-  capflg=0;
-  greflg=0;
-  boldflg=0;
-  vecflg=0;
+Shift=0;
+keytype=1;
+capflg=0;
+greflg=0;
+boldflg=0;
+vecflg=0;
 
-  nch=2;
-  StrL=apply(1..3,""); 
-  StrpL=apply(1..3,"");
-  ansL=apply(1..20,"");
-  nqu=1;
-  stfixed=0;
-  stok=0;
-  initflg=1;
-  choose=0;
-  DrwL=[];
-  dpos=[10,14];
+nch=2;
+ch=2;
+//nt=4;
+px=15;
+dtpy=3.2;
+tposL=apply(1..4,[px+0.5,17.4-(#-1)*dtpy]);
+posyL=[23,-2.5,-34];
 
-  ch=3;
-  Str="";
-  Strp="";
-  Strnq="";
-  Strnow="";
-  Strt="";
-  npos=0;
+//Setwindow([-20,65],[-17,15]);
 
-  //nt=4;
-  px=15;
-  dtpy=3.2;
-  tposL=apply(1..4,[px+0.5,17.4-(#-1)*dtpy]);
-  posyL=[23,-2.5,-34];
+//nameL=Keyname();
+//Keytable(0,dxL,4,32.5,poskey,[1,1,0],nameL,[0,-0.5],22);
 
-  poskey=[19.5,-17.67];
-  dxL=apply(10..19,35.5);
-  dxL_4=40; dxL_5=37;
-  dxL2=apply(1..9,35.5);
-  dxL3=[40,40];
-  forall(1..(length(tposL)),
-    tmp="T"+text(#);
-    Putpoint(tmp,tposL_#);
-  );
-  
-  //  only for kettask
-  ch=3;
-  Str="Student=":
-  Strnq=replace(Str,"?","");
-  StrL_ch=Strnq;
-  npos=length(Str);
+//Keytable(5,43,1,34.5,[46,3.4],0.9*[1,1,1],[],[0,-0.5],20);
+//actL1=["BS","CL","AC","PS","PL"];
+//forall(1..5,drawtext([47+(#-1)*4.3,4.2],actL1_#,size->20));
+//Keytable(2,27,1,30,[46,0],0.9*[1,1,1]);
+//actL2=["$<\!<$","$<$"];
+//forall(1..2,drawtext([46.1+(#-1)*3,1],actL2_#,size->20));
+//Keytable(2,27,1,30,[62,0],0.9*[1,1,1],[],[0,-0.5],20);
+//actL3=["$>$","$>\!>$"];
+//forall(1..2,drawtext([62.5+(#-1)*2.5,1],actL3_#,size->20));
 
-// no ketjs on
-Seteditable(1,["","Size=24","Width=535"]);
-Seteditable(2,["","Size=24","Width=535"]);
-Seteditable(3,["","Size=24","Width=535"]);
-Seteditable(10,["","Size=18","Width=45"]);
-Seteditable(76,["","Size=18","Width=45"]);
-Seteditable(32,["問=","Size=18","Width=80"]);
+poskey=[19.5,-17.67];
+dxL=apply(10..19,35.5);
+dxL_4=40; dxL_5=37;
+dxL2=apply(1..9,35.5);
+dxL3=[40,40];
+
+ // no ketjs on 
+Seteditable(1,["","Size=24","Width=500"]);
+Seteditable(2,["","Size=24","Width=500"]);
+Seteditable(3,["","Size=24","Width=500"]);
+Seteditable(10,["","Size=18","Width=50"]);
+Seteditable(32,["","Size=18","Width=80"]);
 Text1.xy=[px+1,posyL_1-1];
 Text2.xy=[px+1,posyL_2-1];
 Text3.xy=[px+1,posyL_3-1];
 inspect(T1,"ptsize",6);
 inspect(T2,"ptsize",6);
 inspect(T3,"ptsize",6);
-inspect(T4,"ptsize",6); 
+inspect(T4,"ptsize",6);
 // no ketjs off
 
-);
-
-Adddrw(str):=(
-  DrwL=append(DrwL,[dpos,str,18]);
-  dpos=dpos-[0,2];
-);
 
 Keyname():=(
   regional(nL,nL2,nL3,tmp1);
@@ -173,58 +150,41 @@ Keyname():=(
 );
 
 
-///////
-Manifun=["Allclear()","Clear()","Delete()","Push()","Pull()",
-  "Left()","Right()","LLeft()","RRight()"];
 
-Delete():=(
-  regional(tmp,tmp1,tmp2);
-  //global npos,Str,Strnq,Str_ch,funflg
-  tmp=indexof(Str,"?");
-  if(tmp>0,npos=tmp,npos=length(Str));
-  if(ch<=2,
-    if(length(Str)>0,
-      if(npos==length(Str),
-        Str=substring(Str,0,npos-1);
-      ,
-        tmp1=substring(Str,0,npos-2);
-        tmp2=substring(Str,npos-1,length(Str));
-        Str=tmp1+tmp2;
-      );
-      Strnq=replace(Str,"?","");
-      Strnow=Str;
-      StrL_ch=Strnq;
-      npos=npos-1;
-    ,
-      Pull();
-      npos=length(StrL_ch);
-      Delete();
-    );
-  );
-  if(ch==3,
-    Kettaskinit();
-    Str="Student=";
-    Strnq=Str;
-    StrL_3=Str;
-  );
-  funflg=0;
-);
+///////
+Manifun=["Allclear()","Clearnow()","Delete()","Push()","Pull()"];
 
 Allclear():=(
-  Str="";
-  Strnq="";
   StrL_ch="";
   StrpL_ch="";
   npos=0;
+  Subsedit(ch,"");
   funflg=0;
 );
 
-Clear():=( 
-  Str="";
-  Strnq=Str;
-  StrL_ch=Str;
+Clearnow():=(
+  StrL_ch="";
   npos=0;
+  Subsedit(ch,"");
   funflg=0;
+);
+
+Delete():=(
+  regional(tmp1,tmp2,strnow);
+  if(npos>0,
+    strnow=StrL_ch;
+    tmp1=substring(strnow,0,npos-1);
+    tmp2=substring(strnow,npos,length(strnow));
+    StrL_ch=tmp1+tmp2;
+    strnow=StrL_ch;
+    Subsedit(ch,strnow);
+    npos=npos-1;
+    funflg=0;
+  ,
+    Pull();
+    npos=length(StrL_ch);
+    Delete();
+  );
 );
 
 Push():=(
@@ -233,15 +193,14 @@ Push():=(
   tmp=indexof(tmp1,"//");
   if(tmp==0,
     StrpL_ch=StrpL_ch+tmp1+"//";
-    Str="";
+    StrL_ch="";
     npos=0;
   ,
     StrpL_ch=StrpL_ch+substring(tmp1,0,tmp+1);
-    Str=substring(tmp1,tmp+1,length(tmp1));
+    StrL_ch=substring(tmp1,tmp+1,length(tmp1));
     npos=max([0,npos-(tmp+1)]);
   );
-  StrL_ch=Str;
-  Strnq=Str;
+  Subsedit(ch,StrL_ch);
 );
 
 Pull():=(
@@ -252,79 +211,7 @@ Pull():=(
   tmp2=substring(tmp1,0,tmp);
   StrpL_ch=tmp2;
   tmp1=substring(tmp1,tmp,length(tmp1));
-  Str=tmp1+StrL_ch;
-  Strnq=Str;
-  StrL_ch=Str;
+  StrL_ch=tmp1+StrL_ch;
   npos=length(tmp1)+npos;
-);
-
-Left():=(
-  regional(tmp,tmp1,tmp2,tmp3);
-  //global Str,npos
-  if(length(Str)>0,
-    tmp=indexof(Str,"?");
-    if(tmp>1,
-      tmp1=substring(Str,0,tmp-2)+"?";
-      tmp2=substring(Str,tmp-2,tmp-1);
-      tmp3=substring(Str,tmp,length(Str));
-      Str=tmp1+tmp2+tmp3;
-      npos=length(tmp1+"?");
-    );
-    if(tmp==0,
-      tmp1=substring(Str,0,length(Str)-1)+"?";
-      tmp3=substring(Str,length(Str)-1,length(Str));
-      Str=tmp1+tmp3;  
-      npos=length(tmp1);
-    );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
-  );
-);
-
-Right():=(
-  regional(tmp,tmp1,tmp2,tmp3);
-  //global Str,npos
-  if(length(Str)>0,
-    tmp=indexof(Str,"?");
-    if(tmp>0,
-      if(tmp<length(Str)-1,
-        tmp1=substring(Str,0,tmp-1);
-        tmp2=substring(Str,tmp,tmp+1)+"?";
-        tmp3=substring(Str,tmp+1,length(Str));
-        Str=tmp1+tmp2+tmp3;
-        npos=length(tmp1+"?");
-      );
-      if(tmp==length(Str)-1,
-        tmp1=substring(Str,0,tmp-1);
-        tmp3=substring(Str,tmp,length(Str));
-        Str=tmp1+tmp3;
-        npos=length(Str);
-      );
-    );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
-  );
-);
-
-LLeft():=(
-  regional(tmp,tmp1,tmp2,tmp3);
-  //global Str,npos
-  if(length(Str)>0,
-    npos=length(shL_nqu)+1;
-    tmp=substring(Str,npos-1,length(Str));
-    Str=shL_nqu+"?"+tmp;
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
-  );
-);
-
-RRight():=(
-  regional(tmp,tmp1,tmp2,tmp3);
-  //global Str,npos
-  if(length(Str)>0,
-    Str=replace(Str,"?","");
-    npos=length(Str);
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
-  );
+  Subsedit(ch,StrL_ch);
 );
