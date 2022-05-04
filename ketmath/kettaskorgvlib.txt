@@ -1,3 +1,4 @@
+//   220503  ansL= removed
 //   220412
 //   211112
 //   211020
@@ -16,7 +17,7 @@ Kettaskinit():=(
   nch=2;
   StrL=apply(1..3,""); 
   StrpL=apply(1..3,"");
-  ansL=apply(1..20,"");
+//  ansL=apply(1..20,""); //220503(removed)
   nqu=1;
   stfixed=0;
   stok=0;

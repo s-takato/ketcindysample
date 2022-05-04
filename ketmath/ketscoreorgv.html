@@ -2639,7 +2639,12 @@ Lettermove(dir,str):=(
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1.1;
 aalinestart=1;
-
+ansline="";
+caline="";
+mrkline="";
+quline="";
+shline="";
+sqline="";
 zzlineend=1;
 
 
@@ -3376,9 +3381,7 @@ Keyname():=(
 Manifun=["Allclear()","Clear()","Delete()","Push()","Pull()",
   "Left()","Right()","LLeft()","RRight()","Fullmark()"];
 
-Fullmark():=(
-  regional(fmark);
-  fmark=mrkL_nqu;
+Fullmark(fmark):=(
   Str=Str+fmark;
   Strnq=replace(Str,"?","");
   StrL_ch=Strnq;
@@ -3636,6 +3639,18 @@ if(startflg==1,
 
 );
 
+if(stnum==0,
+  tmp=Textedit(3,"","");
+  if(length(tmp)>0,
+    ansline=tmp;
+    ansLL=Line2list(ansline);
+    ansLL=select(ansLL,length(#)>0);
+    StdataLL=apply(ansLL,[#_1,#_2,#_3]);
+    ansLL=apply(ansLL,#_(4..(length(#))));
+    ansorgLL=ansLL;
+  );
+);
+
 drawcircle([px,posyL_ch],0.5,color->[1,0,0]);
 fillcircle([px,posyL_ch],0.5,color->[1,0,0]);
 
@@ -3653,6 +3668,11 @@ if(abs(stnuminc)>0,
   quL=quLL_stnum;
   caL=caLL_stnum;
   ansL=ansLL_stnum;
+  Str=ansL_nqu;
+  npos=length(Str);
+  Strnq=replace(Str,"?","");
+  StrL_2=Strnq;
+  Subsedit(2,StrL_2);
   ansorgL=ansorgLL_stnum;
   ansall=length(ansL);
   forall(1..ansall,
@@ -3948,14 +3968,14 @@ var cdy = CindyJS({
     {name: "Text120", type: "Button", pos: [4.0, 0.05361702127659574, 0.0851063829787234], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1000;", text: "<<", textsize: 14.0},
     {name: "Text121", type: "Button", pos: [4.0, 0.04165289256198347, 0.06611570247933884], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: ">", textsize: 14.0},
     {name: "Text119", type: "Button", pos: [4.0, 0.04, 0.06349206349206349], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1000;", text: ">>", textsize: 14.0},
-    {name: "Text98", type: "Button", pos: [4.0, 0.030303030303030304, 0.06060606060606061], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;Fullmark();", text: "Full", textsize: 14.0},
+    {name: "Text98", type: "ToggleButton", pos: [4.0, 0.030303030303030304, 0.06060606060606061], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;Fullmark(mrkL_nqu);", text: "Full", textsize: 14.0, border: true },
     {name: "Text116", type: "Button", pos: [4.0, 0.31683168316831684, 0.07920792079207921], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "stnuminc=-1;", text: "<", textsize: 14.0}
   ],
   ports: [{
     id: "CSCanvas",
     width: 880,
-    height: 688,
-    transform: [{visibleRect: [-0.05198517366379739, 28.64383068875236, 83.12429268841203, -36.337636390994376]}],
+    height: 733,
+    transform: [{visibleRect: [-0.05198517366379739, 28.64383068875236, 83.12429268841203, -40.600420631425756]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

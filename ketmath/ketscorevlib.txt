@@ -160,10 +160,8 @@ Manifun=["Allclear()","Clear()","Delete()","Push()","Pull()",
   "Left()","Right()","LLeft()","RRight()","Fullmark()"];
 
 // only for ketscore
-Fullmark():=(
-  regional(fmark);
-  //global mrkL,nqu;
-  fmark=mrkL_nqu;
+Fullmark(fmark):=(
+  //global Str,Strnq,StrL_ch,npos
   Str=Str+fmark;
   Strnq=replace(Str,"?","");
   StrL_ch=Strnq;
