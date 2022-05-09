@@ -1,3 +1,15 @@
+<!-- Copyright (C)  2014  Setsuo Takato, KETCindy Japan project team
+* This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version. 
+* This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>
+ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -261,77 +273,114 @@ Addpar(str):=(
   );
   out;
 );
-Listplot(list):=Listplot(list,[]);
-Listplot(Arg1,Arg2):=(
-  regional(name,list,options,str);
-  if(isstring(Arg1),
-    name=Arg1;
-    list=Arg2;
-    Listplot(name,list,[]);
+Shade(plist):=Shade(plist,[]); 
+Shade(Arg1,Arg2):=(
+  if(!isstring(Arg1),
+    Shade(text(SHADECTR),Arg1,Arg2); //190222
   ,
-    list=Arg1;
-    options=Arg2;
-    name="";
-    forall(list, // 16.10.07from
-       name=name+#.name;
-    );// 16.10.07until
-    Listplot(name,list,options);
+    Shade(Arg1,Arg2,[]);
   );
 );
-Listplot(nm,list,options):=(
-  regional(name,cutend,tmp,tmp1,tmp2,ptlist,Ltype,opcindy,Noflg,eqL,Msg,color,color4);
-  if(substring(nm,0,1)=="-",  // 16.01.27 from
+Shade(nm,plistorg,options):=(
+  regional(name,plist,jj,nn,trim,first,tmp,tmp1,tmp2,Noflg,
+     opstr,opcindy,eqL,reL,Str,G2,flg,encflg,startpt,color,color4,ctr,ptshade);
+  if(substring(nm,0,1)=="-", //200513from
     name=substring(nm,1,length(nm));
   ,
-    name="sg"+nm;
-  ); // upto
+    name="shade"+nm;
+  ); //200513to
+  plist=plistorg;
   tmp=Divoptions(options);
-  Ltype=tmp_1;
-  Noflg=tmp_2;
-  eqL=tmp_5;
+  Noflg=tmp_2; //200512
+  eqL=tmp_5; 
+  reL=tmp_6;
   color=tmp_(length(tmp)-2); color4=Colorrgb2cmyk(color); //200618
+  opstr=tmp_(length(tmp)-1);
   opcindy=tmp_(length(tmp));
-  Msg="Y";  //190206
- Msg="N"; //
-  cutend=[0,0];//180719
+  encflg=0; //201029
+  tmp=select(plist,indexof(#,"Invert")>0); //180929from
+  trim="N";
+  first="N"; //191007
+  ptshade="N"; //200513
   forall(eqL,
     tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    if(tmp1=="M",
-      Msg=Toupper(substring(tmp_2,0,1));
+    tmp1=Toupper(tmp_1);
+    tmp2=Toupper(tmp_2);
+    if(substring(tmp1,0,1)=="E",
+      if(substring(tmp2,0,1)=="Y",
+        encflg=1;
+      );
     );
-    if(tmp1=="C",//180719from
-      tmp2=replace(tmp_2,"[","");
-      tmp2=replace(tmp2,"]","");
-      cutend=tokenize(tmp2,",");
-      if(length(cutend)==1,cutend=[cutend_1,cutend_1]);     
-    );//180719to
-  );
-  if(Noflg<3,
-    if(Msg=="Y", //190206
-      println("generate Listplot "+name);
+    if(substring(tmp1,0,1)=="T",
+      trim=substring(tmp2,0,1);
     );
-    if(isstring(list_1),tmp=apply(list,parse(#)),tmp=list); // 15.03.24
-    ptlist=apply(tmp,Pcrd(#));
-    if(|cutend|>0,//180719from
-      tmp=ptlist_(length(ptlist))-ptlist_1;
-      tmp=tmp/|tmp|;
-      ptlist_1=ptlist_1+tmp*cutend_1;
-      ptlist_(length(ptlist))=ptlist_(length(ptlist))-tmp*cutend_2;
-    );//180719to
-    tmp=name+"="+Textformat(ptlist,5)+";"; //190415
-    parse(tmp);
+    if(substring(tmp1,0,1)=="F",
+      first=substring(tmp2,0,1);
+    );
+    if(substring(tmp1,0,1)=="P", //200513[3lines]
+      ptshade=Toupper(substring(tmp2,0,1));
+    );
   );
-  if(Noflg<3, //190818
-    if(isstring(Ltype),
-      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
+  startpt=[];
+  forall(reL,
+    if(islist(#),
+      startpt=#;
+    );
+  ); //180929to
+  flg=0; ctr=1;
+  if(encflg==1, //180929from
+    if(length(startpt)==2,
+      Enclosing(nm,plist,[startpt,"nodisp"]);
     ,
-      if(Noflg==1,Ltype=0);
+      Enclosing(nm,plist,["nodisp"]);
     );
-    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
+    plist=["en"+nm];
+  ); //180929to
+  if((length(plist)==1)&(trim=="Y"), //190220from,109224
+    plist=[Shadein(plist)];
+  ); //190220to
+  forall(1..(length(plist)),jj, //180613from
+    if(flg==0,
+      tmp1=plist_jj;
+      if(isstring(tmp1),tmp=parse(tmp1),tmp=tmp1);
+      if(!islist(tmp),
+         flg=1;
+      ,
+        if(!isstring(tmp1),
+          tmp2=[];
+          forall(tmp1,if(ispoint(#),tmp=#.xy,tmp=#);
+            tmp2=append(tmp2,tmp);
+          );
+          Listplot("-"+name+text(ctr),tmp2,["nodisp"]); //190520
+          plist_jj=name+text(ctr);
+          ctr=ctr+1;
+        );
+      ); 
+    );
+  );//180613to
+  if(flg==1,
+    println("    Shade : some data not defined properly");
+ ,
+    if(Noflg<2, //200512
+      G2=Joincrvs("1",plist,["nodata"]);
+      G2=apply(G2,Pcrd(#));
+      tmp1="fillpoly("+Textformat(G2,10)+opcindy+");";
+      if(ptshade=="N", //200513from
+        tmp=select(1..(length(GCLIST)),contains(plist,GCLIST_#_1)); //200715from
+        if(length(tmp)>0,
+          nn=min(tmp);
+        ,
+          nn=length(GCLIST)+1;
+        );
+        tmp2=GCLIST_(1..(nn-1));
+        tmp2=append(tmp2,[tmp1,[5,0]]);
+        GCLIST=concat(tmp2,GCLIST_(nn..(length(GCLIST))));
+      ,
+        PTSHADElist=append(PTSHADElist,[name,tmp1]);
+      ); //200513to
+    );
   );
-  tmp1=apply(list,Lcrd(#));
-  tmp1;
+  SHADECTR=SHADECTR+1;
 );
 Divoptions(options):=(
   regional(Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,
@@ -603,197 +652,6 @@ Colorrgb2cmyk(clr):=(
   );
   clrnew;
 );
-Pcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=pt.xy;
-  ,
-    tmp=[pt_1*SCALEX,pt_2*SCALEY];
-  );
- re(tmp); //191231
-);
-Getlinestyle(str,name):=(
-  regional(noflg,tmp,tmp1,tmp2,Dop,Ltype,subflg);
-  Ltype=-1;
-  Dop="";
-  tmp1=indexof(str,",");
-  if(tmp1>0,
-    Dop=","+substring(str,tmp1,length(str));
-  );
-  noflg=parse(substring(str,0,1));
-  if(substring(name,0,3)=="sub",subflg=1,subflg=0);  // 16.02.29
-  if(noflg<=1, //1900818from
-    tmp1=Toupper(substring(str,1,3));
-  ,
-    tmp1="NO";
-  ); //1900818to
-  tmp2=""; //190119from
-  tmp=indexof(str,",");
-  if(tmp>0,
-    tmp2=substring(str,tmp,length(str));
-  ); //190119to
-  if(tmp1=="DR",
-    if(length(tmp2)==0,tmp2="1"); //190125
-    Ltype=[0,tmp2];  //190119
-    if(noflg==0 & subflg==0, // 16.02.29
-    );
-  );
-  if(tmp1=="DA",
-    if(length(tmp2)==0,tmp2="1,1"); //190125
-    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
-    Ltype=[1,tmp2];  //190119
-    if(noflg==0 & subflg==0, // 16.02.29
-    );
-  );
-  if(tmp1=="ID",
-    if(length(tmp2)==0,tmp2="1,1"); //190125
-    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
-    Ltype=[2,tmp2];  //190119
-    if(noflg==0 & subflg==0, // 16.02.29
-    );
-  );
-  if(tmp1=="DO",
-    if(length(tmp2)==0,tmp2="1,1"); //190125
-    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
-    Ltype=[3,tmp2];  //190119
-    if(noflg==0 & subflg==0, // 16.02.29
-    );
-  );
-  if(tmp1=="DP",
-    if(length(tmp2)==0,tmp2="1"); //190125
-    Ltype=[0,tmp2];  //190119
-    tmp1=parse(name);
-    tmp2="";
-    forall(tmp1,
-      tmp2=tmp2+Textformat(#_1,5)+",";
-    );
-    tmp2=substring(tmp2,0,length(tmp2)-1);
-    if(noflg==0,
-    );
-  );
-  if(tmp1=="NO", //190818from
-    Ltype=[-1,"0"];
-  );  //190818to
-  Ltype;
-);
-Lcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=[pt.x/SCALEX,pt.y/SCALEY];
-  ,
-    tmp=pt;
-  );
-  re(tmp); //191231
-);
-Shade(plist):=Shade(plist,[]); 
-Shade(Arg1,Arg2):=(
-  if(!isstring(Arg1),
-    Shade(text(SHADECTR),Arg1,Arg2); //190222
-  ,
-    Shade(Arg1,Arg2,[]);
-  );
-);
-Shade(nm,plistorg,options):=(
-  regional(name,plist,jj,nn,trim,first,tmp,tmp1,tmp2,Noflg,
-     opstr,opcindy,eqL,reL,Str,G2,flg,encflg,startpt,color,color4,ctr,ptshade);
-  if(substring(nm,0,1)=="-", //200513from
-    name=substring(nm,1,length(nm));
-  ,
-    name="shade"+nm;
-  ); //200513to
-  plist=plistorg;
-  tmp=Divoptions(options);
-  Noflg=tmp_2; //200512
-  eqL=tmp_5; 
-  reL=tmp_6;
-  color=tmp_(length(tmp)-2); color4=Colorrgb2cmyk(color); //200618
-  opstr=tmp_(length(tmp)-1);
-  opcindy=tmp_(length(tmp));
-  encflg=0; //201029
-  tmp=select(plist,indexof(#,"Invert")>0); //180929from
-  trim="N";
-  first="N"; //191007
-  ptshade="N"; //200513
-  forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(tmp_1);
-    tmp2=Toupper(tmp_2);
-    if(substring(tmp1,0,1)=="E",
-      if(substring(tmp2,0,1)=="Y",
-        encflg=1;
-      );
-    );
-    if(substring(tmp1,0,1)=="T",
-      trim=substring(tmp2,0,1);
-    );
-    if(substring(tmp1,0,1)=="F",
-      first=substring(tmp2,0,1);
-    );
-    if(substring(tmp1,0,1)=="P", //200513[3lines]
-      ptshade=Toupper(substring(tmp2,0,1));
-    );
-  );
-  startpt=[];
-  forall(reL,
-    if(islist(#),
-      startpt=#;
-    );
-  ); //180929to
-  flg=0; ctr=1;
-  if(encflg==1, //180929from
-    if(length(startpt)==2,
-      Enclosing(nm,plist,[startpt,"nodisp"]);
-    ,
-      Enclosing(nm,plist,["nodisp"]);
-    );
-    plist=["en"+nm];
-  ); //180929to
-  if((length(plist)==1)&(trim=="Y"), //190220from,109224
-    plist=[Shadein(plist)];
-  ); //190220to
-  forall(1..(length(plist)),jj, //180613from
-    if(flg==0,
-      tmp1=plist_jj;
-      if(isstring(tmp1),tmp=parse(tmp1),tmp=tmp1);
-      if(!islist(tmp),
-         flg=1;
-      ,
-        if(!isstring(tmp1),
-          tmp2=[];
-          forall(tmp1,if(ispoint(#),tmp=#.xy,tmp=#);
-            tmp2=append(tmp2,tmp);
-          );
-          Listplot("-"+name+text(ctr),tmp2,["nodisp"]); //190520
-          plist_jj=name+text(ctr);
-          ctr=ctr+1;
-        );
-      ); 
-    );
-  );//180613to
-  if(flg==1,
-    println("    Shade : some data not defined properly");
- ,
-    if(Noflg<2, //200512
-      G2=Joincrvs("1",plist,["nodata"]);
-      G2=apply(G2,Pcrd(#));
-      tmp1="fillpoly("+Textformat(G2,10)+opcindy+");";
-      if(ptshade=="N", //200513from
-        tmp=select(1..(length(GCLIST)),contains(plist,GCLIST_#_1)); //200715from
-        if(length(tmp)>0,
-          nn=min(tmp);
-        ,
-          nn=length(GCLIST)+1;
-        );
-        tmp2=GCLIST_(1..(nn-1));
-        tmp2=append(tmp2,[tmp1,[5,0]]);
-        GCLIST=concat(tmp2,GCLIST_(nn..(length(GCLIST))));
-      ,
-        PTSHADElist=append(PTSHADElist,[name,tmp1]);
-      ); //200513to
-    );
-  );
-  SHADECTR=SHADECTR+1;
-);
 Enclosing(nm,plist):=Enclosing2(nm,plist,[]);//180706[2lines]
 Enclosing(nm,plistorg,options):=Enclosing2(nm,plistorg,options);
 Enclosing2(nm,plist):=Enclosing2(nm,plist,[]);
@@ -961,6 +819,15 @@ Enclosing2(nm,plistorg,options):=(
     GCLIST=append(GCLIST,[name,Ltype,opcindy]);
   );
   AnsL; //201110
+);
+Lcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=[pt.x/SCALEX,pt.y/SCALEY];
+  ,
+    tmp=pt;
+  );
+  re(tmp); //191231
 );
 Intersectcurvespp(crv1org,crv2org):=Intersectcurvespp(crv1org,crv2org,[]);
 Intersectcurvespp(crv1org,crv2org,options):=(
@@ -1380,6 +1247,79 @@ Bezierpt(t,ptlist,ctrlist):=(
   p8=(1-t)*p5+t*p6;
   p9=(1-t)*p7+t*p8;
   if(flg3==0,p7,p9);
+);
+Pcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=pt.xy;
+  ,
+    tmp=[pt_1*SCALEX,pt_2*SCALEY];
+  );
+ re(tmp); //191231
+);
+Getlinestyle(str,name):=(
+  regional(noflg,tmp,tmp1,tmp2,Dop,Ltype,subflg);
+  Ltype=-1;
+  Dop="";
+  tmp1=indexof(str,",");
+  if(tmp1>0,
+    Dop=","+substring(str,tmp1,length(str));
+  );
+  noflg=parse(substring(str,0,1));
+  if(substring(name,0,3)=="sub",subflg=1,subflg=0);  // 16.02.29
+  if(noflg<=1, //1900818from
+    tmp1=Toupper(substring(str,1,3));
+  ,
+    tmp1="NO";
+  ); //1900818to
+  tmp2=""; //190119from
+  tmp=indexof(str,",");
+  if(tmp>0,
+    tmp2=substring(str,tmp,length(str));
+  ); //190119to
+  if(tmp1=="DR",
+    if(length(tmp2)==0,tmp2="1"); //190125
+    Ltype=[0,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="DA",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
+    Ltype=[1,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="ID",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
+    Ltype=[2,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="DO",
+    if(length(tmp2)==0,tmp2="1,1"); //190125
+    if(indexof(tmp2,",")==0,tmp2=tmp2+",1"); //200911
+    Ltype=[3,tmp2];  //190119
+    if(noflg==0 & subflg==0, // 16.02.29
+    );
+  );
+  if(tmp1=="DP",
+    if(length(tmp2)==0,tmp2="1"); //190125
+    Ltype=[0,tmp2];  //190119
+    tmp1=parse(name);
+    tmp2="";
+    forall(tmp1,
+      tmp2=tmp2+Textformat(#_1,5)+",";
+    );
+    tmp2=substring(tmp2,0,length(tmp2)-1);
+    if(noflg==0,
+    );
+  );
+  if(tmp1=="NO", //190818from
+    Ltype=[-1,"0"];
+  );  //190818to
+  Ltype;
 );
 Intersectseg(seg1,seg2):=Intersectseg(seg1,seg2,0.01);
 Intersectseg(seg1org,seg2org,Eps1):=(
@@ -1821,6 +1761,78 @@ Unscaling(pdata):=(
   );
   Out;
 );
+Listplot(list):=Listplot(list,[]);
+Listplot(Arg1,Arg2):=(
+  regional(name,list,options,str);
+  if(isstring(Arg1),
+    name=Arg1;
+    list=Arg2;
+    Listplot(name,list,[]);
+  ,
+    list=Arg1;
+    options=Arg2;
+    name="";
+    forall(list, // 16.10.07from
+       name=name+#.name;
+    );// 16.10.07until
+    Listplot(name,list,options);
+  );
+);
+Listplot(nm,list,options):=(
+  regional(name,cutend,tmp,tmp1,tmp2,ptlist,Ltype,opcindy,Noflg,eqL,Msg,color,color4);
+  if(substring(nm,0,1)=="-",  // 16.01.27 from
+    name=substring(nm,1,length(nm));
+  ,
+    name="sg"+nm;
+  ); // upto
+  tmp=Divoptions(options);
+  Ltype=tmp_1;
+  Noflg=tmp_2;
+  eqL=tmp_5;
+  color=tmp_(length(tmp)-2); color4=Colorrgb2cmyk(color); //200618
+  opcindy=tmp_(length(tmp));
+  Msg="Y";  //190206
+ Msg="N"; //
+  cutend=[0,0];//180719
+  forall(eqL,
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(tmp1=="M",
+      Msg=Toupper(substring(tmp_2,0,1));
+    );
+    if(tmp1=="C",//180719from
+      tmp2=replace(tmp_2,"[","");
+      tmp2=replace(tmp2,"]","");
+      cutend=tokenize(tmp2,",");
+      if(length(cutend)==1,cutend=[cutend_1,cutend_1]);     
+    );//180719to
+  );
+  if(Noflg<3,
+    if(Msg=="Y", //190206
+      println("generate Listplot "+name);
+    );
+    if(isstring(list_1),tmp=apply(list,parse(#)),tmp=list); // 15.03.24
+    ptlist=apply(tmp,Pcrd(#));
+    if(|cutend|>0,//180719from
+      tmp=ptlist_(length(ptlist))-ptlist_1;
+      tmp=tmp/|tmp|;
+      ptlist_1=ptlist_1+tmp*cutend_1;
+      ptlist_(length(ptlist))=ptlist_(length(ptlist))-tmp*cutend_2;
+    );//180719to
+    tmp=name+"="+Textformat(ptlist,5)+";"; //190415
+    parse(tmp);
+  );
+  if(Noflg<3, //190818
+    if(isstring(Ltype),
+      Ltype=Getlinestyle(text(Noflg)+Ltype,name);
+    ,
+      if(Noflg==1,Ltype=0);
+    );
+    GCLIST=append(GCLIST,[name,Ltype,opcindy]);
+  );
+  tmp1=apply(list,Lcrd(#));
+  tmp1;
+);
 Shadein(pstrorg):=( //190220
   regional(pstr,ptL,pL,crv,nn,
       tmp,tmp1,tmp2,pm1,pm2,p1,p2,flg);
@@ -2038,6 +2050,144 @@ Ptpos(ptorg,pos):=(
     parse(tmp);
     out=pt.xy;
   );
+  out;
+);
+Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
+Expr(list):=Expr(list,[]);
+Expr(Pt,Dr,St,options):=Expr([Pt,Dr,St],options); //190409
+Expr(listorg,options):=( //16.10.09
+  regional(list,str,tmp,tmp1,tmp2);
+  list=listorg;
+  forall(1..round(length(list)/3),
+    str=list_(3*#);
+    if(isstring(str), //200526from
+      if(!iswindows(),
+        str=replace(str,"¥","\");
+      ); 
+    ,
+      str=format(str,10)
+    ); //200526to
+    str="$"+str+"$"; //200526
+    list_(3*#)=str;
+  );
+  Letter(list,options);
+);
+Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
+Letter(list):=Letter(list,[]);
+Letter(Pt,Dr,St,options):=Letter([Pt,Dr,St],options);//181218
+Letter(list,options):=(
+  regional(Nj,Pos,Dir,Str,Off,Xmv,Ymv,Noflg,opcindy,
+      opL,aln,sz,clr,bld,ita,tmp,tmp1,tmp2,color,color4,eqL);
+  tmp=Divoptions(options);
+  eqL=tmp_5; //190209
+  Noflg=tmp_2;
+  color=tmp_(length(tmp)-2); color4=Colorrgb2cmyk(color); //200618
+  opL=select(options,indexof(#,"->")>0); //16.10.09from
+  tmp=select(opL,indexof(#,"color"));
+  sz=16; //210516
+  bld=false;
+  ita=false;
+  aln="left";
+  forall(opL,
+    tmp=indexof(#,"->");
+    tmp1=Removespace(substring(#,0,tmp-1));
+    tmp2=substring(#,tmp+1,length(#));
+    if(tmp1=="size",sz=parse(tmp2));
+    if(tmp1=="color",clr=parse(tmp2));
+    if(tmp1=="bold",bld=parse(tmp2));
+    if(tmp1=="ita",ita=parse(tmp2));
+  );//16.10.09to
+  forall(eqL, //190209from
+    tmp=Strsplit(#,"=");
+    tmp1=Toupper(substring(tmp_1,0,1));
+    if(tmp1=="S",
+      sz=round(parse(tmp_2)*16); //210516
+    );
+  ); //190209to
+  Nj=1;
+  if(Ketcindyjsfigure>0,sz=round(sz*Ketcindyjsscale) ); // 
+  while(Nj+2<=length(list),
+    Pos=list_Nj;
+    Dir=list_(Nj+1);
+    Str=list_(Nj+2);
+    if(!isstring(Str),Str=format(Str,10)); // 16.09.30,10.09
+    tmp=replace(Str,".xy","");
+    tmp=replace(tmp,".x","(1)");
+    Str=replace(tmp,".y","(2)");
+    Str=RSslash(Str); // 17.09.24
+    Str=replace(Str,"`","'");//180303
+    tmp=Dq+","+Dq+Str+Dq+")";
+    if(Noflg<2,
+      Off=[0,0];
+      Xmv=0; Ymv=0;
+      aln="mid"; //200530from
+      if(indexof(Dir,"c")>0, Off_2=-0.3*sz);
+      if(indexof(Dir,"n")>0,Off_2=0;Ymv=Lettermove("n",Dir)); //210601
+      if(indexof(Dir,"s")>0, Off_2=-0.85*sz;Ymv=-Lettermove("s",Dir));
+      if(indexof(Dir,"e")>0,
+        aln="left";
+        if(indexof(Dir,"n")+indexof(Dir,"s")==0,Off=[0,-0.3*sz]);
+        Xmv=Lettermove("e",Dir);
+      );
+      if(indexof(Dir,"w")>0,
+        aln="right";
+        if(indexof(Dir,"n")+indexof(Dir,"s")==0,Off=[0,-0.4*sz]);
+        Xmv=-Lettermove("w",Dir);
+      );
+      Str=list_(Nj+2);  //17.10.17
+      Pos=Pos+[Xmv,Ymv]*MARKLEN;//210530to
+      if(length(color)==4,color=Colorcmyk2rgb(color)); //200523
+      tmp="drawtext("+format(Pcrd(Pos),10)+",offset->"+text(Off)+","+Dqq(Str)+","; 
+      tmp1="size->sz,color->colornow,align->"+Dqq(aln)+",bold->"+bld+",italics->"+ita; //210601
+      tmp1=Assign(tmp1,["sz",text(sz),"colornow",text(color),"aln",Dqq(aln),"bld",text(bld),"ita",text(ita)]);
+      tmp=tmp+tmp1+");";
+      GCLIST=append(GCLIST,[tmp,[6,0]]); //201004to
+    );
+    Nj=Nj+3;
+  );
+);
+Removespace(str):=(
+  regional(tmp,flg,out);
+  tmp=length(str)+1;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      if((str_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(str,tmp-1,length(str));
+  flg=0;
+  tmp=0;
+  forall(reverse(1..(length(out))),
+    if(flg==0,
+      if((out_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(out,0,tmp);
+);
+Lettermove(dir,str):=(
+  regional(Suu,tmp,tmp1,out,nn);
+  Suu="+-.0123456789";
+  tmp=indexof(str,dir);
+  tmp1=substring(str,tmp,length(str));
+  out="";
+  nn=1;
+  while(nn<=length(tmp1),
+    tmp=substring(tmp1,nn-1,nn);
+    if(indexof(Suu,tmp)>0,
+      out=out+tmp;
+    ,
+      nn=length(str);
+    );
+    nn=nn+1;
+  );
+  if(length(out)==0,out=0,out=parse(out));
   out;
 );
 Ketinit():=Ketinit("fig",0.3); //190831from
@@ -2497,144 +2647,6 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
   );
   SCALEY=scaley; //200114
   [LLcrd(pA),LLcrd(pB)];
-);
-Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
-Expr(list):=Expr(list,[]);
-Expr(Pt,Dr,St,options):=Expr([Pt,Dr,St],options); //190409
-Expr(listorg,options):=( //16.10.09
-  regional(list,str,tmp,tmp1,tmp2);
-  list=listorg;
-  forall(1..round(length(list)/3),
-    str=list_(3*#);
-    if(isstring(str), //200526from
-      if(!iswindows(),
-        str=replace(str,"¥","\");
-      ); 
-    ,
-      str=format(str,10)
-    ); //200526to
-    str="$"+str+"$"; //200526
-    list_(3*#)=str;
-  );
-  Letter(list,options);
-);
-Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
-Letter(list):=Letter(list,[]);
-Letter(Pt,Dr,St,options):=Letter([Pt,Dr,St],options);//181218
-Letter(list,options):=(
-  regional(Nj,Pos,Dir,Str,Off,Xmv,Ymv,Noflg,opcindy,
-      opL,aln,sz,clr,bld,ita,tmp,tmp1,tmp2,color,color4,eqL);
-  tmp=Divoptions(options);
-  eqL=tmp_5; //190209
-  Noflg=tmp_2;
-  color=tmp_(length(tmp)-2); color4=Colorrgb2cmyk(color); //200618
-  opL=select(options,indexof(#,"->")>0); //16.10.09from
-  tmp=select(opL,indexof(#,"color"));
-  sz=16; //210516
-  bld=false;
-  ita=false;
-  aln="left";
-  forall(opL,
-    tmp=indexof(#,"->");
-    tmp1=Removespace(substring(#,0,tmp-1));
-    tmp2=substring(#,tmp+1,length(#));
-    if(tmp1=="size",sz=parse(tmp2));
-    if(tmp1=="color",clr=parse(tmp2));
-    if(tmp1=="bold",bld=parse(tmp2));
-    if(tmp1=="ita",ita=parse(tmp2));
-  );//16.10.09to
-  forall(eqL, //190209from
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    if(tmp1=="S",
-      sz=round(parse(tmp_2)*16); //210516
-    );
-  ); //190209to
-  Nj=1;
-  if(Ketcindyjsfigure>0,sz=round(sz*Ketcindyjsscale) ); // 
-  while(Nj+2<=length(list),
-    Pos=list_Nj;
-    Dir=list_(Nj+1);
-    Str=list_(Nj+2);
-    if(!isstring(Str),Str=format(Str,10)); // 16.09.30,10.09
-    tmp=replace(Str,".xy","");
-    tmp=replace(tmp,".x","(1)");
-    Str=replace(tmp,".y","(2)");
-    Str=RSslash(Str); // 17.09.24
-    Str=replace(Str,"`","'");//180303
-    tmp=Dq+","+Dq+Str+Dq+")";
-    if(Noflg<2,
-      Off=[0,0];
-      Xmv=0; Ymv=0;
-      aln="mid"; //200530from
-      if(indexof(Dir,"c")>0, Off_2=-0.3*sz);
-      if(indexof(Dir,"n")>0,Off_2=0;Ymv=Lettermove("n",Dir)); //210601
-      if(indexof(Dir,"s")>0, Off_2=-0.85*sz;Ymv=-Lettermove("s",Dir));
-      if(indexof(Dir,"e")>0,
-        aln="left";
-        if(indexof(Dir,"n")+indexof(Dir,"s")==0,Off=[0,-0.3*sz]);
-        Xmv=Lettermove("e",Dir);
-      );
-      if(indexof(Dir,"w")>0,
-        aln="right";
-        if(indexof(Dir,"n")+indexof(Dir,"s")==0,Off=[0,-0.4*sz]);
-        Xmv=-Lettermove("w",Dir);
-      );
-      Str=list_(Nj+2);  //17.10.17
-      Pos=Pos+[Xmv,Ymv]*MARKLEN;//210530to
-      if(length(color)==4,color=Colorcmyk2rgb(color)); //200523
-      tmp="drawtext("+format(Pcrd(Pos),10)+",offset->"+text(Off)+","+Dqq(Str)+","; 
-      tmp1="size->sz,color->colornow,align->"+Dqq(aln)+",bold->"+bld+",italics->"+ita; //210601
-      tmp1=Assign(tmp1,["sz",text(sz),"colornow",text(color),"aln",Dqq(aln),"bld",text(bld),"ita",text(ita)]);
-      tmp=tmp+tmp1+");";
-      GCLIST=append(GCLIST,[tmp,[6,0]]); //201004to
-    );
-    Nj=Nj+3;
-  );
-);
-Removespace(str):=(
-  regional(tmp,flg,out);
-  tmp=length(str)+1;
-  flg=0;
-  forall(1..(length(str)),
-    if(flg==0,
-      if((str_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(str,tmp-1,length(str));
-  flg=0;
-  tmp=0;
-  forall(reverse(1..(length(out))),
-    if(flg==0,
-      if((out_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(out,0,tmp);
-);
-Lettermove(dir,str):=(
-  regional(Suu,tmp,tmp1,out,nn);
-  Suu="+-.0123456789";
-  tmp=indexof(str,dir);
-  tmp1=substring(str,tmp,length(str));
-  out="";
-  nn=1;
-  while(nn<=length(tmp1),
-    tmp=substring(tmp1,nn-1,nn);
-    if(indexof(Suu,tmp)>0,
-      out=out+tmp;
-    ,
-      nn=length(str);
-    );
-    nn=nn+1;
-  );
-  if(length(out)==0,out=0,out=parse(out));
-  out;
 );
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1.1;
@@ -3295,7 +3307,35 @@ Kettaskinit():=(
   StrL_ch=Strnq;
   npos=length(Str);
 
-);
+
+  tab=unicode("0009");
+  cma=",";
+  Dirdata=Dircdy+"data";
+
+  quL=Line2list(quline);
+  quall=length(quL);
+  shL=Line2list(shline);
+  ansL=shL;
+  sqLL=Line2list(sqline);
+  sqall=length(sqLL);
+  stall=sqall;
+  stquLL=[];
+  forall(1..stall,ns,
+    tmp=sqLL_ns;
+    name=tmp_1;
+    tmp2=tmp_(2..(length(tmp)));
+    qu=[];
+    sh=[];
+    forall(1..(length(tmp2)),nn,
+      tmp=quL_nn;
+      qu=append(qu,tmp_1+" "+tmp_(tmp2_nn));
+      tmp=shL_nn;
+      sh=append(sh,tmp_1+" "+tmp_2);
+    );
+    stquLL=append(stquLL,[name,qu,sh]);
+  );
+
+); // end init
 
 Adddrw(str):=(
   DrwL=append(DrwL,[dpos,str,18]);
@@ -3546,38 +3586,57 @@ RRight():=(
   );
 );
 
+
 scriptaddstart=1; 
 
-pS=[50,3]; pN=[68,21];pO=(pS+pN)/2;
-vS=[0,0]; vN=[5,5]; vO=[0,0];
+Setadjust():=Setadjust([0,0],1);
+Setadjust(mv,sc):=(
+  Scalea=3.6*sc;
+  pSW=[50,3]+mv; 
+  Movea=pSW-SW.xy;
+);
 
 Adjustpt(pt):=(
-  regional(tmp,,X1,Y1,Cx,Cy,ratio);
-  X1=pt_1; Y1=pt_2;
-  tmp=pS-vS;
-  Cx=tmp_1; Cy=tmp_2;
-  X1=X1+Cx; Y1=Y1+Cy; 
-  ratio=(pN_1-pS_1)/(vN_1-vS_1);
-  Cx=pS_1; Cy=pS_2;
-  X1=Cx+ratio*(X1-Cx);
-  Y1=Cy+ratio*(Y1-Cy);
-  [X1,Y1];
+  regional(x0,y0,x1,y1);
+  x1=pt_1; y1=pt_2;
+  x0=SW.x; y0=SW.y;
+  x1=x0+Scalea*(x1-x0);
+  y1=y0+Scalea*(y1-y0);
+  x1=x1+Movea_1;
+  y1=y1+Movea_2;
+  [x1,y1];
 );
 
 Adjust(gd):=(
-  regional(dL,out,tmp);
-  if(isstring(gd),dL=apply(gd,parse(#)),dL=gd);
-  if(length(dL)==2,dL=[dL]);
-  out=[];
-  forall(dL,
-    tmp=Adjustpt(#);
-    out=append(out,Adjustpt(#));
+  regional(dL,depth,out,tmp);
+  if(isstring(gd),dL=parse(gd),dL=gd);
+  depth=Measuredepth(dL);
+  if(depth==0,out=Adjustpt(dL));
+  if(depth==1,
+    out=apply(dL,Adjustpt(#));
   );
-  if(length(out)==1,out=out_1);
+  if(depth==2,
+    out=[];
+    forall(dL,
+      out=append(out,Adjust(#));
+    );
+  );
   out;
 );
 
-Setkeypos("keylisttaskv");
+xyax():=xyax(["","x","e1","y","n1","O","s1w1"],[]); //220508from
+xyax(axLorg,op):=(
+  regional(axL);
+  if(length(axLorg)==0,
+    axL=["","x","e1","y","n1","O","s1w1"];
+  ); //220508to
+  Listplot("axx",Adjust([[XMIN,0],[XMAX,0]]));
+  Listplot("axy",Adjust([[0,YMIN],[0,YMAX]]));
+  Expr(Adjust([XMAX,0]),axL_3,axL_2,op);
+  Expr(Adjust([0,YMAX]),axL_5,axL_4,op);
+  Letter(Adjust([0,0]),axL_7,axL_6,op);
+);
+
 
 startflg=1;
 
@@ -3673,34 +3732,6 @@ Line2list(strorg):=(
 );
 
 
-tab=unicode("0009");
-cma=",";
-Dirdata=Dircdy+"data";
-
-quL=Line2list(quline);
-quall=length(quL);
-shL=Line2list(shline);
-ansL=shL;
-sqLL=Line2list(sqline);
-sqall=length(sqLL);
-stall=sqall;
-stquLL=[];
-forall(1..stall,ns,
-  tmp=sqLL_ns;
-  name=tmp_1;
-  tmp2=tmp_(2..(length(tmp)));
-  qu=[];
-  sh=[];
-  forall(1..(length(tmp2)),nn,
-    tmp=quL_nn;
-    qu=append(qu,tmp_1+" "+tmp_(tmp2_nn));
-    tmp=shL_nn;
-    sh=append(sh,tmp_1+" "+tmp_2);
-  );
-  stquLL=append(stquLL,[name,qu,sh]);
-);
-
-
 
 ;
 
@@ -3751,33 +3782,36 @@ if(stok<=1,
       );
     );
   );
+  quest=[];
+  nqinc=0;
 );
 
 if(stok>=2,
-  if(ch==3,
-    ch=2;
+  if(length(quest)==0,
     tmp1=sqLL_stno;
     sel=tmp1_(2..(length(tmp1)));
     sel=apply(sel,if(isstring(#),parse(#),#));
     quest=apply(1..(length(sel)),
               quL_#_1+" "+quL_#_(sel_#));
     rechead=text(stno)+";;"+text(stno);
-    nqu=1;
     Str=ansL_1;
     Strnq=Str;
     StrL_ch=Str;
     npos=length(Str);
+    nqu=1;
+  );
+  if(ch==3,
+    ch=2;
   );
   Str=Textedit(2,"","");
   Strnq=replace(Str,"?","");
   StrL_2=Strnq;
-  choose=1;
 );
 
 drawcircle([px,posyL_ch],0.5,color->[1,0,0]);
 fillcircle([px,posyL_ch],0.5,color->[1,0,0]);
 
-if(choose==1,
+if(stok>=2,
   if(abs(nqinc)>0,
     ansL_nqu=Strnq;
     if(nqinc>0,nqu=min([nqu+nqinc,quall]));
@@ -3893,7 +3927,7 @@ if(ch==2,
   );
 );
 
-if(stok>1,
+if(stok>=2,
   tmp="Pg="+text(nqu);
 ,
   tmp="Pg=";
@@ -4045,8 +4079,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 844,
-    height: 695,
-    transform: [{visibleRect: [2.327076488126562, 27.35607693819892, 81.65452832781871, -38.008915972733845]}],
+    height: 716,
+    transform: [{visibleRect: [2.327076488126562, 27.35607693819892, 81.65452832781871, -39.97400278492961]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
@@ -4057,7 +4091,7 @@ var cdy = CindyJS({
     </script>
 </head>
 <body>
-    <div id="CSCanvas"></div>
+<div id="CSCanvas"></div>
 <footer>
 <p><small>&copy; 2021 Setsuo Takato</small></p>
 </footer>
