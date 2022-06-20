@@ -160,152 +160,108 @@ Manifun=["Allclear()","Clear()","Delete()","Push()","Pull()",
   "Left()","Right()","LLeft()","RRight()","Fullmark()"];
 
 // only for ketscore
-Fullmark(fmark):=(
-  //global Str,Strnq,StrL_ch,npos
-  Str=Str+fmark;
-  Strnq=replace(Str,"?","");
-  StrL_ch=Strnq;
-  npos=npos+length(fmark);
-  funflg=0;
+Fullmark():=(
+  //global Score
+  Score=mrkL_nqu;
 );
 
 Delete():=(
   regional(tmp1,tmp2,strnow);
+  //global Score,npos
   if(npos>0,
-    strnow=StrL_ch;
-    tmp1=substring(strnow,0,npos-1);
-    tmp2=substring(strnow,npos,length(strnow));
-    StrL_ch=tmp1+tmp2;
-    iif(length(StrL_ch)<length(shL_npos),
-      StrL_ch=shL_npos;
-    );
-    strnow=StrL_ch;
-    Subsedit(ch,strnow);
+    Score=substring(Score,0,npos-1)+substring(Score,npos,length(Score));
     npos=npos-1;
-    funflg=0;
-  ,
-    Pull();
-    npos=length(StrL_ch);
-    Delete();
   );
 );
 
 
 Allclear():=(
-  Str="";
-  Strnq="";
-  StrL_ch="";
+  Score="";
   StrpL_ch="";
   npos=0;
-  funflg=0;
 );
 
 Clear():=( 
-  Str="";
-  Strnq=Str;
-  StrL_ch=Str;
+  Score="";
   npos=0;
-  funflg=0;
 );
 
 Push():=(
   regional(tmp,tmp1);
-  tmp1=StrL_ch;
+  tmp1=Score;
   tmp=indexof(tmp1,"//");
   if(tmp==0,
     StrpL_ch=StrpL_ch+tmp1+"//";
-    Str="";
+    Score="";
     npos=0;
   ,
     StrpL_ch=StrpL_ch+substring(tmp1,0,tmp+1);
-    Str=substring(tmp1,tmp+1,length(tmp1));
+    Score=substring(tmp1,tmp+1,length(tmp1));
     npos=max([0,npos-(tmp+1)]);
   );
-  StrL_ch=Str;
-  Strnq=Str;
 );
 
 Pull():=(
   regional(tmp,tmp1,tmp2);
-  tmp1=StrpL_ch;
-  tmp=indexall(tmp1,"//");
-  if(length(tmp)>1,tmp=tmp_(-2)+1,tmp=0);
-  tmp2=substring(tmp1,0,tmp);
-  StrpL_ch=tmp2;
-  tmp1=substring(tmp1,tmp,length(tmp1));
-  Str=tmp1+StrL_ch;
-  Strnq=Str;
-  StrL_ch=Str;
-  npos=length(tmp1)+npos;
+  Score=Score+StrpL_ch;
+  npos=length(StrpL_ch)+npos;
 );
 
 Left():=(
   regional(tmp,tmp1,tmp2,tmp3);
-  //global Str,npos
-  if(length(Str)>0,
-    tmp=indexof(Str,"?");
+  //global Score,npos
+  if(length(Score)>0,
+    tmp=indexof(Score,"?");
     if(tmp>1,
-      tmp1=substring(Str,0,tmp-2)+"?";
-      tmp2=substring(Str,tmp-2,tmp-1);
-      tmp3=substring(Str,tmp,length(Str));
-      Str=tmp1+tmp2+tmp3;
+      tmp1=substring(Score,0,tmp-2)+"?";
+      tmp2=substring(Score,tmp-2,tmp-1);
+      tmp3=substring(Score,tmp,length(Str));
+      Score=tmp1+tmp2+tmp3;
       npos=length(tmp1+"?");
     );
     if(tmp==0,
-      tmp1=substring(Str,0,length(Str)-1)+"?";
-      tmp3=substring(Str,length(Str)-1,length(Str));
-      Str=tmp1+tmp3;  
+      tmp1=substring(Score,0,length(Str)-1)+"?";
+      tmp3=substring(Score,length(Str)-1,length(Str));
+      Score=tmp1+tmp3;  
       npos=length(tmp1);
     );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
   );
 );
 
 Right():=(
   regional(tmp,tmp1,tmp2,tmp3);
-  //global Str,npos
-  if(length(Str)>0,
-    tmp=indexof(Str,"?");
+  //global Score,npos
+  if(length(Score)>0,
+    tmp=indexof(Score,"?");
     if(tmp>0,
-      if(tmp<length(Str)-1,
-        tmp1=substring(Str,0,tmp-1);
-        tmp2=substring(Str,tmp,tmp+1)+"?";
-        tmp3=substring(Str,tmp+1,length(Str));
-        Str=tmp1+tmp2+tmp3;
+      if(tmp<length(Score)-1,
+        tmp1=substring(Score,0,tmp-1);
+        tmp2=substring(Score,tmp,tmp+1)+"?";
+        tmp3=substring(Score,tmp+1,length(Score));
+        Score=tmp1+tmp2+tmp3;
         npos=length(tmp1+"?");
       );
-      if(tmp==length(Str)-1,
-        tmp1=substring(Str,0,tmp-1);
-        tmp3=substring(Str,tmp,length(Str));
-        Str=tmp1+tmp3;
-        npos=length(Str);
+      if(tmp==length(Score)-1,
+        tmp1=substring(Score,0,tmp-1);
+        tmp3=substring(Score,tmp,length(Score));
+        Score=tmp1+tmp3;
+        npos=length(Score);
       );
     );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
   );
 );
 
 LLeft():=(
   regional(tmp,tmp1,tmp2,tmp3);
-  //global Str,npos
-  if(length(Str)>0,
-    npos=length(shL_nqu)+1;
-    tmp=substring(Str,npos-1,length(Str));
-    Str=shL_nqu+"?"+tmp;
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
-  );
+  //global Score,npos
+  Score=replace(Score,"?","");
+  npos=1;
+  Score="?"+Score;
 );
 
 RRight():=(
   regional(tmp,tmp1,tmp2,tmp3);
   //global Str,npos
-  if(length(Str)>0,
-    Str=replace(Str,"?","");
-    npos=length(Str);
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
-  );
+  Score=replace(Score,"?","");
+  npos=length(Score);
 );

@@ -131,8 +131,8 @@ Totexform(str):=( //210803from[renew]
     ["^(",["^{xx}"]], //210805
     ["_(",["_{xx}"]], //210831
     ["tx(",["\text{xx}"]], //210907
-    ["tfr(",["","\tfrac{xx}{yy}"]], //210831
-    ["fr(",["","\frac{xx}{yy}"]], //210228from
+    ["tfr(",["","\frac{xx}{yy}"]], //210831,220523
+    ["fr(",["","\dfrac{xx}{yy}"]], //210228from
     ["log(",["\log xx ","\log_{xx} yy"]], //210405
     ["ln(",["\ln xx "]], //210903
     ["sq(",["\sqrt{xx}","\sqrt[xx]{yy}"]],
@@ -3081,7 +3081,6 @@ Gettexform(str):=(
       tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
       repeat(5,tmp1=replace(tmp1,"c c","cc"));
       tmp1=replace(tmp1,"c i r c","\circ");
-      tmp1=replace(tmp1,"\frac","\dfrac");
       tmp1=Greekletter(tmp1); //210514[3lines]
       tmp1=Capitalletter(tmp1);
       tmp1=Boldletter(tmp1);
@@ -3381,149 +3380,104 @@ Keyname():=(
 Manifun=["Allclear()","Clear()","Delete()","Push()","Pull()",
   "Left()","Right()","LLeft()","RRight()","Fullmark()"];
 
-Fullmark(fmark):=(
-  Str=Str+fmark;
-  Strnq=replace(Str,"?","");
-  StrL_ch=Strnq;
-  npos=npos+length(fmark);
-  funflg=0;
+Fullmark():=(
+  Score=mrkL_nqu;
 );
 
 Delete():=(
   regional(tmp1,tmp2,strnow);
   if(npos>0,
-    strnow=StrL_ch;
-    tmp1=substring(strnow,0,npos-1);
-    tmp2=substring(strnow,npos,length(strnow));
-    StrL_ch=tmp1+tmp2;
-    iif(length(StrL_ch)<length(shL_npos),
-      StrL_ch=shL_npos;
-    );
-    strnow=StrL_ch;
-    Subsedit(ch,strnow);
+    Score=substring(Score,0,npos-1)+substring(Score,npos,length(Score));
     npos=npos-1;
-    funflg=0;
-  ,
-    Pull();
-    npos=length(StrL_ch);
-    Delete();
   );
 );
 
 
 Allclear():=(
-  Str="";
-  Strnq="";
-  StrL_ch="";
+  Score="";
   StrpL_ch="";
   npos=0;
-  funflg=0;
 );
 
 Clear():=( 
-  Str="";
-  Strnq=Str;
-  StrL_ch=Str;
+  Score="";
   npos=0;
-  funflg=0;
 );
 
 Push():=(
   regional(tmp,tmp1);
-  tmp1=StrL_ch;
+  tmp1=Score;
   tmp=indexof(tmp1,"//");
   if(tmp==0,
     StrpL_ch=StrpL_ch+tmp1+"//";
-    Str="";
+    Score="";
     npos=0;
   ,
     StrpL_ch=StrpL_ch+substring(tmp1,0,tmp+1);
-    Str=substring(tmp1,tmp+1,length(tmp1));
+    Score=substring(tmp1,tmp+1,length(tmp1));
     npos=max([0,npos-(tmp+1)]);
   );
-  StrL_ch=Str;
-  Strnq=Str;
 );
 
 Pull():=(
   regional(tmp,tmp1,tmp2);
-  tmp1=StrpL_ch;
-  tmp=indexall(tmp1,"//");
-  if(length(tmp)>1,tmp=tmp_(-2)+1,tmp=0);
-  tmp2=substring(tmp1,0,tmp);
-  StrpL_ch=tmp2;
-  tmp1=substring(tmp1,tmp,length(tmp1));
-  Str=tmp1+StrL_ch;
-  Strnq=Str;
-  StrL_ch=Str;
-  npos=length(tmp1)+npos;
+  Score=Score+StrpL_ch;
+  npos=length(StrpL_ch)+npos;
 );
 
 Left():=(
   regional(tmp,tmp1,tmp2,tmp3);
-  if(length(Str)>0,
-    tmp=indexof(Str,"?");
+  if(length(Score)>0,
+    tmp=indexof(Score,"?");
     if(tmp>1,
-      tmp1=substring(Str,0,tmp-2)+"?";
-      tmp2=substring(Str,tmp-2,tmp-1);
-      tmp3=substring(Str,tmp,length(Str));
-      Str=tmp1+tmp2+tmp3;
+      tmp1=substring(Score,0,tmp-2)+"?";
+      tmp2=substring(Score,tmp-2,tmp-1);
+      tmp3=substring(Score,tmp,length(Str));
+      Score=tmp1+tmp2+tmp3;
       npos=length(tmp1+"?");
     );
     if(tmp==0,
-      tmp1=substring(Str,0,length(Str)-1)+"?";
-      tmp3=substring(Str,length(Str)-1,length(Str));
-      Str=tmp1+tmp3;  
+      tmp1=substring(Score,0,length(Str)-1)+"?";
+      tmp3=substring(Score,length(Str)-1,length(Str));
+      Score=tmp1+tmp3;  
       npos=length(tmp1);
     );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
   );
 );
 
 Right():=(
   regional(tmp,tmp1,tmp2,tmp3);
-  if(length(Str)>0,
-    tmp=indexof(Str,"?");
+  if(length(Score)>0,
+    tmp=indexof(Score,"?");
     if(tmp>0,
-      if(tmp<length(Str)-1,
-        tmp1=substring(Str,0,tmp-1);
-        tmp2=substring(Str,tmp,tmp+1)+"?";
-        tmp3=substring(Str,tmp+1,length(Str));
-        Str=tmp1+tmp2+tmp3;
+      if(tmp<length(Score)-1,
+        tmp1=substring(Score,0,tmp-1);
+        tmp2=substring(Score,tmp,tmp+1)+"?";
+        tmp3=substring(Score,tmp+1,length(Score));
+        Score=tmp1+tmp2+tmp3;
         npos=length(tmp1+"?");
       );
-      if(tmp==length(Str)-1,
-        tmp1=substring(Str,0,tmp-1);
-        tmp3=substring(Str,tmp,length(Str));
-        Str=tmp1+tmp3;
-        npos=length(Str);
+      if(tmp==length(Score)-1,
+        tmp1=substring(Score,0,tmp-1);
+        tmp3=substring(Score,tmp,length(Score));
+        Score=tmp1+tmp3;
+        npos=length(Score);
       );
     );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
   );
 );
 
 LLeft():=(
   regional(tmp,tmp1,tmp2,tmp3);
-  if(length(Str)>0,
-    npos=length(shL_nqu)+1;
-    tmp=substring(Str,npos-1,length(Str));
-    Str=shL_nqu+"?"+tmp;
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
-  );
+  Score=replace(Score,"?","");
+  npos=1;
+  Score="?"+Score;
 );
 
 RRight():=(
   regional(tmp,tmp1,tmp2,tmp3);
-  if(length(Str)>0,
-    Str=replace(Str,"?","");
-    npos=length(Str);
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
-  );
+  Score=replace(Score,"?","");
+  npos=length(Score);
 );
 
 
@@ -3540,23 +3494,13 @@ nqinc=0;
 recflg=0;
 rechead="";
 npos=0;
-DrwL=[];
-dpos=[10,14];
 ch=2;
-
 
 stnuminc=0;
 stnum=0;
-choose=0;
-dt=[];
-nqinc=0;
 nqu=1;
 nqunow=1;
-recflg=0;
-npos=0;
 score="";
-DrwL=[];
-dpos=[10,14];
 
 
 Adddrw(str):=(
@@ -3647,7 +3591,6 @@ if(stnum==0,
     ansLL=select(ansLL,length(#)>0);
     StdataLL=apply(ansLL,[#_1,#_2,#_3]);
     ansLL=apply(ansLL,#_(4..(length(#))));
-    ansorgLL=ansLL;
   );
 );
 
@@ -3725,27 +3668,18 @@ if(stnum>0,
     StrL_1=caL_nqu;
     StrL_3=quL_nqu;
     tmp=Textedit(2,"","");
-    if(length(tmp)>length(Str),
+    tmp1=indexof(tmp,ansorgL_nqu);
+    Score="";
+    if((tmp1>0)&(indexof(ansL_nqu,"---")==0),
+      Score=replace(tmp,ansorgL_nqu,"");
       Str=tmp;
       Strnq=replace(Str,"?","");
-      npos=length(Str);      
-    );
-    StrL_2=Str;
-    if(length(score)>0,
-      if(indexof(ansL_nqu,"---")==0,
-        ansL_nqu=ansL_nqu+score;
-      );
+      npos=length(Str);
+      StrL_2=Str;
+      ansL_nqu=Strnq;
       ansLL_stnum=ansL;
-      npos=npos+length(score);
-      score="";
+      Subsedit(2,ansL_nqu);
     );
-    if(indexof(ansL_nqu,"---")==0,
-      tmp=Textedit(2,"","");
-      if(length(tmp)>0,
-        ansL_nqu=tmp;
-      );
-    );
-    Subsedit(2,ansL_nqu);
   );
 );
 
@@ -3767,27 +3701,22 @@ if(recflg==1,
   recflg=0;
 );
 
-if(funflg==1,
+if((funflg==1)&(stnum>0)&(nqu>0),
   if(indexof(StrL_ch,"---")==0,
     if(contains(Manifun,name),
+      Score=replace(Str,ansorgL_nqu,"");
+      tmp=indexof(Score,"?");
+      if(tmp==0,npos=length(Score),npos=tmp-1);
       parse(name+";");
-      Str=StrL_ch;
-      Strnq=replace(Str,"?","");
-      if(ch==2,
-        if(length(Str)<length(ansorgL_nqu),
-          Str=ansorgL_nqu;
-          Strorq=Str;
-          StrL_ch=Str;
-          npos=length(Str);
-        );
-        Str=StrL_ch;
-        Strnq=replace(Str,"?","");
-        StrLL_nqu=Strnq;
-      );
+      Str=ansorgL_nqu+Score;
     ,
       out=Addfunstr(name,npos,StrL_ch);
       Str=out_1; npos=out_2;
     );
+    npos=length(Str);
+    Strnq=replace(Str,"?","");
+    StrL_2=Strnq;
+    StrLL_nqu=Strnq;
   );
   Strnq=replace(Str,"?","");
   StrL_ch=Strnq;
@@ -3810,9 +3739,30 @@ forall(1..nch,nc,
   dy=dyL_nc;
   ns=length(sL);
   forall(1..ns,nn,
-    strt=Gettexform(sL_nn);
-    tmp=tp+[1.2,-0.2];
-    Drwletter(tmp,strt,22);
+    flg=0; //220609from
+    tmp1=sL_nn;
+    if(indexof(tmp1,"(")>0,
+      tmp2=Bracket(tmp1);
+      tmp=tmp2_(-1);
+      if(tmp_2!=-1,
+        flg=1;
+        tmp2=select(tmp2,abs(#_2)==1);
+        tmp2=apply(tmp2,#_1);
+        tmp=tp+[0,-0.2];
+        forall(1..(length(tmp1)),mm,
+          tmp3=tmp1_mm;
+          clr=[0,0,0];
+          if(contains(tmp2,mm),clr=[1,0,0]);
+          tmp_1=tmp_1+1.25;
+          Drwletter(tmp,tmp3,22,clr);
+        );
+      );
+    );
+    if(flg==0,
+      strt=Gettexform(sL_nn);
+      tmp=tp+[1.2,-0.2];
+      Drwletter(tmp,strt,22);
+    ); //220609to
     tp=tp-[0,dy];
     texstr=texstr+strt;
   );
@@ -3968,14 +3918,14 @@ var cdy = CindyJS({
     {name: "Text120", type: "Button", pos: [4.0, 0.05361702127659574, 0.0851063829787234], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1000;", text: "<<", textsize: 14.0},
     {name: "Text121", type: "Button", pos: [4.0, 0.04165289256198347, 0.06611570247933884], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: ">", textsize: 14.0},
     {name: "Text119", type: "Button", pos: [4.0, 0.04, 0.06349206349206349], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1000;", text: ">>", textsize: 14.0},
-    {name: "Text98", type: "ToggleButton", pos: [4.0, 0.030303030303030304, 0.06060606060606061], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;Fullmark(mrkL_nqu);", text: "Full", textsize: 14.0, border: true },
+    {name: "Text98", type: "ToggleButton", pos: [4.0, 0.030303030303030304, 0.06060606060606061], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Fullmark()\";", text: "Full", textsize: 14.0, border: true },
     {name: "Text116", type: "Button", pos: [4.0, 0.31683168316831684, 0.07920792079207921], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "stnuminc=-1;", text: "<", textsize: 14.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 880,
-    height: 733,
-    transform: [{visibleRect: [-0.05198517366379739, 28.64383068875236, 83.12429268841203, -40.600420631425756]}],
+    width: 886,
+    height: 722,
+    transform: [{visibleRect: [-0.05198517366379739, 28.64383068875236, 83.64414442505, -39.560717158149814]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

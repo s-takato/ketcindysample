@@ -14,8 +14,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibkey[20211112 loaded"); // no ketjs
+println("ketcindylibkey[20220523 loaded"); // no ketjs
 
+// 220523 Gettexform  (frac x=>x dfrac 
+// 220424 Setkeypos():=
 // 211111 Setkeystyle changed ( keyposition, only for exiisting text )
 // 211111 Alltextkey changed ( fname option )
 // 211109 Dispposition changed (length of seg, nonascii)
@@ -479,7 +481,7 @@ Gettexform(str):=(
       tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
       repeat(5,tmp1=replace(tmp1,"c c","cc"));
       tmp1=replace(tmp1,"c i r c","\circ");
-      tmp1=replace(tmp1,"\frac","\dfrac");
+//      tmp1=replace(tmp1,"\frac","\dfrac"); //220523(//)
       tmp1=Greekletter(tmp1); //210514[3lines]
       tmp1=Capitalletter(tmp1);
       tmp1=Boldletter(tmp1);
@@ -719,10 +721,8 @@ Setkeypos(fname):=(
   keyL=apply(keyL,Strsplit(#,","));
   forall(keyL,key,
     tmp1=key_3;
-    if(tmp1==Dqq("　"),
-      tmp=key_2+".xy=["+key_7+","+key_8+"];";
-      parse(tmp);
-    );
+    tmp=key_2+".xy=["+key_7+","+key_8+"];";
+    parse(tmp);
   );
 ); //no ketjs off
 ////%Setkeypos end////
