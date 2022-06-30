@@ -186,7 +186,7 @@ Totexform(str):=( //210803from[renew]
         if(nn==1,
           tmp1=substring(out,plv_1_1,length(out)-1);
           if(contains(parL,fun), //210901from
-            tmp1=addpar(tmp1); //211029
+            tmp1=Addpar(tmp1); //211029
           ); //210901to
           out=replace(rep_2_1,"xx",tmp1);
         );
@@ -4052,6 +4052,7 @@ if(stoknow==2,
     Strnq=Str;
     StrL_2=Str;
     npos=length(Str);
+    Subsedit(2,Strnq);//220629readded
     nqinc=0;
   );
   tmp=select(1..(length(quest)),
@@ -4172,7 +4173,7 @@ if(stoknow==2,
       );
       tp=tp-[0,dy];
       texstr=texstr+strt;
-    );
+    ); //220609to
   );
   Subsedit(2,Str);
   Subsedit(10,"Pg="+text(nqu));
@@ -4211,8 +4212,8 @@ var cdy = CindyJS({
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, text: "Student=", textsize: 24.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T2", type: "Free", pos: [4.0, 3.6645161290322577, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text10", type: "EditableText", pos: [4.0, 0.056, 0.08], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 65, textsize: 18.0},
     {name: "Text47", type: "Button", pos: [4.0, -1.1428571428571428, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "___", textsize: 14.0},
@@ -4324,8 +4325,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 846,
-    height: 702,
-    transform: [{visibleRect: [2.327076488126562, 27.35607693819892, 81.86137957120773, -38.629469702900934]}],
+    height: 692,
+    transform: [{visibleRect: [2.327076488126562, 27.35607693819892, 81.86137957120773, -37.69863910765031]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
