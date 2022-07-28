@@ -1,3 +1,5 @@
+//   220720  key width
+//   220718  lic,cpr
 //   220412
 //   211112
 //   211020
@@ -51,10 +53,10 @@ posyL=[23,-2.5,-34];
 //forall(1..2,drawtext([62.5+(#-1)*2.5,1],actL3_#,size->20));
 
 poskey=[19.5,-17.67];
-dxL=apply(10..19,35.5);
-dxL_4=40; dxL_5=37;
-dxL2=apply(1..9,35.5);
-dxL3=[40,40];
+dxL=apply(10..19,42);
+//dxL_4=42; dxL_5=42;
+dxL2=apply(1..9,42);
+dxL3=[42,42];
 
 Adddrw(str):=(
   DrwL=append(DrwL,[dpos,str,18]);
@@ -76,6 +78,8 @@ inspect(T3,"ptsize",6);
 inspect(T4,"ptsize",6);
 // no ketjs off
 
+ctrkey=[["BS","CL","$<\!<$","$<$","$>$","$>\!>$",
+   "AC","PS","PL"]];
 
 Keyname():=(
   regional(nL,nL2,nL3,tmp1);
@@ -95,7 +99,7 @@ Keyname():=(
     ["lim","pi"],
     ["int","$\infty$"],
     ["'","cs"],
-    ["$\sum$","tx"]
+    ["$S_n$","tx"]
   ];
 
   if(Shift==1,

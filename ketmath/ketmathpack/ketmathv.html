@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>ketscorevert.cdy</title>
+    <title>ketmathv.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -143,8 +143,8 @@ Totexform(str):=( //210803from[renew]
     ["^(",["^{xx}"]], //210805
     ["_(",["_{xx}"]], //210831
     ["tx(",["\text{xx}"]], //210907
-    ["tfr(",["","\tfrac{xx}{yy}"]], //210831
-    ["fr(",["","\frac{xx}{yy}"]], //210228from
+    ["tfr(",["","\frac{xx}{yy}"]], //210831,220523
+    ["fr(",["","\dfrac{xx}{yy}"]], //210228from
     ["log(",["\log xx ","\log_{xx} yy"]], //210405
     ["ln(",["\ln xx "]], //210903
     ["sq(",["\sqrt{xx}","\sqrt[xx]{yy}"]],
@@ -198,7 +198,7 @@ Totexform(str):=( //210803from[renew]
         if(nn==1,
           tmp1=substring(out,plv_1_1,length(out)-1);
           if(contains(parL,fun), //210901from
-            tmp1=addpar(tmp1); //211029
+            tmp1=Addpar(tmp1); //211029
           ); //210901to
           out=replace(rep_2_1,"xx",tmp1);
         );
@@ -812,7 +812,7 @@ Enclosing2(nm,plist):=Enclosing2(nm,plist,[]);
 Enclosing2(nm,plistorg,options):=(
   regional(name,plist,AnsL,Start,Eps,Eps1,Eps2,flg,Fdata,Gdata,KL,
       t1,t2,tst,ss,ii,nn,nxtno,Ltype,Noflg,realL,eqL,opstr,opcindy,
-      tmp,tmp1,tmp2,color,color4,p1,p2);
+      tmp,tmp1,tmp2,tmp3,tmp4,color,color4,p1,p2);
   if(substring(nm,0,1)=="-",  //201110from
     name=substrin(nm,1,length(nm));
   ,
@@ -899,7 +899,12 @@ Enclosing2(nm,plistorg,options):=(
       tmp1=parse(Fdata); //200803from
       tmp2=parse(Gdata);
       if(|tmp2_1-tmp1_(-1)|<Eps,
-        AnsL=concat(AnsL,tmp1);
+        if(nn<length(plist), //211217from
+          AnsL=concat(AnsL,tmp1);
+        ,
+          tmp3=Partcrv("",AnsL_(-1),tmp2_1,tmp1,["nodata"]);
+          AnsL=concat(AnsL,tmp3);
+        );  //211217fto
       ,  //200803to
         KL=Intersectcurvespp(Fdata,Gdata);
         if(length(KL)==0, 
@@ -1595,6 +1600,7 @@ Nearestpt(pt,plotstr):=(
     );
     dtL=append(dtL,dt);
   );
+  dtL=select(dtL,length(#)>=3); //220115
   dtL=sort(dtL,[#_3,#_2]);
   dtL_1;
 );
@@ -2065,10 +2071,7 @@ Ketinit(work,strictsep):=( //200509
   LFmark=unicode("000a"); Bs=unicode("005c");
   CRmark=unicode("000d");//16.12.13
   Dq=unicode("0022");
-  Fnametex=Fhead+".tex";
-  FnameR=Fhead+".r";
-  FnamebodyR=Fhead+"body.r";
-  Fnameout=Fhead+".txt";  // 17.10.13to
+  Changework(Dircdy+pathsep()+work); //180329to,181001
   ArrowlineNumber=1;  // 15.01.05
   ArrowheadNumber=1;
   BezierNumber=1; //15.01.03
@@ -2189,16 +2192,6 @@ tmp1=Textedit(n0); //
   if(length(tmp2)==0,out=str,out=tmp2);
   out;
 ); //210208to
-Subsedit(no,str):=(
- regional(tmp,tmp1);
- if(isstring(str),
-   tmp1=str;
- ,
-   tmp1=text(str);
- );
- tmp="Text"+text(no); //210211[2lines]
- parse(tmp).currenttext=tmp1;
-);
 Drwletter(pos,str):=Drwletter(pos,str,[]);
 Drwletter(pos,str,Arg):=(
   regional(sz,clr);
@@ -2209,6 +2202,16 @@ Drwletter(pos,str,sz,clr):=(
   regional(tmp);
   if(!isstring(str),tmp=text(str),tmp=str);
   drawtext(pos,tmp,size->sz,color->clr);
+);
+Subsedit(no,str):=(
+ regional(tmp,tmp1);
+ if(isstring(str),
+   tmp1=str;
+ ,
+   tmp1=text(str);
+ );
+ tmp="Text"+text(no); //210211[2lines]
+ parse(tmp).currenttext=tmp1;
 );
 Windispg():=(
   if(ADDAXES=="1", //181215from
@@ -2647,15 +2650,8 @@ Lettermove(dir,str):=(
 );
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1.1;
-aalinestart=1;
-ansline="";
-caline="";
-mrkline="";
-quline="";
-shline="";
-sqline="";
-zzlineend=1;
 
+setdirectory(Dircdy);
 
 
 
@@ -3090,7 +3086,6 @@ Gettexform(str):=(
       tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
       repeat(5,tmp1=replace(tmp1,"c c","cc"));
       tmp1=replace(tmp1,"c i r c","\circ");
-      tmp1=replace(tmp1,"\frac","\dfrac");
       tmp1=Greekletter(tmp1); //210514[3lines]
       tmp1=Capitalletter(tmp1);
       tmp1=Boldletter(tmp1);
@@ -3271,6 +3266,21 @@ vecflg=0;
 
 nch=2;
 ch=2;
+StrL=apply(1..nch,"");
+StrpL=apply(1..nch,"");
+startflg=1;
+initflg=1;
+DrwL=[];
+dpos=[10,14];
+
+Str="";
+Strp="";
+Strnq="";
+Strnow="";
+Strt="";
+npos=0;
+
+
 px=15;
 dtpy=3.2;
 tposL=apply(1..4,[px+0.5,17.4-(#-1)*dtpy]);
@@ -3280,12 +3290,18 @@ posyL=[23,-2.5,-34];
 
 
 poskey=[19.5,-17.67];
-dxL=apply(10..19,35.5);
-dxL_4=40; dxL_5=37;
-dxL2=apply(1..9,35.5);
-dxL3=[40,40];
+dxL=apply(10..19,42);
+dxL2=apply(1..9,42);
+dxL3=[42,42];
+
+Adddrw(str):=(
+  DrwL=append(DrwL,[dpos,str,18]);
+  dpos=dpos-[0,2];
+);
 
 
+ctrkey=[["BS","CL","$<\!<$","$<$","$>$","$>\!>$",
+   "AC","PS","PL"]];
 
 Keyname():=(
   regional(nL,nL2,nL3,tmp1);
@@ -3305,7 +3321,7 @@ Keyname():=(
     ["lim","pi"],
     ["int","$\infty$"],
     ["'","cs"],
-    ["$\sum$","tx"]
+    ["$S_n$","tx"]
   ];
 
   if(Shift==1,
@@ -3382,9 +3398,12 @@ Keyname():=(
 
 
 
-Manifun=["Allclear()","Clearnow()","Delete()","Push()","Pull()"];
+Manifun=["Allclear()","Clearnow()","Delete()","Push()","Pull()",
+  "Left()","Right()","LLeft()","RRight()"];
 
 Allclear():=(
+  Str="";
+  Strnq="";
   StrL_ch="";
   StrpL_ch="";
   npos=0;
@@ -3400,15 +3419,20 @@ Clearnow():=(
 );
 
 Delete():=(
-  regional(tmp1,tmp2,strnow);
-  if(npos>0,
-    strnow=StrL_ch;
-    tmp1=substring(strnow,0,npos-1);
-    tmp2=substring(strnow,npos,length(strnow));
-    StrL_ch=tmp1+tmp2;
-    strnow=StrL_ch;
-    Subsedit(ch,strnow);
+  regional(tmp,tmp1,tmp2);
+  if(length(Str)>0,
+    if(npos==length(Str),
+      Str=substring(Str,0,npos-1);
+    ,
+      tmp1=substring(Str,0,npos-2);
+      tmp2=substring(Str,npos-1,length(Str));
+      Str=tmp1+tmp2;
+    );
+    Strnq=replace(Str,"?","");
+    Strnow=Str;
+    StrL_ch=Strnq;
     npos=npos-1;
+    Subsedit(ch,Str);
     funflg=0;
   ,
     Pull();
@@ -3423,14 +3447,16 @@ Push():=(
   tmp=indexof(tmp1,"//");
   if(tmp==0,
     StrpL_ch=StrpL_ch+tmp1+"//";
-    StrL_ch="";
+    Str="";
     npos=0;
   ,
     StrpL_ch=StrpL_ch+substring(tmp1,0,tmp+1);
-    StrL_ch=substring(tmp1,tmp+1,length(tmp1));
+    Str=substring(tmp1,tmp+1,length(tmp1));
     npos=max([0,npos-(tmp+1)]);
   );
-  Subsedit(ch,StrL_ch);
+  StrL_ch=Str;
+  Strnq=Str;
+  Subsedit(ch,Str);
 );
 
 Pull():=(
@@ -3441,251 +3467,140 @@ Pull():=(
   tmp2=substring(tmp1,0,tmp);
   StrpL_ch=tmp2;
   tmp1=substring(tmp1,tmp,length(tmp1));
-  StrL_ch=tmp1+StrL_ch;
+  Str=tmp1+StrL_ch;
+  Strnq=Str;
+  StrL_ch=Str;
   npos=length(tmp1)+npos;
-  Subsedit(ch,StrL_ch);
+  Subsedit(ch,Str);
 );
 
-
-
-
-StrpL=apply(1..nch,"");
-startflg=1;
-DrwL=[];
-dpos=[10,14];
-
-choose=0;
-dt=[];
-nqinc=0;
-recflg=0;
-rechead="";
-npos=0;
-DrwL=[];
-dpos=[10,14];
-ch=2;
-
-
-stnuminc=0;
-stnum=0;
-choose=0;
-dt=[];
-nqinc=0;
-nqu=1;
-nqunow=1;
-recflg=0;
-npos=0;
-score="";
-DrwL=[];
-dpos=[10,14];
-
-
-Adddrw(str):=(
-  DrwL=append(DrwL,[dpos,str,18]);
-  dpos=dpos-[0,2];
-);
-
-
-quL=Line2list(quline);
-caL=Line2list(caline);
-mrkL=Strsplit(mrkline,tab);
-sqLL=Line2list(sqline);
-sqLL=select(sqLL,length(#)>0);
-stall=length(sqLL);
-ansLL=Line2list(ansline);
-ansLL=select(ansLL,length(#)>0);
-StdataLL=apply(ansLL,[#_1,#_2,#_3]);
-ansLL=apply(ansLL,#_(4..(length(#))));
-forall(1..(length(ansLL)),nn,
-  tmp=ansLL_nn;
-  forall(1..(length(tmp)),
-    if(indexof(tmp_#,"---")==0,
-      ansLL_nn_#=tmp_#+"::";
+Left():=(
+  regional(tmp,tmp1,tmp2,tmp3);
+  if(length(Str)>0,
+    tmp=indexof(Str,"?");
+    if(tmp>1,
+      tmp1=substring(Str,0,tmp-2)+"?";
+      tmp2=substring(Str,tmp-2,tmp-1);
+      tmp3=substring(Str,tmp,length(Str));
+      Str=tmp1+tmp2+tmp3;
+      npos=length(tmp1+"?");
+    );
+    if(tmp==0,
+      tmp1=substring(Str,0,length(Str)-1)+"?";
+      tmp3=substring(Str,length(Str)-1,length(Str));
+      Str=tmp1+tmp3;  
+      npos=length(tmp1);
     );
   );
 );
-quLL=[];
-caLL=[];
-forall(1..stall,nn,
-  tmp1=sqLL_nn;
-  seL=tmp1_(2..(length(tmp1)));
-  qu=[]; ca=[];
-  forall(1..(length(quL)),ns,
-    tmp=quL_ns;
-    tmp2=tmp_1+" "+tmp_(seL_ns);
-    qu=append(qu,tmp2);
-    tmp=caL_ns;
-    tmp2=tmp_1+" "+tmp_(seL_ns);
-    ca=append(ca,tmp2);
+
+Right():=(
+  regional(tmp,tmp1,tmp2,tmp3);
+  if(length(Str)>0,
+    tmp=indexof(Str,"?");
+    if(tmp>0,
+      if(tmp<length(Str)-1,
+        tmp1=substring(Str,0,tmp-1);
+        tmp2=substring(Str,tmp,tmp+1)+"?";
+        tmp3=substring(Str,tmp+1,length(Str));
+        Str=tmp1+tmp2+tmp3;
+        npos=length(tmp1+"?");
+      );
+      if(tmp==length(Str)-1,
+        tmp1=substring(Str,0,tmp-1);
+        tmp3=substring(Str,tmp,length(Str));
+        Str=tmp1+tmp3;
+        npos=length(Str);
+      );
+    );
   );
-  quLL=append(quLL,qu);
-  caLL=append(caLL,ca);
 );
+
+LLeft():=(
+  regional(tmp,tmp1,tmp2,tmp3);
+  if(length(Str)>0,
+    npos=1;
+    Str="?"+Str;
+  );
+);
+
+RRight():=(
+  regional(tmp,tmp1,tmp2,tmp3);
+  if(length(Str)>0,
+    Str=replace(Str,"?","");
+    npos=length(Str);
+  );
+);
+
+
+;
+
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit(1.6);
-Addax(0);
-
-nameL=Keyname();
-Keytable(0,dxL,4,32.5,poskey,[1,1,0],nameL_1,[0,-0.5],22);
-tmp=poskey+[0,-14];
-Keytable(0,dxL2,4,32.5,tmp,[1,1,0],nameL_2,[0,-0.5],22);
-tmp=poskey+[32.1,-14];
-Keytable(0,dxL3,4,32.5,tmp,[1,1,0],nameL_3,[0,-0.5],22);
-Keytable(5,40,1,30,[40,2.7],0.9*[1,1,1],[],[0,-0.5],20);
-Keytable(2,27,1,30,[40,-0.5],0.9*[1,1,1]);
-actL2=["$<\!<$","$<$"];
-forall(1..2,drawtext([40.1+(#-1)*3,0.5],actL2_#,size->20));
-Keytable(2,27,1,30,[54.5,-0.5],0.9*[1,1,1],[],[0,-0.5],20);
-actL3=["$>$","$>\!>$"];
-forall(1..2,drawtext([54.8+(#-1)*2.5,0.5],actL3_#,size->20));
 
 if(startflg==1,
-  forall(1..4,
-    Putpoint("T"+text(#),tposL_#);
+  forall(1..(length(tposL)),
+    tmp="T"+text(#);
+    Putpoint(tmp,tposL_#);
   );
-  ch=2;
-  stnum=0;
-  stnumflg=0;
-  choose=1;
   startflg=0;
 ,
   T2.x=T1.x; T4.x=T3.x;
   if(T1.y-T2.y<dtpy,T2.y=T1.y-dtpy);
   if(T3.y-T4.y<dtpy,T4.y=T3.y-dtpy);
-
 );
 
+Addax(0);
+nameL=Keyname();
+Keytable(10,42,4,33,poskey,[1,1,0],nameL_1,[0,-0.5],22);
+tmp=poskey+[0,-14];
+Keytable(9,42,4,33,tmp,[1,1,0],nameL_2,[0,-0.5],22);
+tmp=poskey+[9*4.2,-14];
+Keytable(2,42,4,33,tmp,[1,1,0],nameL_3,[0,-0.5],22);
+Keytable(9,36,1,33,[38,-0.5],
+   0.9*[1,1,1],ctrkey,[0,-0.5],16);
 drawcircle([px,posyL_ch],0.5,color->[1,0,0]);
 fillcircle([px,posyL_ch],0.5,color->[1,0,0]);
-
-if(stnum==0,
-  aline=Textedit(3,"","");
-  if(length(aline)>0,
-    ansLL=Line2list(aline);
-    StdataLL=apply(ansLL,[#_1,#_2,#_3]);
-    ansLL=apply(ansLL,#_(4..(length(#))));
-  );
+if(initflg==1,
+  Str=StrL_ch;
+  Strp=StrpL_ch;
+  Strnow=Str;
+  npos=length(Strnow);
+  initflg=0;
 );
 
-if(abs(stnuminc)>0,
-  if(stnum>0,
-    if(length(ansL)>0,
-      ansLL_stnum=ansL;
-    );
-  );
-  if(stnuminc>0,
-    stnum=min([stnum+stnuminc,stall]);
-  ,
-    stnum=max([stnum+stnuminc,1]);
-  );
-  quL=quLL_stnum;
-  caL=caLL_stnum;
-  ansL=ansLL_stnum;
-  ansall=length(ansL);
-  tmp=ansL_nqu;
-  StrL_ch=tmp;
-  npos=length(tmp);
-  Subsedit(ch,tmp);
-  tmp=text(StdataLL_stnum);
-  tmp=substring(tmp,1,length(tmp)-1);
-  Subsedit(32,"St="+tmp);
-  stnuminc=0;
-);
-
-if(stnum>0,
-  if(ansall==0,
-    Subsedit(2,"");
-    Subsedit(10,"q=");
-    Subsedit(1,"");
-    Subsedit(3,"");
-    StrL_1="";
-    StrL_2="";
-    StrL_3="";
-  ,
-    if(abs(nqinc)>0,
-      if(indexof(ansL_nqu,"---")==0,
-        ansL_nqu=Textedit(2,"","");
-      );
-      if(indexof(ansL_nqu,"---")==0,
-        ansL_nqu=Textedit(2,"","");
-        ansLL_stnum=ansL;
-      );
-      if(nqinc>0,nqu=min([nqu+nqinc,ansall]));
-      if(nqinc<0,nqu=max([nqu+nqinc,1]));
-      Subsedit(10,"q="+text(nqu));
-      Subsedit(2,ansL_nqu);
-      StrL_2=ansL_nqu;
-      npos=length(ansL_nqu);
-      fmark=mrkL_nqu;
-      nqinc=0;
-    );
-    Subsedit(10,"q="+text(nqu));
-    Subsedit(1,caL_nqu);
-    StrL_1=caL_nqu;
-    Subsedit(3,quL_nqu);
-    StrL_3=quL_nqu;
-    if(length(score)>0,
-      if(indexof(ansL_nqu,"---")==0,
-        ansL_nqu=ansL_nqu+score;
-      );
-      Subsedit(2,ansL_nqu);
-      StrL_2=ansL_nqu;
-      ansLL_stnum=ansL;
-      npos=npos+length(score);
-      score="";
-    );
-    if(indexof(ansL_nqu,"---")==0,
-      tmp=Textedit(2,"","");
-      if(length(tmp)>0,
-        ansL_nqu=tmp;
-      );
-    );
-    Subsedit(2,ansL_nqu);
-    StrL_2=ansL_nqu;
-    tmp=select(1..(length(caL)),substring(caL_#,0,1)=="Q");
-    tmp=select(tmp,#<=nqu);
-    tmp=tmp_(-1);
-    tmp1=caL_tmp;
-    tmp=indexof(tmp1," ");
-    tmp1=substring(tmp1,0,tmp-1);
-  );
-);
-
-if(recflg==1,
-  out=[];
-  forall(1..stall,ns,
-    tmp1=ansLL_ns;
-    forall(1..(length(tmp1)),
-      tmp2=tmp1_#;
-      ansLL_ns_#=tmp2;
-    );
-    tmp=concat(StdataLL_ns,ansLL_ns);
-    out=append(out,tmp);
-  );
-  out=List2line(out);
-  Subsedit(3,out);
-  StrL_3="";
-  stnum=0;
-  recflg=0;
-);
 if(funflg==1,
   if(contains(Manifun,name),
     parse(name+";");
-    ansL_nqu=StrL_ch;
-    ansLL_stnum=ansL;
   ,
-    out=Addfunstr(name,npos,StrL_ch);
-    StrL_ch=out_1; npos=out_2;
+    tmp=indexof(Str,"?");
+    if(tmp>0,npos=tmp,npos=length(Str));
+    out=Addfunstr(name,npos,Str);
+    tmp=length(out_1)-length(Str);
+    npos=npos+tmp;
+    Str=out_1; //npos=out_2;
+    if(npos<length(Str),
+      tmp=replace(Str,"?","");
+      tmp1=substring(tmp,0,npos-1)+"?";
+      Str=tmp1+substring(tmp,npos-1,length(tmp));
+    );
   );
-  Subsedit(ch,StrL_ch);
+  Subsedit(ch,Str);
   funflg=0;
 );
 
-Dispposition([50,-0.5],2.8,npos,StrL_ch);
+Str=Textedit(ch,"","");
+Str=replace(Str,"///","//");
+Strnq=replace(Str,"?","");
+StrL_ch=Strnq;
+if(Strnq!=Strnow,
+  Strnow=Strnq;
+);
+Subsedit(ch,Str);
 
 tpL=[T1.xy,T3.xy];
 dyL=[T1.y-T2.y,T3.y-T4.y];
-
 texstr="";
 forall(1..nch,nc,
   sL=[];
@@ -3699,16 +3614,75 @@ forall(1..nch,nc,
   dy=dyL_nc;
   ns=length(sL);
   forall(1..ns,nn,
-    strt=Gettexform(sL_nn);
-    tmp=tp+[1.2,-0.2];
-    Drwletter(tmp,strt,22);
+    flg=0; //220609from
+    tmp1=sL_nn;
+    if(flg==0, // 220718from
+      tmp3=Indexall(tmp1,"^");
+      tmp2=[];
+      forall(tmp3,
+        if(#==1,
+          tmp2=append(tmp2,#);
+        ,
+          if(tmp1_(#-1)=="(",
+            tmp2=append(tmp2,#);
+          ,
+            if(#>=4,
+              tmp=substring(tmp1,#-4,#-1);
+              if(contains(["sin","cos","tan"],tmp),
+                tmp2=append(tmp2,#);
+              );
+            );    
+          );
+        );
+      );
+      if(length(tmp2)>0,
+        flg=1;
+        tmp=tp+[0,-0.2];
+        forall(1..(length(tmp1)),mm,
+          tmp3=tmp1_mm;
+          clr=[0,0,0];
+          if(contains(tmp2,mm),clr=[1,0,0]);
+          tmp_1=tmp_1+1.25;
+          Drwletter(tmp,tmp3,22,clr);
+        );
+      );
+    ); // 220718to
+    if((flg==0)&(indexof(tmp1,"(")>0),
+      tmp2=Bracket(tmp1);
+      tmp=tmp2_(-1);
+      if(tmp_2!=-1,
+        flg=1;
+        tmp2=select(tmp2,abs(#_2)==1);
+        tmp2=apply(tmp2,#_1);
+        tmp=tp+[0,-0.2];
+        forall(1..(length(tmp1)),mm,
+          tmp3=tmp1_mm;
+          clr=[0,0,0];
+          if(contains(tmp2,mm),clr=[1,0,0]);
+          tmp_1=tmp_1+1.25;
+          Drwletter(tmp,tmp3,22,clr);
+        );
+      );
+    );
+    if(flg==0,
+      strt=Gettexform(sL_nn);
+      tmp=tp+[1.2,-0.2];
+      Drwletter(tmp,strt,22);
+      texstr=texstr+strt;
+    ); //220609to
     tp=tp-[0,dy];
-    texstr=texstr+strt;
   );
 );
 
+if(texflg==1,
+  Subsedit(3,texstr);
+  texflg=0;
+);
+
 Windispg();
+
 ;
+
 </script>
     <script type="text/javascript">
 var cdy = CindyJS({
@@ -3723,147 +3697,167 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "Text1", type: "EditableText", pos: [-2.909090909090909, -4.0, -0.18181818181818182], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
-    {name: "SW", type: "Free", pos: [1.6160536892179627, -4.0, 0.10943946239011136], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [4.0, 1.5060240963855234, 0.06183125485721977], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "Text2", type: "EditableText", pos: [4.0, -0.875, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
-    {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
-    {name: "Text10", type: "EditableText", pos: [4.0, 0.04858965734006645, 0.1787004960615212], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 55, text: "q=", textsize: 18.0},
-    {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "Text1", type: "EditableText", pos: [-2.909090909090909, -4.0, -0.18181818181818182], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
     {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "Text32", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, text: "St=", textsize: 18.0, dock: {corner: "UL", offset: [133.0, -40.0]}},
-    {name: "Text47", type: "Button", pos: [4.0, -1.1428571428571428, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "___", textsize: 14.0},
-    {name: "Text101", type: "Button", pos: [4.0, 0.3586140053307487, 0.0969227041434456], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;Delete();", text: "BS", textsize: 16.0},
-    {name: "Text24", type: "Button", pos: [4.0, -0.8645161290322582, 0.12903225806451613], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"sin(\";", text: "____", textsize: 14.0},
-    {name: "Text46", type: "Button", pos: [4.0, -1.2903225806451613, 0.12903225806451613], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"cos(\";", text: "____", textsize: 14.0},
-    {name: "Text68", type: "Button", pos: [4.0, -1.7161290322580645, 0.12903225806451613], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"tan(\";", text: "____", textsize: 14.0},
-    {name: "Text25", type: "Button", pos: [4.0, -0.7657142857142857, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"sq(\";", text: "___", textsize: 14.0},
-    {name: "Text90", type: "Button", pos: [4.0, -2.19672131147541, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"log(\";", text: "___", textsize: 14.0},
-    {name: "Text89", type: "Button", pos: [4.0, -2.4275362318840576, 0.14492753623188404], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"=\";", text: "　", textsize: 14.0},
-    {name: "Text88", type: "Button", pos: [4.0, -2.7916666666666665, 0.16666666666666666], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"_(\";", text: "　", textsize: 14.0},
-    {name: "Text75", type: "Button", pos: [4.0, -2.0681818181818183, 0.07575757575757576], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"'\";", text: "　", textsize: 14.0},
-    {name: "Text91", type: "Button", pos: [4.0, -2.156238953693885, 0.07069635913750442], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1; if(Shift==0,name=\"tx(\"); if(Shift==1,name=\"par(\");if(Shift==2,name=\"(circ)\");", text: "___", textsize: 14.0},
-    {name: "Text26", type: "Button", pos: [4.0, -0.6871794871794872, 0.10256410256410256], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\")\";", text: "　", textsize: 14.0},
-    {name: "Text94", type: "Button", pos: [4.0, -1.441910966340934, 0.08686210640608034], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\".\";", text: "　", textsize: 14.0, textbold: true},
-    {name: "Text95", type: "Button", pos: [4.0, -1.3379004634293772, 0.08059641345960104], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(sp)\";", text: "　", textsize: 14.0},
-    {name: "Text62", type: "Button", pos: [4.0, -2.6, 0.09523809523809523], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lm\",\"M\",\"{\\mu}\",\"\\mathbf{m}\",\"{\\vec{m}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text48", type: "Button", pos: [4.0, -1.0256410256410255, 0.10256410256410256], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\",\";", text: "　", textsize: 14.0, textbold: true},
-    {name: "Text87", type: "Button", pos: [4.0, -1.2615326680474488, 0.07531538316701186], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lw\",\"W\",\"{\\omega}\",\"\\mathbf{w}\",\"{\\vec{w}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text40", type: "Button", pos: [4.0, -2.2857142857142856, 0.09523809523809523], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Li\",\"I\",\"{\\theta}\",\"\\mathbf{i}\",\"{\\vec{i}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text42", type: "Button", pos: [4.0, -1.951219512195122, 0.08130081300813008], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lk\",\"K\",\"{\\xi}\",\"\\mathbf{k}\",\"{\\vec{k}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text44", type: "Button", pos: [4.0, -1.646090534979424, 0.1646090534979424], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Ly\",\"Y\",\"{\\iota}\",\"\\mathbf{y}\",\"{\\vec{y}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text45", type: "Button", pos: [4.0, -1.4285714285714286, 0.14285714285714285], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lz\",\"Z\",\"{\\eta}\",\"\\mathbf{z}\",\"{\\vec{z}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text21", type: "Button", pos: [4.0, -1.3009708737864076, 0.19417475728155337], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"La\",\"A\",\"{\\alpha}\",\"\\mathbf{a}\",\"{\\vec{a}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text81", type: "Button", pos: [4.0, -3.9228295819935695, 0.12861736334405144], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"<\";", text: "　", textsize: 14.0},
-    {name: "Text65", type: "Button", pos: [4.0, -2.58252427184466, 0.19417475728155337], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lr\",\"R\",\"{\\rho}\",\"\\mathbf{r}\",\"{\\vec{r}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text67", type: "Button", pos: [4.0, -1.9000000000000001, 0.14285714285714285], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lt\",\"T\",\"{\\tau}\",\"\\mathbf{t}\",\"{\\vec{t}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text77", type: "Button", pos: [4.0, -3.952380952380953, 0.2380952380952381], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, text_fontfamily: "monospace", script: "if(keytype!=5,keytype=5,keytype=1);", text: "Vec", textsize: 14.0},
-    {name: "Text27", type: "Button", pos: [4.0, -0.6282231598687297, 0.09376465072667606], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n7\";", text: "　", textsize: 14.0},
-    {name: "Text29", type: "Button", pos: [4.0, -0.539995970179327, 0.08059641345960104], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n9\";", text: "　", textsize: 14.0},
-    {name: "Text28", type: "Button", pos: [4.0, -0.5819761129207383, 0.08686210640608034], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n8\";", text: "　", textsize: 14.0},
-    {name: "Text49", type: "Button", pos: [4.0, -0.9376465072667606, 0.09376465072667606], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n4\";", text: "　", textsize: 14.0},
-    {name: "Text50", type: "Button", pos: [4.0, -0.8686210640608035, 0.08686210640608034], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n5\";", text: "　", textsize: 14.0},
-    {name: "Text51", type: "Button", pos: [4.0, -0.8059641345960104, 0.08059641345960104], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n6\";", text: "　", textsize: 14.0},
-    {name: "Text72", type: "Button", pos: [4.0, -1.1552660152008687, 0.08686210640608034], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n2\";", text: "　", textsize: 14.0},
-    {name: "Text73", type: "Button", pos: [4.0, -1.0719322990126938, 0.08059641345960104], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n3\";", text: "　", textsize: 14.0},
-    {name: "Text74", type: "Button", pos: [4.0, -0.9981238273921201, 0.07504690431519699], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"*\";", text: "　", textsize: 14.0},
-    {name: "Text93", type: "Button", pos: [4.0, -1.5564932020628226, 0.09376465072667606], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n0\";", text: "　", textsize: 14.0},
-    {name: "Text96", type: "Button", pos: [4.0, -1.2457786116322702, 0.07504690431519699], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"/\";", text: "　", textsize: 14.0},
-    {name: "Text18", type: "Button", pos: [4.0, -1.9714285714285713, 0.09523809523809523], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Le\",\"E\",\"{\\delta}\",\"\\mathbf{e}\",\"{\\vec{e}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text34", type: "Button", pos: [3.466666666666667, -4.0, 0.16666666666666666], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(cross)\";", text: "　", textsize: 14.0},
-    {name: "Text79", type: "Button", pos: [3.1737704918032787, -4.0, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(pm)\";", text: "　", textsize: 14.0},
-    {name: "Text13", type: "Button", pos: [4.0, -3.421487603305785, 0.1652892561983471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"@\";", text: "　", textsize: 14.0},
-    {name: "Text19", type: "Button", pos: [4.0, -1.8157894736842104, 0.08771929824561403], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lf\",\"F\",\"{\\varepsilon}\",\"\\mathbf{f}\",\"{\\vec{f}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text63", type: "Button", pos: [4.0, -2.3947368421052633, 0.08771929824561403], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Ln\",\"N\",\"{\\nu}\",\"\\mathbf{n}\",\"{\\vec{n}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text66", type: "Button", pos: [4.0, -2.189300411522634, 0.1646090534979424], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Ls\",\"S\",\"{\\sigma}\",\"\\mathbf{s}\",\"\\vec{s}\\;\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text35", type: "Button", pos: [4.0, -3.9669421487603302, 0.1652892561983471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"!\";", text: "　", textsize: 14.0},
-    {name: "Text36", type: "Button", pos: [4.0, -3.4782608695652173, 0.14492753623188404], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"{\";", text: "　", textsize: 14.0},
-    {name: "Text37", type: "Button", pos: [4.0, -3.086816720257235, 0.12861736334405144], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"}\";", text: "　", textsize: 14.0},
-    {name: "Text59", type: "Button", pos: [4.0, -3.511254019292605, 0.12861736334405144], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", minwidth: 25, script: "funflg=1;name=\"(leq)\";", text: "　", textsize: 14.0},
-    {name: "Text78", type: "Button", pos: [2.7278688524590162, -4.0, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"\\\";", text: "　", textsize: 14.0},
-    {name: "Text14", type: "Button", pos: [4.0, -3.0, 0.14492753623188404], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"[\";", text: "　", textsize: 14.0},
-    {name: "Text15", type: "Button", pos: [4.0, -2.662379421221865, 0.12861736334405144], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"]\";", text: "　", textsize: 14.0},
-    {name: "Text12", type: "Button", pos: [4.0, -3.9807692307692304, 0.1923076923076923], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(deg)\";", text: "　", textsize: 14.0},
-    {name: "Text57", type: "Button", pos: [3.545787545787545, -4.0, 0.1465201465201465], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\":\";", text: "　", textsize: 14.0},
-    {name: "Text58", type: "Button", pos: [4.0, -3.956521739130434, 0.14492753623188404], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\";\";", text: "　", textsize: 14.0},
-    {name: "Text80", type: "Button", pos: [3.6196721311475413, -4.0, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(mp)\";", text: "　", textsize: 14.0},
-    {name: "Text16", type: "Button", pos: [4.0, -2.3861671469740635, 0.11527377521613832], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"|\";", text: "　", textsize: 14.0},
-    {name: "Text17", type: "Button", pos: [4.0, -2.15625, 0.10416666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Ld\",\"D\",\"{\\Delta}\",\"\\mathbf{d}\",\"{\\vec{d}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text56", type: "Button", pos: [3.0476190476190474, -4.0, 0.1465201465201465], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(cdot)\";", text: "　", textsize: 14.0},
-    {name: "Text30", type: "Button", pos: [4.0, -0.50281425891182, 0.07504690431519699], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"+\";", text: "　", textsize: 14.0},
-    {name: "Text52", type: "Button", pos: [4.0, -0.75046904315197, 0.07504690431519699], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"-\";", text: "　", textsize: 14.0},
-    {name: "Text23", type: "Button", pos: [4.0, -0.9571428571428571, 0.14285714285714285], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lc\",\"C\",\"{\\gamma}\",\"\\mathbf{c}\",\"{\\vec{c}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text71", type: "Button", pos: [4.0, -1.2470698546647914, 0.09376465072667606], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n1\";", text: "　", textsize: 14.0},
-    {name: "Text22", type: "Button", pos: [4.0, -1.102880658436214, 0.1646090534979424], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lb\",\"B\",\"{\\beta}\",\"\\mathbf{b}\",\"{\\vec{b}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text70", type: "Button", pos: [4.0, -1.3641025641025641, 0.10256410256410256], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(\";", text: "　", textsize: 14.0},
-    {name: "Text41", type: "Button", pos: [4.0, -2.1052631578947367, 0.08771929824561403], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lj\",\"J\",\"{\\chi}\",\"\\mathbf{j}\",\"{\\vec{j}\\;}\"]_keytype;", text: "　", textsize: 14.0, textbold: true},
-    {name: "Text92", type: "Button", pos: [4.0, -1.7025641025641027, 0.10256410256410256], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"^(\";", text: "　", textsize: 14.0, textbold: true},
-    {name: "Text86", type: "Button", pos: [4.0, -2.4796747967479673, 0.08130081300813008], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lv\",\"V\",\"{\\lambda}\",\"\\mathbf{v}\",\"{\\vec{v}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text39", type: "Button", pos: [4.0, -2.5, 0.10416666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lh\",\"H\",\"{\\Theta}\",\"\\mathbf{h}\",\"{\\vec{h}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text38", type: "Button", pos: [4.0, -2.7665706051873196, 0.11527377521613832], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(neq)\";", text: "　", textsize: 14.0},
-    {name: "Text20", type: "Button", pos: [4.0, -1.6829268292682926, 0.08130081300813008], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lg\",\"G\",\"{\\varphi}\",\"\\mathbf{g}\",\"{\\vec{g}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text64", type: "Button", pos: [4.0, -2.219512195121951, 0.08130081300813008], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lo\",\"O\",\"{\\omega}\",\"\\mathbf{o}\",\"{\\vec{o}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text60", type: "Button", pos: [4.0, -3.146974063400576, 0.11527377521613832], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(geq)\";", text: "　", textsize: 14.0},
-    {name: "Text61", type: "Button", pos: [4.0, -2.84375, 0.10416666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Ll\",\"L\",\"{\\lambda}\",\"\\mathbf{l}\",\"{\\vec{l}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text85", type: "Button", pos: [4.0, -2.6754385964912277, 0.08771929824561403], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lu\",\"U\",\"{\\Phi}\",\"\\mathbf{u}\",\"{\\vec{u}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text84", type: "Button", pos: [4.0, -2.9047619047619047, 0.09523809523809523], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lq\",\"Q\",\"{\\psi}\",\"\\mathbf{q}\",\"{\\vec{q}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text43", type: "Button", pos: [4.0, -1.9417475728155336, 0.19417475728155337], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lx\",\"X\",\"{\\kappa}\",\"\\mathbf{x}\",\"{\\vec{x}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text106", type: "Button", pos: [4.0, 0.04590314436538903, 0.09180628873077806], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "npos=max([0,npos-1]);", text: "　", textsize: 13.0, textbold: true},
-    {name: "Text107", type: "Button", pos: [4.0, 0.036036036036036036, 0.07207207207207207], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "npos=min([npos+1,length(StrL_ch)]);", text: "　", textsize: 13.0},
-    {name: "Text83", type: "Button", pos: [4.0, -3.1770833333333335, 0.10416666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lp\",\"P\",\"{\\Psi}\",\"\\mathbf{p}\",\"{\\vec{p}\\;}\"]_keytype;", text: "　", textsize: 14.0},
-    {name: "Text82", type: "Button", pos: [4.0, -3.515850144092219, 0.11527377521613832], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\">\";", text: "　", textsize: 14.0},
-    {name: "Text7", type: "Button", pos: [-2.311111111111111, -4.0, -0.17777777777777778], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=1;initflg=1;", text: "1", textsize: 18.0},
-    {name: "Text8", type: "Button", pos: [4.0, -0.9230769230769231, 0.3076923076923077], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=2;initflg=1;", text: "2", textsize: 18.0},
-    {name: "Text103", type: "Button", pos: [4.0, 0.32692732493925336, 0.08835873647006848], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Allclear()\";", text: "CL", textsize: 16.0},
-    {name: "Text31", type: "Button", pos: [4.0, -1.5843857634902412, 0.07654037504783774], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift<=1,name=\"lim(\");if(Shift==2,name=\"mat(\");", text: "____", textsize: 14.0},
-    {name: "Text69", type: "Button", pos: [4.0, -1.52, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"tfr(\";", text: "___", textsize: 14.0},
-    {name: "Text53", type: "Button", pos: [4.0, -1.836266258607498, 0.07651109410864575], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift<=1,name=\"int(\");if(Shift==2,name=\"det(\");", text: "____", textsize: 14.0},
-    {name: "Text97", type: "Button", pos: [4.0, -1.9300106044538707, 0.07069635913750442], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==1,name=\"diff(\",name=\"case(\");", text: "___", textsize: 14.0},
-    {name: "Text55", type: "Button", pos: [4.0, -3.166666666666667, 0.2380952380952381], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, text_fontfamily: "monospace", script: "if(keytype!=4,keytype=4,keytype=1);", text: "Bld", textsize: 14.0},
-    {name: "Text11", type: "Button", pos: [4.0, -1.6047904191616766, 0.23952095808383234], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, text_fontfamily: "monospace", script: "if(keytype!=2,keytype=2,keytype=1);", text: "Cap", textsize: 14.0},
-    {name: "Text33", type: "Button", pos: [4.0, -2.4404761904761907, 0.2380952380952381], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, text_fontfamily: "monospace", script: "if(keytype!=3,keytype=3,keytype=1);", text: "Gre", textsize: 14.0},
-    {name: "Text108", type: "Button", pos: [4.0, 0.034482758620689655, 0.06896551724137931], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "npos=length(StrL_ch);", text: "　", textsize: 13.0},
-    {name: "Text102", type: "Button", pos: [4.0, 0.300507614213198, 0.08121827411167512], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Clearnow()\";", text: "AC", textsize: 16.0},
-    {name: "Text104", type: "Button", pos: [4.0, 0.2781432061642548, 0.07517383950385265], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Push()\";", text: "PS", textsize: 16.0},
-    {name: "Text105", type: "Button", pos: [4.0, 0.2589223233030091, 0.06997900629811057], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Pull()\";", text: "PL", textsize: 16.0},
-    {name: "Text110", type: "Button", pos: [4.0, -0.7079646017699115, 0.07079646017699115], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, script: "if(Shift!=2,Shift=2,Shift=0);", text: "Lin", textsize: 14.0},
-    {name: "Text109", type: "Button", pos: [4.0, -0.4743362831858407, 0.07079646017699115], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, script: "if(Shift!=1,Shift=1,Shift=0);", text: "Cal", textsize: 14.0},
-    {name: "Text100", type: "Button", pos: [4.0, 0.04938271604938271, 0.09876543209876543], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "npos=0;", text: "　", textsize: 13.0},
-    {name: "Text122", type: "Button", pos: [4.0, 0.05797101449275363, 0.19323671497584544], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1;", text: "<", textsize: 14.0},
-    {name: "Text9", type: "Button", pos: [2.0463597779954292, -4.0, 0.1305909239307868], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0},
-    {name: "Text111", type: "Button", pos: [4.0, -1.8971428571428572, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"ln(\";", text: "___", textsize: 14.0},
-    {name: "Text112", type: "Button", pos: [4.0, -2.3520427644138984, 0.07636502481863307], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==1,name=\"br(\",name=\"sum(\");", text: "____", textsize: 14.0},
-    {name: "Text113", type: "Button", pos: [4.0, -1.4608327452364152, 0.07057163020465773], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1; name=\"pi\";", text: "___", textsize: 14.0},
-    {name: "Text54", type: "Button", pos: [4.0, -1.6937191249117856, 0.07057163020465773], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"(inf)\";", text: "___", textsize: 14.0},
-    {name: "Text115", type: "Button", pos: [4.0, 2.1306122448979594, 0.08163265306122448], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "stnuminc=1;", text: ">", textsize: 14.0},
-    {name: "Text118", type: "Button", pos: [-2.528735632183908, -4.0, -0.1532567049808429], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "stnuminc=-1000;", text: "<<", textsize: 14.0},
-    {name: "Text117", type: "Button", pos: [4.0, 2.047058823529412, 0.0784313725490196], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "stnuminc=1000;", text: ">>", textsize: 14.0},
-    {name: "Text120", type: "Button", pos: [4.0, 0.06779661016949153, 0.22598870056497178], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1000;", text: "<<", textsize: 14.0},
-    {name: "Text121", type: "Button", pos: [4.0, 0.042553191489361694, 0.14184397163120566], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: ">", textsize: 14.0},
-    {name: "Text119", type: "Button", pos: [4.0, 0.04, 0.13333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1000;", text: ">>", textsize: 14.0},
-    {name: "Text98", type: "Button", pos: [4.0, 0.033660589060308554, 0.11220196353436186], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "score=fmark;", text: "Full", textsize: 14.0},
-    {name: "Text116", type: "Button", pos: [-2.9272030651341, -4.0, -0.1532567049808429], color: [0.0, 0.0, 0.0], fillcolor: [0.831, 0.639, 1.0], fillalpha: 0.27272728085517883, script: "stnuminc=-1;", text: "<", textsize: 14.0}
+    {name: "NE", type: "Free", pos: [4.0, 1.1283840564974783, 0.05757365765563785], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false, printname: "T1"},
+    {name: "Text2", type: "EditableText", pos: [4.0, -0.875, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
+    {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.686, 0.686], labeled: false, size: 6.0, border: false},
+    {name: "Text47", type: "Button", pos: [4.0, -1.0695187165775402, 0.10695187165775401], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "　　", textsize: 14.0},
+    {name: "Text100", type: "Button", pos: [4.0, 0.06461538461538462, 0.10256410256410256], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Delete()\";", text: "　　", textsize: 14.0},
+    {name: "Text24", type: "Button", pos: [4.0, -0.8072289156626505, 0.12048192771084336], color: [1.0, 1.0, 1.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, alpha: 0.27, text_fontfamily: "monospace", script: "funflg=1;name=\"sin(\";", text: "　　", textsize: 14.0},
+    {name: "Text46", type: "Button", pos: [4.0, -1.2048192771084334, 0.12048192771084336], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, alpha: 0.27, text_fontfamily: "monospace", script: "funflg=1;name=\"cos(\";", text: "　　", textsize: 14.0},
+    {name: "Text68", type: "Button", pos: [4.0, -1.6024096385542168, 0.12048192771084336], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"tan(\";", text: "　　", textsize: 14.0},
+    {name: "Text25", type: "Button", pos: [4.0, -0.7165775401069518, 0.10695187165775401], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"sq(\";", text: "　　", textsize: 14.0},
+    {name: "Text90", type: "Button", pos: [4.0, -2.0, 0.12048192771084336], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"log(\";", text: "　　", textsize: 14.0},
+    {name: "Text89", type: "Button", pos: [4.0, -2.2896551724137932, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"=\";", text: "　　", textsize: 14.0},
+    {name: "Text88", type: "Button", pos: [4.0, -2.67741935483871, 0.16129032258064516], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"_(\";", text: "　　", textsize: 14.0},
+    {name: "Text75", type: "Button", pos: [4.0, -1.8697818244287923, 0.06871671534100669], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"'\";", text: "　　", textsize: 14.0},
+    {name: "Text26", type: "Button", pos: [4.0, -0.6442307692307693, 0.09615384615384615], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\")\";", text: "　　", textsize: 14.0},
+    {name: "Text94", type: "Button", pos: [4.0, -1.3280000000000003, 0.08], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\".\";", text: "　　", textsize: 14.0, textbold: true},
+    {name: "Text95", type: "Button", pos: [4.0, -1.2250922509225093, 0.07380073800738007], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(sp)\";", text: "　　", textsize: 14.0},
+    {name: "Text62", type: "Button", pos: [4.0, -2.3842794759825328, 0.08733624454148471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lm\",\"M\",\"{\\mu}\",\"\\mathbf{m}\",\"{\\vec{m}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text48", type: "Button", pos: [4.0, -0.9615384615384615, 0.09615384615384615], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\",\";", text: "　　", textsize: 14.0, textbold: true},
+    {name: "Text87", type: "Button", pos: [4.0, -3.2233009708737863, 0.19417475728155337], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lw\",\"W\",\"{\\omega}\",\"\\mathbf{w}\",\"{\\vec{w}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text40", type: "Button", pos: [4.0, -2.096069868995633, 0.08733624454148471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Li\",\"I\",\"{\\theta}\",\"\\mathbf{i}\",\"{\\vec{i}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text42", type: "Button", pos: [4.0, -1.7712177121771218, 0.07380073800738007], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lk\",\"K\",\"{\\xi}\",\"\\mathbf{k}\",\"{\\vec{k}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text44", type: "Button", pos: [4.0, -1.6129032258064515, 0.16129032258064516], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Ly\",\"Y\",\"{\\iota}\",\"\\mathbf{y}\",\"{\\vec{y}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text45", type: "Button", pos: [4.0, -1.3793103448275863, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lz\",\"Z\",\"{\\eta}\",\"\\mathbf{z}\",\"{\\vec{z}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text21", type: "Button", pos: [4.0, -1.3009708737864076, 0.19417475728155337], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"La\",\"A\",\"{\\alpha}\",\"\\mathbf{a}\",\"{\\vec{a}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text81", type: "Button", pos: [4.0, -3.6867469879518073, 0.12048192771084336], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"<\";", text: "　　", textsize: 14.0},
+    {name: "Text65", type: "Button", pos: [4.0, -2.58252427184466, 0.19417475728155337], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lr\",\"R\",\"{\\rho}\",\"\\mathbf{r}\",\"{\\vec{r}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text67", type: "Button", pos: [4.0, -1.8344827586206898, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lt\",\"T\",\"{\\tau}\",\"\\mathbf{t}\",\"{\\vec{t}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text77", type: "Button", pos: [3.8554216867469875, -4.0, 0.24096385542168672], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, text_fontfamily: "monospace", script: "if(keytype!=5,keytype=5,keytype=1);", text: "Vec", textsize: 14.0},
+    {name: "Text27", type: "Button", pos: [4.0, -0.5851528384279476, 0.08733624454148471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n7\";", text: "　　", textsize: 14.0},
+    {name: "Text29", type: "Button", pos: [4.0, -0.4944649446494465, 0.07380073800738007], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n9\";", text: "　　", textsize: 14.0},
+    {name: "Text28", type: "Button", pos: [4.0, -0.536, 0.08], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n8\";", text: "　　", textsize: 14.0},
+    {name: "Text49", type: "Button", pos: [4.0, -0.8733624454148472, 0.08733624454148471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n4\";", text: "　　", textsize: 14.0},
+    {name: "Text50", type: "Button", pos: [4.0, -0.8, 0.08], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n5\";", text: "　　", textsize: 14.0},
+    {name: "Text51", type: "Button", pos: [4.0, -0.7380073800738006, 0.07380073800738007], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n6\";", text: "　　", textsize: 14.0},
+    {name: "Text72", type: "Button", pos: [4.0, -1.064, 0.08], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n2\";", text: "　　", textsize: 14.0},
+    {name: "Text73", type: "Button", pos: [4.0, -0.981549815498155, 0.07380073800738007], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n3\";", text: "　　", textsize: 14.0},
+    {name: "Text74", type: "Button", pos: [4.0, -0.9109589041095891, 0.0684931506849315], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"*\";", text: "　　", textsize: 14.0},
+    {name: "Text93", type: "Button", pos: [4.0, -1.4497816593886463, 0.08733624454148471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n0\";", text: "　　", textsize: 14.0},
+    {name: "Text96", type: "Button", pos: [4.0, -1.1369863013698631, 0.0684931506849315], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"/\";", text: "　　", textsize: 14.0},
+    {name: "Text18", type: "Button", pos: [4.0, -1.8078602620087336, 0.08733624454148471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Le\",\"E\",\"{\\delta}\",\"\\mathbf{e}\",\"{\\vec{e}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text34", type: "Button", pos: [3.4333333333333336, -4.0, 0.16666666666666666], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(cross)\";", text: "　　", textsize: 14.0},
+    {name: "Text79", type: "Button", pos: [3.241830065359477, -4.0, 0.130718954248366], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(pm)\";", text: "　　", textsize: 14.0},
+    {name: "Text13", type: "Button", pos: [4.0, -3.3387096774193545, 0.16129032258064516], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"@\";", text: "　　", textsize: 14.0},
+    {name: "Text19", type: "Button", pos: [4.0, -1.656, 0.08], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lf\",\"F\",\"{\\varepsilon}\",\"\\mathbf{f}\",\"{\\vec{f}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text63", type: "Button", pos: [4.0, -2.184, 0.08], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Ln\",\"N\",\"{\\nu}\",\"\\mathbf{n}\",\"{\\vec{n}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text66", type: "Button", pos: [4.0, -2.1451612903225805, 0.16129032258064516], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Ls\",\"S\",\"{\\sigma}\",\"\\mathbf{s}\",\"\\vec{s}\\;\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text35", type: "Button", pos: [4.0, -3.8709677419354835, 0.16129032258064516], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"!\";", text: "　　", textsize: 14.0},
+    {name: "Text36", type: "Button", pos: [4.0, -3.310344827586207, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"{\";", text: "　　", textsize: 14.0},
+    {name: "Text37", type: "Button", pos: [4.0, -2.8915662650602405, 0.12048192771084336], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"}\";", text: "　　", textsize: 14.0},
+    {name: "Text59", type: "Button", pos: [4.0, -3.2891566265060237, 0.12048192771084336], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", minwidth: 25, script: "funflg=1;name=\"(leq)\";", text: "　　", textsize: 14.0},
+    {name: "Text78", type: "Button", pos: [2.69281045751634, -4.0, 0.130718954248366], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"\\\";", text: "　　", textsize: 14.0},
+    {name: "Text14", type: "Button", pos: [4.0, -2.8551724137931034, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"[\";", text: "　　", textsize: 14.0},
+    {name: "Text15", type: "Button", pos: [4.0, -2.4939759036144573, 0.12048192771084336], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"]\";", text: "　　", textsize: 14.0},
+    {name: "Text12", type: "Button", pos: [3.9806763285024163, -4.0, 0.19323671497584544], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(deg)\";", text: "　　", textsize: 14.0},
+    {name: "Text57", type: "Button", pos: [3.6336996336996337, -4.0, 0.1465201465201465], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\":\";", text: "　　", textsize: 14.0},
+    {name: "Text58", type: "Button", pos: [4.0, -3.7655172413793108, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\";\";", text: "　　", textsize: 14.0},
+    {name: "Text80", type: "Button", pos: [3.7908496732026142, -4.0, 0.130718954248366], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(mp)\";", text: "　　", textsize: 14.0},
+    {name: "Text16", type: "Button", pos: [4.0, -2.213903743315508, 0.10695187165775401], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"|\";", text: "　　", textsize: 14.0},
+    {name: "Text17", type: "Button", pos: [4.0, -1.9903846153846152, 0.09615384615384615], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Ld\",\"D\",\"{\\Delta}\",\"\\mathbf{d}\",\"{\\vec{d}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text56", type: "Button", pos: [3.0183150183150187, -4.0, 0.1465201465201465], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(cdot)\";", text: "　　", textsize: 14.0},
+    {name: "Text30", type: "Button", pos: [4.0, -0.4589041095890411, 0.0684931506849315], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"+\";", text: "　　", textsize: 14.0},
+    {name: "Text52", type: "Button", pos: [4.0, -0.684931506849315, 0.0684931506849315], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"-\";", text: "　　", textsize: 14.0},
+    {name: "Text23", type: "Button", pos: [4.0, -0.9241379310344828, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lc\",\"C\",\"{\\gamma}\",\"\\mathbf{c}\",\"{\\vec{c}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text71", type: "Button", pos: [4.0, -1.1615720524017468, 0.08733624454148471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n1\";", text: "　　", textsize: 14.0},
+    {name: "Text22", type: "Button", pos: [4.0, -1.0806451612903225, 0.16129032258064516], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lb\",\"B\",\"{\\beta}\",\"\\mathbf{b}\",\"{\\vec{b}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text70", type: "Button", pos: [4.0, -1.278846153846154, 0.09615384615384615], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(\";", text: "　　", textsize: 14.0},
+    {name: "Text41", type: "Button", pos: [4.0, -1.92, 0.08], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lj\",\"J\",\"{\\chi}\",\"\\mathbf{j}\",\"{\\vec{j}\\;}\"]_keytype;", text: "　　", textsize: 14.0, textbold: true},
+    {name: "Text92", type: "Button", pos: [4.0, -1.596153846153846, 0.09615384615384615], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"^(\";", text: "　　", textsize: 14.0, textbold: true},
+    {name: "Text86", type: "Button", pos: [4.0, -2.2583025830258303, 0.07380073800738007], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lv\",\"V\",\"{\\lambda}\",\"\\mathbf{v}\",\"{\\vec{v}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text39", type: "Button", pos: [4.0, -2.3076923076923075, 0.09615384615384615], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lh\",\"H\",\"{\\Theta}\",\"\\mathbf{h}\",\"{\\vec{h}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text38", type: "Button", pos: [4.0, -2.566844919786096, 0.10695187165775401], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(neq)\";", text: "　　", textsize: 14.0},
+    {name: "Text20", type: "Button", pos: [4.0, -1.5276752767527675, 0.07380073800738007], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lg\",\"G\",\"{\\varphi}\",\"\\mathbf{g}\",\"{\\vec{g}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text64", type: "Button", pos: [4.0, -2.0244625648628616, 0.07412898443291327], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lo\",\"O\",\"{\\omega}\",\"\\mathbf{o}\",\"{\\vec{o}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text60", type: "Button", pos: [4.0, -2.9197860962566846, 0.10695187165775401], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(geq)\";", text: "　　", textsize: 14.0},
+    {name: "Text61", type: "Button", pos: [4.0, -2.625, 0.09615384615384615], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Ll\",\"L\",\"{\\lambda}\",\"\\mathbf{l}\",\"{\\vec{l}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text85", type: "Button", pos: [4.0, -2.448, 0.08], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lu\",\"U\",\"{\\Phi}\",\"\\mathbf{u}\",\"{\\vec{u}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text84", type: "Button", pos: [4.0, -2.6724890829694323, 0.08733624454148471], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lq\",\"Q\",\"{\\psi}\",\"\\mathbf{q}\",\"{\\vec{q}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text43", type: "Button", pos: [4.0, -1.9417475728155336, 0.19417475728155337], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lx\",\"X\",\"{\\kappa}\",\"\\mathbf{x}\",\"{\\vec{x}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text103", type: "Button", pos: [4.0, 0.050602409638554224, 0.08032128514056226], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Left()\";", text: "　　", textsize: 14.0, textbold: true},
+    {name: "Text104", type: "Button", pos: [4.0, 0.04719101123595505, 0.0749063670411985], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Right()\";", text: "　　", textsize: 14.0},
+    {name: "Text83", type: "Button", pos: [4.0, -2.942307692307692, 0.09615384615384615], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lp\",\"P\",\"{\\Psi}\",\"\\mathbf{p}\",\"{\\vec{p}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text82", type: "Button", pos: [4.0, -3.272727272727273, 0.10695187165775401], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\">\";", text: "　　", textsize: 14.0},
+    {name: "Text7", type: "Button", pos: [-2.242152466367713, -4.0, -0.17937219730941703], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=1;initflg=1;", text: "1", textsize: 18.0},
+    {name: "Text8", type: "Button", pos: [4.0, -1.152, 0.32], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=2;initflg=1;", text: "2", textsize: 18.0},
+    {name: "Text106", type: "Button", pos: [4.0, 0.041584158415841586, 0.066006600660066], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Allclear()\";", text: "　　", textsize: 14.0},
+    {name: "Text31", type: "Button", pos: [4.0, -1.3226837060702874, 0.06389776357827476], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift<=1,name=\"lim(\");if(Shift==2,name=\"mat(\");", text: "　　", textsize: 14.0},
+    {name: "Text69", type: "Button", pos: [4.0, -1.4224598930481285, 0.10695187165775401], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"tfr(\";", text: "　　", textsize: 14.0},
+    {name: "Text53", type: "Button", pos: [4.0, -1.643835616438356, 0.0684931506849315], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift<=1,name=\"int(\");if(Shift==2,name=\"det(\");", text: "　　", textsize: 14.0},
+    {name: "Text97", type: "Button", pos: [4.0, -1.7595907928388745, 0.06393861892583119], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==1,name=\"diff(\",name=\"case(\");", text: "　　", textsize: 14.0},
+    {name: "Text55", type: "Button", pos: [4.0, -3.325, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, text_fontfamily: "monospace", script: "if(keytype!=4,keytype=4,keytype=1);", text: "Bld", textsize: 14.0},
+    {name: "Text11", type: "Button", pos: [4.0, -1.675, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, text_fontfamily: "monospace", script: "if(keytype!=2,keytype=2,keytype=1);", text: "Cap", textsize: 14.0},
+    {name: "Text33", type: "Button", pos: [4.0, -2.5, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, text_fontfamily: "monospace", script: "if(keytype!=3,keytype=3,keytype=1);", text: "Gre", textsize: 14.0},
+    {name: "Text105", type: "Button", pos: [4.0, 0.04421052631578948, 0.07017543859649122], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"RRight()\";", text: "　　", textsize: 14.0},
+    {name: "Text107", type: "Button", pos: [4.0, 0.03925233644859813, 0.06230529595015576], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Push()\";", text: "　　", textsize: 14.0},
+    {name: "Text108", type: "Button", pos: [4.0, 0.03716814159292036, 0.05899705014749263], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Pull()\";", text: "　　", textsize: 14.0},
+    {name: "Text110", type: "Button", pos: [4.0, -0.633813975598162, 0.0633813975598162], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, script: "if(Shift!=2,Shift=2,Shift=0);", text: "Lin", textsize: 14.0},
+    {name: "Text109", type: "Button", pos: [4.0, -0.4260731319554849, 0.06359300476947535], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, script: "if(Shift!=1,Shift=1,Shift=0);", text: "Cal", textsize: 14.0},
+    {name: "Text102", type: "Button", pos: [4.0, 0.05454545454545455, 0.08658008658008658], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"LLeft()\";", text: "　　", textsize: 14.0},
+    {name: "Text111", type: "Button", pos: [4.0, -1.7754010695187168, 0.10695187165775401], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"ln(\";", text: "　　", textsize: 14.0},
+    {name: "Text112", type: "Button", pos: [4.0, -2.082848339609723, 0.06846970215679561], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;if(Shift==1,name=\"br(\",name=\"sum(\");", text: "　　", textsize: 14.0},
+    {name: "Text113", type: "Button", pos: [4.0, -1.417808219178082, 0.0684931506849315], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1; name=\"pi\";", text: "　　", textsize: 14.0},
+    {name: "Text54", type: "Button", pos: [4.0, -1.5335463258785942, 0.06389776357827476], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"(inf)\";", text: "　　", textsize: 14.0},
+    {name: "Text91", type: "Button", pos: [4.0, -1.9584398976982096, 0.06393861892583119], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1; if(Shift==0,name=\"tx(\"); if(Shift==1,name=\"par(\");if(Shift==2,name=\"(circ)\");", text: "　　", textsize: 14.0},
+    {name: "Text114", type: "Button", pos: [2.098360655737705, -4.0, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "texflg=1;", text: "TeX", textsize: 16.0},
+    {name: "Text101", type: "Button", pos: [4.0, 0.059154929577464786, 0.09389671361502347], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;Clearnow();", text: "　　", textsize: 14.0},
+    {name: "SW", type: "Free", pos: [1.5801622692426767, -4.0, 0.12214258801822592], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false }
   ],
   ports: [{
     id: "CSCanvas",
-    width: 631,
-    height: 743,
-    transform: [{visibleRect: [9.401803384828714, 29.08226228364115, 65.32548362204821, -36.68164740298457]}],
+    width: 783,
+    height: 722,
+    transform: [{visibleRect: [6.999279061993495, 25.036258167628002, 75.42074828986982, -38.00374718839288]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  use: ["katex"],
-  cinderella: {build: 2036, version: [3, 0, 2036]}
+  cinderella: {build: 2044, version: [3, 0, 2044]}
 });
     </script>
 </head>
 <body>
+<header><p align="center"><font size="6">
+KeTMath
+</font></p></header>
     <div id="CSCanvas"></div>
-<footer>
-<p><small>&copy; 2021 Setsuo Takato</small></p>
-</footer>
+<div style="padding: 50px">
+<p><font size="10">&emsp;KeTMath数式ルール</font></p>
+<ol><font size="5">
+	<li>分数　fr(a,b)　注) 小さい分数 tfr(a,b)</li>
+<li>掛け算　ab　注) a*bも可</li>
+<li>べき乗　a^(b)　注) 1文字の場合はa^bも可</li>
+<li>平方根　sq(a)，3乗根　sq(3,a)</li>
+<li>三角関数　sin(x)，sin(x)の2乗　sin(2,x)</li>
+<li>円周率　pi
+<li>度　(deg)</li>
+<li>対数関数　log(x)，自然対数　ln(x)，底がa　 log(a,x)</li>
+<li>改行　//</li>
+<li>スペース　(sp)　注) \;を出力</li>
+<li>立体　100tx(m)</li>
+<li>不定積分　int(x^2,x)，定積分　int(a,b,x^2,x)<br>
+	　注）定積分で関数の括弧を外すときは先頭に!を追加
+<li>ブラケット　br(f(x),a,b)</li>
+<li>極限　lim(x,a,f(x))　注）括弧を外すときは先頭に !</li>
+<li>和　sum(k=1,n,k^2)　注）括弧を外すときは先頭に !</li></li>
+<li>微分　diff(y,x)，偏微分　par(z,x)</li>
+<li>行列　mat(a,b;c,d)，行列式　det(a,b;c,d)</li>
+<li>場合分け　case(a,(x<0);c,(x(geq)0))
+<li>ドット　(cdot)，×　(cross)</li>
+<li>複号　(pm),(mp)</li>
+<li>不等号　<, >, (leq), (geq),(neq)</li>
+<li>下添字　a_n</li>
+<li>全角文字を混ぜてもよい　2x-3=0の解はx=fr(3,2)<br>
+<li>ギリシャ文字 {\alpha},{\beta}</li>
+<li>その他のTeX 記号　(sp),コンマ,{}などで区切る</li>
+</ol></font>
+</div>
+<footer><p align="center"><font size="4">&copy; 2021 Setsuo Takato</font></p></footer>
 </body>
 </html>

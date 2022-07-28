@@ -1,0 +1,20 @@
+if(scriptaddstart==1,
+
+scriptaddstart=0;
+);
+
+Setwindow([-1,1],[-1,1]);
+Setadjust([0,1],1.3);
+
+if(Quesno()=="Q02",
+  pletter([0,2],"e","$\cos^2 x$",["Size=2"]);
+  pletter([0.3, 1],"e","1.$x$を2乗した値の$\cos$",["Size=1.3"]);
+  pletter([0.3,0.2],"e","2.$\cos x$を2乗した値",["Size=1.3"]);
+  pletter([0.3,-0.6],"e","3.$\cos$の2乗に$x$を掛ける",["Size=1.3"]);
+);
+
+if(Quesno()=="Q03",
+  pletter([0,2],"e","$\cos\dfrac{\pi}{3}=0.5$",["Size=1.6"]);
+  pletter([0,0.7],"e","$\cos(\dfrac{\pi^2}{9})=0.46$",["Size=1.6"]);
+  pletter([0,-0.6],"e","$\cos(\cos\dfrac{\pi}{3})=0.76$",["Size=1.6"]);
+);

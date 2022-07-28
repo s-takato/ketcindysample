@@ -45,9 +45,9 @@ Kettaskinit():=(
 
   poskey=[19.5,-17.67];
   dxL=apply(10..19,35.5);
-  dxL_4=40; dxL_5=37;
+  dxL_4=42; dxL_5=42;
   dxL2=apply(1..9,35.5);
-  dxL3=[40,40];
+  dxL3=[42,42];
   forall(1..(length(tposL)),
     tmp="T"+text(#);
     Putpoint(tmp,tposL_#);

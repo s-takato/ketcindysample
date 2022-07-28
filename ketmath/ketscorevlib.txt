@@ -43,9 +43,9 @@ posyL=[23,-2.5,-34];
 
 poskey=[19.5,-17.67];
 dxL=apply(10..19,35.5);
-dxL_4=40; dxL_5=37;
+dxL_4=42; dxL_5=42;
 dxL2=apply(1..9,35.5);
-dxL3=[40,40];
+dxL3=[42,42];
 
  // no ketjs on 
 Seteditable(1,["","Size=24","Width=500"]);
@@ -264,4 +264,92 @@ RRight():=(
   //global Str,npos
   Score=replace(Score,"?","");
   npos=length(Score);
+);
+
+/ for scriptadd   //220423
+//  changed  220506
+
+scriptaddstart=1; 
+
+Setadjust():=Setadjust([0,0],1);
+Setadjust(mv,sc):=(
+  //help:mv=vSW moving , sc=scale changing
+  //global pSW,Scalea,Movea
+  Scalea=3.6*sc;
+  pSW=[50,3]+mv; 
+  Movea=pSW-SW.xy;
+);
+
+Adjustpt(pt):=(
+  regional(x0,y0,x1,y1);
+  //global Scalea,Movea
+  x1=pt_1; y1=pt_2;
+  x0=SW.x; y0=SW.y;
+  x1=x0+Scalea*(x1-x0);
+  y1=y0+Scalea*(y1-y0);
+  x1=x1+Movea_1;
+  y1=y1+Movea_2;
+  [x1,y1];
+);
+
+Adjust(gd):=(
+  regional(dL,depth,out,tmp);
+  if(isstring(gd),dL=parse(gd),dL=gd);
+  depth=Measuredepth(dL);
+  if(depth==0,out=Adjustpt(dL));
+  if(depth==1,
+    out=apply(dL,Adjustpt(#));
+  );
+  if(depth==2,
+    out=[];
+    forall(dL,
+      out=append(out,Adjust(#));
+    );
+  );
+  out;
+);
+
+pdrwxy():=pdrwxy(["","x","e1","y","n1","O","s1w1"],[]);
+pdrwxy(axLorg,op):=(
+  regional(axL);
+  if(length(axLorg)==0,
+    axL=["","x","e1","y","n1","O","s1w1"];
+  , 
+    axL=axLorg; 
+  ); 
+  Listplot("axx",Adjust([[XMIN,0],[XMAX,0]]));
+  Listplot("axy",Adjust([[0,YMIN],[0,YMAX]]));
+  Expr(Adjust([XMAX,0]),axL_3,axL_2,op);
+  Expr(Adjust([0,YMAX]),axL_5,axL_4,op);
+  Letter(Adjust([0,0]),axL_7,axL_6,op);
+);
+
+pletter(Pt,Dr,St):=pletter([Pt,Dr,St]);
+pletter(list):=pletter(list,[]);
+pletter(Pt,Dr,St,options):=pletter([Pt,Dr,St],options);
+pletter(list,options):=(
+  regional(L,tmp);
+  L=[];
+  forall(1..(length(list)),
+     if(mod(#,3)==1,tmp=Adjust(list_#),tmp=list_#);
+     L=append(L,tmp);
+  );    
+  Letter(L,options);
+);
+
+plistplot(nm,vptL):=plistplot(nm,vptL,[]); //220605
+plistplot(nm,vptL,op):=( //220529
+  regional(ptL,tmp,tmp1);
+  Listplot("v"+nm,vptL,["nodisp"]);
+  tmp=Adjust("sgv"+nm);
+  Listplot(nm,tmp,op);
+);
+
+pplotdata(name1,func,variable):=pplotdata(name1,func,variable,[]);
+pplotdata(name1,func,variable,options):=( //220529
+  regional(tmp,tmp1);
+  tmp=prepend("nodisp",options);
+  Plotdata("v"+name1,func,variable,["nodisp"]);
+  tmp=Adjust("grv"+name1);
+  Listplot("-gr"+name1,tmp,options);
 );

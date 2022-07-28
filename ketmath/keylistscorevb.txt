@@ -189,7 +189,7 @@ funflg=1;name="/";
 Text97
 funflg=1;if(Shift==1,name="diff(",name="case(");
 Text98
-funflg=1;Fullmark();
+funflg=1;name="Fullmark()";
 Text100
 funflg=1;name="LLeft()";
 Text101

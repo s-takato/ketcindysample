@@ -1,0 +1,95 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta charset="utf-8"> 
+<title>KeTLMS</title> 
+<script src="ketcindyjs/jquery.min.js"></script> 
+<link rel="stylesheet" href="ketcindyjs/katex/katex11.min.css" /> 
+<script src="ketcindyjs/katex/katex11.min.js"></script> 
+<script src="ketcindyjs/auto-render11.min.js"></script> 
+<script>$(document).ready(function(){renderMathInElement(document.body,{delimiters: [{left: "[[", right: "]]", display: true},{left: "$", right: "$", display: false}]})});</script> 
+<style> 
+    .nounder { 
+        text-decoration: none; 
+    }
+	.ex1 {
+	   line-height:1.2;
+	}
+</style> 
+<style type="text/css">
+.size2  {width:400px; height:300px; }
+</style>
+</head> 
+<body>
+<div style="padding: 50px"> 
+<p><font size="10">&emsp;KeTLMSの使い方</font> 
+<font size="6">&emsp;&emsp;2022-07-28</font></p> 
+  <ol><font size="6"> 
+  <li>CinderellaとKeTCindyが必要</br>
+  &emsp;<a href="https://s-takato.github.io/ketcindyorg/indexj.html">ketcindy home</a>を参考にインストールする</li>
+	<li>1つのフォルダに以下をおく</br>
+	&emsp;kettaskorgv, ketscoreorgv（htmlファイル）</br>
+	&emsp;toolketmathall.cdy（Cindyファイル）</br>
+	&emsp;ketcindyjs, data（フォルダ，dataは新規作成）</li> 
+  <li>dataに学生リストのファイル(student2022.txtなど)を作る</br>
+  &emsp;&emsp;01AB（ABは名前イニシャルなど）</br>
+  &emsp;&emsp;02CD</br>
+  &emsp;&emsp;...</li>
+  <li>dataに出題ファイル(question0728-01.txtなど)を作る</br>
+  &emsp;&emsp;Q　（番号はファイル名の-01から自動追加）</br>
+  &emsp;&emsp;sin(x),cos(x)の微分公式を書け　（問題文）</br>
+  &emsp;&emsp;[1] (sin(x))'　　（小問が1個のときは[]）</br>
+  &emsp;&emsp;[2] (cos(x))'</br>
+  &emsp;&emsp;Sheet　（解答欄）</br>
+  &emsp;&emsp;[1] (sin(x))'=  ::2　　（::2は配点）</br>
+  &emsp;&emsp;[2] (cos(x))'=  ::2::-1（Maximaで採点しないとき::-1）</br>
+  &emsp;&emsp;Ans　（正解）</br>
+  &emsp;&emsp;[1] cos(x)</br>
+  &emsp;&emsp;[2] -sin(x) </br>
+  &emsp;&emsp;（空白行）</br>
+  &emsp;&emsp;...</br>
+  （注）各問に複数の問題を用意しておくこともできる</br>
+   &emsp;&emsp;[1] (sin(x))'::(cos(x))'　（乱数で学生に割当て）
+  </li>
+  <li>toolketmathall.cdyによる配付課題ファイルの作成</br>
+  <div style="text-align: center">
+  <img class="size2" src="toolketmath.png" alt="toolketmath画面">
+  </div>
+  <ul>
+  <li>「1.tasklineを作成」＝＞studentを選択＝＞all＝＞Reset</br>
+ 「2.kettaskに組み込み」＝＞kettaskorgvを選択＝＞all</li>
+  <li>kettaskv0728-01.htmlをWebサイトに掲載，学生に伝える</br>
+  （注）ketcindyjsフォルダも同じフォルダに入れておく</li>
+  </ul>
+  <li>toolketmathall.cdyによる採点用ファイルの作成
+  <ul>
+  <li>学生からの回答一覧を2anssheet0728-01.txtにペースト</li>
+  <li>toolketmathallを立ち上げて，3, 4を実行</li>
+  </ul>
+  <li>採点
+  <ul>
+  <li>ketscorev0728-01.htmlを立ち上げ，学生・問題ごと採点</li>
+  <li>fullを押すと，配点の点数が入力される</li>
+  <li>採点が終わったらRecを押してRec欄のすべてを選択</li>
+  <li>4scoresheet0728-01.txtにペーストして保存</li>
+  <li>中断するときも同様にして，再開時にRec欄にコピペ</li>
+  <li>予め「Maxima採点」＝＞4_scoresheet0728-01.txt</br>
+  ＝＞結果をRec欄にコピペして採点
+  </li>
+  </ul>
+  <li>成績票の作成と通知
+  <ul>
+   <li>「6成績票を作成」＝＞各学生各問題(ファイル)ごと</li>
+  <li>「7個別結合データ」＝＞各学生の同日の問題すべて</li>
+  <li>「8結合データ複写」＝＞各学生のフォルダにコピー</li>
+  <li>「9クラス結果成績表」＝＞クラスの成績一覧表を作成</li>
+  <li>6,7,9はdata/cardの中にできる</li>
+  <li>8の学生別フォルダはDropboxなどに作成</br>
+  ＝＞リンク先を学生に伝えておく</li>
+  </ul>
+  </li>
+  </ol></font>
+</div> 
+ 
+</body> 
+</html> 

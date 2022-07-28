@@ -8,29 +8,40 @@
 <script src="ketcindyjs/katex/katex11.min.js"></script>  
 <script src="ketcindyjs/auto-render11.min.js"></script>  
 <script>$(document).ready(function(){renderMathInElement(document.body,{delimiters: [{left: "[[", right: "]]", display: true},{left: "$", right: "$", display: false}]})});</script>  
+<style type="text/css">
+.size2  {width:400px; height:300px; }
+</style>
 </head>  
 <body>  
 <div style="padding: 50px">  
 <p><font size="10">&emsp;KeTMath</font>  
-<font size="6">&emsp;&emsp;&emsp;&emsp;2022-06-20</font></p>  
-<p><font size="5">KeTMathは簡易数式を$\TeX$で表示するシステムです．</br>  
-例えば，次の行の左側が簡易数式です</br>  
-&emsp;&emsp;fr(1,3)sin(3x) ＝＞$\frac{1}{3}\sin 3x$</br>  
-これを入力すると，右側の$\TeX$数式が表示されます．</br>  
-&emsp;1をクリックすると，実際にKeTMathを使うことができます．</br>  
-<!-- &emsp;2はスマホ用(縦型)のKeTMathです．</br>  -->
-&emsp;2はKeTMathの説明です．</br>  
-<!--&emsp;4は教員用KeTMathLMS(課題処理)パッケージです．</br>  
-&emsp;5はKeTMathLMSの説明です-->
-</font></p>  
-<!-- polytech -->  
-  <ol><font size="6">  
-<!--    <li><font size="6"><a href="ketmathjsoffL.html">KeTMath</a></font></li>  -->
-    <li><font size="6"><a href="ketmathv.html">KeTMath</a></font></li>  
-    <li><font size="6"><a href="howtoketmath.pdf">KeTMathの使い方pdf</a></font></li>  
-<!--    <li><font size="6"><a href="ketmathset.zip">KeTMathLMSzip</a></font></li>  
-    <li><font size="6"><a href="howtoketmathLMS.pdf">KeTMathLMSの説明pdf</a></font></li>  -->
-  </ol></font><BR>  
-</div>  
+<font size="6">&emsp;&emsp;&emsp;&emsp;2022-07-28</font></p> 
+<div style="text-align: center">
+<img class="size2" src="ketmathscreen.png" alt="KeTMath画面">
+</div>
+<ol><font size="6">
+<li>
+<a href="ketmathv.html">KeTMath</a>は1次元数式を$\TeX$で表示するWebアプリです．
+  <ul><font size="5">
+  <li>例えば，fr(1,2)sq(3)sin(4x) が簡易数式で，$\dfrac{1}{2}\sqrt{3}\sin 4x$と表示されます</li>
+  <li>KeTMath数式は1行のテキストなので，メール等での送受に適しています</li>
+  <li>しかし，数式の意味を捉えるには$\TeX$ の方が優れています</li>
+  <li>送り手はKeTMathで1次元数式を作成・確認してから送ります</li>
+  <li>受け手はKeTMathの入力欄にペーストして数式を確認します．</li>
+  </font></ul>
+</li>
+<li>数式ルールについては，<a href="ketmathrule.html">KeTMath数式</a>を見てください</br>
+<font size="5">&emsp;&emsp;KeTMathアプリの後にも掲載されています</font></li>
+<li>
+YouTubeに<a href="https://www.youtube.com/watch?v=IOMUb2CUjzU">KeTMath</a>の説明動画があります</li>
+<li>KeTLMSはKeTMathによるオンライン授業支援システムです
+<ul>
+<li><a href="ketmathpack.zip" download="ketmathpack.zip">ketmathpack.zip</a>から一式をダウンロードできます</li>
+<li><a href="ketlms.html">KeTLMS</a>に使い方の説明があります</li>
+</ul>
+</li>
+
+</font></ol>
+
 </body>  
 </html>  
