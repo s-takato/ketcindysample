@@ -10,6 +10,7 @@
 //   210910
 
 Kettaskinit():=(
+  regional(tmp,tmp1);
   Shift=0;
   keytype=1;
   capflg=0;
@@ -52,7 +53,6 @@ Kettaskinit():=(
     tmp="T"+text(#);
     Putpoint(tmp,tposL_#);
   );
-  
   //  only for kettask
   ch=3;
   Str="Student=":
@@ -79,7 +79,6 @@ Kettaskinit():=(
   tab=unicode("0009");
   cma=",";
   Dirdata=Dircdy+"data";
-
   tmp=Filelist(Dirdata); //no ketjs on
   file=select(tmp,indexof(#,"taskline")>0);
   file=select(file,indexof(#,".cdy")==0);
@@ -100,6 +99,10 @@ Kettaskinit():=(
   quL=Line2list(quline);
   quall=length(quL);
   shL=Line2list(shline);
+println([102,shL]);
+//  tmp1=replace(shline," ","%"); //220730from
+//  shL=Line2list(tmp1);
+//  shL=apply(shL,replace(#,"%"," ")); //220730to
   ansL=shL;
   sqLL=Line2list(sqline);
   sqall=length(sqLL);
@@ -111,15 +114,19 @@ Kettaskinit():=(
     tmp2=tmp_(2..(length(tmp)));
     qu=[];
     sh=[];
+println([117,length(tmp2)]);
+println([118,length(quL)]);
     forall(1..(length(tmp2)),nn,
       tmp=quL_nn;
       qu=append(qu,tmp_1+" "+tmp_(tmp2_nn));
+println([122,nn,qu]);
       tmp=shL_nn;
       sh=append(sh,tmp_1+" "+tmp_2);
     );
     stquLL=append(stquLL,[name,qu,sh]);
   );
-
+ println([128,shL]);
+ 
   forall(1..(length(tposL)), // no ketjs on
     tmp="T"+text(#);
     Putpoint(tmp,tposL_#);
@@ -150,7 +157,7 @@ Keyname():=(
     ["lim","pi"],
     ["int","$\infty$"],
     ["'","cs"],
-    ["$\sum$","tx"]
+    ["sum","tx"]
   ];
 
   if(Shift==1,
