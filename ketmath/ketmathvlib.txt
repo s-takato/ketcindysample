@@ -99,7 +99,7 @@ Keyname():=(
     ["lim","pi"],
     ["int","$\infty$"],
     ["'","cs"],
-    ["$S_n$","tx"]
+    ["sum","tx"]
   ];
 
   if(Shift==1,

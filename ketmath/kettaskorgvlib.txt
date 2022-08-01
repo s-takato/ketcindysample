@@ -10,7 +10,7 @@
 //   210910
 
 Kettaskinit():=(
-  regional(tmp,tmp1);
+  regional(tmp,tmp1,tmp2);
   Shift=0;
   keytype=1;
   capflg=0;
@@ -94,15 +94,10 @@ Kettaskinit():=(
       "zzlineend",1,
     ]);
   );
-
   setdirectory(Dirwork); // no ketjs off
   quL=Line2list(quline);
   quall=length(quL);
   shL=Line2list(shline);
-println([102,shL]);
-//  tmp1=replace(shline," ","%"); //220730from
-//  shL=Line2list(tmp1);
-//  shL=apply(shL,replace(#,"%"," ")); //220730to
   ansL=shL;
   sqLL=Line2list(sqline);
   sqall=length(sqLL);
@@ -112,21 +107,17 @@ println([102,shL]);
     tmp=sqLL_ns;
     name=tmp_1;
     tmp2=tmp_(2..(length(tmp)));
+    tmp2=apply(tmp2,parse(#));
     qu=[];
     sh=[];
-println([117,length(tmp2)]);
-println([118,length(quL)]);
-    forall(1..(length(tmp2)),nn,
+    forall(1..(length(quL)),nn,
       tmp=quL_nn;
       qu=append(qu,tmp_1+" "+tmp_(tmp2_nn));
-println([122,nn,qu]);
       tmp=shL_nn;
       sh=append(sh,tmp_1+" "+tmp_2);
     );
     stquLL=append(stquLL,[name,qu,sh]);
   );
- println([128,shL]);
- 
   forall(1..(length(tposL)), // no ketjs on
     tmp="T"+text(#);
     Putpoint(tmp,tposL_#);
