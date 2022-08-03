@@ -382,8 +382,14 @@ RRight():=(
 
 // for scriptadd   //220423
 //  changed  220506
+//  Lowerleft added 220802
 
-scriptaddstart=1; 
+//scriptaddstart=1; 
+
+Lsetwindow(xrng,yrng):=(
+  XMIN=xrng_1; XMAX=xrng_2;
+  YMIN=yrng_1; YMAX=yrng_2;
+);
 
 Setadjust():=Setadjust([0,0],1);
 Setadjust(mv,sc):=(
@@ -391,14 +397,14 @@ Setadjust(mv,sc):=(
   //global pSW,Scalea,Movea
   Scalea=3.6*sc;
   pSW=[50,3]+mv; 
-  Movea=pSW-SW.xy;
+  Movea=pSW-[XMIN,YMIN];
 );
 
 Adjustpt(pt):=(
   regional(x0,y0,x1,y1);
   //global Scalea,Movea
   x1=pt_1; y1=pt_2;
-  x0=SW.x; y0=SW.y;
+  x0=XMIN; y0=YMIN;
   x1=x0+Scalea*(x1-x0);
   y1=y0+Scalea*(y1-y0);
   x1=x1+Movea_1;
@@ -424,6 +430,15 @@ Adjust(gd):=(
 );
 
 pdrwxy():=pdrwxy(["","x","e1","y","n1","O","s1w1"],[]);
+pdrwxy(arg1):=(
+  regional(tmp);
+  tmp=select(arg1,indexof(#,"=")>0);
+  if(length(tmp)>0,
+    pdrwxy([],arg1);
+  ,
+    pdrwxy(arg1,[]);
+  );
+);
 pdrwxy(axLorg,op):=(
   regional(axL);
   if(length(axLorg)==0,
@@ -431,11 +446,11 @@ pdrwxy(axLorg,op):=(
   , 
     axL=axLorg; 
   ); 
-  Listplot("axx",Adjust([[XMIN,0],[XMAX,0]]));
-  Listplot("axy",Adjust([[0,YMIN],[0,YMAX]]));
-  Expr(Adjust([XMAX,0]),axL_3,axL_2,op);
-  Expr(Adjust([0,YMAX]),axL_5,axL_4,op);
-  Letter(Adjust([0,0]),axL_7,axL_6,op);
+  plistplot("axx",[[XMIN,0],[XMAX,0]]);
+  plistplot("axy",[[0,YMIN],[0,YMAX]]);
+  plettter([XMAX,0],axL_3,"$"+axL_2+"$",op);
+  plettter([0,YMAX],axL_5,"$"+axL_4+"$",op);
+  pletter([0,0],axL_7,axL_6,op);
 );
 
 pletter(Pt,Dr,St):=pletter([Pt,Dr,St]);

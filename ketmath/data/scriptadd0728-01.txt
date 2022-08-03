@@ -1,0 +1,5 @@
+if(Quesno()=="Q01",
+  Lsetwindow([-5,5],[-5,5]);
+  Setadjust([0,0],1);
+  pdrwxy();
+);
