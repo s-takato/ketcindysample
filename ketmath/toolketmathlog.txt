@@ -1,2 +1,4 @@
+20220807
+Maxima dbg  ( case when errors occurred )
 20220705
 Mkquline changed  ( question number set automatically )
