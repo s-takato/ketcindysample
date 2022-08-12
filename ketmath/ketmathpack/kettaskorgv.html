@@ -3974,6 +3974,18 @@ if(startflg==1,
   startflg=0;
 );
 
+if(stok<=1,
+  Subsedit(1,"");
+  Subsedit(2,"");
+  if(stok==1,
+    tmp=Textedit(3,"");
+    if(length(tmp)==0,
+      Subsedit(3,"Student=");
+      stok=0;
+    );
+  );
+);
+
 T2.x=T1.x; T4.x=T3.x;
 if(T1.y-T2.y<dtpy,T2.y=T1.y-dtpy);
 if(T3.y-T4.y<dtpy,T4.y=T3.y-dtpy);
@@ -4246,8 +4258,8 @@ var cdy = CindyJS({
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, text: "Student=", textsize: 24.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T2", type: "Free", pos: [4.0, 3.6645161290322577, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text10", type: "EditableText", pos: [4.0, 0.051108605787298006, 0.0751597143930853], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 65, textsize: 18.0},
     {name: "Text47", type: "Button", pos: [4.0, -1.075268817204301, 0.10752688172043011], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "　　", textsize: 14.0},
@@ -4359,8 +4371,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 838,
-    height: 688,
-    transform: [{visibleRect: [3.853413989020838, 27.818481811150434, 84.30002932145587, -38.16463443920638]}],
+    height: 670,
+    transform: [{visibleRect: [3.853413989020838, 27.818481811150434, 84.30002932145587, -36.475466663197246]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
