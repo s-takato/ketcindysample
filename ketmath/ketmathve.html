@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>ketmathv.cdy</title>
+    <title>ketmathve.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -2572,7 +2572,7 @@ Letter(list,options):=(
   Nj=1;
   if(Ketcindyjsfigure>0,sz=round(sz*Ketcindyjsscale) ); // 
   while(Nj+2<=length(list),
-    Pos=list_Nj;
+    Pos=Lcrd(list_Nj);  //220814
     Dir=list_(Nj+1);
     Str=list_(Nj+2);
     if(!isstring(Str),Str=format(Str,10)); // 16.09.30,10.09
@@ -3425,26 +3425,28 @@ Clearnow():=(
   funflg=0;
 );
 
-Delete():=(
+Delete():=( //220814dbg
   regional(tmp,tmp1,tmp2);
-  if(length(Str)>0,
-    if(npos==length(Str),
-      Str=substring(Str,0,npos-1);
+  tmp=indexof(Str,"?");
+  if(tmp>0,npos=tmp,npos=length(Str));
+  if(ch<=2,
+    if(length(Str)>0,
+      if(npos==length(Str),
+        Str=substring(Str,0,npos-1);
+      ,
+        tmp1=substring(Str,0,npos-2);
+        tmp2=substring(Str,npos-1,length(Str));
+        Str=tmp1+tmp2;
+      );
+      Strnq=replace(Str,"?","");
+      Strnow=Str;
+      StrL_ch=Strnq;
+      npos=npos-1;
     ,
-      tmp1=substring(Str,0,npos-2);
-      tmp2=substring(Str,npos-1,length(Str));
-      Str=tmp1+tmp2;
+      Pull();
+      npos=length(StrL_ch);
+      Delete();
     );
-    Strnq=replace(Str,"?","");
-    Strnow=Str;
-    StrL_ch=Strnq;
-    npos=npos-1;
-    Subsedit(ch,Str);
-    funflg=0;
-  ,
-    Pull();
-    npos=length(StrL_ch);
-    Delete();
   );
 );
 
@@ -3706,12 +3708,12 @@ var cdy = CindyJS({
   geometry: [
     {name: "Text1", type: "EditableText", pos: [-2.909090909090909, -4.0, -0.18181818181818182], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
     {name: "T2", type: "Free", pos: [4.0, 3.6645161290322577, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "NE", type: "Free", pos: [4.0, 1.1283840564974783, 0.05757365765563785], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false, printname: "T1"},
     {name: "Text2", type: "EditableText", pos: [4.0, -0.875, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
-    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.686, 0.686], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.686, 0.686], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.5801622692426767, -4.0, 0.12214258801822592], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text47", type: "Button", pos: [4.0, -1.0695187165775402, 0.10695187165775401], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "　　", textsize: 14.0},
     {name: "Text100", type: "Button", pos: [4.0, 0.06461538461538462, 0.10256410256410256], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Delete()\";", text: "　　", textsize: 14.0},
@@ -3819,13 +3821,13 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 773,
-    height: 725,
-    transform: [{visibleRect: [5.889217565666488, 29.010195276096354, 78.1668378421893, -38.74364791341791]}],
+    height: 707,
+    transform: [{visibleRect: [5.80894103218142, 28.94189204529327, 78.08656130870422, -37.166941294399706]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2044, version: [3, 0, 2044]}
+  cinderella: {build: 2055, version: [3, 0, 2055]}
 });
     </script>
 </head>
@@ -3864,8 +3866,6 @@ KeTMath
     <li>Other TeX symbols&emsp; Separate them with (sp),comma, { }</li>
   </ol></font>
 </div> 
-
-
 <footer><p align="center"><font size="4">&copy; 2021 Setsuo Takato</font></p></footer>
 </body>
 </html>

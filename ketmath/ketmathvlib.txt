@@ -1,3 +1,4 @@
+//   220814  Delete
 //   220720  key width
 //   220718  lic,cpr
 //   220412
@@ -197,27 +198,28 @@ Clearnow():=(
   funflg=0;
 );
 
-Delete():=(
+Delete():=( //220814dbg
   regional(tmp,tmp1,tmp2);
-  //global npos,Str,Strnq,Str_ch,funflg
-  if(length(Str)>0,
-    if(npos==length(Str),
-      Str=substring(Str,0,npos-1);
+  tmp=indexof(Str,"?");
+  if(tmp>0,npos=tmp,npos=length(Str));
+  if(ch<=2,
+    if(length(Str)>0,
+      if(npos==length(Str),
+        Str=substring(Str,0,npos-1);
+      ,
+        tmp1=substring(Str,0,npos-2);
+        tmp2=substring(Str,npos-1,length(Str));
+        Str=tmp1+tmp2;
+      );
+      Strnq=replace(Str,"?","");
+      Strnow=Str;
+      StrL_ch=Strnq;
+      npos=npos-1;
     ,
-      tmp1=substring(Str,0,npos-2);
-      tmp2=substring(Str,npos-1,length(Str));
-      Str=tmp1+tmp2;
+      Pull();
+      npos=length(StrL_ch);
+      Delete();
     );
-    Strnq=replace(Str,"?","");
-    Strnow=Str;
-    StrL_ch=Strnq;
-    npos=npos-1;
-    Subsedit(ch,Str);
-    funflg=0;
-  ,
-    Pull();
-    npos=length(StrL_ch);
-    Delete();
   );
 );
 

@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>kettask0805-03</title>
+    <title>kettaskorgv.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -487,31 +487,18 @@ Divoptions(options):=(
   );
   [Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,color,opstr,opcindy];
 );
-Strsplit(str,key):=( // 210422 renewed
-  regional(tmp,out);
-  tmp=tokenize(str,key);
-  out=apply(tmp,if(!isstring(#),Textformat(#,10),#));
-  out;
-);
-Textformat(value,dig):=(
-  regional(vv,tmp,tmp1);
-  if(islist(value),
-    tmp1="[";
-    forall(value,
-      tmp1=tmp1+Textformat(#,dig)+",";
-    );
-    if(length(tmp1)>1, //18.01.29from
-      tmp1=substring(tmp1,0,length(tmp1)-1);
-    );
-    tmp1=tmp1+"]"; //18.01.29until
-  ,
-    if(ispoint(value) % isstring(value),
-      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
-    ,
-      tmp1=format(value,dig);
-    );
+Strsplit(strorg,key):=( // 210422 renewed
+  regional(str,ctr,tmp,tmp1,out);
+  str=strorg+key; 
+  out=[];
+  tmp=indexof(str,key);
+  while(tmp>0,
+    tmp1=substring(str,0,tmp-1);
+    out=append(out,tmp1);
+    str=substring(str,tmp-1+length(key),length(str));
+    tmp=indexof(str,key);
   );
-  tmp1;
+  out;
 );
 Colorname2cmyk(name):=( //181212
   regional(dL,code,tmp);
@@ -624,6 +611,26 @@ Assign(funstr,varname,rep,precision):=(
   );
   funstr=tmp2+funstr;
   funstr;
+);
+Textformat(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(islist(value),
+    tmp1="[";
+    forall(value,
+      tmp1=tmp1+Textformat(#,dig)+",";
+    );
+    if(length(tmp1)>1, //18.01.29from
+      tmp1=substring(tmp1,0,length(tmp1)-1);
+    );
+    tmp1=tmp1+"]"; //18.01.29until
+  ,
+    if(ispoint(value) % isstring(value),
+      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
+    ,
+      tmp1=format(value,dig);
+    );
+  );
+  tmp1;
 );
 Colorcmyk2rgb(clr):=(
   regional(clrnew,tmp,black);
@@ -2052,26 +2059,6 @@ Ptpos(ptorg,pos):=(
   );
   out;
 );
-Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
-Expr(list):=Expr(list,[]);
-Expr(Pt,Dr,St,options):=Expr([Pt,Dr,St],options); //190409
-Expr(listorg,options):=( //16.10.09
-  regional(list,str,tmp,tmp1,tmp2);
-  list=listorg;
-  forall(1..round(length(list)/3),
-    str=list_(3*#);
-    if(isstring(str), //200526from
-      if(!iswindows(),
-        str=replace(str,"¥","\");
-      ); 
-    ,
-      str=format(str,10)
-    ); //200526to
-    str="$"+str+"$"; //200526
-    list_(3*#)=str;
-  );
-  Letter(list,options);
-);
 Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
 Letter(list):=Letter(list,[]);
 Letter(Pt,Dr,St,options):=Letter([Pt,Dr,St],options);//181218
@@ -2878,12 +2865,35 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
   SCALEY=scaley; //200114
   [LLcrd(pA),LLcrd(pB)];
 );
+Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
+Expr(list):=Expr(list,[]);
+Expr(Pt,Dr,St,options):=Expr([Pt,Dr,St],options); //190409
+Expr(listorg,options):=( //16.10.09
+  regional(list,str,tmp,tmp1,tmp2);
+  list=listorg;
+  forall(1..round(length(list)/3),
+    str=list_(3*#);
+    if(isstring(str), //200526from
+      if(!iswindows(),
+        str=replace(str,"¥","\");
+      ); 
+    ,
+      str=format(str,10)
+    ); //200526to
+    str="$"+str+"$"; //200526
+    list_(3*#)=str;
+  );
+  Letter(list,options);
+);
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1.1;
 aalinestart=1;
-quline="Q03::@a function @f@ and a number @a@ sutisfiy@//6+int(0,x,fr(f(t),t^2),t)=2sq(x)//@for all @x>0.	[]:: @Find @f@ and @a.";
-shline="Q03---	[] ;;4";
-sqline="01AB	2	2CR02CD	2	2CR03EF	2	2CR04GH	2	2CR05IJ	2	2CR06KL	2	2CR07MN	2	2CR08OP	2	2CR09QR	2	2CR10ST	2	2CR11UV	2	2CR12WX	2	2";
+quline="";
+quline="Q01::x=3,y=2のとき次の値を求めよ．//ただし，答えが整数でないときは分数で答えよ．	[1]:: x+y	[2]:: xy	Q02::{\alpha}=5,{\beta}=4とする．	[]:: {\alpha},{\beta}を解とする2次方程式を作れ．";
+shline="";
+shline="Q01---	[1]= 	[2]= 	Q02---	[] ";
+sqline="";
+sqline="01AA	2	2	2	2	2CR02BB	2	2	2	2	2CR03CC	2	2	2	2	2";
 zzlineend=1;
 
 
@@ -3474,17 +3484,17 @@ Line2list(strorg):=(
   flg=indexof(str,"::");
    tL=[];
   if(indexof(str,"CR")>0,
-    stL=tokenize(str,"CR");
+    stL=Strsplit(str,"CR");
     forall(1..(length(stL)),nn,
       st=stL_nn;
       if(!isstring(st),st=format(st,10));
-      stL_nn=tokenize(st,tab);
+      stL_nn=Strsplit(st,tab);
     );
   ,
-    stL=tokenize(str,tab);
+    stL=Strsplit(str,tab);
     forall(1..(length(stL)),
       tmp=stL_#;
-      if(indexof(tmp,"::")>0,tmp=tokenize(tmp,"::"));
+      if(indexof(tmp,"::")>0,tmp=Strsplit(tmp,"::"));
       stL_#=tmp;
     );
   );
@@ -3492,6 +3502,7 @@ Line2list(strorg):=(
 );
 
 Kettaskinit():=(
+  regional(tmp,tmp1,tmp2);
   Shift=0;
   keytype=1;
   capflg=0;
@@ -3532,7 +3543,6 @@ Kettaskinit():=(
     tmp="T"+text(#);
     Putpoint(tmp,tposL_#);
   );
-  
   ch=3;
   Str="Student=":
   Strnq=replace(Str,"?","");
@@ -3543,7 +3553,6 @@ Kettaskinit():=(
   tab=unicode("0009");
   cma=",";
   Dirdata=Dircdy+"data";
-
   quL=Line2list(quline);
   quall=length(quL);
   shL=Line2list(shline);
@@ -3556,9 +3565,10 @@ Kettaskinit():=(
     tmp=sqLL_ns;
     name=tmp_1;
     tmp2=tmp_(2..(length(tmp)));
+    tmp2=apply(tmp2,parse(#));
     qu=[];
     sh=[];
-    forall(1..(length(tmp2)),nn,
+    forall(1..(length(quL)),nn,
       tmp=quL_nn;
       qu=append(qu,tmp_1+" "+tmp_(tmp2_nn));
       tmp=shL_nn;
@@ -3566,7 +3576,6 @@ Kettaskinit():=(
     );
     stquLL=append(stquLL,[name,qu,sh]);
   );
-
 ); // end init
 
 Adddrw(str):=(
@@ -3591,8 +3600,8 @@ Keyname():=(
   nL3=[
     ["lim","pi"],
     ["int","$\infty$"],
-    ["'","cas"],
-    ["sum","txt"]
+    ["'","cs"],
+    ["sum","tx"]
   ];
 
   if(Shift==1,
@@ -3819,19 +3828,23 @@ RRight():=(
 );
 
 
-scriptaddstart=1; 
+
+Lsetwindow(xrng,yrng):=(
+  XMIN=xrng_1; XMAX=xrng_2;
+  YMIN=yrng_1; YMAX=yrng_2;
+);
 
 Setadjust():=Setadjust([0,0],1);
 Setadjust(mv,sc):=(
   Scalea=3.6*sc;
   pSW=[50,3]+mv; 
-  Movea=pSW-SW.xy;
+  Movea=pSW-[XMIN,YMIN];
 );
 
 Adjustpt(pt):=(
   regional(x0,y0,x1,y1);
   x1=pt_1; y1=pt_2;
-  x0=SW.x; y0=SW.y;
+  x0=XMIN; y0=YMIN;
   x1=x0+Scalea*(x1-x0);
   y1=y0+Scalea*(y1-y0);
   x1=x1+Movea_1;
@@ -3857,6 +3870,15 @@ Adjust(gd):=(
 );
 
 pdrwxy():=pdrwxy(["","x","e1","y","n1","O","s1w1"],[]);
+pdrwxy(arg1):=(
+  regional(tmp);
+  tmp=select(arg1,indexof(#,"=")>0);
+  if(length(tmp)>0,
+    pdrwxy([],arg1);
+  ,
+    pdrwxy(arg1,[]);
+  );
+);
 pdrwxy(axLorg,op):=(
   regional(axL);
   if(length(axLorg)==0,
@@ -3864,11 +3886,11 @@ pdrwxy(axLorg,op):=(
   , 
     axL=axLorg; 
   ); 
-  Listplot("axx",Adjust([[XMIN,0],[XMAX,0]]));
-  Listplot("axy",Adjust([[0,YMIN],[0,YMAX]]));
-  Expr(Adjust([XMAX,0]),axL_3,axL_2,op);
-  Expr(Adjust([0,YMAX]),axL_5,axL_4,op);
-  Letter(Adjust([0,0]),axL_7,axL_6,op);
+  plistplot("axx",[[XMIN,0],[XMAX,0]]);
+  plistplot("axy",[[0,YMIN],[0,YMAX]]);
+  plettter([XMAX,0],axL_3,"$"+axL_2+"$",op);
+  plettter([0,YMAX],axL_5,"$"+axL_4+"$",op);
+  pletter([0,0],axL_7,axL_6,op);
 );
 
 pletter(Pt,Dr,St):=pletter([Pt,Dr,St]);
@@ -3899,19 +3921,6 @@ pplotdata(name1,func,variable,options):=( //220529
   Plotdata("v"+name1,func,variable,["nodisp"]);
   tmp=Adjust("grv"+name1);
   Listplot("-gr"+name1,tmp,options);
-);
-
-Quesno():=( //220728
-  regional(tmp,out);
-  out="";
-  tmp=select(1..nqu,substring(quL_#_1,0,1)=="Q");
-  if(length(tmp)>0,
-    tmp=tmp_(-1);
-    out=quL_tmp_1;
-    tmp=indexof(out," ");
-    if(tmp>0,out=substring(out,0,tmp-1));
-  );
-  out;
 );
 
 tail=Readlines(Dircdy,"ketmathrulein.html");
@@ -3952,67 +3961,6 @@ Returntime(timedata):=(
   out=substring(out,0,length(out)-1);
   out;
 );
-
-List2line(stLL):=(
-  regional(tab,nn,st,tmp,str);
-  tab=unicode("0009");
-  str="";
-  forall(1..(length(stLL)),nn,
-    st=stLL_nn;
-    tmp="";
-    forall(1..(length(st)),kk,
-      tmp=tmp+st_kk+tab;
-    );
-    str=str+substring(tmp,0,length(tmp)-1);
-    if(nn<length(stLL),str=str+";;");
-    str;
-  );  
-);
-
-List2line(stLL):=(
-  regional(tab,nn,nc,tmp,str,st,out);
-  tab=unicode("0009");
-  out="";
-  forall(1..(length(stLL)),nn,
-    st=stLL_nn;
-    str="";
-    forall(1..(length(st)),
-      tmp=st_#;
-      if(!isstring(tmp),tmp=format(tmp,10));
-      str=str+tmp+tab;
-    );
-    str=substring(str,0,length(str)-1);
-    out=out+str;
-    if(nn<length(stLL),out=out+"CR");
-  );
-  out;  
-);
-
-Line2list(strorg):=(
-  regional(tab,stL,st,nn,tL,mx,flg,tmp);
-  tab=unicode("0009");
-  str=replace(strorg,";;",tab);
-  flg=indexof(str,"::");
-  tL=[];
-  if(indexof(str,"CR")>0,
-    stL=tokenize(str,"CR");
-    forall(1..(length(stL)),nn,
-      st=stL_nn;
-      if(!isstring(st),st=format(st,10));
-      stL_nn=tokenize(st,tab);
-    );
-  ,
-    stL=tokenize(str,tab);
-    forall(1..(length(stL)),
-      tmp=stL_#;
-      if(indexof(tmp,"::")>0,tmp=tokenize(tmp,"::"));
-      stL_#=tmp;
-    );
-  );
-  stL;
-);
-
-
 
 ;
 
@@ -4286,21 +4234,6 @@ if(stok==1,
   Subsedit(3,StrL_3);
 );
 
-Setwindow([-1,1],[-1,1]);
-Setadjust([0,1],1.3);
-
-if(Quesno()=="Q04",
-  pletter([0,2],"e","$\cos^2 x$",["Size=2"]);
-  pletter([0.3, 1],"e","1.$x$を2乗した値の$\cos$",["Size=1.3"]);
-  pletter([0.3,0.2],"e","2.$\cos x$を2乗した値",["Size=1.3"]);
-  pletter([0.3,-0.6],"e","3.$\cos$の2乗に$x$を掛ける",["Size=1.3"]);
-);
-
-if(Quesno()=="Q05",
-  pletter([0,2],"e","$\cos\dfrac{\pi}{3}=0.5$",["Size=1.6"]);
-  pletter([0,0.7],"e","$\cos(\dfrac{\pi^2}{9})=0.46$",["Size=1.6"]);
-  pletter([0,-0.6],"e","$\cos(\cos\dfrac{\pi}{3})=0.76$",["Size=1.6"]);
-);
 Windispg();
 
 ;
@@ -4437,15 +4370,15 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 810,
-    height: 682,
-    transform: [{visibleRect: [3.853413989020838, 27.818481811150434, 81.55513168544103, -37.636769509203525]}],
+    width: 838,
+    height: 670,
+    transform: [{visibleRect: [3.853413989020838, 27.818481811150434, 84.30002932145587, -36.475466663197246]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2044, version: [3, 0, 2044]}
+  cinderella: {build: 2053, version: [3, 0, 2053]}
 });
     </script>
 </head>
@@ -4455,35 +4388,35 @@ KeTMath
 </font></p></header>
     <div id="CSCanvas"></div>
 <div style="padding: 50px">
-<div style="padding: 50px"> 
-<p><font size="10"><b>KeTMath Rule</b></font></p>
-  <ol><font size="5"> 
-	<li>Fraction <b>fr(a,b)</b> &emsp;Tiny fraction <b>tfr(a,b)</b></li> 
-    <li>Multiplication  <b>ab</b> &emsp;<b>a*b</b> is also available</li>
-    <li>Power <b>a^(b)</b> &emsp; <b>a^b</b> is also available for 1 character b</li>
-    <li>Square root <b>sq(a)</b>&emsp; n-th root <b>sq(n,a)</b></li>
-    <li>Trigonometric <b>sin(x)</b> &emsp;power of sin(x)　<b>sin(n,x)</b></li>
-    <li>Pi <b>pi</b>
-    <li>Degree <b>(deg)</b></li>
-    <li>Logaritm <b>log(x) ln(x) log(a,x)</b></li>
-    <li>New line　<b>//</b></li>
-    <li>Space <b>(sp)</b> &emsp;\; is used</li>
-    <li>Roman <b>100tx(m)</b> or <b>100@m@</b>(Enclose with @)</li>
-    <li>Integrate <b>int(x^2,x)</b>, <b>int(a,b,x^2,x)</b><br>
-	 Rem) Add <b>!</b> to remove ( ) around the function
-    <li>Bracket <b>br(f(x),a,b)</b></li>
-    <li>Limit <b>lim(x,a,f(x))</b></li>
-    <li>Sum <b>sum(k=1,n,k^2)</b></li></li>
-    <li>Differntiation <b>diff(y,x)</b> &emsp;Partial diff <b>par(z,x)</b></li>
-    <li>Matrix <b>mat(a,b;c,d)</b> &emsp;Determinant <b>det(a,b;c,d)</b></li>
-    <li>Case <b>case(a,(x<0);c,(x(geq)0))</b>
-    <li>Dot <b>(cdot)</b>.&emsp; Cross <b>(cross)</b></li>
-    <li>Plusminus <b>(pm),(mp)</b></li>
-    <li>Inquality <b><, >, (leq), (geq),(neq)</b></li>
-    <li>Under score <b>a_n</b></li>
-    <li>Greek  <b>{\alpha},{\beta}</b></li>
-    <li>Other TeX symbols&emsp; Separate them with (sp),comma, { }</li>
-  </ol></font>
+<p><font size="10">&emsp;<b>KeTMath数式ルール</b></font></p>
+<ol><font size="5">
+	<li>分数　<b>fr(a,b)</b>　注) 小さい分数 <b>tfr(a,b)</b></li>
+<li>掛け算　<b>ab</b>　注) <b>a*b</b>も可</li>
+<li>べき乗　<b>a^(b)</b>　注) 1文字の場合は<b>a^b</b>も可</li>
+<li>平方根　<b>sq(a)</b>，3乗根　<b>sq(3,a)</b></li>
+<li>三角関数　<b>sin(x)</b>，sin(x)の2乗　<b>sin(2,x)</b></li>
+<li>円周率　<b>pi</b>
+<li>度　<b>(deg)</b></li>
+<li>対数関数　<b>log(x)</b>，自然対数　<b>ln(x)</b>，底がa　 <b>log(a,x)</b></li>
+<li>改行　<b>//</b></li>
+<li>スペース　<b>(sp)</b>　注) \;を出力</li>
+<li>立体　<b>100tx(m)</b></li>
+<li>不定積分　<b>int(x^2,x)</b>，定積分　<b>int(a,b,x^2,x)</b><br>
+	　注）定積分で関数の括弧を外すときは先頭に<b>!</b>を追加
+<li>ブラケット　<b>br(f(x),a,b)</b></li>
+<li>極限　<b>lim(x,a,f(x))</b>　注）括弧を外すときは先頭に <b>!</b></li>
+<li>和　<b>sum(k=1,n,k^2)</b>　注）括弧を外すときは先頭に <b>!</b></li></li>
+<li>微分　<b>diff(y,x)</b>，偏微分　<b>par(z,x)</b></li>
+<li>行列　<b>mat(a,b;c,d)</b>，行列式　<b>det(a,b;c,d)</b></li>
+<li>場合分け　<b>case(a,(x<0);c,(x(geq)0))</b>
+<li>ドット　<b>(cdot)</b>，×　<b>(cross)</b></li>
+<li>複号　<b>(pm),(mp)</b></li>
+<li>不等号　<b><, >, (leq), (geq),(neq)</b></li>
+<li>下添字　<b>a_n</b></li>
+<li>全角文字を混ぜてもよい　<b>2x-3=0の解はx=fr(3,2)</b><br>
+<li>ギリシャ文字 <b>{\alpha},{\beta}</b></li>
+<li>その他のTeX 記号　(sp),コンマ,{}などで区切る</li>
+</ol></font>
 </div>
 <footer><p align="center"><font size="4">&copy; 2021 Setsuo Takato</font></p></footer>
 </body>
