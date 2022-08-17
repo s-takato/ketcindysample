@@ -1,0 +1,6 @@
+Setwindow([-1,1],[-1,1]);
+Setadjust();
+
+if(Quesno()=="Q01",
+  pletter([0,1],"e","$x=3,y=2$",["Size=1.5"]);
+);

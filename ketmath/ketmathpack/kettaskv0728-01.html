@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>kettaskorgv.cdy</title>
+    <title>kettask0728-01</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -2888,12 +2888,9 @@ Expr(listorg,options):=( //16.10.09
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1.1;
 aalinestart=1;
-quline="";
-quline="Q01::x=3,y=2のとき次の値を求めよ．//ただし，答えが整数でないときは分数で答えよ．	[1]:: x+y	[2]:: xy	Q02::{\alpha}=5,{\beta}=4とする．	[]:: {\alpha},{\beta}を解とする2次方程式を作れ．";
-shline="";
+quline="Q01::x=3,y=2のとき次の値を求めよ．	[1]:: x+y	[2]:: xy	Q02::{\alpha}=5,{\beta}=4とする．	[]:: {\alpha},{\beta}を解とする2次方程式を作れ．";
 shline="Q01---	[1]= 	[2]= 	Q02---	[] ";
-sqline="";
-sqline="01AA	2	2	2	2	2CR02BB	2	2	2	2	2CR03CC	2	2	2	2	2";
+sqline="01AB	2	2	2	2	2CR02CD	2	2	2	2	2CR03EF	2	2	2	2	2CR04GH	2	2	2	2	2CR05IJ	2	2	2	2	2CR06KL	2	2	2	2	2CR07MN	2	2	2	2	2CR08OP	2	2	2	2	2CR09QR	2	2	2	2	2CR10ST	2	2	2	2	2CR11UV	2	2	2	2	2CR12WX	2	2	2	2	2";
 zzlineend=1;
 
 
@@ -4252,6 +4249,18 @@ if(stok==1,
   Subsedit(3,StrL_3);
 );
 
+Setwindow([-1,1],[-1,1]);
+Setadjust();
+
+poxy=T1.xy+[38,0];
+drwt(line,str):=(
+  drawtext(poxy,text(line)+" "+str,size->15);
+  poxy=poxy-[0,2];
+);
+
+if(Quesno()=="Q01",
+  pletter([0,1],"e","$x=3,y=2$",["Size=1.5"]);
+);
 Windispg();
 
 ;

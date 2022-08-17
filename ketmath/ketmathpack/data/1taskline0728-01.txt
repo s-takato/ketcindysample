@@ -1,0 +1,3 @@
+quline="Q01::x=3,y=2のとき次の値を求めよ．	[1]:: x+y	[2]:: xy	Q02::{\alpha}=5,{\beta}=4とする．	[]:: {\alpha},{\beta}を解とする2次方程式を作れ．";
+shline="Q01---	[1]= 	[2]= 	Q02---	[] ";
+sqline="01AB	2	2	2	2	2CR02CD	2	2	2	2	2CR03EF	2	2	2	2	2CR04GH	2	2	2	2	2CR05IJ	2	2	2	2	2CR06KL	2	2	2	2	2CR07MN	2	2	2	2	2CR08OP	2	2	2	2	2CR09QR	2	2	2	2	2CR10ST	2	2	2	2	2CR11UV	2	2	2	2	2CR12WX	2	2	2	2	2";

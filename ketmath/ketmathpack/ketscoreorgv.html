@@ -3805,16 +3805,21 @@ pplotdata(name1,func,variable,options):=( //220529
   Listplot("-gr"+name1,tmp,options);
 );
 
-Quesno():=( //220728
-  regional(tmp,out);
+Quesno():=Quesno(nqu,0); //220816
+Quesno(nq,flg):=( //220816
+  regional(tmp,tmp1,out);
   out="";
-  tmp=select(1..nqu,substring(quL_#,0,1)=="Q");
+  tmp=select(1..nq,substring(quL_#_1,0,1)=="Q");
   if(length(tmp)>0,
-    tmp=tmp_(-1);
-    out=quL_tmp;
+    tmp1=tmp_(-1);
+    out=quL_tmp1;
+    out=out_1;
     tmp=indexof(out," ");
     if(tmp>0,out=substring(out,0,tmp-1));
-  );
+    if(flg>0, //220816from
+      out=[out,nq-tmp1+1];
+    );
+  ); //220816to
   out;
 );
 

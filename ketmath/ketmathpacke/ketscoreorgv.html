@@ -3805,16 +3805,21 @@ pplotdata(name1,func,variable,options):=( //220529
   Listplot("-gr"+name1,tmp,options);
 );
 
-Quesno():=( //220728
-  regional(tmp,out);
+Quesno():=Quesno(nqu,0); //220816
+Quesno(nq,flg):=( //220816
+  regional(tmp,tmp1,out);
   out="";
-  tmp=select(1..nqu,substring(quL_#,0,1)=="Q");
+  tmp=select(1..nq,substring(quL_#_1,0,1)=="Q");
   if(length(tmp)>0,
-    tmp=tmp_(-1);
-    out=quL_tmp;
+    tmp1=tmp_(-1);
+    out=quL_tmp1;
+    out=out_1;
     tmp=indexof(out," ");
     if(tmp>0,out=substring(out,0,tmp-1));
-  );
+    if(flg>0, //220816from
+      out=[out,nq-tmp1+1];
+    );
+  ); //220816to
   out;
 );
 
@@ -4317,35 +4322,35 @@ KeTMath
 </font></p></header>
     <div id="CSCanvas"></div>
 <div style="padding: 50px">
-<div style="padding: 50px"> 
-<p><font size="10"><b>KeTMath Rule</b></font></p>
-  <ol><font size="5"> 
-	<li>Fraction <b>fr(a,b)</b> &emsp;Tiny fraction <b>tfr(a,b)</b></li> 
-    <li>Multiplication  <b>ab</b> &emsp;<b>a*b</b> is also available</li>
-    <li>Power <b>a^(b)</b> &emsp; <b>a^b</b> is also available for 1 character b</li>
-    <li>Square root <b>sq(a)</b>&emsp; n-th root <b>sq(n,a)</b></li>
-    <li>Trigonometric <b>sin(x)</b> &emsp;power of sin(x)　<b>sin(n,x)</b></li>
-    <li>Pi <b>pi</b>
-    <li>Degree <b>(deg)</b></li>
-    <li>Logaritm <b>log(x) ln(x) log(a,x)</b></li>
-    <li>New line　<b>//</b></li>
-    <li>Space <b>(sp)</b> &emsp;\; is used</li>
-    <li>Roman <b>100tx(m)</b> or <b>100@m@</b>(Enclose with @)</li>
-    <li>Integrate <b>int(x^2,x)</b>, <b>int(a,b,x^2,x)</b><br>
-	 Rem) Add <b>!</b> to remove ( ) around the function
-    <li>Bracket <b>br(f(x),a,b)</b></li>
-    <li>Limit <b>lim(x,a,f(x))</b></li>
-    <li>Sum <b>sum(k=1,n,k^2)</b></li></li>
-    <li>Differntiation <b>diff(y,x)</b> &emsp;Partial diff <b>par(z,x)</b></li>
-    <li>Matrix <b>mat(a,b;c,d)</b> &emsp;Determinant <b>det(a,b;c,d)</b></li>
-    <li>Case <b>case(a,(x<0);c,(x(geq)0))</b>
-    <li>Dot <b>(cdot)</b>.&emsp; Cross <b>(cross)</b></li>
-    <li>Plusminus <b>(pm),(mp)</b></li>
-    <li>Inquality <b><, >, (leq), (geq),(neq)</b></li>
-    <li>Under score <b>a_n</b></li>
-    <li>Greek  <b>{\alpha},{\beta}</b></li>
-    <li>Other TeX symbols&emsp; Separate them with (sp),comma, { }</li>
-  </ol></font>
+<p><font size="10">&emsp;KeTMath数式ルール</font></p>
+<ol><font size="5">
+	<li>分数　fr(a,b)　注) 小さい分数 tfr(a,b)</li>
+<li>掛け算　ab　注) a*bも可</li>
+<li>べき乗　a^(b)　注) 1文字の場合はa^bも可</li>
+<li>平方根　sq(a)，3乗根　sq(3,a)</li>
+<li>三角関数　sin(x)，sin(x)の2乗　sin(2,x)</li>
+<li>円周率　pi
+<li>度　(deg)</li>
+<li>対数関数　log(x)，自然対数　ln(x)，底がa　 log(a,x)</li>
+<li>改行　//</li>
+<li>スペース　(sp)　注) \;を出力</li>
+<li>立体　100tx(m)</li>
+<li>不定積分　int(x^2,x)，定積分　int(a,b,x^2,x)<br>
+	　注）定積分で関数の括弧を外すときは先頭に!を追加
+<li>ブラケット　br(f(x),a,b)</li>
+<li>極限　lim(x,a,f(x))　注）括弧を外すときは先頭に !</li>
+<li>和　sum(k=1,n,k^2)　注）括弧を外すときは先頭に !</li></li>
+<li>微分　diff(y,x)，偏微分　par(z,x)</li>
+<li>行列　mat(a,b;c,d)，行列式　det(a,b;c,d)</li>
+<li>場合分け　case(a,(x<0);c,(x(geq)0))
+<li>ドット　(cdot)，×　(cross)</li>
+<li>複号　(pm),(mp)</li>
+<li>不等号　<, >, (leq), (geq),(neq)</li>
+<li>下添字　a_n</li>
+<li>全角文字を混ぜてもよい　2x-3=0の解はx=fr(3,2)<br>
+<li>ギリシャ文字 {\alpha},{\beta}</li>
+<li>その他のTeX 記号　(sp),コンマ,{}などで区切る</li>
+</ol></font>
 </div>
 <footer><p align="center"><font size="4">&copy; 2021 Setsuo Takato</font></p></footer>
 </body>
