@@ -14,8 +14,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibkey[20220731 loaded"); // no ketjs
+println("ketcindylibkey[20220819 loaded"); // no ketjs
 
+// 220819 Replacedot addded, and added to Morefunction
 // 220731 All Strsplit changed to Strsplit
 // 220523 Gettexform  (frac x=>x dfrac 
 // 220424 Setkeypos():=
@@ -148,6 +149,33 @@ Replacematdet(str):=(
   out;
 );
 
+Replacedot(str):=(  //220819
+  regional(out,rest,tmp,tmp1,tmp2);
+  out=str;
+  tmp1=indexof(out,"dot(");
+  while(tmp1>0,
+    tmp=Indexall(out,")");
+    tmp=select(tmp,#>tmp1);
+    if(length(tmp)>0,
+      tmp2=tmp_1;
+    ,
+      tmp2=length(out);
+    );
+    rest=substring(out,tmp2,length(out));
+    tmp=substring(out,tmp1+3,tmp2-1);
+    tmp=Removespace(tmp);
+    out=substring(out,0,tmp1-1);
+    if((tmp=="")%(tmp=="1"),tmp2="{\cdot}");
+    if((tmp=="3")%(tmp=="s"),tmp2="{\cdots}");
+    if(tmp=="d",tmp2="{\ddots}");
+    if(tmp=="l",tmp2="{\ldots}");
+    if(tmp=="v",tmp2="{\vdots}");
+    out=out+tmp2+rest;
+    tmp1=indexof(out,"dot(");
+  );
+  out;
+);
+
 Replacefun(str,name,repL):=(  //new 210604
   regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
      tmp,tmp1,tmp2);
@@ -203,6 +231,7 @@ Morefunction(str):=( //new 210604
 //  out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
 //  out=Replacefun(out,"e^(",["\exp{","}"]); //210612
   out=Replacematdet(out); //210606
+  out=Replacedot(out); //220819
   out;
 );
 

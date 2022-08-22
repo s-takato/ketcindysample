@@ -1,3 +1,4 @@
+//   220820 pexpr added, kettaskinit changed(nqu=0)
 //   220605 plistplot changed
 //   220529 pdrwxy,plistplot,pplotdata
 //   220510 ketaskinit  ( move setting from ketlib draw)
@@ -22,7 +23,7 @@ Kettaskinit():=(
   StrL=apply(1..3,""); 
   StrpL=apply(1..3,"");
 //  ansL=apply(1..20,""); //220503(removed)
-  nqu=1;
+  nqu=0; //220820
   stfixed=0;
   stok=0;
   initflg=1;
@@ -141,7 +142,7 @@ Keyname():=(
   nL2=[
     ["°","＠","[","]","|","d","e","f","g"],
     ["$\times$","!","{","}","$\neq$","h","i","j","k"],
-    ["・",":",";","$\leq$","$\geq","l","m","n","o"],
+    ["dot",":",";","$\leq$","$\geq","l","m","n","o"],
     ["\","$\pm$","$\mp$","<",">","p","q","u","v"]
   ];
   nL3=[
@@ -466,6 +467,21 @@ pletter(list,options):=(
   Letter(L,options);
 );
 
+pexpr(Pt,Dr,St):=pexpr([Pt,Dr,St]); //220820
+pexpr(list):=pexpr(list,[]);
+pexpr(Pt,Dr,St,options):=pexpr([Pt,Dr,St],options);
+pexpr(list,options):=(
+  regional(L,tmp);
+  L=[];
+  forall(1..(length(list)),
+     if(mod(#,3)==1,tmp=Adjust(list_#));
+     if(mod(#,3)==2,tmp=list_#);
+     if(mod(#,3)==0,tmp="$"+list_#+"$");
+     L=append(L,tmp);
+  );
+  Letter(L,options);
+);
+
 plistplot(nm,vptL):=plistplot(nm,vptL,[]); //220605
 plistplot(nm,vptL,op):=( //220529
   regional(ptL,tmp,tmp1);
@@ -483,7 +499,7 @@ pplotdata(name1,func,variable,options):=( //220529
   Listplot("-gr"+name1,tmp,options);
 );
 
-Quesno():=Quesno(nqu,0); //220816
+Quesno():=Quesno(nqu,1); //220817
 Quesno(nq,flg):=( //220816
   regional(tmp,tmp1,out);
   out="";
@@ -491,11 +507,11 @@ Quesno(nq,flg):=( //220816
   if(length(tmp)>0,
     tmp1=tmp_(-1);
     out=quL_tmp1;
-    out=out_1;
+    if(islist(out),out=out_1); 
     tmp=indexof(out," ");
     if(tmp>0,out=substring(out,0,tmp-1));
     if(flg>0, //220816from
-      out=[out,nq-tmp1+1];
+      out=out+"-"+text(nq-tmp1+1);
     );
   ); //220816to
   out;

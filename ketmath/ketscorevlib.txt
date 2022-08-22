@@ -1,3 +1,4 @@
+//   220728 Quesno, pos of Text1
 //   211112
 //   211020
 //   210923
@@ -53,7 +54,7 @@ Seteditable(2,["","Size=24","Width=500"]);
 Seteditable(3,["","Size=24","Width=500"]);
 Seteditable(10,["Pg=","Size=18","Width=65"]);
 Seteditable(32,["St=","Size=18","Width=65"]);
-Text1.xy=[px+1,posyL_1-1];
+Text1.xy=[px+8,posyL_1-1];
 Text2.xy=[px+1,posyL_2-1];
 Text3.xy=[px+1,posyL_3-1];
 inspect(T1,"ptsize",6);
@@ -74,14 +75,14 @@ Keyname():=(
   nL2=[
     ["°","＠","[","]","|","d","e","f","g"],
     ["$\times$","!","{","}","$\neq$","h","i","j","k"],
-    ["・",":",";","$\leq$","$\geq","l","m","n","o"],
+    ["dot",":",";","$\leq$","$\geq","l","m","n","o"],
     ["\","$\pm$","$\mp$","<",">","p","q","u","v"]
   ];
   nL3=[
     ["lim","pi"],
     ["int","$\infty$"],
-    ["'","cs"],
-    ["$\sum$","tx"]
+    ["'","cas"],
+    ["sum","txt"]
   ];
 
   if(Shift==1,
@@ -266,7 +267,7 @@ RRight():=(
   npos=length(Score);
 );
 
-/ for scriptadd   //220423
+// for scriptadd   //220423
 //  changed  220506
 
 scriptaddstart=1; 
@@ -354,7 +355,7 @@ pplotdata(name1,func,variable,options):=( //220529
   Listplot("-gr"+name1,tmp,options);
 );
 
-Quesno():=Quesno(nqu,0); //220816
+Quesno():=Quesno(nqu,1); //220816
 Quesno(nq,flg):=( //220816
   regional(tmp,tmp1,out);
   out="";
@@ -362,11 +363,11 @@ Quesno(nq,flg):=( //220816
   if(length(tmp)>0,
     tmp1=tmp_(-1);
     out=quL_tmp1;
-    out=out_1;
+    if(islist(out),out=out_1); /////
     tmp=indexof(out," ");
     if(tmp>0,out=substring(out,0,tmp-1));
     if(flg>0, //220816from
-      out=[out,nq-tmp1+1];
+      out=out+"-"+text(nq-tmp1+1);
     );
   ); //220816to
   out;
