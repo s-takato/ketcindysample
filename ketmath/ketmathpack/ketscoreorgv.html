@@ -37,6 +37,31 @@
 
 <script id="csinit" type="text/x-cindyscript">
 Invert(x):=reverse(x);
+Removespace(str):=(
+  regional(tmp,flg,out);
+  tmp=length(str)+1;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      if((str_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(str,tmp-1,length(str));
+  flg=0;
+  tmp=0;
+  forall(reverse(1..(length(out))),
+    if(flg==0,
+      if((out_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(out,0,tmp);
+);
 Getlevel(str):=Getlevel(str,",");
 Getlevel(str,Arg):=Getlevel(str,Arg,"()");
 Getlevel(str,Arg,bra):=(
@@ -487,31 +512,18 @@ Divoptions(options):=(
   );
   [Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,color,opstr,opcindy];
 );
-Strsplit(str,key):=( // 210422 renewed
-  regional(tmp,out);
-  tmp=tokenize(str,key);
-  out=apply(tmp,if(!isstring(#),Textformat(#,10),#));
-  out;
-);
-Textformat(value,dig):=(
-  regional(vv,tmp,tmp1);
-  if(islist(value),
-    tmp1="[";
-    forall(value,
-      tmp1=tmp1+Textformat(#,dig)+",";
-    );
-    if(length(tmp1)>1, //18.01.29from
-      tmp1=substring(tmp1,0,length(tmp1)-1);
-    );
-    tmp1=tmp1+"]"; //18.01.29until
-  ,
-    if(ispoint(value) % isstring(value),
-      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
-    ,
-      tmp1=format(value,dig);
-    );
+Strsplit(strorg,key):=( // 210422 renewed
+  regional(str,ctr,tmp,tmp1,out);
+  str=strorg+key; 
+  out=[];
+  tmp=indexof(str,key);
+  while(tmp>0,
+    tmp1=substring(str,0,tmp-1);
+    out=append(out,tmp1);
+    str=substring(str,tmp-1+length(key),length(str));
+    tmp=indexof(str,key);
   );
-  tmp1;
+  out;
 );
 Colorname2cmyk(name):=( //181212
   regional(dL,code,tmp);
@@ -624,6 +636,26 @@ Assign(funstr,varname,rep,precision):=(
   );
   funstr=tmp2+funstr;
   funstr;
+);
+Textformat(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(islist(value),
+    tmp1="[";
+    forall(value,
+      tmp1=tmp1+Textformat(#,dig)+",";
+    );
+    if(length(tmp1)>1, //18.01.29from
+      tmp1=substring(tmp1,0,length(tmp1)-1);
+    );
+    tmp1=tmp1+"]"; //18.01.29until
+  ,
+    if(ispoint(value) % isstring(value),
+      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
+    ,
+      tmp1=format(value,dig);
+    );
+  );
+  tmp1;
 );
 Colorcmyk2rgb(clr):=(
   regional(clrnew,tmp,black);
@@ -2081,7 +2113,7 @@ Letter(list,options):=(
   Nj=1;
   if(Ketcindyjsfigure>0,sz=round(sz*Ketcindyjsscale) ); // 
   while(Nj+2<=length(list),
-    Pos=list_Nj;
+    Pos=Lcrd(list_Nj);  //220814
     Dir=list_(Nj+1);
     Str=list_(Nj+2);
     if(!isstring(Str),Str=format(Str,10)); // 16.09.30,10.09
@@ -2119,31 +2151,6 @@ Letter(list,options):=(
     );
     Nj=Nj+3;
   );
-);
-Removespace(str):=(
-  regional(tmp,flg,out);
-  tmp=length(str)+1;
-  flg=0;
-  forall(1..(length(str)),
-    if(flg==0,
-      if((str_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(str,tmp-1,length(str));
-  flg=0;
-  tmp=0;
-  forall(reverse(1..(length(out))),
-    if(flg==0,
-      if((out_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(out,0,tmp);
 );
 Lettermove(dir,str):=(
   regional(Suu,tmp,tmp1,out,nn);
@@ -2868,7 +2875,8 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
       Listplot("-ar"+nm+"h",[tmp1,pP,tmp2],append(options,"Msg=n")); //210522
     ,
       Listplot("-ar"+nm+"h",[tmp1,pP,tmp2,pC,tmp1],["dr,0.1","Color="+color,"Msg=n"]); //210522
-    fillpoly(parse("ar"+nm+"h"),color->color); // 
+tmp=Colorcmyk2rgb(color); // 
+fillpoly(parse("ar"+nm+"h"),color->tmp); // 
     );
     if(lineflg==0,
       if(segpos==1,pB=pC); //191202
@@ -3005,6 +3013,33 @@ Replacematdet(str):=(
   out;
 );
 
+Replacedot(str):=(  //220819
+  regional(out,rest,tmp,tmp1,tmp2);
+  out=str;
+  tmp1=indexof(out,"dot(");
+  while(tmp1>0,
+    tmp=Indexall(out,")");
+    tmp=select(tmp,#>tmp1);
+    if(length(tmp)>0,
+      tmp2=tmp_1;
+    ,
+      tmp2=length(out);
+    );
+    rest=substring(out,tmp2,length(out));
+    tmp=substring(out,tmp1+3,tmp2-1);
+    tmp=Removespace(tmp);
+    out=substring(out,0,tmp1-1);
+    if((tmp=="")%(tmp=="1"),tmp2="{\cdot}");
+    if((tmp=="3")%(tmp=="s"),tmp2="{\cdots}");
+    if(tmp=="d",tmp2="{\ddots}");
+    if(tmp=="l",tmp2="{\ldots}");
+    if(tmp=="v",tmp2="{\vdots}");
+    out=out+tmp2+rest;
+    tmp1=indexof(out,"dot(");
+  );
+  out;
+);
+
 Replacefun(str,name,repL):=(  //new 210604
   regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
      tmp,tmp1,tmp2);
@@ -3054,6 +3089,7 @@ Morefunction(str):=( //new 210604
   regional(out,name,repL);
   out=str;
   out=Replacematdet(out); //210606
+  out=Replacedot(out); //220819
   out;
 );
 
@@ -3477,17 +3513,17 @@ Line2list(strorg):=(
   flg=indexof(str,"::");
    tL=[];
   if(indexof(str,"CR")>0,
-    stL=tokenize(str,"CR");
+    stL=Strsplit(str,"CR");
     forall(1..(length(stL)),nn,
       st=stL_nn;
       if(!isstring(st),st=format(st,10));
-      stL_nn=tokenize(st,tab);
+      stL_nn=Strsplit(st,tab);
     );
   ,
-    stL=tokenize(str,tab);
+    stL=Strsplit(str,tab);
     forall(1..(length(stL)),
       tmp=stL_#;
-      if(indexof(tmp,"::")>0,tmp=tokenize(tmp,"::"));
+      if(indexof(tmp,"::")>0,tmp=Strsplit(tmp,"::"));
       stL_#=tmp;
     );
   );
@@ -3537,7 +3573,7 @@ Keyname():=(
   nL2=[
     ["°","＠","[","]","|","d","e","f","g"],
     ["$\times$","!","{","}","$\neq$","h","i","j","k"],
-    ["・",":",";","$\leq$","$\geq","l","m","n","o"],
+    ["dot",":",";","$\leq$","$\geq","l","m","n","o"],
     ["\","$\pm$","$\mp$","<",">","p","q","u","v"]
   ];
   nL3=[
@@ -4186,9 +4222,9 @@ var cdy = CindyJS({
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "Text10", type: "EditableText", pos: [4.0, 0.03773584905660377, 0.07547169811320754], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 65, text: "Pg=", textsize: 18.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T2", type: "Free", pos: [4.0, 3.6645161290322577, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "Text32", type: "EditableText", pos: [4.0, 0.27169811320754716, 0.07547169811320754], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 65, text: "St=", textsize: 18.0},
     {name: "Text47", type: "Button", pos: [4.0, -1.075268817204301, 0.10752688172043011], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "　　", textsize: 14.0},
     {name: "Text108", type: "Button", pos: [4.0, 0.06355140186915889, 0.09345794392523366], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Delete()\";", text: "　　"},
@@ -4247,7 +4283,7 @@ var cdy = CindyJS({
     {name: "Text80", type: "Button", pos: [3.777049180327869, -4.0, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(mp)\";", text: "　　", textsize: 14.0},
     {name: "Text16", type: "Button", pos: [4.0, -2.2150537634408605, 0.10752688172043011], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"|\";", text: "　　", textsize: 14.0},
     {name: "Text17", type: "Button", pos: [4.0, -1.9903381642512081, 0.09661835748792272], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Ld\",\"D\",\"{\\Delta}\",\"\\mathbf{d}\",\"{\\vec{d}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
-    {name: "Text56", type: "Button", pos: [2.9890109890109886, -4.0, 0.1465201465201465], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(cdot)\";", text: "　　", textsize: 14.0},
+    {name: "Text56", type: "Button", pos: [2.9890109890109886, -4.0, 0.1465201465201465], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"dot(\";", text: "　　", textsize: 14.0},
     {name: "Text30", type: "Button", pos: [4.0, -0.4604810996563574, 0.06872852233676975], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"+\";", text: "　　", textsize: 14.0},
     {name: "Text52", type: "Button", pos: [4.0, -0.6872852233676976, 0.06872852233676975], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"-\";", text: "　　", textsize: 14.0},
     {name: "Text23", type: "Button", pos: [4.0, -0.9305555555555556, 0.1388888888888889], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Lc\",\"C\",\"{\\gamma}\",\"\\mathbf{c}\",\"{\\vec{c}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
@@ -4305,50 +4341,50 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 871,
-    height: 743,
-    transform: [{visibleRect: [2.419555435479833, 28.39274235512049, 80.6353882885422, -38.26847882646675]}],
+    height: 729,
+    transform: [{visibleRect: [2.419555435479833, 28.39274235512049, 80.6353882885422, -37.083390449905195]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2044, version: [3, 0, 2044]}
+  cinderella: {build: 2055, version: [3, 0, 2055]}
 });
     </script>
 </head>
 <body>
 <header><p align="center"><font size="6">
-KeTMath
+KeTScore
 </font></p></header>
     <div id="CSCanvas"></div>
 <div style="padding: 50px">
-<p><font size="10">&emsp;KeTMath数式ルール</font></p>
+<p><font size="10">&emsp;<b>KeTMath数式ルール</b></font></p>
 <ol><font size="5">
-	<li>分数　fr(a,b)　注) 小さい分数 tfr(a,b)</li>
-<li>掛け算　ab　注) a*bも可</li>
-<li>べき乗　a^(b)　注) 1文字の場合はa^bも可</li>
-<li>平方根　sq(a)，3乗根　sq(3,a)</li>
-<li>三角関数　sin(x)，sin(x)の2乗　sin(2,x)</li>
-<li>円周率　pi
-<li>度　(deg)</li>
-<li>対数関数　log(x)，自然対数　ln(x)，底がa　 log(a,x)</li>
-<li>改行　//</li>
-<li>スペース　(sp)　注) \;を出力</li>
-<li>立体　100tx(m)</li>
-<li>不定積分　int(x^2,x)，定積分　int(a,b,x^2,x)<br>
-	　注）定積分で関数の括弧を外すときは先頭に!を追加
-<li>ブラケット　br(f(x),a,b)</li>
-<li>極限　lim(x,a,f(x))　注）括弧を外すときは先頭に !</li>
-<li>和　sum(k=1,n,k^2)　注）括弧を外すときは先頭に !</li></li>
-<li>微分　diff(y,x)，偏微分　par(z,x)</li>
-<li>行列　mat(a,b;c,d)，行列式　det(a,b;c,d)</li>
-<li>場合分け　case(a,(x<0);c,(x(geq)0))
-<li>ドット　(cdot)，×　(cross)</li>
-<li>複号　(pm),(mp)</li>
-<li>不等号　<, >, (leq), (geq),(neq)</li>
-<li>下添字　a_n</li>
-<li>全角文字を混ぜてもよい　2x-3=0の解はx=fr(3,2)<br>
-<li>ギリシャ文字 {\alpha},{\beta}</li>
+	<li>分数　<b>fr(a,b)</b>　注) 小さい分数 <b>tfr(a,b)</b></li>
+<li>掛け算　<b>ab</b>　注) <b>a*b</b>も可</li>
+<li>べき乗　<b>a^(b)</b>　注) 1文字の場合は<b>a^b</b>も可</li>
+<li>平方根　<b>sq(a)</b>，3乗根　<b>sq(3,a)</b></li>
+<li>三角関数　<b>sin(x)</b>，sin(x)の2乗　<b>sin(2,x)</b></li>
+<li>円周率　<b>pi</b>
+<li>度　<b>(deg)</b></li>
+<li>対数関数　<b>log(x)</b>，自然対数　<b>ln(x)</b>，底がa　 <b>log(a,x)</b></li>
+<li>改行　<b>//</b></li>
+<li>スペース　<b>(sp)</b>　注) \;を出力</li>
+<li>立体　<b>100tx(m)</b></li>
+<li>不定積分　<b>int(x^2,x)</b>，定積分　<b>int(a,b,x^2,x)</b><br>
+	　注）定積分で関数の括弧を外すときは先頭に<b>!</b>を追加
+<li>ブラケット　<b>br(f(x),a,b)</b></li>
+<li>極限　<b>lim(x,a,f(x))</b>　注）括弧を外すときは先頭に <b>!</b></li>
+<li>和　<b>sum(k=1,n,k^2)</b>　注）括弧を外すときは先頭に <b>!</b></li></li>
+<li>微分　<b>diff(y,x)</b>，偏微分　<b>par(z,x)</b></li>
+<li>行列　<b>mat(a,b;c,d)</b>，行列式　<b>det(a,b;c,d)</b></li>
+<li>場合分け　<b>case(a,(x<0);c,(x(geq)0))</b>
+<li>ドット　<b>(cdot)</b>，×　<b>(cross)</b></li>
+<li>複号　<b>(pm),(mp)</b></li>
+<li>不等号　<b><, >, (leq), (geq),(neq)</b></li>
+<li>下添字　<b>a_n</b></li>
+<li>全角文字を混ぜてもよい　<b>2x-3=0の解はx=fr(3,2)</b><br>
+<li>ギリシャ文字 <b>{\alpha},{\beta}</b></li>
 <li>その他のTeX 記号　(sp),コンマ,{}などで区切る</li>
 </ol></font>
 </div>
