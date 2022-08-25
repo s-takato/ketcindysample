@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <title>inverse_trigon_ver2.cdy</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #CSConsole {
+            background-color: #FAFAFA;
+            border-top: 1px solid #333333;
+            bottom: 0px;
+            height: 200px;
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/KetCindyPlugin.js"></script>
+<script id="csinit" type="text/x-cindyscript">
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+flg=0;graph=-1;ans=0;clear=0;
+;
+</script>
+<script id="cskeytyped" type="text/x-cindyscript">
+kL=keydownlist();
+if(length(kL)>0,
+  if(kL==[17,70], //Ctr+f (Figures)
+    Viewtex();
+    kc();
+  );
+  if(kL==[16,17,80], //Ctr+Shift+p (Parent)
+    if(length(Shellparent)>0,
+      Makeshell(),Makebat();
+    );
+    WritetoSci(2);
+    kc();
+  );
+  if(kL==[17,74], //Ctr+j (Ketjsoff)
+    Mkketcindyjs(append(KETJSOP,"Web=n"));
+  );
+  if(kL==[16,17,74], //Ctr+Shift+j (Ketjson)
+    Mkketcindyjs(append(KETJSOP,"Web=yj"));
+  );
+);
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+Ketinit();
+Setketcindyjs(["Label=[]","Color=offwhite"]);//no ketjs
+Seteditable(8,["","Size=25","Width=80"]);
+Ketcindyjsmain(["<pf10,fp>_;逆三角関数の値"],[
+ "<pf5,fp>(1)_;表示された逆三角関数の値を考えて，入力窓に数値を入力する．<br>",
+ "<pf5,fp>　_;（例）答えが $-\dfrac{1}{\,2\,}\pi$ のときは「-1/2」と入力する．<br>",
+ "<pf5,fp>(2)_;「判定」ボタンを押して，正解かどうか確認する．<br>",
+ "<pf5,fp>(3)_;「出題」ボタンを押して，別の問題を出題する．<br>",
+ "<pf5,fp>(4)_;(1)から(3)を繰り返す．"
+]);
+Addpackage(["emath"]);
+
+//Seteditable(50,["x=","Size=18","Width=60"]);
+//Seteditable(51,["x=","Size=18","Width=60"]);
+
+
+while(flg==0,
+ no=randomint(25);
+// println(no);
+ flg=1;
+);
+
+Setax([6," "]);
+
+Expr([[1.3,2.95],"e1","\pi"],["Color=black","Size=2"]);
+
+//str="0";
+//str=Textedit(8);//only ketjs
+if(length(str)>0,
+ tmp=parse(str);
+);
+
+//println(tmp);
+
+if(no==0,
+ Setwindow([-2,2],[-2,2]);
+ Expr([[0,3],"w1","{\sin}^{-1}0="],["Size=2"]);
+ if(graph==1,
+  Plotdata(text(no),"sin(x)","x=[-pi/2,pi/2]",["dr,2"]);
+  Pointdata(text(no),[0,0],["Size=2","Color=red"]);
+  Expr([[pi/2,1],"e2","y=\sin x"]);
+  Expr([[0,0],"s1e1","0"],["Color=red"]);
+ );
+ if(ans==1,
+  if(tmp==0,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+); 
+
+if(no==1,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"sin(x)","x=[-pi/2,pi/2]",["dr,2"]);
+  Listplot(text(no),[[0,1/2],[pi/6,1/2]],["Color=red"]);
+  Arrowdata(text(no),[[pi/6,1/2],[pi/6,0]],["Color=red"]);
+  Expr([[pi/2,1],"e2","y=\sin x"]);
+  Expr([[0,1/2],"w1","\frac{1}{2}",[pi/6,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\sin}^{-1}\dfrac{1}{2}="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/6,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+); 
+
+if(no==2,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"sin(x)","x=[-pi/2,pi/2]",["dr,2"]);
+  Listplot(text(no),[[0,-1/2],[-pi/6,-1/2]],["Color=red"]);
+  Arrowdata(text(no),[[-pi/6,-1/2],[-pi/6,0]],["Color=red"]);
+  Expr([[pi/2,1],"e2","y=\sin x"]);
+  Expr([[0,-1/2],"e1","-\frac{1}{2}",[-pi/6,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\sin}^{-1}\left(-\dfrac{1}{2}\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==-1/6,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==3,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"sin(x)","x=[-pi/2,pi/2]",["dr,2"]);
+  Listplot(text(no),[[0,sqrt(2)/2],[pi/4,sqrt(2)/2]],["Color=red"]);
+  Arrowdata(text(no),[[pi/4,sqrt(2)/2],[pi/4,0]],["Color=red"]);
+  Expr([[pi/2,1],"e2","y=\sin x"]);
+  Expr([[0,sqrt(2)/2],"w1","\frac{1}{\sqrt{2}}",[pi/4,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\sin}^{-1}\dfrac{1}{\sqrt{2}}="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/4,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==4,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"sin(x)","x=[-pi/2,pi/2]",["dr,2"]);
+  Listplot(text(no),[[0,-sqrt(2)/2],[-pi/4,-sqrt(2)/2]],["Color=red"]);
+  Arrowdata(text(no),[[-pi/4,-sqrt(2)/2],[-pi/4,0]],["Color=red"]);
+  Expr([[pi/2,1],"e2","y=\sin x"]);
+  Expr([[0,-sqrt(2)/2],"e1","-\frac{1}{\sqrt{2}}",[-pi/4,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\sin}^{-1}\left(-\dfrac{1}{\sqrt{2}}\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==-1/4,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==5,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"sin(x)","x=[-pi/2,pi/2]",["dr,2"]);
+  Listplot(text(no),[[0,sqrt(3)/2],[pi/3,sqrt(3)/2]],["Color=red"]);
+  Arrowdata(text(no),[[pi/3,sqrt(3)/2],[pi/3,0]],["Color=red"]);
+  Expr([[pi/2,1],"e2","y=\sin x"]);
+  Expr([[0,sqrt(3)/2],"w1","\frac{\sqrt{3}}{2}",[pi/3,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\sin}^{-1}\dfrac{\sqrt{3}}{2}="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/3,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==6,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"sin(x)","x=[-pi/2,pi/2]",["dr,2"]);
+  Listplot(text(no),[[0,-sqrt(3)/2],[-pi/3,-sqrt(3)/2]],["Color=red"]);
+  Arrowdata(text(no),[[-pi/3,-sqrt(3)/2],[-pi/3,0]],["Color=red"]);
+  Expr([[pi/2,1],"e2","y=\sin x"]);
+  Expr([[0,-sqrt(3)/2],"e1","-\frac{\sqrt{3}}{2}",[-pi/3,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\sin}^{-1}\left(-\dfrac{\sqrt{3}}{2}\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==-1/3,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==7,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"sin(x)","x=[-pi/2,pi/2]",["dr,2"]);
+  Listplot(text(no),[[0,1],[pi/2,1]],["Color=red"]);
+  Arrowdata(text(no),[[pi/2,1],[pi/2,0]],["Color=red"]);
+  Expr([[pi/2,1],"e2","y=\sin x"]);
+  Expr([[0,1],"w1","1",[pi/2,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\sin}^{-1}1="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/2,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==8,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"sin(x)","x=[-pi/2,pi/2]",["dr,2"]);
+  Listplot(text(no),[[0,-1],[-pi/2,-1]],["Color=red"]);
+  Arrowdata(text(no),[[-pi/2,-1],[-pi/2,0]],["Color=red"]);
+  Expr([[pi/2,1],"e2","y=\sin x"]);
+  Expr([[0,-1],"e1","-1",[-pi/2,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\sin}^{-1}\left(-1\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==-1/2,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==9,
+ Setwindow([-0.5,3.5],[-2,2]);
+ Expr([[0,3],"w1","{\cos}^{-1}0="],["Size=2"]);
+ if(graph==1,
+  Plotdata(text(no),"cos(x)","x=[0,pi]",["dr,2"]);
+  Listplot(text(no),[[0,0],[pi/2,0]],["dr,2","Color=red"]);
+  Expr([[pi,-1],"e2","y=\cos x"]);
+  Expr([[0,0],"n1w1","0",[pi/2,0],"n1e1","?"],["Color=red"]);
+ );
+ if(ans==1,
+  if(tmp==1/2,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==10,
+ Setwindow([-0.5,3.5],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"cos(x)","x=[0,pi]",["dr,2"]);
+  Listplot(text(no),[[0,1/2],[pi/3,1/2]],["Color=red"]);
+  Arrowdata(text(no),[[pi/3,1/2],[pi/3,0]],["Color=red"]);
+  Expr([[pi,-1],"e2","y=\cos x"]);
+  Expr([[0,1/2],"w1","\frac{1}{2}",[pi/3,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\cos}^{-1}\dfrac{1}{2}="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/3,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==11,
+ Setwindow([-0.5,3.5],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"cos(x)","x=[0,pi]",["dr,2"]);
+  Listplot(text(no),[[0,-1/2],[2*pi/3,-1/2]],["Color=red"]);
+  Arrowdata(text(no),[[2*pi/3,-1/2],[2*pi/3,0]],["Color=red"]);
+  Expr([[pi,-1],"e2","y=\cos x"]);
+  Expr([[0,-1/2],"w1","-\frac{1}{2}",[2*pi/3,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\cos}^{-1}\left(-\dfrac{1}{2}\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==2/3,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==12,
+ Setwindow([-0.5,3.5],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"cos(x)","x=[0,pi]",["dr,2"]);
+  Listplot(text(no),[[0,sqrt(2)/2],[pi/4,sqrt(2)/2]],["Color=red"]);
+  Arrowdata(text(no),[[pi/4,sqrt(2)/2],[pi/4,0]],["Color=red"]);
+  Expr([[pi,-1],"e2","y=\cos x"]);
+  Expr([[0,sqrt(2)/2],"w1","\frac{1}{\sqrt{2}}",[pi/4,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\cos}^{-1}\dfrac{1}{\sqrt{2}}="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/4,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==13,
+ Setwindow([-0.5,3.5],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"cos(x)","x=[0,pi]",["dr,2"]);
+  Listplot(text(no),[[0,-sqrt(2)/2],[3*pi/4,-sqrt(2)/2]],["Color=red"]);
+  Arrowdata(text(no),[[3*pi/4,-sqrt(2)/2],[3*pi/4,0]],["Color=red"]);
+  Expr([[pi,-1],"e2","y=\cos x"]);
+  Expr([[0,-sqrt(2)/2],"w1","-\frac{1}{\sqrt{2}}",[3*pi/4,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\cos}^{-1}\left(-\dfrac{1}{\sqrt{2}}\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==3/4,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==14,
+ Setwindow([-0.5,3.5],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"cos(x)","x=[0,pi]",["dr,2"]);
+  Listplot(text(no),[[0,sqrt(3)/2],[pi/6,sqrt(3)/2]],["Color=red"]);
+  Arrowdata(text(no),[[pi/6,sqrt(3)/2],[pi/6,0]],["Color=red"]);
+  Expr([[pi,-1],"e2","y=\cos x"]);
+  Expr([[0,sqrt(3)/2],"w1","\frac{\sqrt{3}}{2}",[pi/6,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\cos}^{-1}\dfrac{\sqrt{3}}{2}="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/6,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==15,
+ Setwindow([-0.5,3.5],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"cos(x)","x=[0,pi]",["dr,2"]);
+  Listplot(text(no),[[0,-sqrt(3)/2],[5*pi/6,-sqrt(3)/2]],["Color=red"]);
+  Arrowdata(text(no),[[5*pi/6,-sqrt(3)/2],[5*pi/6,0]],["Color=red"]);
+  Expr([[pi,-1],"e2","y=\cos x"]);
+  Expr([[0,-sqrt(3)/2],"w1","-\frac{\sqrt{3}}{2}",[5*pi/6,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\cos}^{-1}\left(-\dfrac{\sqrt{3}}{2}\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==5/6,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==16,
+ Setwindow([-0.5,3.5],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"cos(x)","x=[0,pi]",["dr,2"]);
+  //Listplot(text(no),[[0,1],[0,1]],["Color=red"]);
+  Arrowdata(text(no),[[0,1],[0,0]],["Color=red"]);
+  Expr([[pi,-1],"e2","y=\cos x"]);
+  Expr([[0,1],"w1","1",[0,0],"s1w1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\cos}^{-1}1="],["Size=2"]);
+ if(ans==1,
+  if(tmp==0,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==17,
+ Setwindow([-0.5,3.5],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"cos(x)","x=[0,pi]",["dr,2"]);
+  Listplot(text(no),[[0,-1],[pi,-1]],["Color=red"]);
+  Arrowdata(text(no),[[pi,-1],[pi,0]],["Color=red"]);
+  Expr([[pi,-1],"e2","y=\cos x"]);
+  Expr([[0,-1],"w1","-1",[pi,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\cos}^{-1}\left(-1\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==18,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"tan(x)","x=[-1.1,1.1]",["dr,2"]);
+  Pointdata(text(no),[0,0],["Size=2","Color=red"]);
+  Expr([[1.1,2],"n2","y=\tan x"]);
+  Expr([[0,0],"n1w1","0"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\tan}^{-1}0="],["Size=2"]);
+ if(ans==1,
+  if(tmp==0,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==19,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"tan(x)","x=[-1.1,1.1]",["dr,2"]);
+  Listplot(text(no),[[0,1/sqrt(3)],[pi/6,1/sqrt(3)]],["Color=red"]);
+  Arrowdata(text(no),[[pi/6,1/sqrt(3)],[pi/6,0]],["Color=red"]);
+  Expr([[1.1,2],"n2","y=\tan x"]);
+  Expr([[0,1/sqrt(3)],"w1","\frac{1}{\sqrt{3}}",[pi/6,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\tan}^{-1}\dfrac{1}{\sqrt{3}}="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/6,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==20,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"tan(x)","x=[-1.1,1.1]",["dr,2"]);
+  Listplot(text(no),[[0,-1/sqrt(3)],[-pi/6,-1/sqrt(3)]],["Color=red"]);
+  Arrowdata(text(no),[[-pi/6,-1/sqrt(3)],[-pi/6,0]],["Color=red"]);
+  Expr([[1.1,2],"n2","y=\tan x"]);
+  Expr([[0,-1/sqrt(3)],"e1","-\frac{1}{\sqrt{3}}",[-pi/6,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\tan}^{-1}\left(-\dfrac{1}{\sqrt{3}}\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==-1/6,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==21,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"tan(x)","x=[-1.1,1.1]",["dr,2"]);
+  Listplot(text(no),[[0,1],[pi/4,1]],["Color=red"]);
+  Arrowdata(text(no),[[pi/4,1],[pi/4,0]],["Color=red"]);
+  Expr([[1.1,2],"n2","y=\tan x"]);
+  Expr([[0,1],"w1","1",[pi/4,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\tan}^{-1}1="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/4,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==22,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"tan(x)","x=[-1.1,1.1]",["dr,2"]);
+  Listplot(text(no),[[0,-1],[-pi/4,-1]],["Color=red"]);
+  Arrowdata(text(no),[[-pi/4,-1],[-pi/4,0]],["Color=red"]);
+  Expr([[1.1,2],"n2","y=\tan x"]);
+  Expr([[0,-1],"e1","-1",[-pi/4,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\tan}^{-1}\left(-1\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==-1/4,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+if(no==23,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"tan(x)","x=[-1.1,1.1]",["dr,2"]);
+  Listplot(text(no),[[0,sqrt(3)],[pi/3,sqrt(3)]],["Color=red"]);
+  Arrowdata(text(no),[[pi/3,sqrt(3)],[pi/3,0]],["Color=red"]);
+  Expr([[1.1,2],"n2","y=\tan x"]);
+  Expr([[0,sqrt(3)],"w1","\sqrt{3}",[pi/3,0],"s1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\tan}^{-1}\sqrt{3}="],["Size=2"]);
+ if(ans==1,
+  if(tmp==1/3,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+
+); 
+
+if(no==24,
+ Setwindow([-2,2],[-2,2]);
+ if(graph==1,
+  Plotdata(text(no),"tan(x)","x=[-1.1,1.1]",["dr,2"]);
+  Listplot(text(no),[[0,-sqrt(3)],[-pi/3,-sqrt(3)]],["Color=red"]);
+  Arrowdata(text(no),[[-pi/3,-sqrt(3)],[-pi/3,0]],["Color=red"]);
+  Expr([[1.1,2],"n2","y=\tan x"]);
+  Expr([[0,-sqrt(3)],"e1","-\sqrt{3}",[-pi/3,0],"n1","?"],["Color=red"]);
+ );
+ Expr([[0,3],"w1","{\tan}^{-1}\left(-\sqrt{3}\right)="],["Size=2"]);
+ if(ans==1,
+  if(tmp==-1/3,
+   Letter([2.7,3.25],"e1","正解",["Color=blue","Size=1"]);
+   ans=-ans;
+  ,
+   Letter([2.7,3.25],"e1","不正解",["Color=red","Size=1"]);
+   ans=-ans;
+  );
+ );
+); 
+
+if(clear==1,
+ Subsedit(8,"");
+ clear=0;
+);
+
+Windispg();
+;
+</script>
+    <script type="text/javascript">
+var cdy = CindyJS({
+  scripts: "cs*",
+  defaultAppearance: {
+    dimDependent: 0.7,
+    fontFamily: "sans-serif",
+    lineSize: 1,
+    pointSize: 5.0,
+    textsize: 12.0
+  },
+  angleUnit: "°",
+  geometry: [
+    {name: "SW", type: "Free", pos: [4.0, 4.0, -2.0], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "NE", type: "Free", pos: [4.0, 4.0, 2.0], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "Text8", type: "EditableText", pos: [-0.21463414634146344, -4.0, -1.4044142140387605], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, textsize: 25.0},
+    {name: "Text1", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.286, 0.286], fillalpha: 0.27272728085517883, script: "Viewtex();\nkc();", text: "Figure", textsize: 18.0, dock: {corner: "UL", offset: [10.0, -20.0]}},
+    {name: "Text2", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "if(length(Shellparent)>0,\n  Makeshell(),Makebat();\n);\nif(indexof(Libname,\"sci\")>0,\n  writetosci(2),writetoRS(2)\n);\nkc();", text: "Parent", textsize: 18.0, dock: {corner: "UL", offset: [77.0, -20.0]}},
+    {name: "Text3", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.929, 0.6], fillalpha: 0.48717948717948717, script: "Parafolder();", text: "ParaF", textsize: 18.0, dock: {corner: "UL", offset: [297.0, -20.0]}},
+    {name: "Text4", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.51, 0.949, 1.0], fillalpha: 0.27272728085517883, script: "Mkanimation();", text: "Anime", textsize: 18.0, dock: {corner: "UL", offset: [353.0, -20.0]}},
+    {name: "Text5", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 0.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkflipanime();", text: "Flip", textsize: 18.0, dock: {corner: "UL", offset: [422.0, -20.0]}},
+    {name: "Text21", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.5726495726495726, script: "Mkketcindyjs(append(KETJSOP,\"Web=y\"));", text: "Ketjson", textsize: 18.0, dock: {corner: "UL", offset: [144.0, -20.0]}},
+    {name: "Text22", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.4358974358974359, script: "Mkketcindyjs(append(KETJSOP,\"Web=n\"));", text: "Ketjsoff", textsize: 18.0, dock: {corner: "UL", offset: [218.0, -20.0]}},
+    {name: "Text0", type: "Button", pos: [-2.657251318710787, -4.0, -1.2548691709560973], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.6153846153846154, script: "ans=1;", text: "判定", textsize: 18.0},
+    {name: "Text7", type: "Button", pos: [-3.3950529818699198, -4.0, -1.6032910740178372], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, script: "flg=0;clear=1;", text: "出題", textsize: 18.0},
+    {name: "Text6", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 1.0, script: "graph=-graph;", text: "グラフ表示", textsize: 18.0, dock: {corner: "LL", offset: [262.0, 31.0]}}
+  ],
+  ports: [{
+    id: "CSCanvas",
+    width: 667,
+    height: 511,
+    transform: [{visibleRect: [-3.992914035025809, 3.8752831796568, 4.724839357321866, -2.803535386294717]}],
+    grid: 0.25,
+    snap: true,
+    background: "rgb(168,176,192)"
+  }],
+  csconsole: false,
+  use: ["katex"],
+  cinderella: {build: 2006, version: [3, 0, 2006]}
+});
+    </script>
+</head>
+<body>
+    <div id="CSCanvas"></div>
+</body>
+</html>

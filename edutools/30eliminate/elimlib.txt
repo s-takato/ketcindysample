@@ -1,0 +1,110 @@
+
+Calcstr(str):=(
+  regional(tmp,out);
+  tmp=Tocindyform(str);
+  tmp=parse(tmp);
+  out=Fracform(tmp);
+  out_1;
+);
+
+Splitlevel(strorg):=(
+  regional(tmp,str,out);
+  str=strorg;
+  tmp=Getlevel(str,",");
+  tmp=select(tmp,#_2==0);
+  tmp=apply(tmp,#_1);
+  forall(1..(length(tmp)),str_(tmp_#)="$");
+  out=Strsplit(str,"$");
+);
+
+Mat2list(mat):=(
+  regional(mL,tmp);
+  tmp=Strsplit(mat1,";");
+  mL=apply(tmp,Splitlevel(#));
+  mL;
+);
+
+List2mat(list):=(
+  regional(tmp,mat);
+  tmp=text(list);
+  tmp=replace(tmp,"],[",";");
+  mat=substring(tmp,2,length(tmp)-2);
+);
+
+Mat2tex(mat):=(
+  regional(tmp,out);
+  tmp=Totexform(mat);
+  tmp="mat("+tmp+")";
+  out=Replacematdet(tmp);
+);
+
+Trans(mat1,op):=(
+  regional(mlist,olist,mm,mm2,nn,
+     tmp,tmp1,tmp2,out);
+  mlist=Mat2list(mat1);
+  tmp=Getlevel(op,",");
+  tmp=select(tmp,#_2==0);
+  tmp=apply(tmp,#_1);
+  forall(1..(length(tmp)),op_(tmp_#)="$");
+  olist=Strsplit(op,"$");
+  tmp=substring(Toupper(olist_1),0,1);
+  if(tmp=="E",
+    mm=parse(olist_2);
+    nn=parse(olist_3);
+    tmp=mlist_mm;
+    mlist_mm=mlist_nn;
+    mlist_nn=tmp;
+    out=List2mat(mlist);
+  );
+  if(tmp=="M",
+    mm=parse(olist_2);
+    tmp1=olist_3;
+    forall(1..(length(mlist_mm)),
+      tmp="("+mlist_mm_#+")*("+tmp1+")";
+      mlist_mm_#=Calcstr(tmp);
+    );
+    out=List2mat(mlist);
+  );
+  if(tmp=="A",
+    mm=parse(olist_2);
+    mm2=parse(olist_3);
+    tmp1=olist_4;
+    forall(1..(length(mlist_mm)),
+      tmp="("+mlist_mm_#+")";
+      tmp=tmp+"+("+mlist_mm2_#+")";
+      tmp=tmp+"*("+tmp1+")";
+      mlist_mm_#=Calcstr(tmp);
+    );
+    out=List2mat(mlist);
+  );
+  out;
+);
+
+Genmat(mat,opL):=(
+  regional(nop,op,mat1,matL,tmp,tmp);
+  matL=[mat];
+  forall(1..(length(opL)),nop,
+    mat1=matL_(-1);
+    op=opL_nop;
+    tmp=Trans(mat1,op);
+    matL=append(matL,tmp);
+  );
+  matL;
+);
+
+pos=[-5,3];
+py=3;
+
+Dispmatrix(mat,opL):=(
+  regional(matL,all,tmp);
+  matL=Genmat(mat,opL);
+  all=length(matL);
+  forall((all-2)..all,
+    tmp=Mat2tex(matL_#);
+    Expr(pos,"e",tmp);
+    pos=pos-[0,py];
+  );
+);
+;
+
+      
