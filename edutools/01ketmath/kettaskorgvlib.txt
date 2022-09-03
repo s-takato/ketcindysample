@@ -78,23 +78,6 @@ Kettaskinit():=(
   // no ketjs off
 
   tab=unicode("0009");
-  cma=",";
-  Dirdata=Dircdy+"data";
-  tmp=Filelist(Dirdata); //no ketjs on
-  file=select(tmp,indexof(#,"taskline")>0);
-  file=select(file,indexof(#,".cdy")==0);
-  if(length(file)>0,
-    file=file_1;
-    quline="";shline="";sqline="";
-    setdirectory(Dirdata);
-    import(file);///
-
-    Ketcindyjsdata([
-      "aalinestart",1,
-      "quline",quline,"shline",shline,"sqline",sqline,
-      "zzlineend",1,
-    ]);
-  );
   setdirectory(Dirwork); // no ketjs off
   quL=Line2list(quline);
   quall=length(quL);
@@ -499,7 +482,7 @@ pplotdata(name1,func,variable,options):=( //220529
   Listplot("-gr"+name1,tmp,options);
 );
 
-Quesno():=Quesno(nqu,1); //220817
+Quesno():=Quesno(nqu,1); //220816
 Quesno(nq,flg):=( //220816
   regional(tmp,tmp1,out);
   out="";
@@ -507,9 +490,13 @@ Quesno(nq,flg):=( //220816
   if(length(tmp)>0,
     tmp1=tmp_(-1);
     out=quL_tmp1;
-    if(islist(out),out=out_1); 
+    if(islist(out),out=out_1); /////
     tmp=indexof(out," ");
-    if(tmp>0,out=substring(out,0,tmp-1));
+    if(tmp>0,
+      out=substring(out,0,tmp-1);
+    ,
+      out=substring(out,0,3); //220903
+    );
     if(flg>0, //220816from
       out=out+"-"+text(nq-tmp1+1);
     );

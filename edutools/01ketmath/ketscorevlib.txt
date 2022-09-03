@@ -365,7 +365,11 @@ Quesno(nq,flg):=( //220816
     out=quL_tmp1;
     if(islist(out),out=out_1); /////
     tmp=indexof(out," ");
-    if(tmp>0,out=substring(out,0,tmp-1));
+    if(tmp>0,
+      out=substring(out,0,tmp-1);
+    ,
+      out=substring(out,0,3); //220903
+    );
     if(flg>0, //220816from
       out=out+"-"+text(nq-tmp1+1);
     );

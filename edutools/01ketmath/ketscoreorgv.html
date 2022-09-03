@@ -2889,6 +2889,10 @@ fillpoly(parse("ar"+nm+"h"),color->tmp); //
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1.1;
 aalinestart=1;
+ansline="";
+caline="";
+mrkline="";
+mxscline="";
 quline="";
 shline="";
 sqline="";
@@ -3848,7 +3852,11 @@ Quesno(nq,flg):=( //220816
     out=quL_tmp1;
     if(islist(out),out=out_1); /////
     tmp=indexof(out," ");
-    if(tmp>0,out=substring(out,0,tmp-1));
+    if(tmp>0,
+      out=substring(out,0,tmp-1);
+    ,
+      out=substring(out,0,3); //220903
+    );
     if(flg>0, //220816from
       out=out+"-"+text(nq-tmp1+1);
     );
@@ -3887,17 +3895,16 @@ Adddrw(str):=(
   dpos=dpos-[0,2];
 );
 
-if(1==0, //skip start
 
-quline="Q01::次の関数の導関数はどうなるか．//アプリ「導関数の意味」を用いよ	[1]::y=x^2-3x	[2]::y=sin(x)";
+if(length(quline)==0,
+quline="Q01::次の関数の導関数はどうなるか．	[1]::y=x^2-3x	[2]::y=sin(x)";
 shline="Q01---	[1]y'=  	[2]y'=  ";
 caline="Q01::	[1]::y'=2x-3	[2]::y'=cos(x)";
 mrkline="0	2	2";
 mxscline="0	1	1";
-sqline="01KA	2	2	2CR02NI	2	2	2CR03VL	2	2	2CR04TO	2	2	2CR05RO	2	2	2CR06AK	2	2	2CR07YK	2	2	2CR08MT	2	2	2CR09HN	2	2	2CR10HH	2	2	2CR11KH	2	2	2CR12YM	2	2	2CR13TY	2	2	2CR14KK	2	2	2CR15YK	2	2	2CR16YT	2	2	2";
-ansline="1	01KA	082913:23:19	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)CR2	02NI	082913:7:3	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)CR3	03VL	082912:54:14	Q01---	[1]y'=  2x-3	[2]y'=  CosxCR4	04TO	082913:21:49	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)CR5	05RO	未提出CR6	06AK	082913:13:11	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)CR7	07YK	082913:23:33	Q01---	[1]y'=  2x	[2]y'=  cos(x)CR8	08MT	082913:12:38	Q01---	[1]y'=2x-3	[2]y'=  cos(x)CR9	09HN	082913:19:54	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)CR10	10HH	082913:15:21	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)CR11	11KH	082912:56:57	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)CR12	12YM	082913:41:33	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)CR13	13TY	未提出CR14	14KK	未提出CR15	15YK	未提出CR16	16YT	未提出";
-
-); //end skip
+sqline="01AA	2	2	2CR02BB	2	2	2";
+ansline="1	01AA	082913:23:19	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)CR2	02BB	082913:7:3	Q01---	[1]y'=  2x-3	[2]y'=  cos(x)";
+);
 
 quLL=Line2list(quline);
 shL=Line2list(shline);
@@ -3906,7 +3913,6 @@ mrkL=Line2list(mrkline);
 mxscL=Line2list(mxscline);
 sqLL=Line2list(sqline);
 ansLL=Line2list(ansline);
-
 
 stall=length(sqLL);
 ansLL=select(ansLL,length(#)>0);
@@ -4192,10 +4198,9 @@ forall(1..nch,nc,
 if(stnum>0,
   tmp=text(StdataLL_stnum);
   tmp=substring(tmp,1,length(tmp)-1);
-  drawtext(Text1.xy+[0,3],tmp,size->18);
+  drawtext(Text1.xy+[0,3.2],tmp,size->18);
   if((nqu>0)&(length(quline)>0),
     tmp=Quesno();
-    tmp=substring(tmp,0,3);////
     drawtext(Text1.xy+[-7,0],tmp,size->18);
   );
   tmp=text(StdataLL_stnum);
@@ -4349,9 +4354,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 871,
-    height: 634,
-    transform: [{visibleRect: [-4.2698158122885275, 28.420929352965793, 87.30788848650533, -38.181037409793376]}],
+    width: 823,
+    height: 740,
+    transform: [{visibleRect: [4.593234447036493, 28.399030183290147, 78.48010254130094, -38.07939525446383]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
