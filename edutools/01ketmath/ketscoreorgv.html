@@ -2174,7 +2174,7 @@ Lettermove(dir,str):=(
 Plotdata(name1,func,variable):=Plotdata(name1,func,variable,[]);
 Plotdata(name1,func,variable,options):=(
   regional(Fn,Va,tmp,tmp1,tmp2,eqL,name,Vname,x1,x2,dx,
-         PdL,Num,Ec,Dc,Fun,Exfun,x,Ke,Eps,Pa,Msg,
+         PdL,Num,Ec,Dc,Fun,Exfun,x,Ke,Eps,Pa,Msg,yflg,
          Ltype,Noflg,Inflg,Outflg,opstr,opcindy,color,color4);
   if(substring(name1,0,1)!="-",  //190420from
     name="gr"+name1;
@@ -2191,6 +2191,7 @@ Plotdata(name1,func,variable,options):=(
   opcindy=tmp_(length(tmp));
   eqL=tmp_5;
   Num=50;
+  yflg=0; //220910
   Ec=[];
   Exfun="";
   Dc=1000;
@@ -2228,14 +2229,20 @@ Plotdata(name1,func,variable,options):=(
     tmp=replace(func,LFmark,"");
     tmp=tokenize(variable,"=");
     Vname=tmp_1;
+    if(Vname=="y",yflg=1); //220910
     if(length(tmp)>1,
       tmp=tmp_2;
       tmp=parse(tmp);
       x1=tmp_1;
       x2=tmp_2;
       ,
-      x1=XMIN;
-      x2=XMAX;
+        if(yflg==0, //220910from
+          x1=XMIN;
+          x2=XMAX;
+        ,
+          x1=YMIN;
+          x2=YMAX;
+        ); //220910to
     );
     Ec=append(sort(Ec),10000);
     Fun=Assign(func,Vname, "xx");
@@ -2326,11 +2333,19 @@ Plotdata(name1,func,variable,options):=(
         println("generate Plotdata "+name);
       );
       if(Measuredepth(PdL)==1,
-        tmp1=apply(PdL,Pcrd(#));
+        if(yflg==0, //220910from
+          tmp1=apply(PdL,Pcrd(#));
+        ,
+          tmp1=apply(PdL,Pcrd([#_2,#_1]));
+        ); //220910to
       ,
         tmp1=[];
         forall(PdL,tmp2,
-          tmp1=append(tmp1,apply(tmp2,Pcrd(#)));
+          if(yflg==0, //220910from
+            tmp1=append(tmp1,apply(tmp2,Pcrd(#)));
+          ,
+            tmp1=append(tmp1,apply(tmp2,Pcrd([#_2,#_1])));
+          ); //220910to
         );
       );
       tmp=name+"="+Textformat(tmp1,5)+";";
@@ -3875,6 +3890,7 @@ startflg=1;
 DrwL=[];
 dpos=[10,14];
 
+nodataflg=0;
 choose=0;
 dt=[];
 nqinc=0;
@@ -3977,6 +3993,12 @@ if(stnum==0,
   );
 );
 
+tmp=apply(ansLL,length(#)); //220911from
+if(sum(tmp)==0,
+  ansall=length(caLL);
+  nodataflg=1;
+); //220911to
+
 drawcircle([px,posyL_ch],0.5,color->[1,0,0]);
 fillcircle([px,posyL_ch],0.5,color->[1,0,0]);
 
@@ -4011,7 +4033,7 @@ if(abs(stnuminc)>0,
   npos=length(Str);
   Strnq=replace(Str,"?","");
   StrL_2=Strnq;
-  Subsedit(2,StrL_2);
+  if(nodataflg==0,Subsedit(2,StrL_2)); //220911
   ansorgL=ansorgLL_stnum;
   ansall=length(ansL);
   forall(1..ansall,
@@ -4057,7 +4079,7 @@ if(stnum>0,
       Strnq=replace(Str,"?","");
       npos=length(Str);
       StrL_2=Strnq;
-      Subsedit(2,Str);
+      if(nodataflg==0,Subsedit(2,Str));
       nqinc=0;
     );
     Subsedit(10,"Pg="+text(nqu));
@@ -4074,7 +4096,7 @@ if(stnum>0,
       StrL_2=Str;
       ansL_nqu=Strnq;
       ansLL_stnum=ansL;
-      Subsedit(2,ansL_nqu);
+      if(nodataflg==0,Subsedit(2,ansL_nqu));
     );
   );
 );
@@ -4188,7 +4210,9 @@ forall(1..nch,nc,
     if(flg==0,
       strt=Gettexform(sL_nn);
       tmp=tp+[1.2,-0.2];
-      Drwletter(tmp,strt,22);
+    if((nodataflg-1)*(nc-1)*(nc-2)!=0, //220911
+        Drwletter(tmp,strt,22);
+    ); //220911
     ); //220609to
     tp=tp-[0,dy];
     texstr=texstr+strt;
@@ -4209,7 +4233,7 @@ if(stnum>0,
 );
 
 Subsedit(1,StrL_1);
-Subsedit(2,StrL_2);
+if(nodataflg==0,Subsedit(2,StrL_2));//220911
 
 Windispg();
 
@@ -4250,7 +4274,7 @@ var cdy = CindyJS({
     {name: "Text89", type: "Button", pos: [4.0, -2.305555555555556, 0.1388888888888889], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"=\";", text: "　　", textsize: 14.0},
     {name: "Text88", type: "Button", pos: [4.0, -2.6991869918699187, 0.16260162601626016], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"_(\";", text: "　　", textsize: 14.0},
     {name: "Text75", type: "Button", pos: [4.0, -1.8762886597938144, 0.06872852233676975], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"'\";", text: "　　", textsize: 14.0},
-    {name: "Text91", type: "Button", pos: [4.0, -1.78494623655914, 0.10752688172043011], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1; if(Shift==0,name=\"tx(\"); if(Shift==1,name=\"par(\");if(Shift==2,name=\"(circ)\");", text: "　　", textsize: 14.0},
+    {name: "Text91", type: "Button", pos: [4.0, -1.9462875197472354, 0.06397210200076407], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1; if(Shift==0,name=\"tx(\"); if(Shift==1,name=\"par(\");if(Shift==2,name=\"(circ)\");", text: "　　", textsize: 14.0},
     {name: "Text26", type: "Button", pos: [4.0, -0.6473429951690822, 0.09661835748792272], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\")\";", text: "　　", textsize: 14.0},
     {name: "Text94", type: "Button", pos: [4.0, -1.3333333333333337, 0.08032128514056226], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\".\";", text: "　　", textsize: 14.0, textbold: true},
     {name: "Text95", type: "Button", pos: [4.0, -1.2296296296296299, 0.07407407407407407], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(sp)\";", text: "　　", textsize: 14.0},
@@ -4354,9 +4378,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 823,
-    height: 740,
-    transform: [{visibleRect: [4.593234447036493, 28.399030183290147, 78.48010254130094, -38.07939525446383]}],
+    width: 827,
+    height: 725,
+    transform: [{visibleRect: [4.593234447036493, 28.399030183290147, 78.8752194829815, -36.696485958581874]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
