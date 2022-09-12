@@ -101,7 +101,7 @@ funflg=1;name="(inf)";
 Text55
 if(keytype!=4,keytype=4,keytype=1);
 Text56
-funflg=1;name="(cdot)";
+funflg=1;name="dot(";
 Text57
 funflg=1;name=":";
 Text58
