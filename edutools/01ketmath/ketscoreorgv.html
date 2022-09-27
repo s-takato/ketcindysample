@@ -4210,9 +4210,9 @@ forall(1..nch,nc,
     if(flg==0,
       strt=Gettexform(sL_nn);
       tmp=tp+[1.2,-0.2];
-    if((nodataflg-1)*(nc-1)*(nc-2)!=0, //220911
+      if((nodataflg==0)%(nc!=2), //220928
         Drwletter(tmp,strt,22);
-    ); //220911
+      ); //220928
     ); //220609to
     tp=tp-[0,dy];
     texstr=texstr+strt;
@@ -4378,9 +4378,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 827,
-    height: 725,
-    transform: [{visibleRect: [4.593234447036493, 28.399030183290147, 78.8752194829815, -36.696485958581874]}],
+    width: 856,
+    height: 741,
+    transform: [{visibleRect: [4.593234447036493, 28.399030183290147, 81.44347960390513, -38.17817448988397]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
