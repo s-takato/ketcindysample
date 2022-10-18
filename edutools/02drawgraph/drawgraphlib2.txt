@@ -109,8 +109,8 @@ GetplotL(str):=(
         tmp2=substring(tmp2,0,tmp3-2);
       );
       if(tmp=="y",
-        fun=replace(fun,"x","x"+"-("+GENTEN_1/S.x+")");
-        fun=Tocindyform(tmp2);
+        fun=replace(tmp2,"x","x"+"-("+GENTEN_1/S.x+")");
+        fun=Tocindyform(fun);
         fun=fun+"+("+GENTEN_2/S.x+")";
       );
       if(tmp=="C",
