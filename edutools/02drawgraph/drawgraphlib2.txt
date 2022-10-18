@@ -93,8 +93,6 @@ Gettexform(str):=(
 GetplotL(str):=(
   regional(out,fd,fun,rng,clr,num,exc,op,tmpL,tmp,tmp1,tmp2,tmp3);
   tmpL=Strsplit(str,"//");
-//  tmpL=apply(tmpL,Tocindyform(#));
-//  tmpL=apply(tmpL,replace(#,"e^(","exp(1)^("));
   out=[];
   forall(tmpL,fd,
     fun="";
@@ -111,9 +109,8 @@ GetplotL(str):=(
         tmp2=substring(tmp2,0,tmp3-2);
       );
       if(tmp=="y",
-        fun=Tocindyform(tmp2);
-        fun=replace(fun,"e^(","exp(");
         fun=replace(fun,"x","x"+"-("+GENTEN_1/S.x+")");
+        fun=Tocindyform(tmp2);
         fun=fun+"+("+GENTEN_2/S.x+")";
       );
       if(tmp=="C",

@@ -3820,9 +3820,8 @@ GetplotL(str):=(
         tmp2=substring(tmp2,0,tmp3-2);
       );
       if(tmp=="y",
-        fun=Tocindyform(tmp2);
-        fun=replace(fun,"e^(","exp(");
         fun=replace(fun,"x","x"+"-("+GENTEN_1/S.x+")");
+        fun=Tocindyform(tmp2);
         fun=fun+"+("+GENTEN_2/S.x+")";
       );
       if(tmp=="C",
@@ -4120,7 +4119,7 @@ var cdy = CindyJS({
     {name: "NE", type: "Free", pos: [4.0, 4.0, 0.4], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text5", type: "EditableText", pos: [-0.19047619047619047, -4.0, -0.38095238095238093], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, text: "y=", textsize: 18.0},
     {name: "Text116", type: "EditableText", pos: [-2.8521739130434782, -4.0, 0.34782608695652173], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 470, textsize: 18.0},
-    {name: "A", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 4.0, border: true },
+    {name: "A", type: "Free", pos: [0.0, -0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 4.0, border: true },
     {name: "S", type: "Free", pos: [0.8, -4.0, 0.4], color: [1.0, 0.0, 0.0], labeled: false, size: 4.5, border: true },
     {name: "Text87", type: "Button", pos: [4.0, -2.8869565217391306, 0.34782608695652173], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"sin(\";", text: "_ _", textsize: 18.0},
     {name: "Text88", type: "Button", pos: [4.0, -2.3304347826086955, 0.34782608695652173], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"cos(\";", text: "_ _", textsize: 18.0},
@@ -4168,14 +4167,13 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 887,
-    height: 642,
-    transform: [{visibleRect: [-12.145062388829583, 12.810009443934584, 22.549528074590192, -12.301520519442525]}],
+    height: 671,
+    transform: [{visibleRect: [-12.47967685544074, 12.378210122381327, 21.08208657889298, -13.010677436173268]}],
     grid: 2,
     snap: true,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  use: ["katex"],
   cinderella: {build: 2055, version: [3, 0, 2055]}
 });
     </script>
