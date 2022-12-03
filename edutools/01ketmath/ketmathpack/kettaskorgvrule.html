@@ -246,7 +246,6 @@ Totexform(str):=( //210803from[renew]
           tmp=replace(rep_2_3,"xx",tmp1);
           tmp=replace(tmp,"yy",tmp2);
           out=replace(tmp,"zz",tmp3);
-          println(out);
         );
         if(nn==4,
           tmp1=substring(out,plv_1_1,clv_1_1-1);
@@ -2180,7 +2179,7 @@ Lettermove(dir,str):=(
 Plotdata(name1,func,variable):=Plotdata(name1,func,variable,[]);
 Plotdata(name1,func,variable,options):=(
   regional(Fn,Va,tmp,tmp1,tmp2,eqL,name,Vname,x1,x2,dx,
-         PdL,Num,Ec,Dc,Fun,Exfun,x,Ke,Eps,Pa,Msg,
+         PdL,Num,Ec,Dc,Fun,Exfun,x,Ke,Eps,Pa,Msg,yflg,
          Ltype,Noflg,Inflg,Outflg,opstr,opcindy,color,color4);
   if(substring(name1,0,1)!="-",  //190420from
     name="gr"+name1;
@@ -2197,6 +2196,7 @@ Plotdata(name1,func,variable,options):=(
   opcindy=tmp_(length(tmp));
   eqL=tmp_5;
   Num=50;
+  yflg=0; //220910
   Ec=[];
   Exfun="";
   Dc=1000;
@@ -2234,14 +2234,20 @@ Plotdata(name1,func,variable,options):=(
     tmp=replace(func,LFmark,"");
     tmp=tokenize(variable,"=");
     Vname=tmp_1;
+    if(Vname=="y",yflg=1); //220910
     if(length(tmp)>1,
       tmp=tmp_2;
       tmp=parse(tmp);
       x1=tmp_1;
       x2=tmp_2;
       ,
-      x1=XMIN;
-      x2=XMAX;
+        if(yflg==0, //220910from
+          x1=XMIN;
+          x2=XMAX;
+        ,
+          x1=YMIN;
+          x2=YMAX;
+        ); //220910to
     );
     Ec=append(sort(Ec),10000);
     Fun=Assign(func,Vname, "xx");
@@ -2332,11 +2338,19 @@ Plotdata(name1,func,variable,options):=(
         println("generate Plotdata "+name);
       );
       if(Measuredepth(PdL)==1,
-        tmp1=apply(PdL,Pcrd(#));
+        if(yflg==0, //220910from
+          tmp1=apply(PdL,Pcrd(#));
+        ,
+          tmp1=apply(PdL,Pcrd([#_2,#_1]));
+        ); //220910to
       ,
         tmp1=[];
         forall(PdL,tmp2,
-          tmp1=append(tmp1,apply(tmp2,Pcrd(#)));
+          if(yflg==0, //220910from
+            tmp1=append(tmp1,apply(tmp2,Pcrd(#)));
+          ,
+            tmp1=append(tmp1,apply(tmp2,Pcrd([#_2,#_1])));
+          ); //220910to
         );
       );
       tmp=name+"="+Textformat(tmp1,5)+";";
@@ -3537,8 +3551,8 @@ Kettaskinit():=(
   vecflg=0;
 
   nch=2;
-  StrL=apply(1..3,""); 
-  StrpL=apply(1..3,"");
+  StrL=apply(1..4,""); 
+  StrpL=apply(1..4,"");
   nqu=0; //220820
   stfixed=0;
   stok=0;
@@ -3729,7 +3743,7 @@ Delete():=(
   );
   if(ch==3,
     Kettaskinit();
-    Str="Student=";
+    Str="No=";
     Strnq=Str;
     StrL_3=Str;
   );
@@ -4036,7 +4050,8 @@ Ketinit(1.6);
 
 if(startflg==1,
   Kettaskinit();
-  Subsedit(3,"Student=");
+  Subsedit(3,"No=");
+  Subsedit(10,"");
   startflg=0;
 );
 
@@ -4046,7 +4061,7 @@ if(stok<=1,
   if(stok==1,
     tmp=Textedit(3,"");
     if(length(tmp)==0,
-      Subsedit(3,"Student=");
+      Subsedit(3,"No=");
       stok=0;
     );
   );
@@ -4070,20 +4085,20 @@ Keytable(9,36,1,33,[15.6,-0.5],
    0.9*[1,1,1],ctrkey,[0,-0.5],16);
 
 if(stok<=1,
-  tmp="Student=";
+  tmp="No=";
   Str=Textedit(3,"","");
   if(indexof(Str,tmp)==0,Str=tmp+Str);
   Strnq=replace(Str,"?","");
   StrL_3=Strnq;
   npos=length(Str);
   if(stok==1,
-    tmp=replace(StrL_3,"Student=","");
+    tmp=replace(StrL_3,"No=","");
     if(length(tmp)>0,
       stno=parse(tmp);
       if((stno>=1)&(stno<=stall),
         tmp1=sqLL_stno;
         stname=tmp1_1;
-        Str="Student="+stno+" "+stname;
+        Str="No="+stno+" "+stname;
         Strnq=replace(Str,"?","");
         StrL_3=Strnq;
         npos=length(Str);
@@ -4120,8 +4135,10 @@ if(stok>=2,
   );
 );
 
-drawcircle([px,posyL_ch],0.5,color->[1,0,0]);
-fillcircle([px,posyL_ch],0.5,color->[1,0,0]);
+if(ch<=2,
+ drawcircle([px,posyL_ch],0.5,color->[1,0,0]);
+ fillcircle([px,posyL_ch],0.5,color->[1,0,0]);
+);
 
 if(stoknow==2,
   if(abs(nqinc)>0,
@@ -4151,8 +4168,8 @@ if((recflg==1)&(stoknow==2),
     str=str+ansL_n+";;";
   );
   rec=rec+substring(str,0,length(str)-2);
-  Subsedit(3,rec);
-  StrL_3=rec;
+  Subsedit(116,rec);
+  StrL_4=rec;
   recflg=0;
 );
 
@@ -4314,7 +4331,7 @@ var cdy = CindyJS({
     {name: "Text1", type: "EditableText", pos: [4.0, 3.8260869565217392, 0.17391304347826086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "NE", type: "Free", pos: [4.0, 1.0067746650167269, 0.05318084682256492], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text2", type: "EditableText", pos: [4.0, -0.875, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
-    {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, text: "Student=", textsize: 24.0},
+    {name: "Text116", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 18.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T2", type: "Free", pos: [4.0, 3.6645161290322577, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
@@ -4357,7 +4374,7 @@ var cdy = CindyJS({
     {name: "Text73", type: "Button", pos: [4.0, -0.9851851851851853, 0.07407407407407407], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n3\";", text: "　　", textsize: 14.0},
     {name: "Text74", type: "Button", pos: [4.0, -0.9140893470790378, 0.06872852233676975], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"*\";", text: "　　", textsize: 14.0},
     {name: "Text93", type: "Button", pos: [4.0, -1.456140350877193, 0.08771929824561403], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n0\";", text: "　　", textsize: 14.0},
-    {name: "Text114", type: "Button", pos: [4.0, -1.0400508582326764, 0.06357279084551812], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.38, text_fontfamily: "monospace", script: "stok=stok+1;", text: "OK", textsize: 18.0},
+    {name: "Text114", type: "Button", pos: [4.0, -1.0566882228330707, 0.06178470679629211], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.38, text_fontfamily: "monospace", script: "stok=stok+1;", text: "OK", textsize: 24.0},
     {name: "Text18", type: "Button", pos: [4.0, -1.8070175438596492, 0.08771929824561403], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=[\"Le\",\"E\",\"{\\delta}\",\"\\mathbf{e}\",\"{\\vec{e}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
     {name: "Text34", type: "Button", pos: [3.414225941422594, -4.0, 0.1673640167364017], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(cross)\";", text: "　　", textsize: 14.0},
     {name: "Text79", type: "Button", pos: [3.2262295081967216, -4.0, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(pm)\";", text: "　　", textsize: 14.0},
@@ -4425,19 +4442,21 @@ var cdy = CindyJS({
     {name: "Text113", type: "Button", pos: [4.0, -1.3246048219703015, 0.06386715631486507], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1; name=\"pi\";", text: "　　", textsize: 14.0},
     {name: "Text54", type: "Button", pos: [4.0, -1.5264250359252751, 0.06386715631486507], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"(inf)\";", text: "　　", textsize: 14.0},
     {name: "Text9", type: "Button", pos: [2.050277505713353, -4.0, 0.1305909239307868], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "Rec", textsize: 18.0},
-    {name: "Text96", type: "Button", pos: [4.0, -1.1408934707903782, 0.06872852233676975], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"/\";", text: "　　", textsize: 18.0}
+    {name: "Text96", type: "Button", pos: [4.0, -1.1408934707903782, 0.06872852233676975], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"/\";", text: "　　", textsize: 18.0},
+    {name: "Text115", type: "Button", pos: [4.0, -0.9891515450685417, 0.05714743664010541], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "Reset", textsize: 24.0},
+    {name: "Text3", type: "EditableText", pos: [4.0, -0.8722185766743209, 0.06413161150183143], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 140, text: "No=", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 849,
-    height: 743,
-    transform: [{visibleRect: [3.810008753722488, 29.223665803039264, 83.3328280033034, -40.307296623731624]}],
+    width: 894,
+    height: 700,
+    transform: [{visibleRect: [-0.5151557769891209, 28.684679141415106, 83.23102563481036, -36.828938789586715]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2055, version: [3, 0, 2055]}
+  cinderella: {build: 2058, version: [3, 0, 2058]}
 });
     </script>
 </head>
