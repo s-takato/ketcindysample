@@ -1,0 +1,14 @@
+Q
+次の三角関数の値を求めよ．
+[1] sin(fr(pi,6))
+[2] sin(fr(pi,3)),sin(fr(pi,4))
+Sheet
+[1]= ::2
+[2]= ::2
+Ans
+[1] fr(1,2)
+[2] fr(sq(3),2),fr(1,sq(2))
+Mxcalc
+[1] sin(fr(pi,6))
+[2] sin(fr(pi,3)),sin(fr(pi,4))
+return i1::i2
