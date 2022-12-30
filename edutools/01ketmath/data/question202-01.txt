@@ -1,0 +1,16 @@
+Q
+次の積分を求めよ．
+[1] int(x^2,x)
+[2] int(sin(x),0,pi,x)
+Sheet
+[1]= ::5
+[2]= ::5
+Ans
+[1] fr(x^3,3) :: diff(CA,x)-diff(SA,x)
+[2] 2
+Mxcalc
+[1] x^2
+[2] sin(x)
+o1:integrate(i1,x)
+o2:integrate(i2,x,0,%pi)
+return o1::o2

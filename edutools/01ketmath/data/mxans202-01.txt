@@ -1,0 +1,10 @@
+[x^3/3,2]
+
+Script
+q1i1:x^2
+q1i2:sin(x)
+q1o1:integrate(q1i1,x)
+q1o2:integrate(q1i2,x,0,%pi)
+q1o1::q1o2
+end
+

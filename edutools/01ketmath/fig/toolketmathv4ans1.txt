@@ -1,0 +1,15 @@
+NIL
+(%i3) powerdisp:false
+(%i4) display2d:false
+(%i5) linel:1000
+(%i6) q1i1:x^2
+(%i7) q1i2:sin(x)
+(%i8) q1o1:integrate(q1i1,x)
+(%i9) q1o2:integrate(q1i2,x,0,%pi)
+(%i10) disp(q1o1)
+x^3/3
+
+(%i11) disp(q1o2)
+2
+
+(%i12) closefile()
