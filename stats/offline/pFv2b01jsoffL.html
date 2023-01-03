@@ -4176,13 +4176,13 @@ if((mf!=mfnow)%(nf!=nfnow),
     tmp2=dlnf(tmp1,mf,nf);
     p1L=append(p1L,[tmp1,exp(tmp2)]);
   );
-  p2L=[]; nn=100;
+  p2L=[]; nn=50;
   forall(0..nn,
     tmp1=x1+#*(x2-x1)/nn;
     tmp2=dlnf(tmp1,mf,nf);
     p2L=append(p2L,[tmp1,exp(tmp2)]);
   );
-  p3L=[]; nn=100;
+  p3L=[]; nn=40;
   forall(0..nn,
     tmp1=x2+#*(xmx-x2)/nn;
     tmp2=dlnf(tmp1,mf,nf);
@@ -4294,12 +4294,12 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [0.0, -1.6, 4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 2.4, 0.4], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, 0.0, 2.0603002400456916], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
+    {name: "A", type: "Free", pos: [4.0, 0.0, 1.7216207485306751], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
     {name: "Text3", type: "EditableText", pos: [-3.9, -4.0, -1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "10", textsize: 20.0},
     {name: "Text4", type: "EditableText", pos: [4.0, 3.4871794871794872, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, textsize: 20.0},
-    {name: "Text5", type: "EditableText", pos: [4.0, 2.871794871794872, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.1404", textsize: 20.0},
+    {name: "Text5", type: "EditableText", pos: [4.0, 2.871794871794872, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.0857", textsize: 20.0},
     {name: "Text0", type: "EditableText", pos: [-3.391304347826087, -4.0, -0.8695652173913044], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "20", textsize: 20.0},
-    {name: "Text6", type: "EditableText", pos: [4.0, 2.2564102564102564, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.8596", textsize: 20.0},
+    {name: "Text6", type: "EditableText", pos: [4.0, 2.2564102564102564, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.9143", textsize: 20.0},
     {name: "Text9", type: "Button", pos: [-2.823529411764706, -4.0, -1.1764705882352942], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=3;\nokflg=0;", text: "f-p", textsize: 18.0},
     {name: "Text10", type: "Button", pos: [-3.428571428571429, -4.0, -1.4285714285714286], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=4;\nokflg=0;", text: "pr-f", textsize: 18.0},
     {name: "Text11", type: "Button", pos: [4.0, 3.666666666666667, 1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=5;\nokflg=0;", text: "pl-f", textsize: 18.0},
@@ -4324,8 +4324,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 787,
-    height: 509,
-    transform: [{visibleRect: [-0.7081571729616258, 6.564378288689229, 10.670098527433037, -0.8036390389789237]}],
+    height: 520,
+    transform: [{visibleRect: [-0.7081571729616258, 6.564378288689229, 10.670098527433037, -0.9627754823410869]}],
     background: "rgb(247,247,247)"
   }],
   csconsole: false,

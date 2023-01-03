@@ -4055,14 +4055,9 @@ startflg=1;
 
 </script>
 <script id="csdraw" type="text/x-cindyscript">
-dpos=[0.5,5];
-drwt(line,str):=(
-  drawtext(dpos," "+line+" "+str,size->15);
-  dpos=dpos-[0,0.3];
-);
-
 Ketinit();
 
+if(1==0,Calcpeak());//no ketjs
 
 if(startflg==1,
   mfnow=0;
@@ -4079,8 +4074,8 @@ if(startflg==1,
   Subsedit(BoxL_1,tmp); StrL_1=tmp;
   tmp=text(nf);
   Subsedit(BoxL_2,tmp); StrL_2=tmp;
-  if(ax!=1.1,tmp=Sprintf(ax,4),tmp=ax);
-  Subsedit(BoxL_3,tmp); StrL_3=tmp;
+  Subsedit(BoxL_3,ax); StrL_3=tmp;
+  Eps=10^(-5);
   funflg=0;
   okflg=1;
   startflg=0;
@@ -4096,8 +4091,7 @@ tmp1="g(f,d_1,d_2)=\dfrac{1}{B(d_1/2,d_2/2)}";
 tmp2="\left(\dfrac{d_1}{d_2}\right)^{d_1/2}f^{d_1/2-1}";
 tmp3="\left(1+\dfrac{d_1}{d_2}f\right)^{-(d_1+d_2)/2}";
 tmp="$"+tmp1+tmp2+tmp3+"$";
-drawtext(pos+[2,0],tmp,size->18);
-
+drawtext(pos+[1.5,0],tmp,size->18);
 
 Addax(0);
 Slider("A",[XMIN,0],[XMAX,0]);
@@ -4138,19 +4132,24 @@ if((ch==1)%(ch==2),
   pp=A.x;
   fr=pf(pp,mf,nf);
   fl=1-fr;
-  if(pp!=1.1,tmp=Sprintf(pp,4),tmp=pp);
-  Subsedit(BoxL_3,tmp);
+  Subsedit(BoxL_3,Sprintf(pp,4));
   Subsedit(BoxL_4,Sprintf(fr,4));
   Subsedit(BoxL_5,Sprintf(fl,4));
 );
 
 tmp=Textedit(BoxL_1,"");
 if(length(tmp)>0,
-  mf=parse(tmp);
+  tmp=parse(tmp);
+  if((tmp>0)&(tmp<150),
+    mf=tmp;
+  );
 );
 tmp=Textedit(BoxL_2,"");
 if(length(tmp)>0,
-  nf=parse(tmp);
+  tmp=parse(tmp);
+  if((tmp>0)&(tmp<150),
+    nf=tmp;
+  );
 );
 
 if((mf!=mfnow)%(nf!=nfnow),
@@ -4162,40 +4161,55 @@ if((mf!=mfnow)%(nf!=nfnow),
     sc=2;
     Setscaling(2);
   );
-  x1=xmn+0.05;y1=dlnf(x1,mf,nf);
-  ctr=1;dx=0.05;
-  while((y1<-2*log(10))&(ctr<200),
-    x1=x1+dx;
-    y1=dlnf(x1,mf,nf);
-    ctr=ctr+1;
+  ans1=10^(-3);
+  ans2=10^(-4);
+  xa=xmn; xb=x0;
+  while(|xb-xa|>Eps,
+    x=(xa+xb)/2;
+    y=df(x,mf,nf);
+    if(y<ans1,xa=x,xb=x);
   );
-  x1=x1-dx;
-  x2=xmx;y2=dlnf(x2,mf,nf);
-  ctr=1;dx=0.05;
-  while((y2<-2*log(10))&(ctr<200),
-    x2=x2-dx;
-    y2=dlnf(x2,mf,nf);
-    ctr=ctr+1;
+  x1=(xa+xb)/2;
+  xa=xmn; xb=x0;
+  while(|xb-xa|>Eps,
+    x=(xa+xb)/2;
+    y=df(x,mf,nf);
+    if(y<ans2,xa=x,xb=x);
   );
-  x2=x2+dx;
-  p1L=[[0,0]]; nn=20;
+  x3=(xa+xb)/2;
+  xa=x0; xb=xmx;
+  while(|xb-xa|>Eps,
+    x=(xa+xb)/2;
+    y=df(x,mf,nf);
+    if(y<ans1,xb=x,xa=x);
+  );
+  x2=(xa+xb)/2;
+  xa=x0; xb=xmx;
+  while(|xb-xa|>Eps,
+    x=(xa+xb)/2;
+    y=df(x,mf,nf);
+    if(y<ans2,xb=x,xa=x);
+  );
+  x4=(xa+xb)/2;
+  p1L=[[xmn,0]]; nn=20;
   forall(1..nn,
-    tmp1=#*x1/nn;
-    tmp2=dlnf(tmp1,mf,nf);
-    p1L=append(p1L,[tmp1,exp(tmp2)]);
+    tmp1=xmn+#*(x1-xmn)/nn;
+    tmp2=df(tmp1,mf,nf);
+    p1L=append(p1L,[tmp1,tmp2]);
   );
-  p2L=[]; nn=100;
+  p2L=[]; nn=80;
   forall(0..nn,
     tmp1=x1+#*(x2-x1)/nn;
     tmp2=dlnf(tmp1,mf,nf);
     p2L=append(p2L,[tmp1,exp(tmp2)]);
   );
-  p3L=[]; nn=100;
+  p3L=[]; nn=20;
   forall(0..nn,
     tmp1=x2+#*(xmx-x2)/nn;
-    tmp2=dlnf(tmp1,mf,nf);
-    p3L=append(p3L,[tmp1,exp(tmp2)]);
+    tmp2=df(tmp1,mf,nf);
+    p3L=append(p3L,[tmp1,tmp2]);
   );
+  pL=p1L++p2L_(2..(length(p2L)-1))++p3L;
   tt=Textedit(4,"","");
   tt=parse(tt);
   ttnow=tt;
@@ -4203,6 +4217,7 @@ if((mf!=mfnow)%(nf!=nfnow),
   mfnow=mf;
   nfnow=nf;
 );
+
 Str=StrL_ch;
 
 Subsedit(BoxL_1,text(mfnow));
@@ -4212,17 +4227,16 @@ opr=append(op,"Color=red");
 opb=concat(op,["Color=blue"]);
 opg=append(op,"Color=[0.64,0,0.95,0.4]");
 
-Listplot("c1",p1L,opb);
-Listplot("c2",p2L,opb);
-Listplot("c3",p3L,opb);
+Listplot("gr",pL,opb);
 Optc=["Color=red","Size=2"];
 Expr([px,py_ch/SCALEY],"w","\bullet$",Optc);
 tmp=px+0.9;
-Expr([tmp,py_1/SCALEY],"e","d_1=",["Size=1.3"]);
-Expr([tmp,py_2/SCALEY],"e","d_2=",["Size=1.3"]);
+Expr([tmp,py_1/SCALEY],"e","m=",["Size=1.3"]);
+Expr([tmp,py_2/SCALEY],"e","n=",["Size=1.3"]);
 Expr([tmp,py_3/SCALEY],"e","f=",["Size=1.3"]);
 Expr([tmp,py_4/SCALEY],"e","pr=",["Size=1.3"]);
 Expr([tmp,py_5/SCALEY],"e","pl=",["Size=1.3"]);
+
 if(ch==3,
   tmp=Textedit(box,"","");
   if(A.x!=axnow,
@@ -4243,15 +4257,20 @@ if(ch==3,
     );
   );
 );
+
 if(ch==4,
   tmp=Textedit(box,"","");
   pp=parse(tmp);
   tt=qf(pp,mfnow,nfnow);
   Putpoint("A",[tt,0]);
   axnow=tt;
-  if(tt!=1.1,tmp=Sprintf(tt,4),tmp=tt);
-  Subsedit(BoxL_3,tmp);
+  Subsedit(BoxL_3,Sprintf(tt,4));
   Subsedit(BoxL_5,format(1-pp,4));
+  tmp1=select(pL,#_1>=A.x-Eps);
+  tmp2=[[x4,0],[A.x,0],tmp1_1];
+  tmp=concat(tmp1,tmp2);
+  Listplot("sh",tmp,["nodisp"]);
+  Shade(["sgsh"],["Color=cyan"]);
 );
 
 if(ch==5,
@@ -4262,15 +4281,21 @@ if(ch==5,
   axnow=tt;
   Subsedit(BoxL_3,Sprintf(tt,4));
   Subsedit(BoxL_4,format(1-pp,4));
+  tmp1=select(pL,#_1<=A.x);
+  tmp2=[[A.x,0],[x3,0],[x3,df(x3,mf,nf)]];
+  tmp=concat(tmp1,tmp2);
+  Listplot("sh",tmp,["nodisp"]);
+  Shade(["sgsh"],["Color=cyan"]);
 );
+
+
 Str=StrL_ch;
 
 pD=[A.x,df(A.x,mf,nf)];
 tmp=pf(A.x,mfnow,nfnow);
 pR=[A.x,tmp];
 Listplot("2",[A,pD],opr);
-if(A.x!=1.1,tmp=Sprintf(A.x,4),tmp=A.x);
-Htickmark([A.x,tmp,XMAX,"s2",text(XMAX)]);
+Htickmark([A.x,Sprintf(A.x,4),XMAX,"s2",text(XMAX)]);
 Vtickmark([0.1,"0.1",0.5,"0.5",1,"1"]);
 
 if(ch==3,
@@ -4285,7 +4310,6 @@ StrL_ch=Str;
 Subsedit(box,Str);
 
 Windispg();
-
 ;
 
 </script>
