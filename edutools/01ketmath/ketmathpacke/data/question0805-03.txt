@@ -1,8 +1,0 @@
-Q
-@a function @f@ and a number @a@ sutisfiy@//
-6+int(0,x,fr(f(t),t^2),t)=2sq(x)//@for all @x>0.
-[] @Find @f@ and @a.
-Sheet
-[] ;;4
-Ans
-f(x)=x^(tfr(3,2)),a=9

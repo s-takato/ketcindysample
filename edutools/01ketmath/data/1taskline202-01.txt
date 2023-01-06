@@ -1,4 +1,3 @@
-quline="Q01::次の積分を求めよ．	[1]:: int(x^2,x)	[2]:: int(sin(x),0,pi,x)";
+quline="Q01::次の積分を求めよ．	[1]:: int(x^2,x)	[2]:: int(0,pi,sin(x),x)";
 shline="Q01---	[1]= 	[2]= ";
-evline="Q01::	[1]::diff(CA,x)-diff(SA,x)	[2]::(CA)-(SA)";
 sqline="01AA	2	2	2CR02BB	2	2	2CR03CC	2	2	2";

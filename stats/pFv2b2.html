@@ -247,6 +247,16 @@ nmove=[0,-0.1];
 dy=8; dx=10;
 Keytable(3,dx,5,dy,[5.4,1],[1,1,0],nameL,nmove,20);
 
+if(1==0,
+pos=[0.2,5.5];
+drawtext(pos,"F分布",size->22);
+tmp1="g(f,d_1,d_2)=\dfrac{1}{B(d_1/2,d_2/2)}";
+tmp2="\left(\dfrac{d_1}{d_2}\right)^{d_1/2}f^{d_1/2-1}";
+tmp3="\left(1+\dfrac{d_1}{d_2}f\right)^{-(d_1+d_2)/2}";
+tmp="$"+tmp1+tmp2+tmp3+"$";
+drawtext(pos+[1.5,0],tmp,size->18);
+);
+
 Setketcindyjs(["Size=1.1"]);//no ketjs
 
 Addax(0);
@@ -519,12 +529,13 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 715,
-    height: 454,
-    transform: [{visibleRect: [-0.7877253946427073, 6.628032866034093, 10.590530305751953, -0.5967616626081116]}],
+    height: 480,
+    transform: [{visibleRect: [-0.7877253946427073, 6.628032866034093, 10.590530305751953, -1.0105164153497355]}],
     background: "rgb(168,176,192)"
   }],
   csconsole: false,
-  cinderella: {build: 2066, version: [3, 0, 2066]}
+  use: ["katex"],
+  cinderella: {build: 2067, version: [3, 0, 2067]}
 });
     </script>
 </head>

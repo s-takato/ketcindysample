@@ -1,7 +1,7 @@
 Q
 次の積分を求めよ．
 [1] int(x^2,x)
-[2] int(sin(x),0,pi,x)
+[2] int(0,pi,sin(x),x)
 Sheet
 [1]= ::5
 [2]= ::5
