@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>pFv2b3.cdy</title>
+    <title>pFe2023b2.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -3456,7 +3456,7 @@ fillpoly(parse("ar"+nm+"h"),color->tmp); //
   [LLcrd(pA),LLcrd(pB)];
 );
 Ketcindyjsfigure=0;
-Ketcindyjsscale=1.1;
+Ketcindyjsscale=1;
 setdirectory(Dircdy);
 
 
@@ -4356,9 +4356,9 @@ Gridpaper():=(
   Htickmark(tmp);
   Vtickmark(tmp);
 );
+
 usagi1=[[[0.0859,3.051],[-0.2853,3.2137],[-0.6624,3.405],[-0.9985,3.6306],[-1.2473,3.8963],[-0.795,3.8294],[-0.4434,3.6577],[-0.1322,3.4441],[0.1992,3.2514],[0.5204,3.1722],[0.7166,2.9835],[0.8916,2.7784],[1.149,2.6502],[1.0565,2.3342],[0.892,2.1284],[0.6883,2.0093],[0.4781,1.9531],[0.5422,1.265],[0.4423,0.775],[0.2298,0.4523],[-0.0436,0.2662],[-0.1979,0.3973],[-0.3452,0.5244],[-0.4859,0.6523],[-0.6199,0.7854],[-0.6001,1.2005],[-0.4402,1.4618],[-0.2241,1.6615],[-0.0361,1.8921],[-0.4005,2.1536],[-0.5665,2.4879],[-0.5348,2.8662],[-0.3062,3.2601],[-0.6008,3.2401],[-0.8857,3.2961],[-1.1443,3.406],[-1.3606,3.5477],[-1.3411,3.6346],[-1.2658,3.6588],[-1.1682,3.658],[-1.0817,3.6697]],[[0.1149,0.3563],[0.1562,0.3282],[0.1918,0.2935],[0.2211,0.2521],[0.2432,0.2041],[0.1166,0.2053],[-0.0101,0.2065],[-0.1367,0.2078],[-0.2634,0.209],[-0.2752,0.2557],[-0.2615,0.2993],[-0.2303,0.3384],[-0.1896,0.3713],[-0.1545,0.343],[-0.1202,0.3132],[-0.0842,0.2863],[-0.0436,0.2662],[0.0079,0.2814],[0.0499,0.3008],[0.0848,0.3254],[0.1149,0.3563]],[[-0.8244,0.7941],[-0.8053,0.8529],[-0.7553,0.8892],[-0.6935,0.8892],[-0.6435,0.8529],[-0.6244,0.7941],[-0.6435,0.7353],[-0.6935,0.699],[-0.7553,0.699],[-0.8053,0.7353],[-0.8244,0.7941]]];
 usagi2=[[[0.7343,2.5979],[0.742,2.6214],[0.762,2.6359],[0.7867,2.6359],[0.8067,2.6214],[0.8143,2.5979],[0.8067,2.5744],[0.7867,2.5598],[0.762,2.5598],[0.742,2.5744],[0.7343,2.5979]],[[1.6511,0.4575],[1.2557,0.1864],[0.5319,0.1741],[-0.1919,0.1619],[-0.6852,0.1838],[-1.1823,0.2327],[-1.6871,0.3358]]];
-
 
 px=3.9; py=apply([3.6,3,2.4,1.8,1.2],#+1);
 px=px-1.6; py=apply(py,#+0.1);
@@ -4512,11 +4512,11 @@ if(startflg==1,
   mf=20;
   nf=23;
   ax=1.1;
-  tmp=text(mf);
+  tmp=format(mf,4);
   Subsedit(BoxL_1,tmp); StrL_1=tmp;
   tmp=text(nf);
   Subsedit(BoxL_2,tmp); StrL_2=tmp;
-  tmp=format(ax,1);
+  tmp=Sprintf(ax,1);
   Subsedit(BoxL_3,tmp); StrL_3=tmp;
 
   Listplot("-r1a",usagi1_1,["noddisp"]);
@@ -4538,14 +4538,13 @@ nameL=Keyname();
 nmove=[0,-0.1];
 dy=8; dx=10;
 Keytable(3,dx,5,dy,[5.4,1],[1,1,0],nameL,nmove,20);
-
 pos=[0.2,5.5];
 drawtext(pos,"F-distribution",size->22);
 tmp1="g(f,d_1,d_2)=\dfrac{1}{B(d_1/2,d_2/2)}";
 tmp2="\left(\dfrac{d_1}{d_2}\right)^{d_1/2}f^{d_1/2-1}";
 tmp3="\left(1+\dfrac{d_1}{d_2}f\right)^{-(d_1+d_2)/2}";
 tmp="$"+tmp1+tmp2+tmp3+"$";
-drawtext(pos+[2.5,0],tmp,size->18);
+drawtext(pos+[1.5,0],tmp,size->18);
 
 
 Addax(0);
@@ -4686,8 +4685,8 @@ Listplot("gr",pL,opb);
 Optc=["Color=red","Size=2"];
 Expr([px,py_ch/SCALEY],"w","\bullet$",Optc);
 tmp=px+0.9;
-Expr([tmp,py_1/SCALEY],"e","m=",["Size=1.3"]);
-Expr([tmp,py_2/SCALEY],"e","n=",["Size=1.3"]);
+Expr([tmp,py_1/SCALEY],"e","d_1=",["Size=1.3"]);
+Expr([tmp,py_2/SCALEY],"e","d_2=",["Size=1.3"]);
 Expr([tmp,py_3/SCALEY],"e","f=",["Size=1.3"]);
 Expr([tmp,py_4/SCALEY],"e","pr=",["Size=1.3"]);
 Expr([tmp,py_5/SCALEY],"e","pl=",["Size=1.3"]);
@@ -4697,7 +4696,7 @@ if(ch==3,
   if(A.x!=axnow,
     if((A.x-XMIN)*(A.x-XMAX)<0,
       tt=A.x;
-      Str_ch=format(tt,4);
+      Str_ch=Sprintf(tt,4);
       Str=Str_ch;
       ttnow=tt;
       axnow=A.x;
@@ -4794,7 +4793,6 @@ Subsedit(box,Str);
 
 Windispg();
 
-
 ;
 
 </script>
@@ -4813,12 +4811,12 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [0.0, -1.6, 4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 2.4, 0.4], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, 0.0, 2.645859255636305], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
-    {name: "Text3", type: "EditableText", pos: [-3.9, -4.0, -1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "10", textsize: 20.0},
+    {name: "A", type: "Free", pos: [4.0, 0.0, 2.0603002400456916], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
+    {name: "Text3", type: "EditableText", pos: [-3.9, -4.0, -1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "23", textsize: 20.0},
     {name: "Text4", type: "EditableText", pos: [4.0, 3.4871794871794872, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, textsize: 20.0},
-    {name: "Text5", type: "EditableText", pos: [4.0, 2.871794871794872, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.2542", textsize: 20.0},
+    {name: "Text5", type: "EditableText", pos: [4.0, 2.871794871794872, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.0637", textsize: 20.0},
     {name: "Text0", type: "EditableText", pos: [-3.391304347826087, -4.0, -0.8695652173913044], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "20", textsize: 20.0},
-    {name: "Text6", type: "EditableText", pos: [4.0, 2.2564102564102564, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.7458", textsize: 20.0},
+    {name: "Text6", type: "EditableText", pos: [4.0, 2.2564102564102564, 1.0256410256410258], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.9363", textsize: 20.0},
     {name: "Text9", type: "Button", pos: [-2.823529411764706, -4.0, -1.1764705882352942], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=3;\nokflg=0;", text: "f-p", textsize: 18.0},
     {name: "Text10", type: "Button", pos: [-3.428571428571429, -4.0, -1.4285714285714286], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=4;\nokflg=0;", text: "pr-f", textsize: 18.0},
     {name: "Text11", type: "Button", pos: [4.0, 3.666666666666667, 1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=5;\nokflg=0;", text: "pl-f", textsize: 18.0},
@@ -4837,20 +4835,19 @@ var cdy = CindyJS({
     {name: "Text37", type: "Button", pos: [4.0, 3.253619192832838, 0.7211790245774102], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Delete()\";doflg=0;matflg=0;", text: "　　", textsize: 24.0},
     {name: "Text27", type: "Button", pos: [4.0, 1.0864118204628899, 0.5305411893052439], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n3\";", text: "　　", textsize: 24.0},
     {name: "Text31", type: "Button", pos: [4.0, 1.5411191915828018, 0.5294391974578398], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n6\";", text: "\u0000　　", textsize: 24.0},
-    {name: "Text7", type: "Button", pos: [-2.086956521739131, -4.0, -0.8695652173913044], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=1;\nokflg=0;", text: "自由度", textsize: 14.0},
-    {name: "Text8", type: "Button", pos: [-2.4, -4.0, -1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=2;\nokflg=0;", text: "自由度", textsize: 14.0}
+    {name: "Text7", type: "Button", pos: [-2.086956521739131, -4.0, -0.8695652173913044], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=1;\nokflg=0;", text: "df1", textsize: 14.0},
+    {name: "Text8", type: "Button", pos: [-2.4, -4.0, -1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=2;\nokflg=0;", text: "df2", textsize: 14.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 784,
-    height: 525,
-    transform: [{visibleRect: [-0.7877253946427073, 6.628032866034093, 10.558703017079521, -0.9627754823410867]}],
-    grid: 1.0,
+    width: 715,
+    height: 453,
+    transform: [{visibleRect: [-0.7081571729616258, 6.564378288689229, 10.670098527433037, -0.6445025956167606]}],
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2066, version: [3, 0, 2066]}
+  cinderella: {build: 2067, version: [3, 0, 2067]}
 });
     </script>
 </head>
@@ -4867,5 +4864,4 @@ var cdy = CindyJS({
 </ol></font>
 </div>
 </body>
-<footer><p align="center"><font size="4">&copy; 2023 Setsuo Takato</font></p></footer>
-</html>
+<footer><p align="center"><font size="4">&copy; 2023 Setsuo Takato</font></p></footer></html>
