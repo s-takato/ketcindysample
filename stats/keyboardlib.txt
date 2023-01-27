@@ -344,8 +344,6 @@ Clear():=(
   Str="";
   Strnq="";
   npos=0;
-  Strnow=Str;
-  Subsedit(5,Str);
 );
 
 Left():=(
