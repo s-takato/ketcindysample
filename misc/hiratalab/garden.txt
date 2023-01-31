@@ -1,0 +1,69 @@
+Ketinit();
+Setwindow([0,10],[0,10]);
+Addax(0);
+Letter([-1.1,-1.1],"e","半径",["Size=1.2","Color=blue"]);
+Slider("R",[0.1,-1],[10,-1]);
+rr=R.x/10;
+Expr(R,"s2",Sprintf(rr,1));
+Framedata();
+
+if(startflg==1,
+  qL=[];
+  ctr=1;
+  forall(1..4,ii,
+    forall(1..4,jj,
+      Putpoint("P"+ctr,[2*ii,2*jj]);
+      qL=append(qL,parse("P"+ctr));
+      ctr=ctr+1;
+    );
+  );
+  forall(17..25,jj,
+    Putpoint("P"+ctr,[-1,26-jj]);
+    qL=append(qL,parse("P"+ctr));
+    ctr=ctr+1;
+  );
+  Putpoint("R",[5,-1]);
+  //no ketjs on
+  Settextkey(30,[-3,9],"設定","setflg=1;dispflg=0;");
+  Settextkey(31,[-3,7.5],"開始","dispflg=1;setflg=0;");
+//  Settextkey(32,[-1.1,-1.1],"半径","",18,5,0.3);
+  //no ketjs off
+  startflg=0;
+);
+
+pL=select(qL,(#.x*(#.x-10)<0)&(#.y*(#.y-10)<0));
+ptL=apply(pL,#.xy);
+ptall=length(ptL);
+forall(1..ptall,
+  Circledata(text(#),[ptL_#,rr],["Msg=n"]);
+);
+
+if(dispflg==1,
+  nang=100;
+  angL=apply(1..(nang-1),pi/2/nang*#);
+  vL=apply(angL,[cos(#),sin(#)]);
+  lineL=[];ctr=1000;
+  forall(1..(length(vL)),nv,
+    v=vL_nv;
+    flg=0;
+    forall(1..ptall,np,
+      if(flg==0,
+        u=ptL_np;
+        dd=abs(Crossprod(u,v));
+        if(dd<rr,flg=1);
+      );
+    );
+    if(flg==0,
+      lineL=append(lineL,v);
+    );
+  );
+  forall(1..(length(lineL)),
+    Listplot(text(#),
+      [[0,0],10*sqrt(2)*lineL_#],["Msg=n"]);
+  );
+);
+
+Windispg();
+
+//Help("Settextkey");
+
