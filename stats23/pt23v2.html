@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <title>pt23v2.cdy</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #CSConsole {
+            background-color: #FAFAFA;
+            border-top: 1px solid #333333;
+            bottom: 0px;
+            height: 200px;
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/KetCindyPlugin.js"></script>
+<script id="csinit" type="text/x-cindyscript">
+//KETlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+setdirectory(Dircdy);
+import("ketcindylibkey.cs");
+import("keyboardlib.txt");
+//Alltextkey(1);
+//Setkeystyle();
+
+px=2.5; py=[3.6,3,2.4,1.8];
+Seteditable(3,["","Size=20","Width=90"]); //no ketjs on
+Seteditable(4,["","Size=20","Width=90"]);
+Seteditable(5,["","Size=20","Width=90"]);
+//Seteditable(6,["","Size=20","Width=90"]);
+Text51.xy=[px-0.5,py_1];
+Text52.xy=[px-0.5,py_2];
+Text53.xy=[px-0.5,py_3];
+//Text54.xy=[px,py_4];
+Text56.xy=[px-2.1,py_1];
+Text57.xy=[px-2.1,py_2];
+Text58.xy=[px-2.1,py_3];
+//Text59.xy=[px-1.6,py_4];
+
+Tblk=[21,22,23,25,26,27,29,30,31,33,34,35,37,38,39];
+dpx0=3.76;dpy0=0.46;dpx=1;dpy=0.8;
+forall(1..(length(Tblk)),
+  ii=floor((#-1)/3)+1;
+  jj=mod((#-1),3)+1;
+  name=Tblk_#;
+  pos=[dpx0+(jj-1)*dpx,dpy0+(ii-1)*dpy];
+  disp="　　";
+  script="";
+  Settextkey(name,pos,disp,script);
+);
+//no ketjs off
+
+px=px-2.2; py=apply(py,#+0.1);
+
+//gammcof=[76.18009172947146,-86.50532032941677,
+//         24.01409824083091,-1.231739572450155,
+//         0.1208650973866179*10^(-2),
+//        -0.5395239384953*10^(-5)];
+
+gammcof=[76.18009173,-86.50532033,
+         24.01409824,-1.23173957,
+         0.12086510*10^(-2),
+        -0.53952394*10^(-5)];
+
+gammln(xx):=(
+  regional(x,y,tmp,ser);
+  x=xx;y=xx;
+  tmp=x+5.5;
+  tmp=tmp-(x+0.5)*log(tmp);
+  ser=1.000000000190015;
+//  ser=1;
+  forall(gammcof, y=y+1; ser=ser+#/y);
+  -tmp+log(2.5066282746310005*ser/x);
+//  -tmp+log(2.50662827*ser/x);
+);
+
+beta(p,q):=(
+  exp(gammln(p)+gammln(q)-gammln(p+q));
+);
+
+
+//beta(p,q):=(
+//  regional(fun,out,tmp);
+//  tmp="(p+q)*(p+q+1)*(p+q+2)*(p+q+3)/(p*q*(p+1)*(q+1))";
+//  tmp=tmp+"*t^(p+1)*(1-t)^(q+1)";
+//  fun=Assign(tmp,["p",p,"q",q]);
+//  out=Integrate(fun,"t=[0,1]",["Num=500"]);
+//);
+
+coef(n):=(
+  regional(tmp,out);
+  tmp=beta(n/2,1/2);
+  out=1/(sqrt(n)*tmp);
+  out;
+);
+
+//coef(n):=(
+//  regional(tmp,out);
+//  tmp=beta(n/2,1/2);
+//  out=1/(sqrt(n)*tmp);
+//  out;
+//);
+
+//println(format(beta(5/2,1/2),6));
+//println(format(dt(0,5),6));
+
+
+dt(x,n):=(
+  regional(tmp);
+  tmp=-gammln(n/2)-gammln(1/2)+gammln((n+1)/2);
+  exp(tmp-(n+1)/2*log(1+x^2/n))/sqrt(n);
+);
+
+coeflog(n):=-gammln(n/2)-gammln(1/2)+gammln((n+1)/2)-log(n)/2;
+dt(x,n,co):=exp(co-(n+1)/2*log(1+x^2/n));
+
+//dt(x,n):=(
+//  //global coefn
+//  coef(n)*(1+x^2/n)^(-(n+1)/2);
+//);
+
+ptg(x,n):=(
+  regional(y);
+  y=0.5+Integrate("dt(t,n)","t=[0,x]",["Num=100"]);
+  y;
+);
+ptg(x,xpL,n):=(
+  regional(y,rng);
+  rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
+  y=xpL_2+Integrate("dt(t,df)",rng,["Num=10"]);
+  y;
+);
+
+makecxp(df):=(
+  regional(tmp,fun,rng);
+  //global coefn,xL,pL
+  coefn=coeflog(df);
+  xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);
+  fun=Assign("dt(t,n,cf)",["n",df,"cf",coefn]);
+  pL=[0.5+Integrate(fun,"t=[0,XMIN]",["Num=100"])];
+  forall(1..100,
+    rng=Assign("t=[t1,t2]",["t1",xL_#,"t2",xL_(#+1)]);
+    tmp=pL_(-1)+Integrate(fun,rng,["Num=10"]);
+    pL=append(pL,tmp);
+  );
+);
+
+findxp(x):=(
+  regional(flg,nn,tmp,tmp1,out);
+  //global xL,pL
+  nn=length(xL);
+  out=[xL_1,pL_1];
+  flg=0;
+  while((flg==0)&(nn>0),
+    tmp=xL_nn;
+    if(tmp<x,
+      tmp1=xL_(nn+1);
+      if(|tmp-x|<|tmp1-x|,
+        out=[tmp,pL_nn];
+      ,
+        out=[tmp1,pL_(nn+1)];
+      );
+      flg=1;
+    ,
+      nn=nn-1;
+    );
+  );
+  out;
+);
+
+qtg(p,n):=(
+  regional(eps,x1,x2,x,y1,y2,ctr);
+  eps=10^(-6);
+  x1=XMIN; x2=XMAX;
+  y1=1-ptg(x1,findxp(x1),n);
+  y2=1-ptg(x2,findxp(x2),n);
+  ctr=1;
+  while((|y2-y1|>eps)&(ctr<40),
+    x=(x1+x2)/2;
+    y=1-ptg(x,findxp(x),n);
+    if(y>p,
+      x1=x; y1=y;
+    ,
+      x2=x; y2=y;
+    );
+    ctr=ctr+1;
+  );
+  x;
+);
+
+Str2num(str,chno):=(
+  regional(tmp1,tmp2,ok,out);
+  ok=false;
+  out=1000;
+  if(length(str)>0,
+    tmp1=Indexall(str,".");
+    tmp2=Indexall(str,"-");
+    if(length(tmp1)<=1,
+      if(length(tmp2)==0,
+        ok=true;
+      );
+      if(length(tmp2)==1,
+        if(tmp2_1==1,
+          ok=true;
+        );
+      );
+    );
+  );
+  if(ok==true,
+    out=parse(str);
+    if(chno==1,
+      out=max([1,out]);
+      out=min([50,out]);
+    );
+    if(chno==2,
+      out=max([XMIN,out]);
+      out=min([XMAX,out]);
+    );
+    if(chno==3,
+      out=max([0,out]);
+      out=min([1,out]);
+    );
+    if(chno==4,
+      out=max([0,out]);
+      out=min([1,out]);
+    );
+  );
+  out;
+);
+
+drwt(line,str):=(
+  drawtext([posx,posy]," "+line+" "+str,size->15);
+  posy=posy-0.4;
+  if(round((5-posy)/0.4)==3,
+    posy=posy-0.4*3;
+  );
+);
+textf(v):=format(v,4);
+
+prn(val):=println(format(val,6));//no ketjs
+
+startflg=1;
+BoxL=[51,52,53,54];
+StrL=["","","",""];
+;
+
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+//figures
+posx=-1.5;
+posy=4.5;
+
+Ketinit();
+
+Setketcindyjs(["Size=1.1"]);
+//Ketcindyjsmain(//no ketjs
+//["<pf5/fp>_;$t$分布の$p$値","<pf4/fp>_;_;$df$は自由度"],//no ketjs
+//["<p><small>&copy;2021 Setsuo Takato</small></p>"]);//no ketjs
+Ketcindyjsbody([],//no ketjs on
+["<footer>","<p><small>_;&copy; 2023 Setsuo Takato</small></p>","</footer>"]);
+// no ketjs off
+
+Addax(0);
+//xmn=0; xmx=8;
+xmn=-4.0+0.00001; xmx=-xmn;//-3.5
+Setscaling(5);//8
+Setwindow([xmn,xmx],[-0.1,1]);//[-0.1,0.6]
+Setax(["","t","","",""," "]);
+drwxy();
+Slider("A",[XMIN,0],[XMAX-0.00001,0]);
+inspect(A,"ptsize",5.1);// no ketjs
+//op=["dr,2"];
+//opb=["dr,2","Color=blue"];
+//opr=["dr,2","Color=red"];
+//opg=["dr,2","Color=[0.64,0,0.95,0.4]"];
+
+
+tmp=px+1;
+Expr([tmp,py_1/SCALEY],"e","df=",["Size=1.3"]);
+Expr([tmp,py_2/SCALEY],"e","t=",["Size=1.3"]);
+Expr([tmp,py_3/SCALEY],"e","p=",["Size=1.3"]);
+//Expr([tmp,py_4/SCALEY],"e","pl=",["Size=1.3"]);
+
+if(startflg==1,
+  StrL=["","","",""];
+  ch=2;
+  chnow=0;
+  box=BoxL_ch;
+  df=5;
+  dfnow=0;
+  makecxp(df);
+  Ketcindyjsdata(["coefn",coefn,"xL",xL,"pL",pL]);//no ketjs
+  fun1=apply(xL,[#,dt(#,df,coefn)]);
+  xx=2.5705;
+  pp=1-ptg(xx,findxp(xx),df);
+  pl=1-pp;
+  xxnow=-1;
+  ppnow=-1;
+  plnow=-1;
+  Putpoint("A",[xx,0]);
+  axnow=A.x;
+  StrL_1=textf(df);
+  StrL_2=textf(xx);
+  StrL_3=textf(pp);
+//  StrL_4=textf(pl);
+  forall(1..3,Subsedit(BoxL_#,StrL_#));
+  Str=StrL_ch;
+  Eps=10^(-5);
+  funflg=0;
+  startflg=0;
+);
+nameL=Keyname();
+nmove=[0,-0.1];
+dy=8; dx=10;
+Keytable(3,dx,5,dy,[3.5,0.2],[1,1,0],nameL,nmove,20);//[5,0.5]
+Optr=["dr,2","Color=red"];
+Optb=["dr,2","Color=blue"];
+//Listplot("-gr1",fun1,Optb);
+//Listplot("gr2",gr2,["dr,2"]);
+//Listplot("gr3",gr3,Optg);
+//Listplot("h1",[[XMIN,1],[XMAX,1]]);
+tmp=px+0.6;
+op=["dr,2","Msg=n"];
+opr=append(op,"Color=red");
+opb=append(op,"Color=blue");
+opg=append(op,"Color=[0.64,0,0.95,0.4]");
+
+if(|df-dfnow|>Eps,
+  makecxp(df);
+  fun1=apply(xL,[#,dt(#,df,coefn)]);
+  dfnow=df;
+);
+
+Str=StrL_ch;
+
+if(funflg==1,
+  npos=length(Str);//230125
+  if(contains(Manifun,name),
+    parse(name+";");
+  ,
+    tmp=indexof(Str,"?");
+    if(tmp>0,npos=tmp,npos=length(Str));
+    out=Addfunstr(name,npos,Str);
+    tmp=length(out_1)-length(Str);
+    npos=npos+tmp;
+    Str=out_1; //npos=out_2;
+    if(npos<length(Str),
+      tmp=replace(Str,"?","");
+      tmp1=substring(tmp,0,npos-1)+"?";
+      Str=tmp1+substring(tmp,npos-1,length(tmp));
+    );
+  );
+  funflg=0;
+);
+
+box=BoxL_ch;
+StrL_ch=Str;
+Subsedit(box,Str);
+
+if(ch==1,
+  tmp=Str2num(Str,ch);
+  if(tmp<1000,
+    df=tmp;
+    if(|df-dfnow|>Eps,
+      if(df>1,tmp=0,tmp=1);
+      fun1=xL;
+    );
+    StrL_ch=Str;
+  );
+  xx=A.x;
+  pp=1-ptg(xx,findxp(xx),df);//pchi
+  pl=1-pp;
+  xxnow=xx;
+  axnow=A.x;
+  Subsedit(BoxL_2,textf(xx));
+  StrL_2=textf(xx);
+  Subsedit(BoxL_3,textf(pp));
+  StrL_3=textf(pp);
+//  Subsedit(BoxL_4,textf(pl));
+//  StrL_4=textf(pl);
+);
+
+Listplot("-gr1",fun1,opb);
+
+if(ch==2,
+  if(|A.x-axnow|>Eps,
+    xx=A.x;
+    pp=1-ptg(xx,findxp(xx),df);//pchi
+    pl=1-pp;
+    xxnow=xx;
+    axnow=A.x;
+    StrL_2=textf(xx);
+    StrL_3=textf(pp);
+    Subsedit(BoxL_2,textf(xx));
+    Subsedit(BoxL_3,textf(pp));
+  ,
+    tmp=Str2num(Str,ch);
+    if(tmp<1000,
+      xx=tmp;
+      if(|xx-xxnow|>Eps,
+        xxnow=xx;
+        pp=1-ptg(xx,findxp(xx),df);
+        pl=1-pp;
+        Subsedit(BoxL_3,textf(pp));
+        StrL_3=textf(pp);
+//        Subsedit(BoxL_4,textf(pl));
+//        StrL_4=textf(pl);
+        if((xx-XMIN)*(xx-XMAX)<Eps,
+          Putpoint("A",[xx,0]);
+          axnow=A.x;
+        );
+      );
+    );
+  );
+  StrL_3=textf(pp);
+);
+
+if(ch==3,
+  tmp=Str2num(Str,ch);
+  if(tmp<1000,
+    pp=tmp;
+    pl=1-pp;
+    xx=qtg(pp,df);
+    Putpoint("A",[xx,0]);
+    axnow=A.x;
+    Subsedit(BoxL_2,textf(xx));
+    StrL_2=textf(xx);
+//    Subsedit(BoxL_4,textf(pl));
+//    StrL_4=textf(pl);
+  );
+);
+
+Optc=["Color=red","Size=2"];
+Expr([px,py_(ch)/SCALEY],"w","\bullet",Optc);
+tmp=1-ptg(A.x,findxp(A.x),df);//pchi
+pR=[A.x,1-tmp];
+tmp=[XMIN,"s1",text(XMIN),A.x,textf(A.x),XMAX,"s1",text(XMAX)];
+Htickmark(tmp);
+Vtickmark([0.1,"0.1",0.2,"0.2",0.5,"0.5"]);
+pP=[A.x,dt(A.x,df,coefn)];//dchi
+Listplot("1",[pP,[A.x,0]],opr);
+
+Windispg();
+;
+
+</script>
+    <script type="text/javascript">
+var cdy = CindyJS({
+  scripts: "cs*",
+  defaultAppearance: {
+    dimDependent: 0.7,
+    fontFamily: "sans-serif",
+    lineSize: 1,
+    pointSize: 5.0,
+    textsize: 12.0
+  },
+  angleUnit: "°",
+  geometry: [
+    {name: "SW", type: "Free", pos: [4.0, 0.500001250003125, -1.00000250000625], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "NE", type: "Free", pos: [-3.199992, -4.0, -0.8], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "Text51", type: "EditableText", pos: [-2.2222222222222223, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "5", textsize: 20.0},
+    {name: "Text52", type: "EditableText", pos: [-2.6666666666666665, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "2.5705", textsize: 20.0},
+    {name: "Text53", type: "EditableText", pos: [-3.3333333333333335, -4.0, -1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.025", textsize: 20.0},
+    {name: "A", type: "Free", pos: [4.0, 0.0, 1.5561174868702585], color: [1.0, 0.0, 0.0], labeled: true, size: 5.1},
+    {name: "Text1", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.286, 0.286], fillalpha: 0.27272728085517883, script: "Viewtex();kc();", text: "Figure", textsize: 18.0, dock: {corner: "UL", offset: [10.0, -20.0]}},
+    {name: "Text2", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "if(length(Shellparent)>0,  Makeshell(),Makebat(););WritetoSci(2);kc();", text: "Parent", textsize: 18.0, dock: {corner: "UL", offset: [77.0, -20.0]}},
+    {name: "Text9", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.44, script: "Mkketcindyjs(append(KETJSOP,\"Web=n\"));", text: "Ketjsoff", textsize: 18.0, dock: {corner: "UL", offset: [154.0, -20.0]}},
+    {name: "Text22", type: "Button", pos: [4.0, 0.3865546218487395, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n0\";", text: "　　", textsize: 18.0},
+    {name: "Text21", type: "Button", pos: [4.0, 0.4893617021276596, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"-\";", text: "　　", textsize: 18.0},
+    {name: "Text23", type: "Button", pos: [4.0, 0.3194444444444445, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\".\";", text: "　　", textsize: 18.0},
+    {name: "Text25", type: "Button", pos: [4.0, 1.3404255319148937, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n1\";", text: "　　", textsize: 18.0},
+    {name: "Text26", type: "Button", pos: [4.0, 1.0588235294117647, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n2\";", text: "　　", textsize: 18.0},
+    {name: "Text27", type: "Button", pos: [4.0, 0.875, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n3\";", text: "　　", textsize: 18.0},
+    {name: "Text29", type: "Button", pos: [4.0, 2.1914893617021276, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n4\";", text: "　　", textsize: 18.0},
+    {name: "Text30", type: "Button", pos: [4.0, 1.73109243697479, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n5\";", text: "　　", textsize: 18.0},
+    {name: "Text31", type: "Button", pos: [4.0, 1.4305555555555558, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n6\";", text: "　　", textsize: 18.0},
+    {name: "Text33", type: "Button", pos: [4.0, 3.0425531914893615, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n7\";", text: "　　", textsize: 18.0},
+    {name: "Text34", type: "Button", pos: [4.0, 2.403361344537815, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n8\";", text: "　　", textsize: 18.0},
+    {name: "Text35", type: "Button", pos: [4.0, 1.986111111111111, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n9\";", text: "　　", textsize: 18.0},
+    {name: "Text37", type: "Button", pos: [4.0, 3.893617021276596, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Delete()\";doflg=0;matflg=0;", text: "　　", textsize: 18.0},
+    {name: "Text38", type: "Button", pos: [4.0, 3.075630252100841, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Clear()\";doflg=0;matflg=0;", text: "　　", textsize: 18.0},
+    {name: "Text39", type: "Button", pos: [4.0, 2.541666666666667, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "　　", textsize: 18.0},
+    {name: "Text56", type: "Button", pos: [-0.4444444444444443, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=1;", text: "自由度", textsize: 18.0},
+    {name: "Text57", type: "Button", pos: [-0.5333333333333332, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=2;", text: "t->p", textsize: 18.0},
+    {name: "Text58", type: "Button", pos: [-0.6666666666666665, -4.0, -1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=3;", text: "p->t", textsize: 18.0}
+  ],
+  ports: [{
+    id: "CSCanvas",
+    width: 729,
+    height: 421,
+    transform: [{visibleRect: [-4.50328631515267, 5.623354120965771, 6.682048348378153, -0.8362150057097804]}],
+    grid: 1.0,
+    background: "rgb(168,176,192)"
+  }],
+  csconsole: false,
+  cinderella: {build: 2069, version: [3, 0, 2069]}
+});
+    </script>
+</head>
+<body>
+    <div id="CSCanvas"></div>
+</body>
+</html>
