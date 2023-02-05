@@ -4229,7 +4229,10 @@ betacf(a, b, x):=(
 );
 
 ptK(x, n):=(
-  betai(n/2,1/2,n/(n+x^2))/2;
+  regional(out);
+  out=betai(n/2,1/2,n/(n+x^2))/2;
+  if(x<0,out=1-out);
+  out;
 );
 
 
@@ -4380,7 +4383,7 @@ StrL=["","","",""];
 posx=-1.5;
 posy=4.5;
 
-Ketinit();
+Ketinit(0.2);
 
 
 Addax(0);
@@ -4471,9 +4474,7 @@ if(ch==1,
     StrL_ch=Str;
   );
   xx=A.x;
-  tmp1=ptK(xx-0.00005,df);
-  tmp2=ptK(xx+0.00005,df);
-  pp=(tmp1+tmp2)/2;
+  pp=ptK(xx,df);
   xxnow=xx;
   axnow=A.x;
   Subsedit(BoxL_2,textf(xx));
@@ -4488,9 +4489,7 @@ Listplot("-gr1",fun1,opb);
 if(ch==2,
   if(|A.x-axnow|>Eps,
     xx=A.x;
-    tmp1=ptK(xx-0.00005,df);
-    tmp2=ptK(xx+0.00005,df);
-    pp=(tmp1+tmp2)/2;
+    pp=ptK(xx,df);
     xxnow=xx;
     axnow=A.x;
     StrL_2=textf(xx);
@@ -4585,9 +4584,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 856,
-    height: 429,
-    transform: [{visibleRect: [-4.825091826031471, 5.243738249771079, 7.11206917290813, -0.7401856442989013]}],
+    width: 832,
+    height: 428,
+    transform: [{visibleRect: [-4.810154207156253, 5.239769255961277, 6.789452110579401, -0.7288112435085232]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],

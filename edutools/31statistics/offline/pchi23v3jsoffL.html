@@ -4205,9 +4205,8 @@ Listplot("-gr1",fun1,opb);
 if(ch==2,
   if(|A.x-axnow|>Eps,
     xx=sc*A.x;
-    tmp1=1-pchi(xx-0.00005,df);
-    tmp2=1-pchi(xx+0.00005,df);
     pp=(tmp1+tmp2)/2;
+    pp=1-pchi(xx,df);
     pl=1-pp;
     Subsedit(BoxL_2,textf(xx));
     Subsedit(BoxL_3,textf(pp));
@@ -4223,15 +4222,13 @@ if(ch==2,
       xx=tmp;
       if(|xx-xxnow|>Eps,
         xxnow=xx;
-        tmp1=1-pchi(xx-0.00005,df);
-        tmp2=1-pchi(xx+0.00005,df);
-        pp=(tmp1+tmp2)/2;
+        pp=1-pchi(xx,df);
         pl=1-pp;
         Subsedit(BoxL_3,textf(pp));
         StrL_3=textf(pp);
         Subsedit(BoxL_4,textf(pl));
         StrL_4=textf(pl);
-        if((xx/sc-XMIN)*(xx/sc-XMAX)<-Eps,
+        if((xx/sc-XMIN)*(xx/sc-XMAX)<Eps,
           Putpoint("A",[xx/sc,0]);
           axnow=A.x;
         );
@@ -4331,7 +4328,7 @@ var cdy = CindyJS({
     id: "CSCanvas",
     width: 749,
     height: 433,
-    transform: [{visibleRect: [-0.7751697367592693, 4.963077166243146, 8.723786374806386, -0.5326478087302297]}],
+    transform: [{visibleRect: [-0.7741440002817825, 4.9587061639670935, 8.724812111283873, -0.5370188110062816]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
