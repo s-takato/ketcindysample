@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>pt23v3.cdy</title>
+    <title>pnorm23v3.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -2572,9 +2572,6 @@ Strictmove(pCorg,sep):=(
     );
   );
 );
-Addax(param):=(
-  ADDAXES=text(param);
-);
 Setscaling(sc):=(
   regional(tmp);
   tmp=format(sc,5);
@@ -2588,6 +2585,9 @@ Setscaling(sc):=(
     Com0th("Setscaling("+tmp_1+","+tmp_2+")");
   );
   Setwindow("Msg=no");
+);
+Addax(param):=(
+  ADDAXES=text(param);
 );
 Setax(arglistorg):=(
   regional(arglist,st,nn,tmp,eqL); 
@@ -2693,35 +2693,6 @@ Putonseg(name,p1org,p2org,options):=(
     tmp=(p2_1-p1_1)/(p2_2-p1_2)*(p_2-p1_2)+p1_1;
     parse(name+".x="+tmp+";"); //190415
   ); //190120to
-);
-Textedit(no):=(
-  regional(tmp,tmp1,tmp2);
-  tmp="Text"+text(no)+".currenttext";
-  tmp1=parse(tmp);
-  tmp1;
-);
-Textedit(n0,str):=Textedit(n0,str,"="); //210406from
-Textedit(n0,str,sep):=( //210208from
-  regional(tmp,tmp1,tmp2,out);
-  tmp1=str;
-tmp1=Textedit(n0); //
-  tmp2=tmp1;
-  if(length(sep)>0,
-    tmp=Strsplit(sep+tmp1,sep);
-    tmp2=tmp_(-1);
-  ); //210406to
-  if(length(tmp2)==0,out=str,out=tmp2);
-  out;
-); //210208to
-Subsedit(no,str):=(
- regional(tmp,tmp1);
- if(isstring(str),
-   tmp1=str;
- ,
-   tmp1=text(str);
- );
- tmp="Text"+text(no); //210211[2lines]
- parse(tmp).currenttext=tmp1;
 );
 Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
 Expr(list):=Expr(list,[]);
@@ -2836,6 +2807,35 @@ Lettermove(dir,str):=(
   if(length(out)==0,out=0,out=parse(out));
   out;
 );
+Textedit(no):=(
+  regional(tmp,tmp1,tmp2);
+  tmp="Text"+text(no)+".currenttext";
+  tmp1=parse(tmp);
+  tmp1;
+);
+Textedit(n0,str):=Textedit(n0,str,"="); //210406from
+Textedit(n0,str,sep):=( //210208from
+  regional(tmp,tmp1,tmp2,out);
+  tmp1=str;
+tmp1=Textedit(n0); //
+  tmp2=tmp1;
+  if(length(sep)>0,
+    tmp=Strsplit(sep+tmp1,sep);
+    tmp2=tmp_(-1);
+  ); //210406to
+  if(length(tmp2)==0,out=str,out=tmp2);
+  out;
+); //210208to
+Subsedit(no,str):=(
+ regional(tmp,tmp1);
+ if(isstring(str),
+   tmp1=str;
+ ,
+   tmp1=text(str);
+ );
+ tmp="Text"+text(no); //210211[2lines]
+ parse(tmp).currenttext=tmp1;
+);
 Htickmark(arglist):=Htickmark("",arglist,[]);
 Htickmark(Arg1,Arg2):=(
   if(isstring(Arg1),
@@ -2892,6 +2892,23 @@ Htickmark(nm,arglist,options):=(
     Listplot("ht"+nm+text(nn),tmp,append(options,"Msg=n"));
     Expr([GENTEN+[tmp1,0],tmp2,tmp3],options); 
   );
+);
+Sprintf(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(!islist(value),  // 17.03.12from
+    if(isstring(value),
+      vv=value;
+    ,
+      vv=Textformat(value,dig);
+    );  // 17.03.12from
+    if(indexof(vv,".")==0,vv=vv+".");
+    vv=vv+"0000000000000000";
+    tmp=indexof(vv,".")+dig;
+    vv=substring(vv,0,tmp);
+  ,
+    vv=apply(value,Sprintf(#,dig));
+  );
+  vv;
 );
 Vtickmark(arglist):=Vtickmark("",arglist,[]);
 Vtickmark(Arg1,Arg2):=(
@@ -3250,9 +3267,8 @@ fillpoly(parse("ar"+nm+"h"),color->tmp); //
 );
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1.1;
-coefn=0.379606689822;
-pL=[0.005164123479,0.005707069594,0.006316673321,0.00700213799,0.007774073305,0.008644672555,0.009627991993,0.010740235868,0.012000078425,0.01342910074,0.015052153984,0.016897906748,0.018999394584,0.021394621191,0.024127349759,0.02724771151,0.030813101689,0.034888991379,0.039549713917,0.044879448517,0.050972629405,0.057934616958,0.065881840579,0.074941438752,0.085250751541,0.096955074406,0.110205280789,0.12515377139,0.141948922907,0.160728906815,0.181612331379,0.204689295342,0.230010819087,0.257578053683,0.287333766597,0.319153085427,0.352840214877,0.388128166365,0.424683498795,0.462118254178,0.500003113009,0.537887989238,0.575322717829,0.61187800808,0.647165901784,0.680852961396,0.712672201117,0.74242782853,0.769994971787,0.795316405357,0.818393280263,0.839276618662,0.858056520649,0.874851597358,0.889800017011,0.903050158505,0.914754422577,0.925063682521,0.934123233514,0.942070415252,0.949032365797,0.955125514114,0.960455220137,0.96511591704,0.969191784885,0.97275715601,0.975877501159,0.978610215271,0.981005429607,0.983106906489,0.984952649715,0.986575694652,0.988004709726,0.989264546127,0.990376784488,0.991360099108,0.992230694145,0.993002625768,0.993688087282,0.994297688166,0.994840631783,0.995324931971,0.995757568427,0.996144623124,0.996491416081,0.996802585948,0.997082195411,0.997333804105,0.997560532825,0.997765129502,0.997950005041,0.998117285152,0.998268844769,0.998406338552,0.998531233816,0.998644826128,0.998748265662,0.998842573729,0.99892865758,0.999007327398,0.999079302972];
-xL=[-3.99999,-3.8999902,-3.7999904,-3.6999906,-3.5999908,-3.499991,-3.3999912,-3.2999914,-3.1999916,-3.0999918,-2.999992,-2.8999922,-2.7999924,-2.6999926,-2.5999928,-2.499993,-2.3999932,-2.2999934,-2.1999936,-2.0999938,-1.999994,-1.8999942,-1.7999944,-1.6999946,-1.5999948,-1.499995,-1.3999952,-1.2999954,-1.1999956,-1.0999958,-0.999996,-0.8999962,-0.7999964,-0.6999966,-0.5999968,-0.499997,-0.3999972,-0.2999974,-0.1999976,-0.0999978,0.000002,0.1000018,0.2000016,0.3000014,0.4000012,0.500001,0.6000008,0.7000006,0.8000004,0.9000002,1,1.0999998,1.1999996,1.2999994,1.3999992,1.499999,1.5999988,1.6999986,1.7999984,1.8999982,1.999998,2.0999978,2.1999976,2.2999974,2.3999972,2.499997,2.5999968,2.6999966,2.7999964,2.8999962,2.999996,3.0999958,3.1999956,3.2999954,3.3999952,3.499995,3.5999948,3.6999946,3.7999944,3.8999942,3.999994,4.0999938,4.1999936,4.2999934,4.3999932,4.499993,4.5999928,4.6999926,4.7999924,4.8999922,4.999992,5.0999918,5.1999916,5.2999914,5.3999912,5.499991,5.5999908,5.6999906,5.7999904,5.8999902,5.99999];
+pL=[0.000033783732,0.000046259445,0.000063379084,0.000086699929,0.000118264749,0.000160649549,0.000217185425,0.000292166611,0.000390923183,0.000520151321,0.000688162639,0.000905244474,0.00118374438,0.001538969083,0.001989073928,0.00255575669,0.003264654681,0.004145880446,0.005234045247,0.006569502182,0.008197869629,0.010170727771,0.012545710665,0.015386548797,0.018762949748,0.022750288862,0.027429084232,0.032884234466,0.039204003632,0.046478745556,0.054799369084,0.064255556768,0.074933761467,0.086915017871,0.100272618519,0.115069715791,0.131356921774,0.149169986257,0.168527638576,0.189429681082,0.211855420181,0.235762514883,0.261086312651,0.287739728142,0.315613702729,0.344578262173,0.374484167297,0.405165128883,0.436440537376,0.46811862802,0.5,0.53188137198,0.563559462624,0.594834871117,0.625515832703,0.655421737827,0.684386299079,0.712260271858,0.738913687349,0.764237485117,0.788144579819,0.810570318918,0.831472361424,0.850830013743,0.868643078226,0.884930284209,0.899727381481,0.913084982129,0.925066238533,0.935744443232,0.945200630916,0.953521204793,0.960795996368,0.967115765534,0.972570915768,0.977249711138,0.981237050252,0.984613451203,0.987454289335,0.989829272229,0.991802130371,0.993430497818,0.994765954753,0.995854119554,0.996735345319,0.99744424331,0.998010926072,0.998461030917,0.99881625562,0.999094755526,0.999311837361,0.999479848679,0.999609076817,0.999707833389,0.999782814575,0.999839372992,0.999881754234,0.999913300071,0.999936620916,0.999953740555,0.999966216268];
+xL=[-4,-3.92,-3.84,-3.76,-3.68,-3.6,-3.52,-3.44,-3.36,-3.28,-3.2,-3.12,-3.04,-2.96,-2.88,-2.8,-2.72,-2.64,-2.56,-2.48,-2.4,-2.32,-2.24,-2.16,-2.08,-2,-1.92,-1.84,-1.76,-1.68,-1.6,-1.52,-1.44,-1.36,-1.28,-1.2,-1.12,-1.04,-0.96,-0.88,-0.8,-0.72,-0.64,-0.56,-0.48,-0.4,-0.32,-0.24,-0.16,-0.08,0,0.08,0.16,0.24,0.32,0.4,0.48,0.56,0.64,0.72,0.8,0.88,0.96,1.04,1.12,1.2,1.28,1.36,1.44,1.52,1.6,1.68,1.76,1.84,1.92,2,2.08,2.16,2.24,2.32,2.4,2.48,2.56,2.64,2.72,2.8,2.88,2.96,3.04,3.12,3.2,3.28,3.36,3.44,3.52,3.6,3.68,3.76,3.84,3.92,4];
 setdirectory(Dircdy);
 
 
@@ -4151,132 +4167,25 @@ Gridpaper():=(
   Vtickmark(tmp);
 );
 
-px=2.5; py=[3.8,3.2,2.6,2];
+px=1.5; py=[3.6,3];
+px=px-0.9; py=apply(py,#+0.1);
 
-px=px-2.2; py=apply(py,#+0.1);
-
-gammcof=[76.18009172947146,-86.50532032941677,
-         24.01409824083091,-1.231739572450155,
-         0.1208650973866179*10^(-2),
-        -0.5395239384953*10^(-5)];
-
-gammln(xx):=(
-  regional(x,y,tmp,ser);
-  x=xx;y=xx;
-  tmp=x+5.5;
-  tmp=tmp-(x+0.5)*log(tmp);
-  ser=1.000000000190015;
-  forall(gammcof, y=y+1; ser=ser+#/y);
-  -tmp+log(2.5066282746310005*ser/x);
+dnorm(x):=(
+  1/sqrt(2*pi)*exp(-x^2/2);
 );
 
-beta(p,q):=(
-  exp(gammln(p)+gammln(q)-gammln(p+q));
-);
-coef(n):=(
-  regional(tmp,out);
-  tmp=beta(n/2,1/2);
-  out=1/(sqrt(n)*tmp);
-  out;
-);
-
-dt(x,n):=(
-  regional(tmp);
-  tmp=-gammln(n/2)-gammln(1/2)+gammln((n+1)/2);
-  exp(tmp-(n+1)/2*log(1+x^2/n))/sqrt(n);
-);
-
-betai(a,b,x):=(
-  regional(bt);
-  if(or(x<0.0, x>1.0), println("Bad x in routine betai"));
-  if(or(x==0.0, x==1.0), bt=0.0,
-    bt=exp(gammln(a+b)-gammln(a)-gammln(b)+a*log(x)+b*log(1.0-x)));
-  if(x<(a+1.0)/(a+b+2.0), bt*betacf(a,b,x)/a, 1.0-bt*betacf(b,a,1.0-x)/b);
-);
-
-
-betaITMAX=100;//100
-betaEPS=3.0*10^(-7);//3.0*10^(-7)
-
-betacf(a, b, x):=(
-  regional(qap,qam,qab,em,tem,d,
-           bz,bm,bp,bpp,
-           az,am,ap,app,aold,m);
-
-  bm=1.0;az=bm;am=bm;
-  qab=a+b; //これらのqは係数(6.3.6)に現れる因子で使われる
-  qap=a+1.0;
-  qam=a-1.0;
-  bz=1.0-qab*x/qap;
-  m=1; //漸化式(5.2.5)による連分数の計算
-  while(m<betaITMAX,
-    em=m;
-    tem=em+em;
-    d=em*(b-em)*x/((qam+tem)*(a+tem));
-    ap=az+d*am; //漸化式の１ステップ（偶数）
-    bp=bz+d*bm;
-    d=-(a+em)*(qab+em)*x/((qap+tem)*(a+tem));
-    app=ap+d*az; //漸化式の次のステップ（奇数）
-    bpp=bp+d*bz;
-    aold=az; //古い答えを保存
-    am=ap/bpp; //桁あふれを避けるために再規格化する
-    bm=bp/bpp;
-    az=app/bpp;
-    bz=1.0;
-    if(abs(az-aold)<(betaEPS*abs(az)), m=betaITMAX+1, m=m+1);
-  );
-  if(betaITMAX<m, az, -1);
-);
-
-ptK(x, n):=(
-  betai(n/2,1/2,n/(n+x^2))/2;
-);
-
-
-JMAX=40;
-xacc=10^(-5);
-
-qtK(pp, n):=(
-  regional(xmid,fmid,ltb,rtb);
-  ltb=XMIN; rtb=XMAX;
-  j=1;
-  while(j<JMAX,
-    xmid=(ltb+rtb)/2;
-    fmid=ptK(xmid,n)-pp;
-    if(fmid>0, ltb=xmid, rtb=xmid);
-    if((abs(rtb-ltb)<xacc)%(fmid==0),j=JMAX);
-    j=j+1;
-  );
-  xmid;
-);
-
-
-ptg(x,n):=(
+pnorm(x):=(
   regional(y);
-  y=0.5+Integrate("dt(t,n)","t=[0,x]",["Num=100"]);
+  y=0.5+Integrate("dnorm(t)","t=[0,x]",
+    ["Num=100"]);
   y;
 );
-ptg(x,xpL,n):=(
+
+pnorm(x,xpL):=(
   regional(y,rng);
   rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
-  y=xpL_2+Integrate("dt(t,df)",rng,["Num=10"]);
+  y=xpL_2+Integrate("dnorm(t)",rng,["Num=10"]);
   y;
-);
-
-xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);
-
-
-makecxp(df):=(
-  regional(tmp,fun,rng);
-  coefn=coef(df);
-  xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);
-  fun=Assign("dt(t,n)",["n",df]);
-  pL=[0.5+Integrate(fun,"t=[0,XMIN]",["Num=100"])];
-  forall(1..100,
-    rng=Assign("t=[t1,t2]",["t1",xL_#,"t2",xL_(#+1)]);
-    tmp=pL_(-1)+Integrate(fun,rng,["Num=10"]);
-    pL=append(pL,tmp);
-  );
 );
 
 findxp(x):=(
@@ -4301,24 +4210,17 @@ findxp(x):=(
   out;
 );
 
-qtg(p,n):=(
-  regional(eps,x1,x2,x,y1,y2,ctr);
-  eps=10^(-6);
-  x1=XMIN; x2=XMAX;
-  y1=1-ptg(x1,findxp(x1),n);
-  y2=1-ptg(x2,findxp(x2),n);
-  ctr=1;
-  while((|y2-y1|>eps)&(ctr<40),
-    x=(x1+x2)/2;
-    y=1-ptg(x,findxp(x),n);
-    if(y>p,
-      x1=x; y1=y;
-    ,
-      x2=x; y2=y;
-    );
-    ctr=ctr+1;
+waittime():=waittime(1);
+waittime(tall):=(
+  regional(nall,nn,tmp,wtime);
+  nall=round(tall*100);
+  resetclock();
+  forall(1..nall,nn,
+    tmp=1..500;
+    tmp=apply(tmp,Sprintf(#,5));
+    tmp=apply(tmp,parse(#));
   );
-  x;
+  wtime=format(seconds(),4);
 );
 
 Str2num(str,chno):=(
@@ -4332,28 +4234,20 @@ Str2num(str,chno):=(
       if(length(tmp2)==0,
         ok=true;
       );
-      if(length(tmp2)==1,
-        if(tmp2_1==1,
-          ok=true;
-        );
+    );
+    if(length(tmp2)==1,
+      if(tmp2_1==1,
+        ok=true;
       );
     );
   );
   if(ok==true,
     out=parse(str);
     if(chno==1,
-      out=max([1,out]);
-      out=min([1000,out]);//50
-    );
-    if(chno==2,
       out=max([XMIN,out]);
       out=min([XMAX,out]);
     );
-    if(chno==3,
-      out=max([0.0,out]);
-      out=min([1.0,out]);
-    );
-    if(chno==4,
+    if(chno==2,
       out=max([0,out]);
       out=min([1,out]);
     );
@@ -4361,6 +4255,71 @@ Str2num(str,chno):=(
   out;
 );
 
+ztop(z):=(
+  1-pnorm(z,findxp(z));
+);
+
+ptoz(p):=(
+  regional(eps,x1,x2,y1,y2,x,y,ctr);
+  eps=10^(-6);
+  x1=XMIN; x2=XMAX;
+  y1=ztop(x1);
+  y2=ztop(x2);
+  ctr=1;
+  while((|x2-x1|>eps)&(ctr<20),
+    x=(x1+x2)/2;
+    y=ztop(x);
+    if(y>p,
+      x1=x; y1=y;
+    ,
+      x2=x; y2=y;
+    );
+    ctr=ctr+1;
+  );
+  (x1+x2)/2;
+);
+
+if(1==0,
+
+ztop(x):=(
+  regional(t,z,ans);
+  z=abs(x/sqrt(2));
+  t=1.0/(1.0+0.5*z);
+  ans=t*exp(-z*z-1.26551223+t*(1.00002368+t*(0.37409196
+  +t*(0.09678418+t*(-0.18628806+t*(0.27886807+
+  t*(-1.13520398+t*(1.48851587+t*(-0.82215223+
+  t*0.17087277)))))))));
+  1.0-ans/2;
+);
+
+ptoz(p):=(
+  regional(xmid,fmid,ltb,rtb,jmax,xacc);
+  jmax=41;
+  xacc=10^(-8);
+  ltb=0; rtb=XMAX;
+  j=1;
+  while(j<jmax,
+    xmid=(ltb+rtb)/2;
+    fmid=pnorm(xmid)-p;
+    if(fmid<0, ltb=xmid, rtb=xmid);
+    if((abs(rtb-ltb)<xacc)%(fmid==0),j=jmax);
+    j=j+1;
+  );
+  xmid;
+);
+
+);//endskip
+
+BoxL=[4,5];
+StrL=["",""];
+startflg=1;
+
+;
+
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+posx=-4.5;
+posy=5;
 drwt(line,str):=(
   drawtext([posx,posy]," "+line+" "+str,size->15);
   posy=posy-0.4;
@@ -4368,53 +4327,34 @@ drwt(line,str):=(
     posy=posy-0.4*3;
   );
 );
-textf(v):=format(v,4);
-
-startflg=1;
-BoxL=[51,52,53,54];
-StrL=["","","",""];
-;
-
-</script>
-<script id="csdraw" type="text/x-cindyscript">
-posx=-1.5;
-posy=4.5;
 
 Ketinit();
 
 
+Setscaling(4);
+Setwindow([-4,4],[-0.1,1.2]);
 Addax(0);
-xmn=-4.0+0.00001; xmx=-xmn+2;
-Setscaling(5);
-Setwindow([xmn,xmx],[-0.1,1]);//[-0.1,0.6]
-Setax(["","t","e1","",""," "]);
+Setax(["","z","e1","",""," "]);
 drwxy();
-Slider("A",[XMIN,0],[XMAX-0.00001,0]);
-
-tmp=px+1;
-Expr([tmp,py_1/SCALEY],"e","df=",["Size=1.3"]);
-Expr([tmp,py_2/SCALEY],"e","t=",["Size=1.3"]);
-Expr([tmp,py_3/SCALEY],"e","p=",["Size=1.3"]);
+Slider("A",[XMIN,0],[XMAX,0]);
 
 if(startflg==1,
-  StrL=["","","",""];
-  ch=2;
-  chnow=0;
+  ch=1;
+  chnow=1;
   box=BoxL_ch;
-  df=5;//5
-  dfnow=0;
-  makecxp(df);
-  fun1=apply(xL,[#,dt(#,df)]);
-  pp=0.025;
-  xx=qtK(pp,df);
-  xxnow=-1;
-  ppnow=-1;
-  Putpoint("A",[xx,0]);
+  zz=1.960;
+  Putpoint("A",[zz,0]);
   axnow=A.x;
-  StrL_1=textf(df);
-  StrL_2=textf(xx);
-  StrL_3=textf(pp);
-  forall(1..3,Subsedit(BoxL_#,StrL_#));
+  ax=axnow;
+  fun1=apply(xL,[#,dnorm(#)]);
+  Str=format(ax,4);
+  Subsedit(box,Str);
+  StrL_1=Str;
+  zznow=zz;
+  pp=0.05;
+  ppnow=pp;
+  StrL_2=format(pp,4);
+  Subsedit(BoxL_2,StrL_2);
   Eps=10^(-5);
   funflg=0;
   startflg=0;
@@ -4423,15 +4363,16 @@ if(startflg==1,
 nameL=Keyname();
 nmove=[0,-0.1];
 dy=8; dx=10;
-Keytable(3,dx,5,dy,[3.5,0.2],[1,1,0],nameL,nmove,20);//[5,0.5]
+Keytable(3,dx,5,dy,[3.5,0.2],[1,1,0],nameL,nmove,20);
 Optr=["dr,2","Color=red"];
 Optb=["dr,2","Color=blue"];
+Listplot("-gr1",fun1,Optb);
+Optc=["Color=red","Size=2"];
+Expr([px-0.3,py_ch/SCALEY],"w","\bullet$",Optc);
 tmp=px+0.6;
-op=["dr,2","Msg=n"];
-opr=append(op,"Color=red");
-opb=append(op,"Color=blue");
-opg=append(op,"Color=[0.64,0,0.95,0.4]");
 
+Expr([tmp,py_1/SCALEY],"e","z=",["Size=1.3"]);
+Expr([tmp,py_2/SCALEY],"e","p=",["Size=1.3"]);
 
 box=BoxL_ch;
 Str=Textedit(box,"","");
@@ -4441,6 +4382,7 @@ if(funflg==1,
   npos=length(Str);//230125
   if(contains(Manifun,name),
     parse(name+";");
+    Subsedit(BoxL_ch,Str);
   ,
     tmp=indexof(Str,"?");
     if(tmp>0,npos=tmp,npos=length(Str));
@@ -4454,94 +4396,68 @@ if(funflg==1,
       Str=tmp1+substring(tmp,npos-1,length(tmp));
     );
   );
+  Subsedit(BoxL_ch,Str);
   funflg=0;
 );
 
-StrL_ch=Str;
-Subsedit(box,Str);
-
 if(ch==1,
-  tmp=Str2num(Str,ch);
-  if(tmp<1000,
-    df=tmp;
-    if(|df-dfnow|>Eps,
-      if(df>1,tmp=0,tmp=1);
-      fun1=xL;
-    );
+  ax=A.x;
+  if(|ax-axnow|>Eps,
+    Putpoint("A",[ax,0]);
+    Str=format(ax,4);
+    Subsedit(box,Str);
     StrL_ch=Str;
+    zz=ax;
+    zznow=ax;
+    axnow=ax;
   );
-  xx=A.x;
-  tmp1=ptK(xx-0.00005,df);
-  tmp2=ptK(xx+0.00005,df);
-  pp=(tmp1+tmp2)/2;
-  xxnow=xx;
-  axnow=A.x;
-  Subsedit(BoxL_2,textf(xx));
-  StrL_2=textf(xx);
-  Subsedit(BoxL_3,textf(pp));
-  StrL_3=textf(pp);
+  Subsedit(box,Str);
+  zz=Str2num(Str,1);
+  if(zz<1000,
+    zz=parse(Str);
+    StrL_ch=Str;
+    if(|zz-zznow|>Eps,
+      ax=zz;
+      axnow=zz;
+      Putpoint("A",[zz,0]);
+      zznow=zz;
+    );
+    tmp1=ztop(zz-0.00005);
+    tmp2=ztop(zz+0.00005);
+    pp=(tmp1+tmp2)/2;
+    Subsedit(BoxL_2,format(pp,4));
+  );
 );
-
-fun1=apply(xL,[#,dt(#,df)]);
-Listplot("-gr1",fun1,opb);
 
 if(ch==2,
-  if(|A.x-axnow|>Eps,
-    xx=A.x;
-    tmp1=ptK(xx-0.00005,df);
-    tmp2=ptK(xx+0.00005,df);
-    pp=(tmp1+tmp2)/2;
-    xxnow=xx;
-    axnow=A.x;
-    StrL_2=textf(xx);
-    StrL_3=textf(pp);
-    Subsedit(BoxL_2,textf(xx));
-    Subsedit(BoxL_3,textf(pp));
-  ,
-    tmp=Str2num(Str,ch);
-    if(tmp<1000,
-      xx=tmp;
-      if(|xx-xxnow|>Eps,
-        xxnow=xx;
-        pp=ptK(xx,df);
-        pl=1-pp;
-        Subsedit(BoxL_3,textf(pp));
-        StrL_3=textf(pp);
-        if((xx-XMIN)*(xx-XMAX)<Eps,
-          Putpoint("A",[xx,0]);
-          axnow=A.x;
-        );
-      );
-    );
+  if(|ch-chnow|>Eps,
+    box=BoxL_2;
+    Str=Textedit(box,"","");
+    chnow=ch;
   );
-  StrL_3=textf(pp);
-);
-
-if(ch==3,
-  tmp=Str2num(Str,ch);
-  if(tmp<1000,
-    pp=tmp;
-    tmp1=qtK(pp-0.00005,df);
-    tmp2=qtK(pp+0.00005,df);
-    xx=(tmp1+tmp2)/2;
-    Putpoint("A",[xx,0]);
-    axnow=A.x;
-    Subsedit(BoxL_2,textf(xx));
-    StrL_2=textf(xx);
+  Subsedit(box,Str);
+  pp=Str2num(Str,2);
+  if(pp<1000,
+    tmp1=ptoz(pp-0.00005);
+    tmp2=ptoz(pp+0.00005);
+    zz=(tmp1+tmp2)/2;
+    ax=zz;
+    axnow=ax;
+    Putpoint("A",[ax,0]);
+    Subsedit(BoxL_1,format(ax,4));
   );
 );
 
-Optc=["Color=red","Size=2"];
-Expr([px,py_(ch)/SCALEY],"w","\bullet",Optc);
-tmp=1-ptg(A.x,findxp(A.x),df);//pchi
-pR=[A.x,1-tmp];
-tmp=[XMIN,"s1",text(XMIN),A.x,textf(A.x),XMAX,"s1",text(XMAX)];
-Htickmark(tmp);
-Vtickmark([0.1,"0.1",0.2,"0.2",0.5,"0.5"]);
-pP=[A.x,dt(A.x,df)];//dchi
-Listplot("1",[pP,[A.x,0]],opr);
+pR=[ax,ztop(ax)];
+Htickmark([A.x,Sprintf(A.x,4)]);
+Vtickmark([0.5,"0.5",1,"nw1","1"]);
+pP=[A.x,dnorm(ax)];
+pM=[XMAX,dnorm(XMAX)];
+Listplot("1",[pP,[A.x,0]],Optr);
+tmp=format(pR_2,4);
 
 Windispg();
+
 ;
 
 </script>
@@ -4558,40 +4474,40 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "SW", type: "Free", pos: [4.0, 0.500001250003125, -1.00000250000625], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [4.0, 3.333338888898148, 0.6666677777796296], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "Text51", type: "EditableText", pos: [-2.1052631578947367, -4.0, -1.0526315789473684], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "5", textsize: 20.0},
-    {name: "Text52", type: "EditableText", pos: [-2.4999999999999996, -4.0, -1.2499999999999998], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, textsize: 20.0},
-    {name: "Text53", type: "EditableText", pos: [-3.0769230769230766, -4.0, -1.5384615384615383], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.025", textsize: 20.0},
-    {name: "A", type: "Free", pos: [4.0, 0.0, 1.5560723996317882], color: [1.0, 0.0, 0.0], labeled: false, size: 5.1, border: true },
-    {name: "Text22", type: "Button", pos: [4.0, 0.4033613445378151, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n0\";", text: "　　", textsize: 18.0},
-    {name: "Text21", type: "Button", pos: [4.0, 0.5106382978723404, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"-\";", text: "　　", textsize: 18.0},
-    {name: "Text23", type: "Button", pos: [4.0, 0.3333333333333333, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\".\";", text: "　　", textsize: 18.0},
-    {name: "Text25", type: "Button", pos: [4.0, 1.3617021276595747, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n1\";", text: "　　", textsize: 18.0},
-    {name: "Text26", type: "Button", pos: [4.0, 1.0756302521008403, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n2\";", text: "　　", textsize: 18.0},
-    {name: "Text27", type: "Button", pos: [4.0, 0.888888888888889, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n3\";", text: "　　", textsize: 18.0},
-    {name: "Text29", type: "Button", pos: [4.0, 2.2127659574468086, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n4\";", text: "　　", textsize: 18.0},
-    {name: "Text30", type: "Button", pos: [4.0, 1.7478991596638658, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n5\";", text: "　　", textsize: 18.0},
-    {name: "Text31", type: "Button", pos: [4.0, 1.4444444444444446, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n6\";", text: "　　", textsize: 18.0},
-    {name: "Text33", type: "Button", pos: [4.0, 3.0638297872340425, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n7\";", text: "　　", textsize: 18.0},
-    {name: "Text34", type: "Button", pos: [4.0, 2.4201680672268906, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n8\";", text: "　　", textsize: 18.0},
-    {name: "Text35", type: "Button", pos: [4.0, 2.0, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n9\";", text: "　　", textsize: 18.0},
-    {name: "Text37", type: "Button", pos: [4.0, 3.914893617021277, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Delete()\";doflg=0;matflg=0;", text: "　　", textsize: 18.0},
-    {name: "Text38", type: "Button", pos: [4.0, 3.092436974789916, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Clear()\";doflg=0;matflg=0;", text: "　　", textsize: 18.0},
-    {name: "Text39", type: "Button", pos: [4.0, 2.555555555555556, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "　　", textsize: 18.0},
-    {name: "Text56", type: "Button", pos: [-0.4210526315789473, -4.0, -1.0526315789473684], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=1;", text: "自由度", textsize: 18.0},
-    {name: "Text57", type: "Button", pos: [-0.49999999999999983, -4.0, -1.2499999999999998], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=2;", text: "t->p", textsize: 18.0},
-    {name: "Text58", type: "Button", pos: [-0.6153846153846152, -4.0, -1.5384615384615383], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=3;", text: "p->t", textsize: 18.0}
+    {name: "SW", type: "Free", pos: [4.0, 0.4, -1.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "NE", type: "Free", pos: [-3.3333333333333335, -4.0, -0.8333333333333334], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "A", type: "Free", pos: [4.0, 0.0, 2.0408163265306123], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
+    {name: "Text4", type: "EditableText", pos: [-2.0, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, textsize: 20.0},
+    {name: "Text5", type: "EditableText", pos: [-2.4000000000000004, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.05", textsize: 20.0},
+    {name: "Text6", type: "Button", pos: [-0.4444444444444443, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=1;", text: "z->p", textsize: 18.0},
+    {name: "Text7", type: "Button", pos: [-0.5333333333333332, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=2;", text: "p->z", textsize: 18.0},
+    {name: "Text3", type: "Text", pos: [-0.6230529595015576, -4.0, -1.0241916491382321], color: [0.0, 0.0, 0.0], size: 3.0, border: true },
+    {name: "Text22", type: "Button", pos: [4.0, 0.38900634249471455, 0.8456659619450316], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n0\";", text: "　　", textsize: 24.0},
+    {name: "Text21", type: "Button", pos: [4.0, 0.4932975871313673, 1.0723860589812333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"-\";", text: "　　", textsize: 24.0},
+    {name: "Text23", type: "Button", pos: [4.0, 0.32111692844677137, 0.6980802792321117], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\".\";", text: "　　", textsize: 24.0},
+    {name: "Text25", type: "Button", pos: [4.0, 1.3512064343163537, 1.0723860589812333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n1\";", text: "　　", textsize: 24.0},
+    {name: "Text26", type: "Button", pos: [4.0, 1.0655391120507398, 0.8456659619450316], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n2\";", text: "　　", textsize: 24.0},
+    {name: "Text27", type: "Button", pos: [4.0, 0.8795811518324607, 0.6980802792321117], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n3\";", text: "　　", textsize: 24.0},
+    {name: "Text29", type: "Button", pos: [4.0, 2.20911528150134, 1.0723860589812333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n4\";", text: "　　", textsize: 24.0},
+    {name: "Text30", type: "Button", pos: [4.0, 1.7420718816067653, 0.8456659619450316], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n5\";", text: "　　", textsize: 24.0},
+    {name: "Text31", type: "Button", pos: [4.0, 1.4380453752181501, 0.6980802792321117], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n6\";", text: "　　", textsize: 24.0},
+    {name: "Text33", type: "Button", pos: [4.0, 3.067024128686327, 1.0723860589812333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n7\";", text: "　　", textsize: 24.0},
+    {name: "Text34", type: "Button", pos: [4.0, 2.4186046511627906, 0.8456659619450316], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n8\";", text: "　　", textsize: 24.0},
+    {name: "Text35", type: "Button", pos: [4.0, 1.9965095986038395, 0.6980802792321117], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n9\";", text: "　　", textsize: 24.0},
+    {name: "Text37", type: "Button", pos: [4.0, 3.9249329758713136, 1.0723860589812333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Delete()\";doflg=0;matflg=0;", text: "　　", textsize: 24.0},
+    {name: "Text38", type: "Button", pos: [4.0, 3.0951374207188156, 0.8456659619450316], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Clear()\";doflg=0;matflg=0;", text: "　　", textsize: 24.0},
+    {name: "Text39", type: "Button", pos: [4.0, 2.554973821989529, 0.6980802792321117], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "　　", textsize: 24.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 824,
-    height: 430,
-    transform: [{visibleRect: [-4.850127782485995, 5.311743725176673, 6.642074773048403, -0.6875235634934862]}],
+    width: 872,
+    height: 446,
+    transform: [{visibleRect: [-4.537882240340361, 5.349999313179923, 6.760518439690742, -0.4203062043643348]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
+  use: ["katex"],
   cinderella: {build: 2069, version: [3, 0, 2069]}
 });
     </script>
@@ -4611,7 +4527,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 -->
     <div id="CSCanvas"></div>
 <footer>
-<p><small>&emsp;&copy; 2023 Setsuo Takato and Kiyoshi Kitahara</small></p>
+<p><small>&emsp;&copy; 2023 Setsuo Takato</small></p>
 </footer>
 </body>
 </html>

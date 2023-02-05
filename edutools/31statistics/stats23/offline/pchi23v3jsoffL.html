@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>pnorm23v3.cdy</title>
+    <title>pchi23v3.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -2184,250 +2184,6 @@ Drwexpr(pos,str,sz,clr):=(
   if(!isstring(str),tmp=text(str),tmp=str);
   drawtext(pos,"$"+tmp+"$",size->sz,color->clr);
 );
-Integrate(Arg1,Arg2):=( //180708from
-  if(isstring(Arg2),
-    Integratefn(Arg1,Arg2,[]);
-  ,
-    Integratedt(Arg1,Arg2,[]);
-  );
-);
-Integrate(Arg1,Arg2,options):=(
-  if(isstring(Arg2),
-    Integratefn(Arg1,Arg2,options);
-  ,
-    Integratedt(Arg1,Arg2,options);
-  );
-);//180708to
-Integratefn(fnstr,rngstr,options):=( //180708from
-  regional(Sm,Lx,Rx,va1,va2,Num,Way,sx,ex,dx,xn,yn,
-     x0,x1,x2,y0,y1,y2,tmp,tmp1,tmp2,eqL,var,range,plt);
-  Num=100;
-  Way="o";
-  tmp=Divoptions(options);
-  eqL=tmp_5;
-  forall(eqL,
-    tmp=Strsplit(#,"=");
-    tmp1=Toupper(substring(tmp_1,0,1));
-    tmp2=tmp_2;
-    if(tmp1=="N",
-      Num=parse(tmp2);
-    );
-    if(tmp1=="R",
-      tmp2=substring(tmp2,0,1);
-    );
-  );
-  tmp=Strsplit(rngstr,"=");
-  var=tmp_1;
-  range=parse(tmp_2);
-  if(Way=="o",
-    sx=range_1;
-    ex=range_2;
-    dx=(ex-sx)/Num;
-    xn=apply(0..Num,sx+#*dx);
-    yn=apply(xn,parse(Assign(fnstr,[var,#]))); //181230
-    plt=apply(1..(Num+1),[xn_#,yn_#]);
-    Sm=IntegrateO(plt,range);
-  );//180708to
-  if(Way=="t",
-    Sm=0;
-    forall(1..Num,
-      Lx=range_1+(range_2-range_1)*(#-1)/Num;
-      Rx=range_1+(range_2-range_1)*#/Num;
-      va1=parse(replace(fnstr,vastr,Textformat(Lx,5)));
-      va2=parse(replace(fnstr,vastr,Textformat(Rx,5)));
-      Sm=Sm+(va1+va2)*(Rx-Lx)/2;
-    );
-  );
-  if(Way=="s",
-    Sm=0;
-    sx=range_1;
-    ex=range_2;
-    dx=(ex-sx)/Num;
-    xn=apply(0..Num,sx+#*dx);
-    yn=apply(xn,parse(replace(fnstr,vastr,Textformat(#,5))));
-    dx=dx/2;
-    repeat(Num,s,
-      x0=xn_s;
-      x1=(xn_s+xn_(s+1))/2;
-      x2=xn_(s+1);
-      y0=yn_s;
-      y1=parse(replace(fnstr,vastr,Textformat(x1,5)));
-      y2=yn_(s+1);
-      Sm=Sm+dx*(y0+4*y1+y2)/3;
-    ); 
-  );
-  SCALEY*Sm; //211125
-);
-IntegrateO(p0org,p1org,p2org,p3org):=(
-  regional(p0,p1,p2,p3,pQ,pR,cc,p01,p02,
-     p11,p12,p21,p22,p31,p32, tmp);
-  if(ispoint(p0org),p0=p0org.xy,p0=p0org);  // 16.03.10
-  if(ispoint(p1org),p1=p1org.xy,p1=p1org); // 16.03.16
-  if(ispoint(p2org),p2=p2org.xy,p2=p2org);
-  if(ispoint(p3org),p3=p3org.xy,p3=p3org);
-  tmp=1+sqrt((1+Dotprod(p2-p0,p3-p1)/|p2-p0|/|p3-p1|)/2);
-  cc=4*|p2-p1|/3/(|p2-p0|+|p3-p1|)/tmp;
-  pQ=p1+cc*(p2-p0);
-  pR=p2+cc*(p1-p3);
-  p01=p1_1; p02=p1_2;
-  p31=p2_1; p32=p2_2;
-  p11=pQ_1; p12=pQ_2;
-  p21=pR_1; p22=pR_2;
-  tmp=-6*p12*p01+3*p12*p21+3*p12*p31+6*p02*p11-
-         10*p02*p01+3*p02*p21+p02*p31-3*p22*p11-
-         3*p22*p01+6*p22*p31-3*p32*p11-p32*p01-
-         6*p32*p21+10*p32*p31;
-  tmp=tmp/20;
-);
-IntegrateO(pltdata,rangeorg):=(
-  regional(tmp,tmp1,tmp2,pdata,va1,va2,list,Bzk,Bzc,range,pmflg,
-    Sm,p0,p1,p2,p3,pQ,pR,cc,p01,p02,p11,p12,p21,p22,p31,p32);
-  if(isstring(pltdata),
-    pdata=parse(pltdata);
-  ,
-    pdata=pltdata;
-  );
-  if(Measuredepth(pdata)==2,pdata=pdata_1);
-  range=rangeorg;
-  pmflg=1;
-  if(range_2<range_1,
-    range=reverse(range);
-    pmflg=-1;
-  );
-  va1=Meetcurve(pdata,range_1,0);
-  va2=Meetcurve(pdata,range_2,0);
-  list=select(pdata,(#_1>range_1 & #_1<range_2));
-  if(length(list)>0,  // 16.09.25
-    if(list_1_1>list_(length(list))_1, //16.11.03
-      list=reverse(list);
-    );
-  );
-  list=apply(list,LLcrd(#)); 
-  list=concat([va1],list);
-  list=concat(list,[va2]);
-  Sm=0;
-  forall(1..(length(list)-1),
-    p1=list_#;
-    p2=list_(#+1);
-    if(#==1 % #==length(list)-1,
-      tmp1=(p1_2+p2_2)*(p2_1-p1_1)/2;
-      Sm=Sm+tmp1;
-    ,
-      p0=list_(#-1);
-      p3=list_(#+2);
-      tmp=1+sqrt((1+Dotprod(p2-p0,p3-p1)/|p2-p0|/|p3-p1|)/2);
-      cc=4*|p2-p1|/3/(|p2-p0|+|p3-p1|)/tmp;
-      pQ=p1+cc*(p2-p0);
-      pR=p2+cc*(p1-p3);
-      p01=p1_1; p02=p1_2;
-      p31=p2_1; p32=p2_2;
-      p11=pQ_1; p12=pQ_2;
-      p21=pR_1; p22=pR_2;
-      tmp1=-6*p12*p01+3*p12*p21+3*p12*p31+6*p02*p11-
-         10*p02*p01+3*p02*p21+p02*p31-3*p22*p11-
-         3*p22*p01+6*p22*p31-3*p32*p11-p32*p01-
-         6*p32*p21+10*p32*p31;
-      tmp1=tmp1/20;
-      Sm=Sm+tmp1;
-    );
-  );
-  if(pmflg==-1,
-    Sm=-Sm;
-  );
-  Sm;
-);
-Meetcurve(Crv,Xorg,Yorg):=(
-  regional(Cv,tmp,tmp1,tmp2,X0,Y0,x1,x2,y1,y2,Ylist,Ban,Tate);
-  if(isstring(Crv),Cv=parse(Crv),Cv=Crv);
-  if(Measuredepth(Cv)==2,Cv=Cv_1);
-  Cv=apply(Cv,LLcrd(#));  // 14.12.18
-  while(length(Cv)==1,
-    Cv=Cv_1;
-  );
-  Cv=apply(Cv,Lcrd(#));
-  tmp1=min(apply(Cv,#_1));
-  tmp2=max(apply(Cv,#_1));
-  if(isstring(Xorg),X0=parse(Xorg),X0=Xorg);
-  if(isstring(Yorg),Y0=parse(Yorg),Y0=Yorg);
-  if(X0<tmp1,
-    X0=tmp1;
-  ,
-    if(X0>tmp2,
-      X0=tmp2;
-    );
-  );
-  tmp1=select(
-    1..(length(Cv)-1),Cv_#_1<=X0 & X0<=Cv_(#+1)_1);
-  tmp2=select(
-    1..(length(Cv)-1),Cv_#_1>=X0 & X0>=Cv_(#+1)_1);
-  tmp2=remove(tmp2,common(tmp2,tmp1));
-  Ban=concat(tmp1,tmp2);
-  Tate=select(Ban,
-    abs(Cv_#_1-Cv_(#+1)_1)<=
-       10^(-2)*abs(Cv_#_2-Cv_(#+1)_2)
-  );
-  Ban=remove(Ban,Tate);
-  Ylist=[];
-  forall(Ban,
-    tmp=Cv_#;
-    x1=tmp_1; y1=tmp_2;
-    tmp=Cv_(#+1);
-    x2=tmp_1; y2=tmp_2;
-    tmp=((x2-X0)*y1+(X0-x1)*y2)/(x2-x1);
-    Ylist=append(Ylist,tmp);
-  );
-  forall(Tate,
-    tmp=Cv_#;
-    x1=tmp_1; y1=tmp_2;
-    tmp=Cv_(#+1);
-    x2=tmp_1; y2=tmp_2;
-    tmp1=min([y1,y2]);
-    tmp2=max([y1,y2]);
-    if(Y0<tmp1,
-      tmp=tmp1;
-    ,
-      if(Y0>tmp2,
-        tmp=tmp2;
-      ,
-        tmp=Y0;
-      );
-    );
-    Ylist=append(Ylist,tmp);
-  );
-  tmp=sort(Ylist,abs(#_1-Y0));
-  [X0,tmp_1];
-);
-Integratedt(pltdata,range,options):=(
-  regional(tmp,tmp1,eqL,Rule,pdata,Sm,ptP,ptQ,list,va1,va2);
-  tmp=Divoptions(options);
-  eqL=tmp_5;
-  Rule="o";
-  forall(eqL,
-    if(Toupper(substring(#,0,1))=="R",
-      tmp=indexof(#,"=");
-      Rule=substring(#,tmp,tmp+1); 
-    );
-  );
-  if(Rule=="o",
-    Sm=SCALEY*IntegrateO(pltdata,range); //211125
-  ,
-    if(isstring(pltdata),pdata=parse(pltdata),pdata=pltdata);
-    if(Measuredepth(pdata)==2,pdata=pdata_1);
-    va1=MeetCurve(pdata,range_1,0);
-    va2=MeetCurve(pdata,range_2,0);
-    list=select(pdata,(#_1>range_1 & #_1<range_2));
-    list=apply(list,LLcrd(#));  // 15.09.14
-    list=concat([va1],list);
-    list=concat(list,[va2]);
-    Sm=0;
-    forall(1..(length(list)-1),
-      ptP=list_#;           // 15.09.14
-      ptQ=list_(#+1);
-      Sm=Sm+(ptP_2+ptQ_2)*(ptQ_1-ptP_1)/2;
-    );
-    SCALEY*Sm; //211125
-  );
-);
 Ketinit():=Ketinit("fig",0.3); //190831from
 Ketinit(Arg):=(//181001from
   if(isstring(Arg),
@@ -2572,6 +2328,9 @@ Strictmove(pCorg,sep):=(
     );
   );
 );
+Addax(param):=(
+  ADDAXES=text(param);
+);
 Setscaling(sc):=(
   regional(tmp);
   tmp=format(sc,5);
@@ -2585,9 +2344,6 @@ Setscaling(sc):=(
     Com0th("Setscaling("+tmp_1+","+tmp_2+")");
   );
   Setwindow("Msg=no");
-);
-Addax(param):=(
-  ADDAXES=text(param);
 );
 Setax(arglistorg):=(
   regional(arglist,st,nn,tmp,eqL); 
@@ -2693,6 +2449,35 @@ Putonseg(name,p1org,p2org,options):=(
     tmp=(p2_1-p1_1)/(p2_2-p1_2)*(p_2-p1_2)+p1_1;
     parse(name+".x="+tmp+";"); //190415
   ); //190120to
+);
+Textedit(no):=(
+  regional(tmp,tmp1,tmp2);
+  tmp="Text"+text(no)+".currenttext";
+  tmp1=parse(tmp);
+  tmp1;
+);
+Textedit(n0,str):=Textedit(n0,str,"="); //210406from
+Textedit(n0,str,sep):=( //210208from
+  regional(tmp,tmp1,tmp2,out);
+  tmp1=str;
+tmp1=Textedit(n0); //
+  tmp2=tmp1;
+  if(length(sep)>0,
+    tmp=Strsplit(sep+tmp1,sep);
+    tmp2=tmp_(-1);
+  ); //210406to
+  if(length(tmp2)==0,out=str,out=tmp2);
+  out;
+); //210208to
+Subsedit(no,str):=(
+ regional(tmp,tmp1);
+ if(isstring(str),
+   tmp1=str;
+ ,
+   tmp1=text(str);
+ );
+ tmp="Text"+text(no); //210211[2lines]
+ parse(tmp).currenttext=tmp1;
 );
 Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
 Expr(list):=Expr(list,[]);
@@ -2807,35 +2592,6 @@ Lettermove(dir,str):=(
   if(length(out)==0,out=0,out=parse(out));
   out;
 );
-Textedit(no):=(
-  regional(tmp,tmp1,tmp2);
-  tmp="Text"+text(no)+".currenttext";
-  tmp1=parse(tmp);
-  tmp1;
-);
-Textedit(n0,str):=Textedit(n0,str,"="); //210406from
-Textedit(n0,str,sep):=( //210208from
-  regional(tmp,tmp1,tmp2,out);
-  tmp1=str;
-tmp1=Textedit(n0); //
-  tmp2=tmp1;
-  if(length(sep)>0,
-    tmp=Strsplit(sep+tmp1,sep);
-    tmp2=tmp_(-1);
-  ); //210406to
-  if(length(tmp2)==0,out=str,out=tmp2);
-  out;
-); //210208to
-Subsedit(no,str):=(
- regional(tmp,tmp1);
- if(isstring(str),
-   tmp1=str;
- ,
-   tmp1=text(str);
- );
- tmp="Text"+text(no); //210211[2lines]
- parse(tmp).currenttext=tmp1;
-);
 Htickmark(arglist):=Htickmark("",arglist,[]);
 Htickmark(Arg1,Arg2):=(
   if(isstring(Arg1),
@@ -2892,23 +2648,6 @@ Htickmark(nm,arglist,options):=(
     Listplot("ht"+nm+text(nn),tmp,append(options,"Msg=n"));
     Expr([GENTEN+[tmp1,0],tmp2,tmp3],options); 
   );
-);
-Sprintf(value,dig):=(
-  regional(vv,tmp,tmp1);
-  if(!islist(value),  // 17.03.12from
-    if(isstring(value),
-      vv=value;
-    ,
-      vv=Textformat(value,dig);
-    );  // 17.03.12from
-    if(indexof(vv,".")==0,vv=vv+".");
-    vv=vv+"0000000000000000";
-    tmp=indexof(vv,".")+dig;
-    vv=substring(vv,0,tmp);
-  ,
-    vv=apply(value,Sprintf(#,dig));
-  );
-  vv;
 );
 Vtickmark(arglist):=Vtickmark("",arglist,[]);
 Vtickmark(Arg1,Arg2):=(
@@ -3267,8 +3006,6 @@ fillpoly(parse("ar"+nm+"h"),color->tmp); //
 );
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1.1;
-pL=[0.000033783732,0.000046259445,0.000063379084,0.000086699929,0.000118264749,0.000160649549,0.000217185425,0.000292166611,0.000390923183,0.000520151321,0.000688162639,0.000905244474,0.00118374438,0.001538969083,0.001989073928,0.00255575669,0.003264654681,0.004145880446,0.005234045247,0.006569502182,0.008197869629,0.010170727771,0.012545710665,0.015386548797,0.018762949748,0.022750288862,0.027429084232,0.032884234466,0.039204003632,0.046478745556,0.054799369084,0.064255556768,0.074933761467,0.086915017871,0.100272618519,0.115069715791,0.131356921774,0.149169986257,0.168527638576,0.189429681082,0.211855420181,0.235762514883,0.261086312651,0.287739728142,0.315613702729,0.344578262173,0.374484167297,0.405165128883,0.436440537376,0.46811862802,0.5,0.53188137198,0.563559462624,0.594834871117,0.625515832703,0.655421737827,0.684386299079,0.712260271858,0.738913687349,0.764237485117,0.788144579819,0.810570318918,0.831472361424,0.850830013743,0.868643078226,0.884930284209,0.899727381481,0.913084982129,0.925066238533,0.935744443232,0.945200630916,0.953521204793,0.960795996368,0.967115765534,0.972570915768,0.977249711138,0.981237050252,0.984613451203,0.987454289335,0.989829272229,0.991802130371,0.993430497818,0.994765954753,0.995854119554,0.996735345319,0.99744424331,0.998010926072,0.998461030917,0.99881625562,0.999094755526,0.999311837361,0.999479848679,0.999609076817,0.999707833389,0.999782814575,0.999839372992,0.999881754234,0.999913300071,0.999936620916,0.999953740555,0.999966216268];
-xL=[-4,-3.92,-3.84,-3.76,-3.68,-3.6,-3.52,-3.44,-3.36,-3.28,-3.2,-3.12,-3.04,-2.96,-2.88,-2.8,-2.72,-2.64,-2.56,-2.48,-2.4,-2.32,-2.24,-2.16,-2.08,-2,-1.92,-1.84,-1.76,-1.68,-1.6,-1.52,-1.44,-1.36,-1.28,-1.2,-1.12,-1.04,-0.96,-0.88,-0.8,-0.72,-0.64,-0.56,-0.48,-0.4,-0.32,-0.24,-0.16,-0.08,0,0.08,0.16,0.24,0.32,0.4,0.48,0.56,0.64,0.72,0.8,0.88,0.96,1.04,1.12,1.2,1.28,1.36,1.44,1.52,1.6,1.68,1.76,1.84,1.92,2,2.08,2.16,2.24,2.32,2.4,2.48,2.56,2.64,2.72,2.8,2.88,2.96,3.04,3.12,3.2,3.28,3.36,3.44,3.52,3.6,3.68,3.76,3.84,3.92,4];
 setdirectory(Dircdy);
 
 
@@ -4167,60 +3904,120 @@ Gridpaper():=(
   Vtickmark(tmp);
 );
 
-px=1.5; py=[3.6,3];
-px=px-0.9; py=apply(py,#+0.1);
+px=4; py=[3.6,3,2.4,1.8];
+px=px-1.65; py=apply(py,#+0.1);
 
-dnorm(x):=(
-  1/sqrt(2*pi)*exp(-x^2/2);
-);
+x995=[
+7.88,10.6,12.84,14.86,16.75,18.55,20.28,21.95,23.59,25.19,
+26.76,28.3,29.82,31.32,32.8,34.27,35.72,37.16,38.58,40,
+41.4,42.8,44.18,45.56,46.93,48.29,49.64,50.99,52.34,53.67,
+55,56.33,57.65,58.96,60.27,61.58,62.88,64.18,65.48,66.77,
+68.05,69.34,70.62,71.89,73.17,74.44,75.7,76.97,78.23,79.49,
+80.75,82,83.25,84.5,85.75,86.99,88.24,89.48,90.72,91.95
+]; //1--60
 
-pnorm(x):=(
-  regional(y);
-  y=0.5+Integrate("dnorm(t)","t=[0,x]",
-    ["Num=100"]);
+gammacoef=[676.5203681218851 , - 1259.1392167224028 ,771.32342877765313 , - 176.61502916214059 , 12.507343278686905 ,- 0.13857109526572012 , 9.9843695780195716*10^(-6),1.5056327351493116 * 10^(- 7)];
+
+gamma(z0):=(
+  regional(z,x,y,t);
+  z = z0;
+  if(z<0.5,y=pi/(sin(pi*z)*gamma(1-z)),
+    z = z-1;
+    x = 0.99999999999980993;
+    repeat(length(gammacoef),x=x+(gammacoef_#)/(z+#));
+    t = z + length(gammacoef)-0.5;
+    y = sqrt(2*pi)*t^(z+0.5)*exp(-t)*x;
+  );
   y;
 );
 
-pnorm(x,xpL):=(
-  regional(y,rng);
-  rng=Assign("t=[x1,x]",["x1",xpL_1,"x",x]);
-  y=xpL_2+Integrate("dnorm(t)",rng,["Num=10"]);
-  y;
+gammp(a,x):=(
+  regional(gamser,gammcf,rtn);
+  if((x < 0.0)%(a<=0.0),println("Invalid arguments in routine gammp"),
+    if(x<(a+1.0),gamser=gser(a,x);rtn=gamser,gammcf=gcf(a,x);rtn=1.0-gammcf));
+  rtn
 );
 
-findxp(x):=(
-  regional(flg,nn,tmp,tmp1,out);
-  nn=length(xL);
-  out=[xL_1,pL_1];
-  flg=0;
-  while((flg==0)&(nn>0),
-    tmp=xL_nn;
-    if(tmp<x,
-      tmp1=xL_(nn+1);
-      if(|tmp-x|<|tmp1-x|,
-        out=[tmp,pL_nn];
-      ,
-        out=[tmp1,pL_(nn+1)];
-      );
-      flg=1;
+gammq(a,x):=(
+  regional(gamser,gammcf,rtn);
+  if((x < 0.0)%(a<=0.0),println("Invalid arguments in routine gammq"),
+    if(x<(a+1.0),gamser=gser(a,x);rtn=1.0-gamser,gammcf=gcf(a,x);rtn=gammcf));
+  rtn
+);
+
+gser(a,x):=(
+  regional(n,sum,del,ap,gln,gamser,loop,itmax,eps);
+  itmax = 100;
+  eps = 0.0000001;
+  loop=1;
+  gln=log(gamma(a));
+  if (x<=0.0, if(x<0.0, println("x less than 0 in routine gser"),gamser=0.0),
+    ap = a;
+    sum = 1.0/a;
+    del = sum;
+    n = 1;
+    while(loop>0,
+      ap = ap+1;
+      del = del*(x/ap);
+      sum = sum + del;
+      if (abs(del)<abs(sum)*eps,gamser=sum*exp(-x+a*log(x)-gln);loop=-1);
+      if(n>=itmax,println("a too large, itmax too small in routine gser");loop=-1,n=n+1)
+    )
+  );
+  gamser
+);
+
+gcf(a,x):=(
+  regional(i,an,b,c,d,del,h,gammcf,gln,loop,itmax,eps,fpmin);
+  itmax = 100;
+  eps = 0.0000001;
+  fpmin = 0.000000000000000000000000000001;
+  loop=1;
+  gln=log(gamma(a));
+  b=x+1.0-a;
+  c=1.0/fpmin;
+  d=1.0/b;
+  h=d;
+  i=1;
+  while(loop>0,
+    an=-i*(i-a);
+    b=b+2.0;
+    d=an*d+b;
+    if(abs(d)<fpmin,d=fpmin);
+    c=b+an/c;
+    if(abs(c)<fpmin,c=fpmin);
+    d=1.0/d;
+    del=d*c;
+    h=h*del;
+    if (abs(del-1.0)<eps,loop=-1);
+    if(i>=itmax,println("a too large, itmax too small in routine gcf");loop=-1,i=i+1)
+  );
+  gammcf=exp(-x+a*log(x)-gln)*h;
+);
+
+incgamm(a,x):=gammq(a,x)*gamma(a);
+
+dchi(x,n):=1/(2^(n/2)*gamma(n/2))*x^(n/2-1)*exp(-x/2);
+pchi(x,n):=1-gammq(n/2,x/2);
+
+qchi(p,n):=(
+  regional(eps,x1,x2,x,y1,y2,ctr);
+  eps=10^(-6);
+  x1=0; x2=300;
+  y1=1-pchi(x1,n);
+  y2=1-pchi(x2,n);
+  ctr=1;
+  while((|y2-y1|>eps)&(ctr<40),
+    x=(x1+x2)/2;
+    y=1-pchi(x,n);
+    if(y>p,
+      x1=x; y1=y;
     ,
-      nn=nn-1;
+      x2=x; y2=y;
     );
+    ctr=ctr+1;
   );
-  out;
-);
-
-waittime():=waittime(1);
-waittime(tall):=(
-  regional(nall,nn,tmp,wtime);
-  nall=round(tall*100);
-  resetclock();
-  forall(1..nall,nn,
-    tmp=1..500;
-    tmp=apply(tmp,Sprintf(#,5));
-    tmp=apply(tmp,parse(#));
-  );
-  wtime=format(seconds(),4);
+  x;
 );
 
 Str2num(str,chno):=(
@@ -4234,20 +4031,28 @@ Str2num(str,chno):=(
       if(length(tmp2)==0,
         ok=true;
       );
-    );
-    if(length(tmp2)==1,
-      if(tmp2_1==1,
-        ok=true;
+      if(length(tmp2)==1,
+        if(tmp2_1==1,
+          ok=true;
+        );
       );
     );
   );
   if(ok==true,
     out=parse(str);
     if(chno==1,
-      out=max([XMIN,out]);
-      out=min([XMAX,out]);
+      out=max([1,out]);
+      out=min([100,out]);
     );
     if(chno==2,
+      out=max([XMIN,out]);
+      out=min([sc*XMAX,out]);
+    );
+    if(chno==3,
+      out=max([0,out]);
+      out=min([1,out]);
+    );
+    if(chno==4,
       out=max([0,out]);
       out=min([1,out]);
     );
@@ -4255,71 +4060,6 @@ Str2num(str,chno):=(
   out;
 );
 
-ztop(z):=(
-  1-pnorm(z,findxp(z));
-);
-
-ptoz(p):=(
-  regional(eps,x1,x2,y1,y2,x,y,ctr);
-  eps=10^(-6);
-  x1=XMIN; x2=XMAX;
-  y1=ztop(x1);
-  y2=ztop(x2);
-  ctr=1;
-  while((|x2-x1|>eps)&(ctr<20),
-    x=(x1+x2)/2;
-    y=ztop(x);
-    if(y>p,
-      x1=x; y1=y;
-    ,
-      x2=x; y2=y;
-    );
-    ctr=ctr+1;
-  );
-  (x1+x2)/2;
-);
-
-if(1==0,
-
-ztop(x):=(
-  regional(t,z,ans);
-  z=abs(x/sqrt(2));
-  t=1.0/(1.0+0.5*z);
-  ans=t*exp(-z*z-1.26551223+t*(1.00002368+t*(0.37409196
-  +t*(0.09678418+t*(-0.18628806+t*(0.27886807+
-  t*(-1.13520398+t*(1.48851587+t*(-0.82215223+
-  t*0.17087277)))))))));
-  1.0-ans/2;
-);
-
-ptoz(p):=(
-  regional(xmid,fmid,ltb,rtb,jmax,xacc);
-  jmax=41;
-  xacc=10^(-8);
-  ltb=0; rtb=XMAX;
-  j=1;
-  while(j<jmax,
-    xmid=(ltb+rtb)/2;
-    fmid=pnorm(xmid)-p;
-    if(fmid<0, ltb=xmid, rtb=xmid);
-    if((abs(rtb-ltb)<xacc)%(fmid==0),j=jmax);
-    j=j+1;
-  );
-  xmid;
-);
-
-);//endskip
-
-BoxL=[4,5];
-StrL=["",""];
-startflg=1;
-
-;
-
-</script>
-<script id="csdraw" type="text/x-cindyscript">
-posx=-4.5;
-posy=5;
 drwt(line,str):=(
   drawtext([posx,posy]," "+line+" "+str,size->15);
   posy=posy-0.4;
@@ -4327,33 +4067,65 @@ drwt(line,str):=(
     posy=posy-0.4*3;
   );
 );
+textf(v):=format(v,4);
 
-Ketinit();
 
-Setscaling(4);
-Setwindow([-4,4],[-0.1,1.2]);
+startflg=1;
+BoxL=[51,52,53,54];
+StrL=["","","",""];
+;
+
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+posx=-1.5;
+posy=4.5;
+
+Ketinit(0.2);
+
+
 Addax(0);
-Setax(["","z","e1","",""," "]);
+xmn=0; xmx=8;
+Setscaling(8);
+Setwindow([xmn,xmx],[-0.1,0.6]);
+Setax(["","x","e1","",""," "]);
 drwxy();
-Slider("A",[XMIN,0],[XMAX,0]);
+Slider("A",[XMIN,0],[XMAX-0.00001,0]);
+
+tmp=px+1;
+Expr([tmp,py_1/SCALEY],"e","df=",["Size=1.3"]);
+Expr([tmp,py_2/SCALEY],"e","x=",["Size=1.3"]);
+Expr([tmp,py_3/SCALEY],"e","pr=",["Size=1.3"]);
+Expr([tmp,py_4/SCALEY],"e","pl=",["Size=1.3"]);
 
 if(startflg==1,
-  ch=1;
-  chnow=1;
+  StrL=["","","",""];
+  ch=2;
+  chnow=0;
   box=BoxL_ch;
-  zz=1.960;
-  Putpoint("A",[zz,0]);
+  df=5;
+  dfnow=0;
+  tmp=min([60,df]);
+  sc=ceil(x995_tmp/XMAX);
+  scnow=sc;
+  xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);
+  pL=apply(xL,pchi(#,df));
+  fun1=apply(xL,[#,dchi(sc*#,df)]);
+  xx=11.0705;
+  tmp1=1-pchi(xx-0.00005,df);
+  tmp2=1-pchi(xx+0.00005,df);
+  pp=(tmp1+tmp2)/2;
+  pl=1-pp;
+  xxnow=-1;
+  ppnow=-1;
+  plnow=-1;
+  Putpoint("A",[xx/sc,0]);
   axnow=A.x;
-  ax=axnow;
-  fun1=apply(xL,[#,dnorm(#)]);
-  Str=format(ax,4);
-  Subsedit(box,Str);
-  StrL_1=Str;
-  zznow=zz;
-  pp=0.05;
-  ppnow=pp;
-  StrL_2=format(pp,4);
-  Subsedit(BoxL_2,StrL_2);
+  StrL_1=textf(df);
+  StrL_2=textf(xx);
+  StrL_3=textf(pp);
+  StrL_4=textf(pl);
+  forall(1..4,Subsedit(BoxL_#,StrL_#));
+  Str=StrL_ch;
   Eps=10^(-5);
   funflg=0;
   startflg=0;
@@ -4362,16 +4134,14 @@ if(startflg==1,
 nameL=Keyname();
 nmove=[0,-0.1];
 dy=8; dx=10;
-Keytable(3,dx,5,dy,[3.5,0.2],[1,1,0],nameL,nmove,20);
+Keytable(3,dx,5,dy,[5.5,0.2],[1,1,0],nameL,nmove,20);
 Optr=["dr,2","Color=red"];
 Optb=["dr,2","Color=blue"];
-Listplot("-gr1",fun1,Optb);
-Optc=["Color=red","Size=2"];
-Expr([px-0.3,py_ch/SCALEY],"w","\bullet$",Optc);
 tmp=px+0.6;
-
-Expr([tmp,py_1/SCALEY],"e","z=",["Size=1.3"]);
-Expr([tmp,py_2/SCALEY],"e","p=",["Size=1.3"]);
+op=["dr,2","Num=150"];
+opr=append(op,"Color=red");
+opb=append(op,"Color=blue");
+opg=append(op,"Color=[0.64,0,0.95,0.4]");
 
 box=BoxL_ch;
 Str=Textedit(box,"","");
@@ -4381,7 +4151,6 @@ if(funflg==1,
   npos=length(Str);//230125
   if(contains(Manifun,name),
     parse(name+";");
-    Subsedit(BoxL_ch,Str);
   ,
     tmp=indexof(Str,"?");
     if(tmp>0,npos=tmp,npos=length(Str));
@@ -4395,68 +4164,126 @@ if(funflg==1,
       Str=tmp1+substring(tmp,npos-1,length(tmp));
     );
   );
-  Subsedit(BoxL_ch,Str);
   funflg=0;
 );
 
+StrL_ch=Str;
+Subsedit(box,Str);
+
 if(ch==1,
-  ax=A.x;
-  if(|ax-axnow|>Eps,
-    Putpoint("A",[ax,0]);
-    Str=format(ax,4);
-    Subsedit(box,Str);
-    StrL_ch=Str;
-    zz=ax;
-    zznow=ax;
-    axnow=ax;
-  );
-  Subsedit(box,Str);
-  zz=Str2num(Str,1);
-  if(zz<1000,
-    zz=parse(Str);
-    StrL_ch=Str;
-    if(|zz-zznow|>Eps,
-      ax=zz;
-      axnow=zz;
-      Putpoint("A",[zz,0]);
-      zznow=zz;
+  tmp=Str2num(Str,ch);
+  if(tmp<1000,
+    df=tmp;
+    if(|df-dfnow|>Eps,
+      tmp=min([60,df]);
+      sc=ceil(x995_tmp/XMAX);
+      if(df>1,tmp=0,tmp=1);
+      tmp1=apply((tmp)..100,[#/100,dchi(#/100*sc,df)]);
+      tmp2=apply(0..50,
+          [1+#/50*(XMAX-1),dchi((1+#/50*(XMAX-1))*sc,df)]);
+      fun1=concat(tmp1,tmp2);
     );
-    tmp1=ztop(zz-0.00005);
-    tmp2=ztop(zz+0.00005);
-    pp=(tmp1+tmp2)/2;
-    Subsedit(BoxL_2,format(pp,4));
+    StrL_ch=Str;
   );
+  xx=sc*A.x;
+  tmp1=1-pchi(xx-0.00005,df);
+  tmp2=1-pchi(xx+0.00005,df);
+  pp=(tmp1+tmp2)/2;
+  pl=1-pp;
+  xxnow=xx;
+  axnow=A.x;
+  Subsedit(BoxL_2,textf(xx));
+  StrL_2=textf(xx);
+  Subsedit(BoxL_3,textf(pp));
+  StrL_3=textf(pp);
+  Subsedit(BoxL_4,textf(pl));
+  StrL_4=textf(pl);
 );
+
+Listplot("-gr1",fun1,opb);
 
 if(ch==2,
-  if(|ch-chnow|>Eps,
-    box=BoxL_2;
-    Str=Textedit(box,"","");
-    chnow=ch;
-  );
-  Subsedit(box,Str);
-  pp=Str2num(Str,2);
-  if(pp<1000,
-    tmp1=ptoz(pp-0.00005);
-    tmp2=ptoz(pp+0.00005);
-    zz=(tmp1+tmp2)/2;
-    ax=zz;
-    axnow=ax;
-    Putpoint("A",[ax,0]);
-    Subsedit(BoxL_1,format(ax,4));
+  if(|A.x-axnow|>Eps,
+    xx=sc*A.x;
+    tmp1=1-pchi(xx-0.00005,df);
+    tmp2=1-pchi(xx+0.00005,df);
+    pp=(tmp1+tmp2)/2;
+    pl=1-pp;
+    Subsedit(BoxL_2,textf(xx));
+    Subsedit(BoxL_3,textf(pp));
+    Subsedit(BoxL_4,textf(pl));
+    StrL_2=textf(xx);
+    StrL_3=textf(pp);
+    StrL_4=textf(pl);
+    xxnow=xx;
+    axnow=A.x;
+  ,
+    tmp=Str2num(Str,ch);
+    if(tmp<1000,
+      xx=tmp;
+      if(|xx-xxnow|>Eps,
+        xxnow=xx;
+        tmp1=1-pchi(xx-0.00005,df);
+        tmp2=1-pchi(xx+0.00005,df);
+        pp=(tmp1+tmp2)/2;
+        pl=1-pp;
+        Subsedit(BoxL_3,textf(pp));
+        StrL_3=textf(pp);
+        Subsedit(BoxL_4,textf(pl));
+        StrL_4=textf(pl);
+        if((xx/sc-XMIN)*(xx/sc-XMAX)<-Eps,
+          Putpoint("A",[xx/sc,0]);
+          axnow=A.x;
+        );
+      );
+    );
   );
 );
 
-pR=[ax,ztop(ax)];
-Htickmark([A.x,Sprintf(A.x,4)]);
-Vtickmark([0.5,"0.5",1,"nw1","1"]);
-pP=[A.x,dnorm(ax)];
-pM=[XMAX,dnorm(XMAX)];
-Listplot("1",[pP,[A.x,0]],Optr);
-tmp=format(pR_2,4);
+if(ch==3,
+  tmp=Str2num(Str,ch);
+  if(tmp<1000,
+    pp=tmp;
+    pl=1-pp;
+    tmp1=qchi(pp-0.00005,df);
+    tmp2=qchi(pp+0.00005,df);
+    xx=(tmp1+tmp2)/2;
+    Putpoint("A",[xx/sc,0]);
+    axnow=A.x;
+    Subsedit(BoxL_2,textf(xx));
+    StrL_2=textf(xx);
+    Subsedit(BoxL_4,textf(pl));
+    StrL_4=textf(pl);
+  );
+);
+
+if(ch==4,
+  tmp=Str2num(Str,ch);
+  if(tmp<1000,
+    pl=tmp;
+    pp=1-pl;
+    tmp1=qchi(pp-0.00005,df);
+    tmp2=qchi(pp+0.00005,df);
+    xx=(tmp1+tmp2)/2;
+    Putpoint("A",[xx/sc,0]);
+    axnow=A.x;
+    Subsedit(BoxL_2,textf(xx));
+    StrL_2=textf(xx);
+    Subsedit(BoxL_3,textf(pp));
+    StrL_3=textf(pp);
+  );
+);
+
+Optc=["Color=red","Size=2"];
+Expr([px-0.1,py_(ch)/SCALEY],"w","\bullet",Optc);
+tmp=1-pchi(sc*A.x,df);
+pR=[A.x,1-tmp];
+Htickmark([A.x,"s0.5",text(sc*A.x),XMAX,"s0.5",textf(sc*XMAX)]);
+Vtickmark([0.1,"0.1",0.2,"0.2",0.5,"0.5"]);
+pP=[A.x,dchi(sc*A.x,df)];
+Listplot("1",[pP,[A.x,0]],opr);
 
 Windispg();
-
 ;
 
 </script>
@@ -4473,40 +4300,42 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "SW", type: "Free", pos: [4.0, 0.4, -1.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [-3.3333333333333335, -4.0, -0.8333333333333334], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [4.0, 0.0, 2.0408163265306123], color: [1.0, 0.0, 0.0], labeled: false, textsize: 18.0, size: 5.1, border: true },
-    {name: "Text4", type: "EditableText", pos: [-2.0, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, textsize: 20.0},
-    {name: "Text5", type: "EditableText", pos: [-2.4000000000000004, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.05", textsize: 20.0},
-    {name: "Text6", type: "Button", pos: [-0.4444444444444443, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=1;", text: "z->p", textsize: 18.0},
-    {name: "Text7", type: "Button", pos: [-0.5333333333333332, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=2;", text: "p->z", textsize: 18.0},
-    {name: "Text3", type: "Text", pos: [-0.6230529595015576, -4.0, -1.0241916491382321], color: [0.0, 0.0, 0.0], size: 3.0, border: true },
-    {name: "Text22", type: "Button", pos: [4.0, 0.4033613445378151, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n0\";", text: "　　", textsize: 18.0},
-    {name: "Text21", type: "Button", pos: [4.0, 0.5106382978723404, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"-\";", text: "　　", textsize: 18.0},
-    {name: "Text23", type: "Button", pos: [4.0, 0.3333333333333333, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\".\";", text: "　　", textsize: 18.0},
-    {name: "Text25", type: "Button", pos: [4.0, 1.3617021276595747, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n1\";", text: "　　", textsize: 18.0},
-    {name: "Text26", type: "Button", pos: [4.0, 1.0756302521008403, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n2\";", text: "　　", textsize: 18.0},
-    {name: "Text27", type: "Button", pos: [4.0, 0.888888888888889, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n3\";", text: "　　", textsize: 18.0},
-    {name: "Text29", type: "Button", pos: [4.0, 2.2127659574468086, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n4\";", text: "　　", textsize: 18.0},
-    {name: "Text30", type: "Button", pos: [4.0, 1.7478991596638658, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n5\";", text: "　　", textsize: 18.0},
-    {name: "Text31", type: "Button", pos: [4.0, 1.4444444444444446, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n6\";", text: "　　", textsize: 18.0},
-    {name: "Text33", type: "Button", pos: [4.0, 3.0638297872340425, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n7\";", text: "　　", textsize: 18.0},
-    {name: "Text34", type: "Button", pos: [4.0, 2.4201680672268906, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n8\";", text: "　　", textsize: 18.0},
-    {name: "Text35", type: "Button", pos: [4.0, 2.0, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n9\";", text: "　　", textsize: 18.0},
-    {name: "Text37", type: "Button", pos: [4.0, 3.914893617021277, 1.0638297872340425], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Delete()\";doflg=0;matflg=0;", text: "　　", textsize: 18.0},
-    {name: "Text38", type: "Button", pos: [4.0, 3.092436974789916, 0.8403361344537815], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Clear()\";doflg=0;matflg=0;", text: "　　", textsize: 18.0},
-    {name: "Text39", type: "Button", pos: [4.0, 2.555555555555556, 0.6944444444444444], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "　　", textsize: 18.0}
+    {name: "SW", type: "Free", pos: [0.0, -3.2, 4.0], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "NE", type: "Free", pos: [4.0, 2.4, 0.5], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "Text51", type: "EditableText", pos: [4.0, 3.6, 1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "5", textsize: 20.0},
+    {name: "Text52", type: "EditableText", pos: [4.0, 3.0, 1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, textsize: 20.0},
+    {name: "Text53", type: "EditableText", pos: [4.0, 2.4, 1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.05", textsize: 20.0},
+    {name: "Text54", type: "EditableText", pos: [4.0, 1.8, 1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.95", textsize: 20.0},
+    {name: "A", type: "Free", pos: [4.0, 0.0, 1.083961880673863], color: [1.0, 0.0, 0.0], labeled: false, size: 5.1, border: true },
+    {name: "Text22", type: "Button", pos: [4.0, 0.27976190476190477, 0.5952380952380953], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n0\";", text: "　　", textsize: 24.0},
+    {name: "Text21", type: "Button", pos: [4.0, 0.3286713286713287, 0.6993006993006994], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"-\";", text: "　　", textsize: 24.0},
+    {name: "Text23", type: "Button", pos: [4.0, 0.24352331606217614, 0.5181347150259067], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\".\";", text: "　　", textsize: 24.0},
+    {name: "Text25", type: "Button", pos: [4.0, 0.8881118881118882, 0.6993006993006994], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n1\";", text: "　　", textsize: 24.0},
+    {name: "Text26", type: "Button", pos: [4.0, 0.755952380952381, 0.5952380952380953], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n2\";", text: "　　", textsize: 24.0},
+    {name: "Text27", type: "Button", pos: [4.0, 0.6580310880829016, 0.5181347150259067], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n3\";", text: "　　", textsize: 24.0},
+    {name: "Text29", type: "Button", pos: [4.0, 1.4475524475524477, 0.6993006993006994], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n4\";", text: "　　", textsize: 24.0},
+    {name: "Text30", type: "Button", pos: [4.0, 1.2321428571428572, 0.5952380952380953], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n5\";", text: "　　", textsize: 24.0},
+    {name: "Text31", type: "Button", pos: [4.0, 1.0725388601036268, 0.5181347150259067], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n6\";", text: "　　", textsize: 24.0},
+    {name: "Text33", type: "Button", pos: [4.0, 2.006993006993007, 0.6993006993006994], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n7\";", text: "　　", textsize: 24.0},
+    {name: "Text34", type: "Button", pos: [4.0, 1.7083333333333337, 0.5952380952380953], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n8\";", text: "　　", textsize: 24.0},
+    {name: "Text35", type: "Button", pos: [4.0, 1.4870466321243525, 0.5181347150259067], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n9\";", text: "　　", textsize: 24.0},
+    {name: "Text37", type: "Button", pos: [4.0, 2.5664335664335667, 0.6993006993006994], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Delete()\";doflg=0;matflg=0;", text: "　　", textsize: 24.0},
+    {name: "Text38", type: "Button", pos: [4.0, 2.1845238095238098, 0.5952380952380953], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Clear()\";doflg=0;matflg=0;", text: "　　", textsize: 24.0},
+    {name: "Text39", type: "Button", pos: [4.0, 1.9015544041450778, 0.5181347150259067], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "　　", textsize: 24.0},
+    {name: "Text56", type: "Button", pos: [-2.6666666666666665, -4.0, -1.1111111111111112], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=1;", text: "自由度", textsize: 18.0},
+    {name: "Text57", type: "Button", pos: [-3.1999999999999997, -4.0, -1.3333333333333333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=2;", text: "x->p", textsize: 18.0},
+    {name: "Text59", type: "Button", pos: [4.0, 3.0000000000000004, 1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=4;", text: "pl->x", textsize: 18.0},
+    {name: "Text58", type: "Button", pos: [4.0, 4.0, 1.6666666666666667], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "ch=3;", text: "pr->x", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 872,
-    height: 463,
-    transform: [{visibleRect: [-4.537882240340361, 5.349999313179923, 6.760518439690742, -0.6482688914771944]}],
+    width: 749,
+    height: 433,
+    transform: [{visibleRect: [-0.7751697367592693, 4.963077166243146, 8.723786374806386, -0.5326478087302297]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  use: ["katex"],
   cinderella: {build: 2069, version: [3, 0, 2069]}
 });
     </script>
@@ -4526,7 +4355,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 -->
     <div id="CSCanvas"></div>
 <footer>
-<p><small>&emsp;&copy; 2023 Setsuo Takato</small></p>
+<p><small>&emsp;&copy; 2023 Setsuo Takato, Takuya Kitamoto,Kiyoshi Kitahara</small></p>
 </footer>
 </body>
 </html>
