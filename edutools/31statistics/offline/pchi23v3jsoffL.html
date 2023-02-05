@@ -4042,7 +4042,7 @@ Str2num(str,chno):=(
     out=parse(str);
     if(chno==1,
       out=max([1,out]);
-      out=min([50,out]);
+      out=min([100,out]);
     );
     if(chno==2,
       out=max([XMIN,out]);
@@ -4080,7 +4080,7 @@ StrL=["","","",""];
 posx=-1.5;
 posy=4.5;
 
-Ketinit();
+Ketinit(0.2);
 
 
 Addax(0);
@@ -4104,7 +4104,8 @@ if(startflg==1,
   box=BoxL_ch;
   df=5;
   dfnow=0;
-  sc=ceil(x995_df/XMAX);
+  tmp=min([60,df]);
+  sc=ceil(x995_tmp/XMAX);
   scnow=sc;
   xL=apply(0..100,#/100*(XMAX-XMIN)+XMIN);
   pL=apply(xL,pchi(#,df));
@@ -4174,7 +4175,8 @@ if(ch==1,
   if(tmp<1000,
     df=tmp;
     if(|df-dfnow|>Eps,
-      sc=ceil(x995_df/XMAX);
+      tmp=min([60,df]);
+      sc=ceil(x995_tmp/XMAX);
       if(df>1,tmp=0,tmp=1);
       tmp1=apply((tmp)..100,[#/100,dchi(#/100*sc,df)]);
       tmp2=apply(0..50,
@@ -4328,8 +4330,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 749,
-    height: 449,
-    transform: [{visibleRect: [-0.7183498380993124, 5.126088650514511, 8.780606273466352, -0.5649158920975176]}],
+    height: 451,
+    transform: [{visibleRect: [-0.7183498380993124, 5.126088650514511, 8.780606273466352, -0.5928129731887529]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
@@ -4353,7 +4355,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 -->
     <div id="CSCanvas"></div>
 <footer>
-<p><small>&emsp;&copy; 2023 Setsuo Takato,Takuya Kitamoto,Kiyoshi Kitahara</small></p>
+<p><small>&emsp;&copy; 2023 Setsuo Takato and Kiyoshi Kitahara</small></p>
 </footer>
 </body>
 </html>
