@@ -16,7 +16,8 @@ poskey=[11,-12];
 dy=16;
 nmove=[0,-0.3];
 poskey=[11,-12];
-dxL=prepend(22,apply(1..4,15));
+//dxL=prepend(22,apply(1..4,22));
+dx=22;
 dy=16;
 nmove=[0,-0.3];
 

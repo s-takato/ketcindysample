@@ -4231,6 +4231,7 @@ betacf(a, b, x):=(
 ptK(x, n):=(
   regional(out);
   out=betai(n/2,1/2,n/(n+x^2))/2;
+  out=re(out);
   if(x<0,out=1-out);
   out;
 );
@@ -4562,7 +4563,7 @@ var cdy = CindyJS({
     {name: "Text51", type: "EditableText", pos: [-2.1052631578947367, -4.0, -1.0526315789473684], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "5", textsize: 20.0},
     {name: "Text52", type: "EditableText", pos: [-2.4999999999999996, -4.0, -1.2499999999999998], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, textsize: 20.0},
     {name: "Text53", type: "EditableText", pos: [-3.0769230769230766, -4.0, -1.5384615384615383], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.025", textsize: 20.0},
-    {name: "A", type: "Free", pos: [4.0, 0.0, 1.5560723996317882], color: [1.0, 0.0, 0.0], labeled: false, size: 5.1, border: true },
+    {name: "A", type: "Free", pos: [4.0, 0.0, 1.5560723996316177], color: [1.0, 0.0, 0.0], labeled: false, size: 5.1, border: true },
     {name: "Text22", type: "Button", pos: [4.0, 0.3931623931623932, 0.8547008547008548], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n0\";", text: "　　", textsize: 24.0},
     {name: "Text21", type: "Button", pos: [4.0, 0.5, 1.0869565217391304], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"-\";", text: "　　", textsize: 24.0},
     {name: "Text23", type: "Button", pos: [4.0, 0.323943661971831, 0.704225352112676], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\".\";", text: "　　", textsize: 24.0},
@@ -4585,8 +4586,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 832,
-    height: 428,
-    transform: [{visibleRect: [-4.810154207156253, 5.239769255961277, 6.789452110579401, -0.7288112435085232]}],
+    height: 427,
+    transform: [{visibleRect: [-4.756019642327904, 5.206403356629781, 6.843586675407747, -0.7468337482398394]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],

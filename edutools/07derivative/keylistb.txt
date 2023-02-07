@@ -7,13 +7,15 @@ if(length(Shellparent)>0,  Makeshell(),Makebat(););WritetoSci(2);kc();
 Text3
 saitenflg=1;
 Text4
-addflg=1;
+okflg=min([2,okflg+1]);
 Text5
 
 Text6
 startflg=1;
 okflg=0;
 dokanflg=0;
+Text9
+addflg=1;
 Text10
 funflg=1;name="n0";
 Text11
@@ -53,7 +55,14 @@ okflg=min([2,okflg+1]);
 Text36
 funflg=1;name="Delete()";
 Text37
-funflg=1;name="Clear()";
+//funflg=1;name="Clear()";
+if(ch==1,
+  StrL_ch="y="
+,
+  StrL_ch="y'="
+);
+Str=StrL_ch;
+Subsedit(box_ch,Str);
 Text38
 funflg=1;name="Left()";
 Text39
@@ -98,5 +107,11 @@ Text89
 funflg=1;name="tan(";
 Text90
 funflg=1;name="log(";
+Text101
+exflg=1;
+Text102
+exflg=2;
+Text103
+exflg=3;
 Text116
 
