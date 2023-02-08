@@ -1154,6 +1154,16 @@ tmp1=Textedit(n0); //
   if(length(tmp2)==0,out=str,out=tmp2);
   out;
 ); //210208to
+Subsedit(no,str):=(
+ regional(tmp,tmp1);
+ if(isstring(str),
+   tmp1=str;
+ ,
+   tmp1=text(str);
+ );
+ tmp="Text"+text(no); //210211[2lines]
+ parse(tmp).currenttext=tmp1;
+);
 Shade(plist):=Shade(plist,[]); 
 Shade(Arg1,Arg2):=(
   if(!isstring(Arg1),
@@ -2468,16 +2478,6 @@ Inwindow(point,xrng,yrng):=(
   ymin=yrng_1; ymax=yrng_2;
   tmp=(x>xmin-Eps)&(x<xmax+Eps)&(y>ymin-Eps)&(y<ymax+Eps);
   if(tmp,true,false);
-);
-Subsedit(no,str):=(
- regional(tmp,tmp1);
- if(isstring(str),
-   tmp1=str;
- ,
-   tmp1=text(str);
- );
- tmp="Text"+text(no); //210211[2lines]
- parse(tmp).currenttext=tmp1;
 );
 Expr(Pt,Dr,St):=Expr([Pt,Dr,St]);
 Expr(list):=Expr(list,[]);
@@ -4277,6 +4277,13 @@ if(ch==4,
     Subsedit(BoxL_3,textf(pp));
     StrL_3=textf(pp);
   );
+  tmp1=select(fun1,(#_1>XMIN+0.01)&(#_1<A.x-Eps));
+  tmp1=prepend([XMIN+0.01,dchi(sc*XMIN+0.01,df)],tmp1);
+  tmp1=append(tmp1,[A.x,dchi(sc*A.x,df)]);
+  tmp2=apply(tmp1,[#_1,0]);
+  tmp=concat(tmp1,reverse(tmp2));
+  Listplot("sh",tmp,["nodisp"]);
+  Shade("1",["sgsh"],["Color=cyan"]);
 );
 
 Optc=["Color=red","Size=2"];
@@ -4287,7 +4294,6 @@ Htickmark([A.x,"s0.5",text(sc*A.x),XMAX,"s0.5",textf(sc*XMAX)]);
 Vtickmark([0.1,"0.1",0.2,"0.2",0.5,"0.5"]);
 pP=[A.x,dchi(sc*A.x,df)];
 Listplot("1",[pP,[A.x,0]],opr);
-
 Windispg();
 ;
 
@@ -4309,9 +4315,9 @@ var cdy = CindyJS({
     {name: "NE", type: "Free", pos: [4.0, 2.4, 0.5], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text51", type: "EditableText", pos: [4.0, 3.6, 1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "5", textsize: 20.0},
     {name: "Text52", type: "EditableText", pos: [4.0, 3.0, 1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, textsize: 20.0},
-    {name: "Text53", type: "EditableText", pos: [4.0, 2.4, 1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, textsize: 20.0},
+    {name: "Text53", type: "EditableText", pos: [4.0, 2.4, 1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.05", textsize: 20.0},
     {name: "Text54", type: "EditableText", pos: [4.0, 1.8, 1.0], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 90, text: "0.95", textsize: 20.0},
-    {name: "A", type: "Free", pos: [4.0, 0.0, 1.083961880673765], color: [1.0, 0.0, 0.0], labeled: false, size: 5.1, border: true },
+    {name: "A", type: "Free", pos: [4.0, 0.0, 1.083961880673863], color: [1.0, 0.0, 0.0], labeled: false, size: 5.1, border: true },
     {name: "Text22", type: "Button", pos: [4.0, 0.27976190476190477, 0.5952380952380953], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n0\";", text: "　　", textsize: 24.0},
     {name: "Text21", type: "Button", pos: [4.0, 0.3286713286713287, 0.6993006993006994], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"-\";", text: "　　", textsize: 24.0},
     {name: "Text23", type: "Button", pos: [4.0, 0.24352331606217614, 0.5181347150259067], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\".\";", text: "　　", textsize: 24.0},
@@ -4334,9 +4340,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 749,
-    height: 416,
-    transform: [{visibleRect: [-0.7741440002817825, 4.9587061639670935, 8.724812111283873, -0.31384216227639833]}],
+    width: 751,
+    height: 436,
+    transform: [{visibleRect: [-0.8185003592168495, 4.966238375861722, 8.708352833440037, -0.5573836802028852]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
