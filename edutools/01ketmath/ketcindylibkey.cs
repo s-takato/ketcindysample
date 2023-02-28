@@ -14,8 +14,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibkey[20220819 loaded"); // no ketjs
+println("ketcindylibkey[20230227 loaded"); // no ketjs
 
+// 230227 Keytable changed (sz)
 // 220819 Replacedot addded, and added to Morefunction
 // 220731 All Strsplit changed to Strsplit
 // 220523 Gettexform  (frac x=>x dfrac 
@@ -605,6 +606,7 @@ Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz,shade):=(
         tmp1=xL_col;
         tmp2=xL_(col+1);
         pos_1=(tmp1+tmp2)/2;
+        tmp=indexof(name,",");
        drawtext(pos+nmove,name,align->"mid",size->sz);
       );
     );

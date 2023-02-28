@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <title>inversion1.cdy</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #CSConsole {
+            background-color: #FAFAFA;
+            border-top: 1px solid #333333;
+            bottom: 0px;
+            height: 200px;
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/KetCindyPlugin.js"></script>
+<script id="csinit" type="text/x-cindyscript">
+//KETlib
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+//Seteditable(0,["",18,"Width=200"]);
+//Settextkey("2",[-2.2,1.5],"開始","startflg=1");
+//Animationkey();
+
+;
+
+</script>
+<script id="cskeytyped" type="text/x-cindyscript">
+//Script (CindyScript)
+kL=keydownlist();
+if(length(kL)>0,
+  if(kL==[17,70], //Ctr+f (Figures)
+    Viewtex();
+    kc();
+  );
+  if(kL==[16,17,80], //Ctr+Shift+p (Parent)
+    if(length(Shellparent)>0,
+      Makeshell(),Makebat();
+    );
+    WritetoSci(2);
+    kc();
+  );
+  if(kL==[17,74], //Ctr+j (Ketjsoff)
+    Mkketcindyjs(append(KETJSOP,"Web=n"));
+  );
+  if(kL==[16,17,74], //Ctr+Shift+j (Ketjson)
+    Mkketcindyjs(append(KETJSOP,"Web=yj"));
+  );
+);
+;
+
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+//figures
+Ketinit();
+
+Ptz(z):=(
+ regional(z1,z2);
+ z1=re(z);
+ z2=im(z);
+ [z1,z2];
+);
+
+Ptdisp(nm,w,clr):=(
+  regional(name,op);
+  op=["Size=2","Color="+clr];
+  name="w"+nm;
+  Pointdata(nm,Ptz(w),op);
+  Expr(Ptz(w),"ne",name);
+);
+
+Putpoint("Z",[1,1],Z.xy);
+z=Z.x+i*Z.y;
+zc=conjugate(z);
+
+Ch=[1];
+if(contains(Ch,1),
+  Setwindow([-2.5,2.5],[-1.5,1.5]);
+  timeL=[10,20,30,40,50,60];
+  msgL=[
+   "もうすぐ10秒",
+   "もうすぐ20秒",
+   "もうすぐ30秒",
+   "もうすぐ40秒",
+   "もうすぐ50秒",
+   "もうすぐ60秒で終了"
+  ];
+  Circledata("1",[[0,0],1]);
+  Circledata("2",[[1,0],1]);
+  ss=Animationparam(0,1,[0,60]);
+  Letter([-2.5,1],"e",floor(ss),["Size=1.4"]);        
+  nn=select(1..(length(timeL)),ss<timeL_#);
+  if(length(nn)>0,
+    nn=nn_(1);
+    msg=msgL_nn;
+    if(ss>0,
+      Letter([-3,0.7],"e",msg,["Size=1.4"]);
+    );
+  );
+  w1=1/z;
+  w2=1-z;
+  w3=1/(1-z);
+  w4=(z-1)/z;
+  w5=z/(z-1);
+  w6=conjugate(w4);
+  Ptdisp("1",w1,"black");
+  Ptdisp("2",w2,[0.7,0,0]);
+  Ptdisp("3",w3,"blue");
+  Ptdisp("4",w4,"green");
+  Ptdisp("5",w5,"yellow");
+  Ptdisp("6",w6,"yellow");
+  Arrowdata("0",[[0,0],Ptz(z)]);
+  Arrowdata("1",[[0,0],Ptz(w1)]);
+  Arrowdata("2",[[1,0],Ptz(w2)]);
+  Arrowdata("3",[[1,0],Ptz(w3)]);
+  Arrowdata("4",[[1,0],Ptz(w4)]);
+  if(ss>=60,
+    stopanimation();Animeflg="";sstart=Current;
+  );
+);
+
+if(contains(Ch,2),
+  Setwindow([-1.5,3.5],[-1.5,2.5]);
+  Putpoint("B",[3,3],B.xy);
+  Slider("R",[0.1,-1.4],[XMAX,-1.4]);
+  r=R.x/2;
+  aa=B.x+i*B.y;
+  Circledata("1",[[0,0],r]);
+  Circledata("2",[B.xy,r]);
+  w1=r^2/(conjugate(z-aa))+aa;
+  w2=r^2/(z-aa)+aa;
+  Ptdisp("1",w1,"black");
+  Ptdisp("2",w2,"blue");
+  Listplot("1",[B.xy,Ptz(z)]);
+  Listplot("2",[B.xy,Ptz(w1)]);
+  
+
+);
+
+Windispg();
+//Help("Anima");
+;
+
+</script>
+    <script type="text/javascript">
+var cdy = CindyJS({
+  scripts: "cs*",
+  defaultAppearance: {
+    dimDependent: 0.7,
+    fontFamily: "sans-serif",
+    lineSize: 1,
+    pointSize: 5.0,
+    textsize: 12.0
+  },
+  angleUnit: "°",
+  geometry: [
+    {name: "SW", type: "Free", pos: [4.0, 2.4, -1.6], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "NE", type: "Free", pos: [4.0, 2.4, 1.6], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "Z", type: "Free", pos: [4.0, 2.0754102842029685, 1.6198720765302406], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "B", type: "Free", pos: [4.0, 2.11342567138029, 2.436472422436795], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "R", type: "Free", pos: [4.0, -2.2583595994080836, 1.6131139995772028], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "Text1", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.286, 0.286], fillalpha: 0.27272728085517883, script: "Viewtex();\nkc();", text: "Figure", textsize: 18.0, dock: {corner: "UL", offset: [10.0, -20.0]}},
+    {name: "Text12", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "if(length(Shellparent)>0,\n  Makeshell(),Makebat();\n);\nif(indexof(Libname,\"sci\")>0,\n  writetosci(2),writetoRS(2)\n);\nkc();", text: "Parent", textsize: 18.0, dock: {corner: "UL", offset: [77.0, -20.0]}},
+    {name: "Text3", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.929, 0.6], fillalpha: 0.27272728085517883, script: "Parafolder();", text: "ParaF", textsize: 18.0, dock: {corner: "UL", offset: [295.0, -20.0]}},
+    {name: "Text4", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.51, 0.949, 1.0], fillalpha: 0.27272728085517883, script: "Mkanimation();", text: "Anime", textsize: 18.0, dock: {corner: "UL", offset: [355.0, -20.0]}},
+    {name: "Text5", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 0.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkflipanime();", text: "Flip", textsize: 18.0, dock: {corner: "UL", offset: [423.0, -20.0]}},
+    {name: "Text21", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.5726495726495726, script: "Mkketcindyjs(append(KETJSOP,\"Web=y\"));", text: "Ketjson", textsize: 18.0, dock: {corner: "UL", offset: [144.0, -20.0]}},
+    {name: "Text22", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.4358974358974359, script: "Mkketcindyjs(append(KETJSOP,\"Web=n\"));", text: "Ketjsoff", textsize: 18.0, dock: {corner: "UL", offset: [218.0, -20.0]}},
+    {name: "Text71", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "resetclock();playanimation();Animeflg=1;Dirflg=1;\n        sorg=Current;", text: "Play", textsize: 18.0, dock: {corner: "LL", offset: [305.0, 33.0]}},
+    {name: "Text74", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "Stop", textsize: 18.0, dock: {corner: "LL", offset: [475.0, 33.0]}}
+  ],
+  ports: [{
+    id: "CSCanvas",
+    width: 865,
+    height: 573,
+    transform: [{visibleRect: [-3.1383158727988016, 2.224604750892924, 3.317065940574627, -2.051619271145197]}],
+    axes: true,
+    grid: 0.25,
+    snap: true,
+    background: "rgb(168,176,192)"
+  }],
+  csconsole: false,
+  cinderella: {build: 2070, version: [3, 0, 2070]}
+});
+    </script>
+</head>
+<body>
+    <div id="CSCanvas"></div>
+</body>
+</html>
