@@ -1,0 +1,261 @@
+Seteditable(5,["y=","Size=18","Width=440"]);
+Seteditable(116,["","Size=18","Width=400"]);
+Text5.xy=[1.5,10.5];
+Text114.xy=[-3.5,10.5];
+Text115.xy=[-10.2,-11.5];
+Text116.xy=[-8.2,-11.5];
+//inspect(A,"ptsize",4);
+//Putpoint("S",[2,-10]);
+
+Str="";
+StrL=[];
+Strnow="";
+Strt="";
+Strc="";
+Nfun=1;
+npos=2;
+dispflg=0;
+tpos=[10.5,9];
+dpos=[0,-1.2];
+
+poskey=[11.2,-12];
+dx=18;
+dy=16;
+nmove=[0,-0.3];
+
+Keyname():=(
+  regional(nL);
+  nL=[
+    ["fr","sq","x",")","pi"],
+    ["e^(","^(",",","(","|"],
+    ["cos","7","8","9","＋"],
+    ["sin","4","5","6","ー"],
+    ["tan","1","2","3","＊"],
+    ["log","0",".","sp","／"]
+  ];
+  nL;
+);
+
+Keyname2():=(
+  regional(nL);
+  nL=[
+    ["表示","BS","CL","<-","->"],
+    ["y=","色","x=","N=","E="]
+  ];
+  nL;
+);
+
+////////////////////////
+
+Addfunstr(name,npos,strnow):=(
+  regional(str,tmp,out);
+  str=Instr(name);
+  tmp="";
+  tmp=substring(strnow,0,npos)+str;
+  tmp=tmp+substring(strnow,npos,length(strnow));
+  out=[tmp,npos+length(str)];
+  funflg=0;
+  out;
+);
+
+Gettexform(str):=(
+  regional(err,subL,strt,tmp,tmp1,tmp2,tmp3,tmp4);
+  err="";
+  tmp=Sepchar(str);
+  subL=tmp_1;
+  err=tmp_2;
+  strt="";
+  forall(subL,
+    if(substring(#,0,1)=="@",
+      strt=strt+substring(#,1,length(#));
+    ,
+      tmp=#;
+      tmp=replace(#," ","(sp)");
+      tmp=Modifyfortex(tmp);
+      tmp=Morefunction(tmp);
+      tmp1=Totexform(tmp);
+//      tmp=Addasterisk(tmp);
+//      tmp=replace(tmp,"\exp(","e^(");
+//      tmp1=Totexform(tmp);
+      tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
+      repeat(5,tmp1=replace(tmp1,"c c","cc"));
+      tmp1=replace(tmp1,"c i r c","\circ");
+//      tmp1=replace(tmp1,"\frac","\dfrac"); //220523(to comment)
+      tmp1=Greekletter(tmp1); //210514[3lines]
+      tmp1=Capitalletter(tmp1);
+      tmp1=Boldletter(tmp1);
+      strt=strt+"$"+tmp1+"$";
+    );
+  );
+  strt;
+);
+
+GetplotL(str):=(
+  regional(out,fd,fun,rng,clr,num,exc,op,
+      tmpL,tmp,tmp1,tmp2,tmp3);
+  tmpL=Strsplit(str,"//");
+  out=[];
+  forall(tmpL,fd,
+    fun="";
+    rng="x=[XMIN,XMAX]";
+    clr="Color=black";
+    num="Num=50";
+    exc="Exc=[]";
+    tmp1=Indexall(fd,"=");
+    forall(tmp1,
+      tmp=substring(fd,#-2,#-1);
+      tmp2=substring(fd,#,length(fd));
+      tmp3=indexof(tmp2,"=");
+      if(tmp3>0,
+        tmp2=substring(tmp2,0,tmp3-2);
+      );
+      if(tmp=="y",
+        fun=replace(tmp2,"x","(x"+"-("+GENTEN_1/S.x+"))");
+        fun=Tocindyform(fun);
+        fun=fun+"+("+GENTEN_2/S.x+")";
+      );
+      if(tmp=="C",
+        if(indexof(tmp2,",")>0,
+          clr="Color=["+tmp2+"]";
+        ,
+          clr="black";
+          if(tmp2=="1",clr="red");
+          if(tmp2=="2",clr="blue");
+          if(tmp2=="3",clr="green");
+          if(tmp2=="4",clr="yellow");
+          if(tmp2=="5",clr="[1,0,1]");
+          if(tmp2=="6",clr="[0.5,0.5,0]");
+          if(indexof(tmp2,",")>0,clr="["+tmp2+"]");
+          clr="Color="+clr;
+       );
+      );
+      if(tmp=="x",
+        rng=Tocindyform(tmp2);
+        rng=Removespace(rng);
+        rng="x=S.x*["+replace(rng,"e^(","exp(");
+        rng=replace(rng,"+,","+0.001,");
+        tmp=rng_(-1);
+        if(tmp=="-",
+          rng=rng+"0.001";
+        );
+        rng=rng+"]";
+      );
+      if(tmp=="N",
+        num="Num="+tmp2;
+      );
+      if(tmp=="E",
+        exc=Tocindyform(tmp2);
+        exc="Exc=["+replace(exc,"e^(","exp(")+"]";
+      );
+    );
+    out=append(out,[fun,rng,clr,num,exc]);
+  );
+  out;
+);
+
+Key2fun():=(
+  regional(out);
+  out="";
+  forall(keyL,
+    out=out+#;
+  );
+  out;
+);
+
+///////
+Manifun=["Display()","Delete()","Clear()","Left()","Right()"];
+
+Delete():=(
+  regional(tmp,tmp1,tmp2,tmp3);
+  //global Str,npos
+  if(length(Str)>2,
+    tmp=indexof(Str,"?");
+    if(tmp>1,
+      tmp1=substring(Str,0,tmp-2)+"?";
+      tmp2=substring(Str,tmp,length(Str));
+      Str=tmp1+tmp2;
+      npos=tmp-1;
+    );
+    if(tmp==0,
+      Str=substring(Str,0,length(Str)-1);
+      npos=length(Str);
+    );
+  );
+);
+
+Clear():=(
+  regional(tmp);
+  //global Str,Strnow,npos
+  Str=replace(Str,"?",""); //220515from
+  tmp=Indexall(Str,"//");
+  if(length(tmp)>0,
+    Str=substring(Str,0,tmp_(-1)-1);
+  ,
+    Str="y=";
+  ); //220515to
+  npos=2;
+  Strnow=Str;
+  Subsedit(5,Str);
+);
+
+Left():=(
+  regional(tmp,tmp1,tmp2,tmp3);
+  //global Str,npos
+  if(length(Str)>0,
+    tmp=indexof(Str,"?");
+    if(tmp>1,
+      tmp1=substring(Str,0,tmp-2)+"?";
+      tmp2=substring(Str,tmp-2,tmp-1);
+      tmp3=substring(Str,tmp,length(Str));
+      Str=tmp1+tmp2+tmp3;
+      npos=length(tmp1+"?");
+    );
+    if(tmp==0,
+      tmp1=substring(Str,0,length(Str)-1)+"?";
+      tmp3=substring(Str,length(Str)-1,length(Str));
+      Str=tmp1+tmp3;  
+      npos=length(tmp1);
+    );
+  );
+);
+
+Right():=(
+  regional(tmp,tmp1,tmp2,tmp3);
+  //global Str,npos
+  if(length(Str)>0,
+    tmp=indexof(Str,"?");
+    if(tmp>0,
+      if(tmp<length(Str)-1,
+        tmp1=substring(Str,0,tmp-1);
+        tmp2=substring(Str,tmp,tmp+1)+"?";
+        tmp3=substring(Str,tmp+1,length(Str));
+        Str=tmp1+tmp2+tmp3;
+        npos=length(tmp1+"?");
+      );
+      if(tmp==length(Str)-1,
+        tmp1=substring(Str,0,tmp-1);
+        tmp3=substring(Str,tmp,length(Str));
+        Str=tmp1+tmp3;
+        npos=length(Str);
+      );
+    );
+  );
+);
+
+Gridpaper():=(
+  regional(mv,tmp,tmp1);
+  Drwxy();
+//  mv=0.3;
+//  Drwexpr([XMAX,0],"x",15);
+//  Drwexpr([0,YMAX],"y",15);
+//  draw(A+[XMIN,0],A+[XMAX,0],color->[0,0,0]);
+//  draw(A+[0,YMIN],A+[0,YMAX],color->[0,0,0]);
+  tmp=apply(remove((-10)..(10),[0]),[S.x*#,text(#)]); // scale=S.x;
+  tmp=apply(remove((-10)..(10),[0]),[S.x*#,text(#)]); // scale=S.x;
+  tmp1=select(tmp,(#_1>=XMIN-GENTEN_1)&(#_1<=XMAX-GENTEN_1));
+  tmp2=select(tmp,(#_1>=YMIN-GENTEN_2)&(#_1<=YMAX-GENTEN_2));  
+  tmp1=flatten(tmp1);
+  tmp2=flatten(tmp2);
+  Htickmark(flatten(tmp1));
+  Vtickmark(flatten(tmp2));
+);

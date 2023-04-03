@@ -14,8 +14,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibkey[20220523 loaded"); // no ketjs
+println("ketcindylibkey[20230402 loaded"); // no ketjs
 
+// 230402 Errorcheckstr added
+// 230227 Keytable changed (sz)
+// 220819 Replacedot addded, and added to Morefunction
+// 220731 All Strsplit changed to Strsplit
 // 220523 Gettexform  (frac x=>x dfrac 
 // 220424 Setkeypos():=
 // 211111 Setkeystyle changed ( keyposition, only for exiisting text )
@@ -147,6 +151,33 @@ Replacematdet(str):=(
   out;
 );
 
+Replacedot(str):=(  //220819
+  regional(out,rest,tmp,tmp1,tmp2);
+  out=str;
+  tmp1=indexof(out,"dot(");
+  while(tmp1>0,
+    tmp=Indexall(out,")");
+    tmp=select(tmp,#>tmp1);
+    if(length(tmp)>0,
+      tmp2=tmp_1;
+    ,
+      tmp2=length(out);
+    );
+    rest=substring(out,tmp2,length(out));
+    tmp=substring(out,tmp1+3,tmp2-1);
+    tmp=Removespace(tmp);
+    out=substring(out,0,tmp1-1);
+    if((tmp=="")%(tmp=="1"),tmp2="{\cdot}");
+    if((tmp=="3")%(tmp=="s"),tmp2="{\cdots}");
+    if(tmp=="d",tmp2="{\ddots}");
+    if(tmp=="l",tmp2="{\ldots}");
+    if(tmp=="v",tmp2="{\vdots}");
+    out=out+tmp2+rest;
+    tmp1=indexof(out,"dot(");
+  );
+  out;
+);
+
 Replacefun(str,name,repL):=(  //new 210604
   regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
      tmp,tmp1,tmp2);
@@ -202,6 +233,7 @@ Morefunction(str):=( //new 210604
 //  out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
 //  out=Replacefun(out,"e^(",["\exp{","}"]); //210612
   out=Replacematdet(out); //210606
+  out=Replacedot(out); //220819
   out;
 );
 
@@ -535,6 +567,7 @@ Addfunstr(name,npos,strnow):=(
   out;
 );
 
+////%Keytable start////
 Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22,1); //210629
 Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz,1);
 Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz,shade):=(
@@ -575,11 +608,13 @@ Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz,shade):=(
         tmp1=xL_col;
         tmp2=xL_(col+1);
         pos_1=(tmp1+tmp2)/2;
+        tmp=indexof(name,",");
        drawtext(pos+nmove,name,align->"mid",size->sz);
       );
     );
   );
 );
+////%Keytable end////
 
 Allclear():=(
   StrL_ch="";
@@ -756,20 +791,57 @@ Line2list(strorg):=(
   flg=indexof(str,"::");
    tL=[];
   if(indexof(str,"CR")>0,
-    stL=tokenize(str,"CR");
+    stL=Strsplit(str,"CR");
     forall(1..(length(stL)),nn,
       st=stL_nn;
       if(!isstring(st),st=format(st,10));
-      stL_nn=tokenize(st,tab);
+      stL_nn=Strsplit(st,tab);
     );
   ,
-    stL=tokenize(str,tab);
+    stL=Strsplit(str,tab);
     forall(1..(length(stL)),
       tmp=stL_#;
-      if(indexof(tmp,"::")>0,tmp=tokenize(tmp,"::"));
+      if(indexof(tmp,"::")>0,tmp=Strsplit(tmp,"::"));
       stL_#=tmp;
     );
   );
   stL;
 );
 ////%Line2list end////
+
+
+Errorcheckstr(str):=(
+  regional(flg,tmp,tmp1,tmp2,tmp3);
+  flg=0; 
+  if(flg==0,
+    forall(tmp3,
+      if(#==1,
+        tmp2=append(tmp2,#);
+      ,
+        if(str_(#-1)=="(",
+          tmp2=append(tmp2,#);
+        ,
+          if(#>=4,
+            tmp=substring(str,#-4,#-1);
+            if(contains(["sin","cos","tan"],tmp),
+              tmp2=append(tmp2,#);
+            );
+          );    
+        );
+        if(length(tmp2)>0,
+          flg=2; // pos of hats different
+        );
+      );
+    );
+  );
+  if(flg==0,
+    if(indexof(str,"(")>0,
+      tmp2=Bracket(str);
+      tmp=tmp2_(-1);
+      if(tmp_2!=-1,
+        flg=1; // brackets mismached
+      );
+    );
+  ); 
+  flg;
+);
