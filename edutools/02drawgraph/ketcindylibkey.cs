@@ -812,7 +812,8 @@ Line2list(strorg):=(
 
 Errorcheckstr(str):=(
   regional(flg,tmp,tmp1,tmp2,tmp3);
-  flg=0; 
+  flg=0;
+  if(length(str)==0,flg=3);
   if(flg==0,
     forall(tmp3,
       if(#==1,
