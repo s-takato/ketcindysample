@@ -3297,9 +3297,11 @@ Line2list(strorg):=(
 
 Errorcheckstr(str):=(
   regional(flg,tmp,tmp1,tmp2,tmp3);
-  flg=0;
+  flg=[0,[]];
   if(length(str)==0,flg=3);
-  if(flg==0,
+  if(flg_1==0,
+    tmp3=Indexall(str,"^");
+    tmp2=[];
     forall(tmp3,
       if(#==1,
         tmp2=append(tmp2,#);
@@ -3309,23 +3311,27 @@ Errorcheckstr(str):=(
         ,
           if(#>=4,
             tmp=substring(str,#-4,#-1);
+            println(tmp);
+            
             if(contains(["sin","cos","tan"],tmp),
               tmp2=append(tmp2,#);
             );
           );    
         );
         if(length(tmp2)>0,
-          flg=2; // pos of hats different
+          flg=[2,tmp2]; // pos of hats different
         );
       );
     );
   );
-  if(flg==0,
+  if(flg_1==0,
     if(indexof(str,"(")>0,
       tmp2=Bracket(str);
       tmp=tmp2_(-1);
-      if(tmp_2!=-1,
-        flg=1; // brackets mismached
+      if(tmp_2!=-1, // brackets mismach
+        tmp2=select(tmp2,abs(#_2)==1);
+        tmp2=apply(tmp2,#_1);
+        flg=[1,tmp2]; 
       );
     );
   ); 
@@ -3693,63 +3699,25 @@ forall(1..nch,nc,
   dy=dyL_nc;
   ns=length(sL);
   forall(1..ns,nn,
-    flg=0; //220609from
     tmp1=sL_nn;
-    if(flg==0, // 220718from
-      tmp3=Indexall(tmp1,"^");
-      tmp2=[];
-      forall(tmp3,
-        if(#==1,
-          tmp2=append(tmp2,#);
-        ,
-          if(tmp1_(#-1)=="(",
-            tmp2=append(tmp2,#);
-          ,
-            if(#>=4,
-              tmp=substring(tmp1,#-4,#-1);
-              if(contains(["sin","cos","tan"],tmp),
-                tmp2=append(tmp2,#);
-              );
-            );    
-          );
-        );
-      );
-      if(length(tmp2)>0,
-        flg=1;
-        tmp=tp+[0,-0.2];
-        forall(1..(length(tmp1)),mm,
-          tmp3=tmp1_mm;
-          clr=[0,0,0];
-          if(contains(tmp2,mm),clr=[1,0,0]);
-          tmp_1=tmp_1+1.25;
-          Drwletter(tmp,tmp3,22,clr);
-        );
-      );
-    ); // 220718to
-    if((flg==0)&(indexof(tmp1,"(")>0),
-      tmp2=Bracket(tmp1);
-      tmp=tmp2_(-1);
-      if(tmp_2!=-1,
-        flg=1;
-        tmp2=select(tmp2,abs(#_2)==1);
-        tmp2=apply(tmp2,#_1);
-        tmp=tp+[0,-0.2];
-        forall(1..(length(tmp1)),mm,
-          tmp3=tmp1_mm;
-          clr=[0,0,0];
-          if(contains(tmp2,mm),clr=[1,0,0]);
-          tmp_1=tmp_1+1.25;
-          Drwletter(tmp,tmp3,22,clr);
-        );
-      );
-    );
-    if(flg==0,
-      strt=Gettexform(sL_nn);
+    flg=Errorcheckstr(tmp1);
+    if(flg_1==0,
+      strt=Gettexform(tmp1);
       tmp=tp+[1.2,-0.2];
       Drwletter(tmp,strt,22);
       texstr=texstr+strt;
-    ); //220609to
-    tp=tp-[0,dy];
+    );
+    if(flg_1>0,
+      tmp2=flg_2;
+      tmp=tp+[1.2,-0.2];
+      forall(1..(length(tmp1)),mm,
+        tmp3=tmp1_mm;
+        clr=[0,0,0];
+        if(contains(tmp2,mm),clr=[1,0,0]);
+        tmp_1=tmp_1+1.25;
+        Drwletter(tmp,tmp3,22,clr);
+      );
+    );
   );
 );
 
@@ -3891,8 +3859,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 824,
-    height: 705,
-    transform: [{visibleRect: [3.13580002622181, 27.9137608891548, 80.14282362098037, -37.989446219310125]}],
+    height: 706,
+    transform: [{visibleRect: [3.13580002622181, 27.9137608891548, 80.14282362098037, -38.09225933492396]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

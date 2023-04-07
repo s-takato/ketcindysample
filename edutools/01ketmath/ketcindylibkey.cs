@@ -16,6 +16,7 @@
 
 println("ketcindylibkey[20230406 loaded"); // no ketjs
 
+// 230406 Errorcheckstr dbg &changed  (flg returned as list )
 // 230406 Replacedot changed  (cdot in other case )
 // 230406 Keytable changed  ( no painting when clr==0 )
 // 230402 Errorcheckstr added
@@ -815,9 +816,11 @@ Line2list(strorg):=(
 
 Errorcheckstr(str):=(
   regional(flg,tmp,tmp1,tmp2,tmp3);
-  flg=0;
+  flg=[0,[]];
   if(length(str)==0,flg=3);
-  if(flg==0,
+  if(flg_1==0,
+    tmp3=Indexall(str,"^");
+    tmp2=[];
     forall(tmp3,
       if(#==1,
         tmp2=append(tmp2,#);
@@ -827,23 +830,27 @@ Errorcheckstr(str):=(
         ,
           if(#>=4,
             tmp=substring(str,#-4,#-1);
+            println(tmp);
+            
             if(contains(["sin","cos","tan"],tmp),
               tmp2=append(tmp2,#);
             );
           );    
         );
         if(length(tmp2)>0,
-          flg=2; // pos of hats different
+          flg=[2,tmp2]; // pos of hats different
         );
       );
     );
   );
-  if(flg==0,
+  if(flg_1==0,
     if(indexof(str,"(")>0,
       tmp2=Bracket(str);
       tmp=tmp2_(-1);
-      if(tmp_2!=-1,
-        flg=1; // brackets mismached
+      if(tmp_2!=-1, // brackets mismach
+        tmp2=select(tmp2,abs(#_2)==1);
+        tmp2=apply(tmp2,#_1);
+        flg=[1,tmp2]; 
       );
     );
   ); 

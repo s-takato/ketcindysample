@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>drawgraphv5.cdy</title>
+    <title>drawgraphv5b2.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -2885,6 +2885,17 @@ tmp1=Textedit(n0); //
   if(length(tmp2)==0,out=str,out=tmp2);
   out;
 ); //210208to
+Drwletter(pos,str):=Drwletter(pos,str,[]);
+Drwletter(pos,str,Arg):=(
+  regional(sz,clr);
+  if(!islist(Arg),sz=Arg;clr=[0,0,0],sz=12;clr=Arg);
+  Drwletter(pos,str,sz,clr);
+);
+Drwletter(pos,str,sz,clr):=(
+  regional(tmp);
+  if(!isstring(str),tmp=text(str),tmp=str);
+  drawtext(pos,tmp,size->sz,color->clr);
+);
 Plotdata(name1,func,variable):=Plotdata(name1,func,variable,[]);
 Plotdata(name1,func,variable,options):=(
   regional(Fn,Va,tmp,tmp1,tmp2,eqL,name,Vname,x1,x2,dx,
@@ -3333,7 +3344,7 @@ Replacematdet(str):=(
 );
 
 Replacedot(str):=(  //220819
-  regional(out,rest,tmp,tmp1,tmp2);
+  regional(out,rest,flg,tmp,tmp1,tmp2);
   out=str;
   tmp1=indexof(out,"dot(");
   while(tmp1>0,
@@ -3348,11 +3359,13 @@ Replacedot(str):=(  //220819
     tmp=substring(out,tmp1+3,tmp2-1);
     tmp=Removespace(tmp);
     out=substring(out,0,tmp1-1);
-    if((tmp=="")%(tmp=="1"),tmp2="{\cdot}");
-    if((tmp=="3")%(tmp=="s"),tmp2="{\cdots}");
-    if(tmp=="d",tmp2="{\ddots}");
-    if(tmp=="l",tmp2="{\ldots}");
-    if(tmp=="v",tmp2="{\vdots}");
+    flg=0;
+    if((tmp=="")%(tmp=="1"),tmp2="{\cdot}";flg=1);
+    if((tmp=="3")%(tmp=="s"),tmp2="{\cdots}";flg=1);
+    if(tmp=="d",tmp2="{\ddots}";flg=1);
+    if(tmp=="l",tmp2="{\ldots}";flg=1);
+    if(tmp=="v",tmp2="{\vdots}";flg=1);
+    if(flg==0,tmp2="{\cdot}");
     out=out+tmp2+rest;
     tmp1=indexof(out,"dot(");
   );
@@ -3732,8 +3745,7 @@ Addfunstr(name,npos,strnow):=(
 );
 
 Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22,1); //210629
-Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz,1);
-Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz,shade):=(
+Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=( //230406
   regional(xL,yL,plt,prt,prb,row,col,name,tmp1,tmp2,pos);
   if(nx>0,  //211012from
     xL=apply(0..nx,#/10*dx+plb_1);
@@ -3754,7 +3766,7 @@ Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz,shade):=(
     );
   );  //211012to
   plt=[xL_1,yL_1]; prt=[xL_(-1),yL_1]; prb=[xL_(-1),yL_(-1)];
-  if(shade==1,
+  if(clr!=0,//shade==1, 230406
     fillpoly([plb,plt,prt,prb,plb],color->clr);
   );
   forall(xL,draw([#,plb_2],[#,plt_2],color->[0,0,0]));
@@ -3853,9 +3865,11 @@ Line2list(strorg):=(
 
 Errorcheckstr(str):=(
   regional(flg,tmp,tmp1,tmp2,tmp3);
-  flg=0;
-  if(length(str)==0,flg=3);
-  if(flg==0,
+  flg=[0,[]];
+  if(length(str)==0,flg=[3,[]]);
+  if(flg_1==0,
+    tmp3=Indexall(str,"^");
+    tmp2=[];
     forall(tmp3,
       if(#==1,
         tmp2=append(tmp2,#);
@@ -3865,23 +3879,27 @@ Errorcheckstr(str):=(
         ,
           if(#>=4,
             tmp=substring(str,#-4,#-1);
+            println(tmp);
+            
             if(contains(["sin","cos","tan"],tmp),
               tmp2=append(tmp2,#);
             );
           );    
         );
         if(length(tmp2)>0,
-          flg=2; // pos of hats different
+          flg=[2,tmp2]; // pos of hats different
         );
       );
     );
   );
-  if(flg==0,
+  if(flg_1==0,
     if(indexof(str,"(")>0,
       tmp2=Bracket(str);
       tmp=tmp2_(-1);
-      if(tmp_2!=-1,
-        flg=1; // brackets mismached
+      if(tmp_2!=-1, // brackets mismach
+        tmp2=select(tmp2,abs(#_2)==1);
+        tmp2=apply(tmp2,#_1);
+        flg=[1,tmp2]; 
       );
     );
   ); 
@@ -4233,26 +4251,36 @@ if(Strnq!=Strnow,
 );
 
 StrL=Strsplit(Strnq,"//");
-flgL=[];
-forall(StrL,
-  tmp=Indexall(#,"=");
-  if(length(tmp)==0,tmp=[1]);
-  tmp=append(tmp,length(#));
-  tmp1=substring(#,tmp_1,tmp_2);
-  tmp2=Errorcheckstr(tmp1);
-  flgL=append(flgL,tmp2);
-);
-if(sum(flgL)==0,
-  StrtL=apply(StrL,Gettexform(#));
-  StrpltL=GetplotL(Strnq);
-);
+StrL=select(StrL,length(#)>3);
+StrtL=[];
+StrpltL=[];
 
-forall(1..(length(StrtL)),
+forall(1..(length(StrL)),
+  str=StrL_#;
+  tmp=Indexall(str,"=");
+  if(length(tmp)==0,tmp=[1]);
+  tmp=append(tmp,length(str));
+  tmp1=substring(str,tmp_1,tmp_2);
   Pt=parse("P"+#);
   if(Pt.x>25,
     Putpoint(Pt.name,tpos+(#-1)*dpos);
   );
-  Letter(Pt.xy+[0.5,0.1],"e",StrtL_#,["Size=1.5"]);
+  flg=Errorcheckstr(tmp1);
+  if(flg_1==0,
+    StrtL=append(StrtL,Gettexform(str));
+    StrpltL=concat(StrpltL,GetplotL(str));
+    Letter(Pt.xy+[0.5,0.1],"e",StrtL_#,["Size=1.5"]);
+  ,
+    tmp2=flg_2;
+    tmp=Pt.xy+[0.5,-0.1];
+    forall(1..(length(tmp1)),mm,
+      tmp3=tmp1_mm;
+      clr=[0,0,0];
+      if(contains(tmp2,mm),clr=[1,0,0]);
+      tmp_1=tmp_1+0.6;
+      Drwletter(tmp,tmp3,22,clr);
+    );
+  );
 );
 
 if(dispflg==1,
@@ -4345,9 +4373,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 905,
-    height: 679,
-    transform: [{visibleRect: [-11.264139988901162, 12.424150519276338, 22.67696490672607, -13.014808816014849]}],
+    width: 895,
+    height: 617,
+    transform: [{visibleRect: [-12.444509483849014, 12.164478499123657, 24.445355419609058, -13.294724039882619]}],
     grid: 2,
     snap: true,
     background: "rgb(247,247,247)"
