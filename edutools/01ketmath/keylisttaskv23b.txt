@@ -6,12 +6,18 @@ Text2
 
 Text3
 
+Text4
+nc=-1;
+Text5
+nc=-1;
 Text6
 Mkketcindyjs(append(KETJSOP,"Web=y"));
 Text7
 ch=1;initflg=1;
 Text8
 ch=2;initflg=1;
+Text10
+
 Text11
 if(keytype!=2,keytype=2,keytype=1);
 Text12
@@ -25,7 +31,9 @@ if(Shift!=1,Shift=1,Shift=0);
 Text17
 if(Shift!=2,Shift=2,Shift=0);
 Text18
-texflg=1;
+recflg=1;
+Text19
+stok=stok+1;
 Text30
 funflg=1;name=["La","A","{\alpha}","\mathbf{a}","{\vec{a}\;}"]_keytype;
 Text31
@@ -194,10 +202,12 @@ Text112
 funflg=1;if(Shift==1,name="br(");if(Shift==2,name="sum(");if(Shift==0,name="sum(");
 Text113
 funflg=1;if(Shift==0,name="tx(");if(Shift==1,name="par(");if(Shift==2,name="(circ)");
+Text120
+startflg=1;
 Text200
 funflg=1;name="Delete()";
 Text201
-funflg=1;Clearnow();
+funflg=1;name="Clearnow()";
 Text202
 funflg=1;name="LLeft()";
 Text203
@@ -212,3 +222,5 @@ Text207
 funflg=1;name="Push()";
 Text208
 funflg=1;name="Pull()";
+Text___
+___

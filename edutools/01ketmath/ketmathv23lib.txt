@@ -80,7 +80,7 @@ inspect(T4,"ptsize",6);
 // no ketjs off
 
 CtrkeyL=[
-  [["BS","CL","$<\!<$","$<$","$>$","$>\!>$","AC","PS","PL"]],
+  [["PS","PL","AC","$<\!<$","$<$","$>$","$>\!>$","CL","BS"]],
   [["Cap"],["Gre"],["Bld"],["Vec"]],
   [["Cal"],["Lin"]],
   [["TeX"]]
@@ -190,6 +190,7 @@ Allclear():=(
 );
 
 Clearnow():=(
+  Str="";
   StrL_ch="";
   npos=0;
   Subsedit(ch,"");
@@ -425,8 +426,7 @@ Settext(sLLorg,rLLorg,yinit):=(
     forall(1..(length(sLL_1)),nc,
       txn=rLL_nr_nc;
       pos=[20.4+4.3*(nc-1),yinit-3.3*(nr-1)];
-//      println([txn,pos,"　　",sLL_nr_nc,16]);
-      Settextkey(txn,pos,"　　",sLL_nr_nc,16);
+      Settextkey(txn,pos,"　　",sLL_nr_nc,14);
     );
   );
 );
@@ -444,8 +444,15 @@ Text18.xy=tmp+[-4.3,0];
 tmp=Text39.xy;
 Text16.xy=tmp+[4.3,0];
 Text17.xy=tmp+[4.3,-3.3];
-tmp="　　";
+tmp1="　　";
+tmp=Text30.xy-[4.3,0];
+tmp2=[
+  "Push()","Pull()","Allclear()","LLeft()","Left()","Right()",
+  "RRight()","Clearnow()","Delete()"
+];
+tmp2=apply(tmp2,"funflg=1;name="+Dqq(#)+";");
 forall(0..8,
-  Settextkey(200+#,[37.6+#*4.3,0.72],tmp,"",16);
+  Settextkey(200+#,[tmp_1+#*4.3,0.72],tmp1,tmp2_(#+1),14);
 );
+
 //no ketjs off

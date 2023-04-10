@@ -64,10 +64,10 @@ Kettaskinit():=(
   // no ketjs on
   Seteditable(1,["","Size=24","Width=500"]);
   Seteditable(2,["","Size=24","Width=535"]);
-  Seteditable(3,["","Size=18","Width=140"]);
-  Seteditable(10,["","Size=18","Width=65"]);
-  Seteditable(76,["","Size=18","Width=45"]);
-  Seteditable(116,["","Size=18","Width=535"]);
+  Seteditable(3,["","Size=24","Width=535"]);
+  Seteditable(10,["no","Size=18","Width=100"]);
+//  Seteditable(76,["","Size=18","Width=45"]);
+//  Seteditable(116,["","Size=18","Width=535"]);
 //  Seteditable(32,["問=","Size=18","Width=80"]);
 //  Text1.xy=[px+1+5,posyL_1-1];
 //  Text2.xy=[px+1,posyL_2-1];
