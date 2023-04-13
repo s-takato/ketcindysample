@@ -660,7 +660,7 @@ Alltextkey(make,fname):=(
   println(fname+".csv");
   keyL=[];
   forall(txtkey,key,
-    tmp=replace(key.name,"Text","");
+     tmp=replace(key.name,"Text","");
     tmp=replace(tmp,"''",".2");
     tmp=replace(tmp,"'",".1");
     tmp=parse(tmp);
