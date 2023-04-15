@@ -1,0 +1,38 @@
+// 20230415
+Maximaによるans(正解)のチェック
+
+1. questionの各問の最後に次のようなMxcalcを追加して保存
+　　Mxcalc
+　　[1] -fr(9,2)a(-fr(5,6)b)　// i1にmaxima数式を代入
+　　[2] fr(2,3)a(-3a)^(2)
+　　o1:expand(i1)　　　　// o1にi1を展開したmaxima数式を代入
+　　return o1::i2　　　　　// o1とi2を返す（必須）
+
+2. toolketmath.cdyを立ち上げて「Mxans」「実行」をクリック
+　・mxans(+問題名).txtができる
+　　　デフォルトでは，すでにあれば作らないが
+　　　Mxansを２度クリックして実行すると作り直す
+　・内容
+　　　[a^2,2*%pi*r,(15*a*b)/4,6*a^3]　//結果（解答）
+　　
+　　　Script　　　　　　　　//Maxima実行スクリプト
+　　　q1i1:a^2
+　　　q1i2:2*%pi*r
+　　　q2i1:-(9)/(2)*a*(-(5)/(6)*b)
+　　　q2i2:(2)/(3)*a*(-3*a)^(2)
+　　　q2o1:expand(q2i1)
+　　　q1i1::q1i2::q2o1::q2i2
+　　　end
+　注）複数の問があっても１つの結果にまとめて返す
+
+3. 「リセット」「Ans,Mxans照合」「実行」
+　・mxans(+問題名).txtにCheck(照合結果)が追加される
+　・内容
+　　　Check　　　　　　//Maxima実行スクリプト
+　　　(a^2)  -  (a^2)
+　　　(2*%pi*r)  -  (2*%pi*r)
+　　　((15)/(4)*a*b)  -  ((15*a*b)/4)
+　　　(6*a^3)  -  (6*a^3)
+　　　Result
+　　　[0,0,0,0]　//AnsとMxansの差 (0ならOK)
+　　　end

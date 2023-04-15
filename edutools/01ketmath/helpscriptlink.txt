@@ -1,0 +1,21 @@
+//20230415
+htmlへの埋め込み
+　LinkLのリストにリストとして記述
+　　LinkL=[[,,], [,]]
+これをscriptlink(+問題名).txtとしてdataに入れる
+
+1.画像
+　　　　[種類, ファイル,スタイル]
+　・配置はleft
+
+["img src","loaded/0417-01.png","style="+Dqq("width:700px")]
+＝＝＞
+<p style="text-align: left"><img src="loaded/0417-01.png"style="width:700px"></img></p>
+
+2リンクhref
+　　　　[リンク先,タイトル]
+　・配置はcenter
+
+["https://s-takato.github.io/ketcindysample/edutools/offline/drawgraphv5b2jsoffL.html","関数のグラフ"]
+＝＝＞
+<p style="text-align: center"><a href="https://s-takato.github.io/ketcindysample/edutools/offline/drawgraphv5b2jsoffL.html">関数のグラフ</a></p>
