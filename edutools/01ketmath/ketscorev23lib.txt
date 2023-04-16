@@ -53,13 +53,8 @@ dxL3=[42,42];
 Seteditable(1,["","Size=24","Width=500"]);
 Seteditable(2,["","Size=24","Width=500"]);
 Seteditable(3,["","Size=24","Width=500"]);
-Seteditable(4,["St=","Size=18","Width=75"]);
-Seteditable(5,["Pg=","Size=18","Width=75"]);
-Text1.xy=[px+8,posyL_1-1];
-Text2.xy=[px+1,posyL_2-1];
-Text3.xy=[px+1,posyL_3-1];
-Text4.xy=[64,4.1];
-Text5.xy=[64,0.8];
+Seteditable(4,["St=","Size=18","Width=80"]);
+Seteditable(5,["Pg=","Size=18","Width=80"]);
 inspect(T1,"ptsize",6);
 inspect(T2,"ptsize",6);
 inspect(T3,"ptsize",6);
@@ -67,7 +62,7 @@ inspect(T4,"ptsize",6);
 // no ketjs off
 
 CtrkeyL=[
-  [["PS","PL","AC","$<\!<$","$<$","$>$","$>\!>$","CL","BS"]],
+  [["PS","PL","AC","CL","BS","$<\!<$","$<$","$>$","$>\!>$"]],
   [["Cap"],["Gre"],["Bld"],["Vec"]],
   [["Cal"],["Lin"],[""]],
   [["Rec"]]
@@ -611,19 +606,10 @@ tmp2=[
 forall(1..2,
   Settextkey(15+#,tmp+[0,-(#-1)*3.3],tmp1,tmp2_(#),14);
 );
-tmp=Text103.xy;
-Text18.xy=tmp+[4.3,0];
-tmp=Text39.xy;
-Text16.xy=tmp+[4.3,0];
-Text17.xy=tmp+[4.3,-3.3];
-//Text3.xy=tmp+[4.05,-2*3.3-0.25];
-//Text19.xy=tmp+[13,-3*3.3];
-Text120.xy=tmp+[13,-3.3];
-//Text10.xy=[Text10.xy_1,0.62];
 tmp=Text30.xy-[4.3,0];
 tmp2=[
-  "Push()","Pull()","Allclear()","LLeft()","Left()","Right()",
-  "RRight()","Clearnow()","Delete()"
+  "Push()","Pull()","Allclear()","Clearnow()","Delete()",
+  "LLeft()","Left()","Right()","RRight()"
 ];
 tmp2=apply(tmp2,"funflg=1;name="+Dqq(#)+";");
 tmp=Text30.xy-[4.3,0];
@@ -646,5 +632,21 @@ forall(0..7,
 tmp=Text16.xy+[4.3,0];
 Settextkey(230,tmp,"Full",
     "funflg=1;name="+Dqq("Fullmark()")+";",18,5,0.6);
+    
+Text1.xy=[px+8,posyL_1-1];
+Text2.xy=[px+1,posyL_2-1];
+Text3.xy=[px+1,posyL_3-1];
+Text4.xy=[64,4.1];
+Text5.xy=[64,0.8];
+
+tmp=Text103.xy;
+Text18.xy=tmp+[4.3,0];
+tmp=Text39.xy;
+Text16.xy=tmp+[4.3,0];
+Text17.xy=tmp+[4.3,-3.3];
+//Text3.xy=tmp+[4.05,-2*3.3-0.25];
+//Text19.xy=tmp+[13,-3*3.3];
+Text120.xy=tmp+[13,-3.3];
+//Text10.xy=[Text10.xy_1,0.62];
 
 //no ketjs off
