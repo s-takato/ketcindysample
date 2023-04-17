@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>kettaskorgv23.cdy</title>
+    <title>kettaskorgv.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -4160,7 +4160,7 @@ if(stok<=1,
   Strnq=replace(Str,"?","");
   StrL_3=Strnq;
   npos=length(Str);
-  if(stok==1,
+  if((stok==1)&(stoknow!=stok), //230417
     tmp=replace(StrL_3,"St=","");
     if(length(tmp)>0,
       stno=parse(tmp);
@@ -4521,8 +4521,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 802,
-    height: 627,
-    transform: [{visibleRect: [3.4220902209120556, 26.55560487125874, 86.03517446723727, -38.0309335607187]}],
+    height: 595,
+    transform: [{visibleRect: [3.347787079807443, 26.524774555397432, 85.96087132613265, -34.76548121338499]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

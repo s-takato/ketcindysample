@@ -1,8 +1,10 @@
-//   230413
-//   220728 Quesno, pos of Text1
+//   220814  Delete
+//   220720  key width
+//   220718  lic,cpr
+//   220412
 //   211112
 //   211020
-//   2109ff23
+//   210923
 //   210619
 //   210910
 
@@ -15,12 +17,20 @@ vecflg=0;
 
 nch=2;
 ch=2;
+StrL=apply(1..nch,"");
+StrpL=apply(1..nch,"");
+startflg=1;
+initflg=1;
+DrwL=[];
+dpos=[10,14];
+
 Str="";
 Strp="";
 Strnq="";
 Strnow="";
 Strt="";
 npos=0;
+
 
 //nt=4;
 px=15;
@@ -44,17 +54,25 @@ posyL=[23,-2.5,-34];
 //forall(1..2,drawtext([62.5+(#-1)*2.5,1],actL3_#,size->20));
 
 poskey=[19.5,-17.67];
-dxL=apply(10..19,35.5);
-dxL_4=42; dxL_5=42;
-dxL2=apply(1..9,35.5);
+dxL=apply(10..19,42);
+//dxL_4=42; dxL_5=42;
+dxL2=apply(1..9,42);
 dxL3=[42,42];
 
+Adddrw(str):=(
+  DrwL=append(DrwL,[dpos,str,18]);
+  dpos=dpos-[0,2];
+);
+
  // no ketjs on 
-Seteditable(1,["","Size=24","Width=500"]);
-Seteditable(2,["","Size=24","Width=500"]);
-Seteditable(3,["","Size=24","Width=500"]);
-Seteditable(4,["St=","Size=18","Width=80"]);
-Seteditable(5,["Pg=","Size=18","Width=80"]);
+Seteditable(1,["","Size=24","Width=535"]);
+Seteditable(2,["","Size=24","Width=535"]);
+Seteditable(3,["","Size=24","Width=535"]);
+//Seteditable(10,["","Size=18","Width=50"])
+//Seteditable(32,["","Size=18","Width=80"]);
+Text1.xy=[px+1,posyL_1-1];
+Text2.xy=[px+1,posyL_2-1];
+Text3.xy=[px+1,posyL_3-1];
 inspect(T1,"ptsize",6);
 inspect(T2,"ptsize",6);
 inspect(T3,"ptsize",6);
@@ -64,8 +82,8 @@ inspect(T4,"ptsize",6);
 CtrkeyL=[
   [["PS","PL","AC","CL","BS","$<\!<$","$<$","$>$","$>\!>$"]],
   [["Cap"],["Gre"],["Bld"],["Vec"]],
-  [["Cal"],["Lin"],[""]],
-  [["Rec"]]
+  [["Cal"],["Lin"]],
+  [["TeX"]]
 ];
 
 Keyname():=(
@@ -82,14 +100,13 @@ Keyname():=(
     ["dot",":",";","$\leq$","$\geq","l","m","n","o","'","cs"],
     ["\","$\pm$","$\mp$","<",">","p","q","u","v","sum","tx"]
   ];
-  
+
   if(Shift==1,
-    nL2_3_11="$d$"; nL2_4_10="$[.]_{}^{}$"; nL2_4_11="$\partial$";
+    nL2_3_11="$d$"; nL2_4_10="$[.]_{}^{}$"; nL2_4_11="$\partial$"; //210923
   );
   if(Shift==2,
-    nL2_1_10="mat"; nL2_2_10="det"; nL2_4_11="$\circ$";
+    nL2_1_10="mat"; nL2_2_10="det"; nL2_4_11="$\circ$"; //210923
   );
-
   if(keytype==2,
     tmp1=["A","B","C"]; forall(1..3,nL_1_(#)=tmp1_#);
     tmp1=["D","E","F","G"]; forall(1..4,nL2_1_(#+5)=tmp1_#);
@@ -157,91 +174,52 @@ Keyname():=(
 );
 
 
-Manifun=["Allclear()","Clearnow()","Delete()","Push()","Pull()",
-  "Left()","Right()","LLeft()","RRight()","Fullmark()"];
 
-// only for ketscore
-Fullmark():=(
-  regional(tmp,tmp1,score);
-//  global ansLLorgorg,stnum,nqu,npos,mrkL
-  Str=replace(Str,"?","");
-  score=mrkL_nqu;
-  tmp=Indexall(Str,"::");
-  if(length(tmp)==0,
-    Str=Str+"::"+score;
-  ,
-    tmp1=substring(Str,0,tmp_1+1)+score;
-    if(length(tmp)==2,
-      tmp1=tmp1+substring(Str,tmp_2-1,length(Str));
-    );
-    Str=tmp1;
-  );
-  Strnq=Str;
-  StrL_ch=Str;
-  npos=length(Str);
-  Subsedit(ch,Str);
+///////
+Manifun=["Allclear()","Clearnow()","Delete()","Push()","Pull()",
+  "Left()","Right()","LLeft()","RRight()"];
+
+Allclear():=(
+  Str="";
+  Strnq="";
+  StrL_ch="";
+  StrpL_ch="";
+  npos=0;
+  Subsedit(ch,"");
   funflg=0;
 );
 
 Clearnow():=(
-  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
-  //global ch,ansLL,nqu,Str,npos
-  preL=["",ansLLorgorg_stnum_nqu+"::",""];
-  pre=preL_ch;
-  if(StrpL_ch=="",Str=pre,Str="");
-  Strnq=Str;
-  StrL_ch=Str;
-  npos=length(Str);
-  Subsedit(ch,Str);
+  Str="";
+  StrL_ch="";
+  npos=0;
+  Subsedit(ch,"");
   funflg=0;
 );
 
-Delete():=(
-  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
-  //global ch,ansLL,nqu,Str,npos
-  preL=["",ansLLorgorg_stnum_nqu+"::",""];
-  pre=preL_ch;
+Delete():=( //220814dbg
+  regional(tmp,tmp1,tmp2);
   tmp=indexof(Str,"?");
   if(tmp>0,npos=tmp,npos=length(Str));
-  if(length(Str)>length(pre),
-    if(npos==length(Str),
-      Str=substring(Str,0,npos-1);
+  if(ch<=2,
+    if(length(Str)>0,
+      if(npos==length(Str),
+        Str=substring(Str,0,npos-1);
+      ,
+        tmp1=substring(Str,0,npos-2);
+        tmp2=substring(Str,npos-1,length(Str));
+        Str=tmp1+tmp2;
+      );
+      Strnq=replace(Str,"?","");
+      Strnow=Str;
+      StrL_ch=Strnq;
+      npos=npos-1;
     ,
-      tmp1=substring(Str,0,npos-2);
-      tmp2=substring(Str,npos-1,length(Str));
-      Str=tmp1+tmp2;
+      Pull();
+      npos=length(StrL_ch);
+      Delete();
     );
-    Strnq=replace(Str,"?","");
-    Strnow=Str;
-    StrL_ch=Strnq;
-    npos=npos-1;
-  ,
-//    Pull();
-//    npos=length(StrL_ch);
-//    Delete();
   );
-  funflg=0;
-);
-
-Allclear():=(
-  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
-  //global ch,ansLL,nqu,Str,npos
-  preL=["",ansLLorgorg_stnum_nqu+"::",""];
-  pre=preL_ch;
-  Str=pre;
-  Strnq=Str;
-  StrL_ch=Str;
-  StrpL_ch="";
-  npos=length(Str);
-  funflg=0;
-);
-
-Clear():=( 
-  Str="";
-  Strnq=Str;
-  StrL_ch=Str;
-  npos=0;
-  funflg=0;
 );
 
 Push():=(
@@ -259,7 +237,7 @@ Push():=(
   );
   StrL_ch=Str;
   Strnq=Str;
-  funflg=0;
+  Subsedit(ch,Str);
 );
 
 Pull():=(
@@ -274,17 +252,15 @@ Pull():=(
   Strnq=Str;
   StrL_ch=Str;
   npos=length(tmp1)+npos;
-  funflg=0;
+  Subsedit(ch,Str);
 );
 
 Left():=(
-  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
-  //global ch,ansLL,nqu,Str,npos
-  preL=["",ansLLorgorg_stnum_nqu+"::",""];
-  pre=preL_ch;
-  if(length(Str)>length(pre),
+  regional(tmp,tmp1,tmp2,tmp3);
+  //global Str,npos
+  if(length(Str)>0,
     tmp=indexof(Str,"?");
-    if(tmp>length(pre)+1,
+    if(tmp>1,
       tmp1=substring(Str,0,tmp-2)+"?";
       tmp2=substring(Str,tmp-2,tmp-1);
       tmp3=substring(Str,tmp,length(Str));
@@ -297,10 +273,7 @@ Left():=(
       Str=tmp1+tmp3;  
       npos=length(tmp1);
     );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
   );
-  funflg=0;
 );
 
 Right():=(
@@ -323,26 +296,16 @@ Right():=(
         npos=length(Str);
       );
     );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
   );
-  funflg=0;
 );
 
 LLeft():=(
-  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
-  //global ch,ansLL,nqu,Str,npos
-  preL=["",ansLLorgorg_stnum_nqu+"::",""];
-  pre=preL_ch;
-  tmp=replace(Str,"?","");
-  if(length(tmp)>length(pre),
-    tmp=substring(tmp,length(pre),length(tmp));
-    Str=pre+"?"+tmp;
-    npos=length(pre)+1;
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
+  regional(tmp,tmp1,tmp2,tmp3);
+  //global Str,npos
+  if(length(Str)>0,
+    npos=1;
+    Str="?"+Str;
   );
-  funflg=0;
 );
 
 RRight():=(
@@ -351,120 +314,7 @@ RRight():=(
   if(length(Str)>0,
     Str=replace(Str,"?","");
     npos=length(Str);
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
   );
-  funflg=0;
-);
-
-// for scriptadd   //220423
-//  changed  220506
-
-scriptaddstart=1; 
-
-Setadjust():=Setadjust([0,0],1);
-Setadjust(mv,sc):=(
-  //help:mv=vSW moving , sc=scale changing
-  //global pSW,Scalea,Movea
-  Scalea=3.6*sc;
-  pSW=[50,3]+mv; 
-  Movea=pSW-SW.xy;
-);
-
-Adjustpt(pt):=(
-  regional(x0,y0,x1,y1);
-  //global Scalea,Movea
-  x1=pt_1; y1=pt_2;
-  x0=SW.x; y0=SW.y;
-  x1=x0+Scalea*(x1-x0);
-  y1=y0+Scalea*(y1-y0);
-  x1=x1+Movea_1;
-  y1=y1+Movea_2;
-  [x1,y1];
-);
-
-Adjust(gd):=(
-  regional(dL,depth,out,tmp);
-  if(isstring(gd),dL=parse(gd),dL=gd);
-  depth=Measuredepth(dL);
-  if(depth==0,out=Adjustpt(dL));
-  if(depth==1,
-    out=apply(dL,Adjustpt(#));
-  );
-  if(depth==2,
-    out=[];
-    forall(dL,
-      out=append(out,Adjust(#));
-    );
-  );
-  out;
-);
-
-pdrwxy():=pdrwxy(["","x","e1","y","n1","O","s1w1"],[]);
-pdrwxy(axLorg,op):=(
-  regional(axL);
-  if(length(axLorg)==0,
-    axL=["","x","e1","y","n1","O","s1w1"];
-  , 
-    axL=axLorg; 
-  ); 
-  Listplot("axx",Adjust([[XMIN,0],[XMAX,0]]));
-  Listplot("axy",Adjust([[0,YMIN],[0,YMAX]]));
-  Expr(Adjust([XMAX,0]),axL_3,axL_2,op);
-  Expr(Adjust([0,YMAX]),axL_5,axL_4,op);
-  Letter(Adjust([0,0]),axL_7,axL_6,op);
-);
-
-pletter(Pt,Dr,St):=pletter([Pt,Dr,St]);
-pletter(list):=pletter(list,[]);
-pletter(Pt,Dr,St,options):=pletter([Pt,Dr,St],options);
-pletter(list,options):=(
-  regional(L,tmp);
-  L=[];
-  forall(1..(length(list)),
-     if(mod(#,3)==1,tmp=Adjust(list_#),tmp=list_#);
-     L=append(L,tmp);
-  );    
-  Letter(L,options);
-);
-
-plistplot(nm,vptL):=plistplot(nm,vptL,[]); //220605
-plistplot(nm,vptL,op):=( //220529
-  regional(ptL,tmp,tmp1);
-  Listplot("v"+nm,vptL,["nodisp"]);
-  tmp=Adjust("sgv"+nm);
-  Listplot(nm,tmp,op);
-);
-
-pplotdata(name1,func,variable):=pplotdata(name1,func,variable,[]);
-pplotdata(name1,func,variable,options):=( //220529
-  regional(tmp,tmp1);
-  tmp=prepend("nodisp",options);
-  Plotdata("v"+name1,func,variable,["nodisp"]);
-  tmp=Adjust("grv"+name1);
-  Listplot("-gr"+name1,tmp,options);
-);
-
-Quesno():=Quesno(nqu,1); //220816
-Quesno(nq,flg):=( //220816
-  regional(tmp,tmp1,out);
-  out="";
-  tmp=select(1..nq,substring(quL_#_1,0,1)=="Q");
-  if(length(tmp)>0,
-    tmp1=tmp_(-1);
-    out=quL_tmp1;
-    if(islist(out),out=out_1); /////
-    tmp=indexof(out," ");
-    if(tmp>0,
-      out=substring(out,0,tmp-1);
-    ,
-      out=substring(out,0,3); //220903
-    );
-    if(flg>0, //220816from
-      out=out+"-"+text(nq-tmp1+1);
-    );
-  ); //220816to
-  out;
 );
 
 //no ketjs on
@@ -584,69 +434,25 @@ Settext(sLLorg,rLLorg,yinit):=(
 Settext(sLL1,rLL1,-6.7);
 Settext(sLL2,rLL2,-20.6);
 
+tmp=Text30.xy;
+Text11.xy=tmp+[-4.3,0];
+Text12.xy=tmp+[-4.3,-3.3];
+Text13.xy=tmp+[-4.3,-3.3*2];
+Text14.xy=tmp+[-4.3,-3.3*3];
+tmp=Text103.xy;
+Text18.xy=tmp+[-4.3,0];
+tmp=Text39.xy;
+Text16.xy=tmp+[4.3,0];
+Text17.xy=tmp+[4.3,-3.3];
 tmp1="　　";
-tmp=Text30.xy-[4.3,0];
-tmp2=[
-  "if(keytype!=2,keytype=2,keytype=1);",
-  "if(keytype!=3,keytype=3,keytype=1);",
-  "if(keytype!=4,keytype=4,keytype=1);",
-  "if(keytype!=5,keytype=5,keytype=1);"
-];
-forall(1..4,
-  Settextkey(10+#,tmp+[0,-(#-1)*3.3],tmp1,tmp2_(#),14);
-);
-tmp=Text70.xy-[4.3,0];
-Settextkey(18,tmp,tmp1,"recflg=1;",14);
-
-tmp=Text39.xy+[4.3,0];
-tmp2=[
-  "if(Shift!=1,Shift=1,Shift=0);",
-  "if(Shift!=2,Shift=2,Shift=0);"
-];
-forall(1..2,
-  Settextkey(15+#,tmp+[0,-(#-1)*3.3],tmp1,tmp2_(#),14);
-);
 tmp=Text30.xy-[4.3,0];
 tmp2=[
   "Push()","Pull()","Allclear()","Clearnow()","Delete()",
   "LLeft()","Left()","Right()","RRight()"
 ];
 tmp2=apply(tmp2,"funflg=1;name="+Dqq(#)+";");
-tmp=Text30.xy-[4.3,0];
 forall(0..8,
   Settextkey(200+#,[tmp_1+#*4.3,0.72],tmp1,tmp2_(#+1),14);
 );
-// stno,pgno
-tmp1="　　";
-tmp2=[
-  "stnuminc=-1000;","stnuminc=-1;","stnuminc=1;","stnuminc=1000;",
-  "nqinc=-1000;","nqinc=-1;","nqinc=1;","nqinc=1000;",
-];
-tmp=[
-   [4.3+1,3.3],[1+4.3*2,3.3],[1+4.3*5,3.3],[1+4.3*6,3.3],
-   [4.3+1,   0],[1+4.3*2,   0],[1+4.3*5,   0],[1+4.3*6,   0]
-];
-forall(0..7,
-  Settextkey(220+#,Text208.xy+tmp_(#+1),tmp1,tmp2_(#+1),14);
-);
-tmp=Text16.xy+[4.3,0];
-Settextkey(230,tmp,"Full",
-    "funflg=1;name="+Dqq("Fullmark()")+";",18,5,0.6);
-    
-Text1.xy=[px+8,posyL_1-1];
-Text2.xy=[px+1,posyL_2-1];
-Text3.xy=[px+1,posyL_3-1];
-Text4.xy=[64,4.1];
-Text5.xy=[64,0.8];
-
-tmp=Text103.xy;
-Text18.xy=tmp+[4.3,0];
-tmp=Text39.xy;
-Text16.xy=tmp+[4.3,0];
-Text17.xy=tmp+[4.3,-3.3];
-//Text3.xy=tmp+[4.05,-2*3.3-0.25];
-//Text19.xy=tmp+[13,-3*3.3];
-Text120.xy=tmp+[13,-3.3];
-//Text10.xy=[Text10.xy_1,0.62];
 
 //no ketjs off
