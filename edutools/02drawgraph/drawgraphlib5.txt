@@ -125,6 +125,9 @@ GetplotL(str):=(
           if(tmp2=="4",clr="yellow");
           if(tmp2=="5",clr="[1,0,1]");
           if(tmp2=="6",clr="[0.5,0.5,0]");
+          if(tmp2=="7",clr="[0,1,1]");
+          if(tmp2=="8",clr="[1,0.75,0.8]");
+          if(tmp2=="9",clr="[1,0.65,0]");
           if(indexof(tmp2,",")>0,clr="["+tmp2+"]");
           clr="Color="+clr;
        );

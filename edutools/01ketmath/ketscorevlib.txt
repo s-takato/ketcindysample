@@ -163,7 +163,7 @@ Manifun=["Allclear()","Clearnow()","Delete()","Push()","Pull()",
 // only for ketscore
 Fullmark():=(
   regional(tmp,tmp1,score);
-//  global ansLLorgorg,stnum,nqu,npos,mrkL
+//  global ansLLorgorg,stnum,nqu,npos,mrkL,nquinc
   Str=replace(Str,"?","");
   score=mrkL_nqu;
   tmp=Indexall(Str,"::");
@@ -179,7 +179,6 @@ Fullmark():=(
   Strnq=Str;
   StrL_ch=Str;
   npos=length(Str);
-  Subsedit(ch,Str);
   funflg=0;
 );
 

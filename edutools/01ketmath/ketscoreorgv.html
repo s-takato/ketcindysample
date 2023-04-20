@@ -21,7 +21,7 @@
             margin: 0px;
             padding: 0px;
         }
-
+        
         #CSConsole {
             background-color: #FAFAFA;
             border-top: 1px solid #333333;
@@ -2901,7 +2901,7 @@ fillpoly(parse("ar"+nm+"h"),color->tmp); //
   [LLcrd(pA),LLcrd(pB)];
 );
 Ketcindyjsfigure=0;
-Ketcindyjsscale=1;
+Ketcindyjsscale=0.9;
 aalinestart=1;
 ansline="";
 caline="";
@@ -3738,7 +3738,6 @@ Fullmark():=(
   Strnq=Str;
   StrL_ch=Str;
   npos=length(Str);
-  Subsedit(ch,Str);
   funflg=0;
 );
 
@@ -4127,13 +4126,24 @@ if(stnum==0,
     ansLL=select(ansLL,length(#)>0);
     StdataLL=apply(ansLL,[#_1,#_2,#_3]);
     ansLL=apply(ansLL,#_(4..(length(#))));
-    ansLLorgorg=ansLL;
     ansorgLL=ansLL;
+    ansLLorgorg=ansLL;
+    forall(1..(length(ansLLorgorg)),na,
+      ansL=ansLLorgorg_na;
+      forall(1..(length(ansL)),
+        tmp1=ansL_#;
+        tmp=indexof(tmp1,"::");
+        if(tmp>0,ansL_#=substring(tmp1,0,tmp-1));
+      );
+      ansLLorgorg_na=ansL;
+    );
     forall(1..(length(ansLL)),nn,
       tmp=ansLL_nn;
       forall(1..(length(tmp)),
         if(indexof(tmp_#,"---")==0,
-          ansLL_nn_#=tmp_#+"::";
+          if(indexof(tmp,"::")==0,
+            ansLL_nn_#=tmp_#+"::";
+          );
         );
       );
     );
@@ -4365,7 +4375,7 @@ forall(1..nch,nc,
 if(stnum>0,
   tmp=text(StdataLL_stnum);
   tmp=substring(tmp,1,length(tmp)-1);
-  drawtext(Text1.xy+[0,3.2],tmp,size->18);
+  drawtext(Text221.xy+[0,3.4],tmp,size->18);
   if((nqu>0)&(length(quline)>0),
     tmp=Quesno();
     drawtext(Text1.xy+[-7,0],tmp,size->18);
@@ -4403,9 +4413,9 @@ var cdy = CindyJS({
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "Text5", type: "EditableText", pos: [4.0, 0.05, 0.0625], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "Pg=", textsize: 18.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T2", type: "Free", pos: [4.0, 3.6645161290322577, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "Text4", type: "EditableText", pos: [4.0, 0.25625, 0.0625], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "St=", textsize: 18.0},
     {name: "Text47", type: "Button", pos: [4.0, -0.7920792079207921, 0.07920792079207921], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n5\";", text: "　　", textsize: 14.0},
     {name: "Text108", type: "Button", pos: [4.0, -2.911694510739857, 0.0954653937947494], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lp\",\"P\",\"{\\Psi}\",\"\\mathbf{p}\",\"{\\vec{p}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
@@ -4518,19 +4528,20 @@ var cdy = CindyJS({
     {name: "Text37", type: "Button", pos: [4.0, -0.5306930693069307, 0.07920792079207921], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n8\";", text: "　　", textsize: 14.0},
     {name: "Text38", type: "Button", pos: [4.0, -0.48905109489051096, 0.07299270072992702], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"n9\";", text: "　　", textsize: 14.0},
     {name: "Text73", type: "Button", pos: [4.0, -2.4744744744744747, 0.12012012012012012], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"]\";", text: "　　", textsize: 14.0},
-    {name: "Text78", type: "Button", pos: [4.0, -1.5036496350364967, 0.07299270072992702], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lg\",\"G\",\"{\\varphi}\",\"\\mathbf{g}\",\"{\\vec{g}\\;}\"]_keytype;", text: "　　", textsize: 14.0}
+    {name: "Text78", type: "Button", pos: [4.0, -1.5036496350364967, 0.07299270072992702], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lg\",\"G\",\"{\\varphi}\",\"\\mathbf{g}\",\"{\\vec{g}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text228", type: "Button", pos: [4.0, -0.36164383561643837, 0.05547169940614263], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: "\u0000＞", textsize: 14.0}
   ],
   ports: [{
+    width: 759,
+    height: 625,
     id: "CSCanvas",
-    width: 788,
-    height: 651,
-    transform: [{visibleRect: [5.778585272078102, 27.11490012282802, 83.61662278314724, -37.19038213568214]}],
+    transform: [{visibleRect: [8.8191897369198, 25.727500861699728, 84.52000379071681, -36.593216757914895]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2071, version: [3, 0, 2071]}
+  cinderella: {build: 2072, version: [3, 0, 2072]}
 });
     </script>
 </head>
