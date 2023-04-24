@@ -106,11 +106,12 @@ inspect(T4,"ptsize",6);
 // no ketjs off
 
 CtrkeyL=[
-  [["PS","PL","AC","CL","BS","$<\!<$","$<$","$>$","$>\!>$"]],
+  [["PS","PL","AC","CL","BS"]],
   [["Cap"],["Gre"],["Bld"],["Vec"]],
   [["Cal"],["Lin"],[""]],
   [["Rec"]],
-  [["＜","","＞"]]
+  [["＜","","＞"]],
+  [["$<\!<$","$<$","$>$","$>\!>$"]]
 ];
 
 Keyname():=(
@@ -673,13 +674,14 @@ tmp2=[
   "LLeft()","Left()","Right()","RRight()"
 ];
 tmp2=apply(tmp2,"funflg=1;name="+Dqq(#)+";");
-forall(0..8,
+forall(0..4,
   Settextkey(200+#,[tmp_1+#*4.3,0.8],tmp1,tmp2_(#+1),14);
 );
-
-tmp=[poskey_1+37,0.8];
-Settextkey(4,tmp,tmp1,"nqinc=-1;",14);
-Settextkey(5,tmp+[14,0],tmp1,"nqinc=1;",14);
+forall(5..8,
+  Settextkey(200+#,[tmp_1+(#+5)*4.3,0.8],tmp1,tmp2_(#+1),14);
+);
+Settextkey(4,[tmp_1+5*4.3,0.8],tmp1,"nqinc=-1;",14);
+Settextkey(5,[tmp_1+2+8*4.3,0.8],tmp1,"nqinc=1;",14);
 
 Text1.xy=[poskey_1+4,posyL_1];
 Text2.xy=[poskey_1-4,posyL_2];
