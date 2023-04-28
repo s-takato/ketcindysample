@@ -3431,7 +3431,7 @@ Addfunstr(name,npos,strnow):=(
 
 Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22,1); //210629
 Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=( //230406
-  regional(xL,yL,plt,prt,prb,row,col,name,tmp1,tmp2,pos);
+  regional(xL,yL,plt,prt,prb,row,col,name,tmp,tmp2,pos);
   if(nx>0,  //211012from
     xL=apply(0..nx,#/10*dx+plb_1);
   ,
@@ -4160,11 +4160,9 @@ drawcircle([px,posyL_ch],0.5,color->[1,0,0]);
 fillcircle([px,posyL_ch],0.5,color->[1,0,0]);
 
 if(abs(stnuminc)>0,
-  if(stnum>0,
-    if(length(ansL)>0,
-      ansLL_stnum=ansL;
-    );
-  );
+  tmp=Textedit(2,"","");
+  ansL_nqu=tmp;
+  ansLL_stnum=ansL;
   if(stnuminc>0,
     stnum=min([stnum+stnuminc,stall]);
   ,
@@ -4201,8 +4199,9 @@ if(abs(stnuminc)>0,
   );
   tmp=ansL_nqu;
   if(indexof(tmp,"---")==0,
-    tmp=tmp+"::";
-    tmp=replace(tmp,"::::","::");
+    if(indexof(tmp,"::")==0,
+      tmp=tmp+"::";
+    );
   );
   StrL_ch=tmp;
   npos=length(tmp);
@@ -4532,10 +4531,10 @@ var cdy = CindyJS({
     {name: "Text228", type: "Button", pos: [4.0, -0.36164383561643837, 0.05547169940614263], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: "\u0000＞", textsize: 14.0}
   ],
   ports: [{
-    width: 759,
-    height: 625,
+    width: 740,
+    height: 589,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.8191897369198, 25.727500861699728, 84.52000379071681, -36.593216757914895]}],
+    transform: [{visibleRect: [3.7042213282551915, 27.90513400618911, 84.900752843609, -36.696485958581434]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
