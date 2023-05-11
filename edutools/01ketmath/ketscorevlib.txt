@@ -631,6 +631,7 @@ forall(0..7,
 tmp=Text16.xy+[4.3,0];
 Settextkey(230,tmp,"Full",
     "funflg=1;name="+Dqq("Fullmark()")+";",18,5,0.6);
+Text231.xy=tmp+[0,-3.3];
     
 Text1.xy=[px+8,posyL_1-1];
 Text2.xy=[px+1,posyL_2-1];
