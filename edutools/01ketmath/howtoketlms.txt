@@ -1,0 +1,79 @@
+　ketlmsの使い方
+
+[0] 準備
+１．ketcindyを4.4.32に更新する
+　　　4.4.31以降の修正分をアップしてなかったです
+２．github/ketmath.git/ketmath23/0529をダウンロードする
+
+[1] kettaskの作成
+１．toolkemath.cdyを立ち上げる
+２．(1) cのmxansを作成を選択
+　　　　 2回押せば，矯正実行
+　　　　 ファイルを選べば（赤字になる）それだけが実行
+　　(2) 実行を押す
+　　　　mxans0529-(番号).txtがdata内にできる
+　　　　エラーが出たら報告してください
+　　(3) リセットを押す
+　　(4) ファイルを開き，questionの正解を確かめる　　
+３．1.tasklineを作成 を押す
+　　　　1taskline.txtと2anssheetができる
+４．2.kettaskに組込 を押す
+　　(1) orgvかorgvnr(ketmathルール表付き)を選ぶ
+　　(2) 実行するとkettask(+日付番号).htmlができる
+　　　　　これのurlを学生に配付
+５．8.総括ファイル作成 を実行しておくと便利
+　　　sumqueall.txt（問題データすべて）
+　　　sumqueque.txt（問のみ）
+　　　sumtable.csv（一覧表．ここでは無意味）
+
+[2] kettaskへのpngの組込み
+１．drawdataに0529.png,0529-3.pngを入れる
+２．tooldraw0529.cdyを立ち上げる
+　　　エラー(1) HTMLに書き出す を実行
+　　　エラー(2) kettaskv.を作っていない
+３．上の左ボタンが Imqgであることを確かめる
+　　　　注）クリックするとDrwに変わる
+４．ステップを3回押す．
+　(1) (日付番号).pngファイルから (日付番号)png.txtを作成
+　(2) 図を表示
+　　　　T3,Sを動かして中心位置とスケールを決める
+　　　　実行を押すと，(日付番号)script.txtを作成
+　(3) inserthtmlにして実行すると同名のkettaskvに組込み
+　注）<<, <, >, >> を押すと図ファイルを変更できる
+
+[3] kettaskへのketcindyjsスクリプトの組込み
+１．ketjsoffLを押して，htmlを作っておく
+２．スクリプトを記述したdrwscript(+日付).txtをdrwdataに入れる．
+３．tooldraw0529.cdyを立ち上げて，Imagをクリック
+　　　ボタンがDrawに変わる
+４．O, Sを動かして図の位置とスケールを決める
+５．OS保存 を押すと，O, Sの位置が保存される
+６．実行 を押してkettaskvに組込む
+　注）<<, <, >, >> を押すとファイルを変更できる
+
+[4] ketscoreによる採点
+１．回収したデータをdata/anssheetallにコピーする
+　　　今回は，2anssheet0529allサンプル.txtの内容をコピー
+２．a.Anssheet分割 を選び，実行する
+　　　　　問題ごとのanssheet.txtにコピーされる
+３．3.scoreline作成 を選び，実行する
+　　　　　4scoreline.txtができる
+４．4.ketscore組込 を選び，実行する
+　　　　　ketscorev(+日付番号).htmlができる
+５．5.Maximaによる採点を選び，実行する
+　　　(1) エラーがある場合
+　　　　　・maxerror(+日付).txtができる
+　　　　　・3scorelineを修正する
+　　　　　・そのファイルだけを選んで強制的に実行
+　　　　　・エラーがなくなるまで繰り返し行う
+　　　(2) 4_scoresheet(+日付番号)ができる
+６．ketscoreを立ち上げて，4_scoresheetの中身を最下欄にコピー
+７．st, pgを動かして，得点を確認修正する
+　　　・コメントもつけられる
+８，出来上がったら Rec を押し，最下欄の行を4_scoresheetにコピー
+９．b.４scoresheet作成 を押すと，問題別のファイルができる
+
+[5] 返却と集計
+１．6と7のボタンで学生ごとの成績票を作成する
+２．9を押すと，Dropboxの学生ごとのフォルダにコピーされる
+３．8.総括ファイル を押すと，成績一覧表ができる．
