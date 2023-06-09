@@ -4107,11 +4107,17 @@ quline="Q01::導関数y'=tfr(dy,dx)を求めよ．	[1]::y=x^2-3x	[2]::y=sin(x)";
 shline="Q01---	[1]y'=	[2]y'=";
 sqline="01AA	2	2	2CR02BB	2	2	2";
 );
+
+dtpy0=3.2;
+size=[22,22];
+dtpyL=dtpy0/22*size;
+ch=2;
 ;
 
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit(1.6);
+
 
 if(startflg==1,
   Kettaskinit();
@@ -4138,8 +4144,8 @@ if(stok<=1,
 );
 
 T2.x=T1.x; T4.x=T3.x;
-if(T1.y-T2.y<dtpy,T2.y=T1.y-dtpy);
-if(T3.y-T4.y<dtpy,T4.y=T3.y-dtpy);
+if(T1.y-T2.y<dtpyL_1,T2.y=T1.y-dtpyL_1);
+if(T3.y-T4.y<dtpyL_2,T4.y=T3.y-dtpyL_2);
 
 Addax(0);
 nameL=Keyname();
@@ -4237,7 +4243,7 @@ if(stoknow==2,
     if(length(tmp)>0,
       tmp1=tmp_(-1);
       tmp=Gettexform(quest_tmp1);
-      drawtext(Text1.xy+[15,-2.5],tmp,size->14);
+      drawtext(Text1.xy+[10,-2.5],tmp,size->14);
     );//230411to
   );
 );
@@ -4282,6 +4288,16 @@ if(funflg==1,
 if(stoknow==2,
   flg=0;
   Str=Textedit(2,"","");
+  tmp=length(Str);
+  if(substring(Str,tmp-2,tmp)=="//",
+    tmp=Strsplit(Str,"=");
+    tmp=replace(tmp_2,"/","");
+    tmp=parse(tmp);
+    size_ch=tmp;
+    dtpyL_ch=dtpy0*tmp/22;
+    tmp=indexof(Str,"sz=");
+    Str=substring(Str,0,tmp-1);
+  );
   if(indexof(shL_nqu,"---")==0,
     if(length(tmp)>length(shL_nqu),
       Strnq=replace(Str,"?","");
@@ -4347,7 +4363,7 @@ if(stoknow==2,
             clr=[0,0,0];
             if(contains(tmp2,mm),clr=[1,0,0]);
             tmp_1=tmp_1+1.25;
-            Drwletter(tmp,tmp3,22,clr);
+            Drwletter(tmp,tmp3,size_nc,clr);
           );
         );
       ); // 220718to
@@ -4364,14 +4380,14 @@ if(stoknow==2,
             clr=[0,0,0];
             if(contains(tmp2,mm),clr=[1,0,0]);
             tmp_1=tmp_1+1.25;
-            Drwletter(tmp,tmp3,22,clr);
+            Drwletter(tmp,tmp3,size_nc,clr);
           );
         );
       );
       if(flg==0,
         strt=Gettexform(sL_nn);
         tmp=tp+[1.2,-0.2];
-        Drwletter(tmp,strt,22);
+        Drwletter(tmp,strt,size_nc);
       );
       tp=tp-[0,dy];
       texstr=texstr+strt;
@@ -4411,11 +4427,11 @@ var cdy = CindyJS({
     {name: "NE", type: "Free", pos: [4.0, 1.0067746650167269, 0.05318084682256492], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text2", type: "EditableText", pos: [4.0, -0.8516129032258064, 0.25806451612903225], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T2", type: "Free", pos: [4.0, 3.6645161290322577, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "Text3", type: "EditableText", pos: [4.0, -0.8621236133122027, 0.06339144215530904], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 130, text: "St=", textsize: 21.0},
+    {name: "Text3", type: "EditableText", pos: [4.0, -0.8621236133122027, 0.06339144215530904], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "St=", textsize: 21.0},
     {name: "Text9", type: "EditableText", pos: [1.7714285714285714, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "Text7", type: "Button", pos: [-2.0, -4.0, -0.17391304347826086], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=1;initflg=1;", text: "1", textsize: 18.0},
     {name: "Text8", type: "Button", pos: [4.0, -1.1478260869565216, 0.34782608695652173], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=2;initflg=1;", text: "2", textsize: 18.0},
@@ -4525,10 +4541,10 @@ var cdy = CindyJS({
     {name: "Text5", type: "Button", pos: [4.0, 0.06095238095238095, 0.0761904761904762], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: "　　", textsize: 14.0}
   ],
   ports: [{
-    width: 805,
-    height: 656,
+    width: 836,
+    height: 622,
     id: "CSCanvas",
-    transform: [{visibleRect: [3.6568135794819683, 28.89397771956879, 86.57892432548152, -38.679816875928985]}],
+    transform: [{visibleRect: [9.11628174039871, 27.039818721521595, 95.23166631636845, -37.031675544331485]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

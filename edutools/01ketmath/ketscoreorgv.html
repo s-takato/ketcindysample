@@ -4078,6 +4078,10 @@ forall(1..(length(ansLL)),nn,
   );
 );
 
+dtpy0=3.2;
+size=[22,22];
+dtpyL=dtpy0/22*size;
+ch=2;
 
 ;
 
@@ -4240,20 +4244,24 @@ if(stnum>0,
     StrL_1=caL_nqu;
     StrL_3=quL_nqu;
     tmp=Textedit(2,"","");
-    tmp1=indexof(tmp,ansorgL_nqu);
-    Score="";
-    if((tmp1>0)&(indexof(ansL_nqu,"---")==0),
-      Score=replace(tmp,ansorgL_nqu,"");
-      Str=tmp;
-      Strnq=replace(Str,"?","");
-      npos=length(Str);
-      StrL_2=Str;
-      ansL_nqu=Strnq;
-      ansLL_stnum=ansL;
-      if(nodataflg==0,Subsedit(2,ansL_nqu));
+    if(indexof(tmp,"sz=")>0, //2dr30610
+      tmp1=length(tmp);
+      if(substring(tmp,tmp1-2,tmp1)=="//",
+        tmp1=Strsplit(tmp,"=");
+        tmp1=replace(tmp1_(-1),"//","");
+        tmp1=parse(tmp1);
+        size_ch=tmp1;
+        dtpyL_ch=dtpy0*tmp 1/22;
+        tmp1=indexof(tmp,"sz=");
+        tmp=substring(tmp,0,tmp1-1);
+        Subsedit(2,tmp);
+        StrL_2=tmp;
+        Str=tmp;
+        Strnq=tmp;
+      );
     );
   );
-);
+);    
 
 if(recflg==1,
   out=[];
@@ -4336,7 +4344,7 @@ forall(1..nch,nc,
           clr=[0,0,0];
           if(contains(tmp2,mm),clr=[1,0,0]);
           tmp_1=tmp_1+1.25;
-          Drwletter(tmp,tmp3,22,clr);
+          Drwletter(tmp,tmp3,size_nc,clr);
         );
       );
     ); // 220718to
@@ -4361,7 +4369,7 @@ forall(1..nch,nc,
       strt=Gettexform(sL_nn);
       tmp=tp+[1.2,-0.2];
       if((nodataflg==0)%(nc!=2), //220928
-        Drwletter(tmp,strt,22);
+        Drwletter(tmp,strt,size_ nc);
       ); //220928
     ); //220609to
     tp=tp-[0,dy];
@@ -4414,9 +4422,9 @@ var cdy = CindyJS({
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
     {name: "Text5", type: "EditableText", pos: [4.0, 0.05, 0.0625], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "Pg=1", textsize: 18.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T2", type: "Free", pos: [4.0, 3.6645161290322577, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "Text4", type: "EditableText", pos: [4.0, 0.25625, 0.0625], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, text: "St=", textsize: 18.0},
     {name: "Text47", type: "Button", pos: [4.0, -0.7920792079207921, 0.07920792079207921], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"n5\";", text: "　　", textsize: 14.0},
     {name: "Text108", type: "Button", pos: [4.0, -2.911694510739857, 0.0954653937947494], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lp\",\"P\",\"{\\Psi}\",\"\\mathbf{p}\",\"{\\vec{p}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
@@ -4534,9 +4542,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 740,
-    height: 624,
+    height: 621,
     id: "CSCanvas",
-    transform: [{visibleRect: [10.297247606546014, 25.578979337765343, 84.68633784920529, -37.13591061133791]}],
+    transform: [{visibleRect: [10.995467718349271, 25.656091342814968, 85.38455796100854, -36.78730557620559]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

@@ -96,7 +96,7 @@ Kettaskinit():=(
 Seteditable(1,["","Size=24","Width=500"]);
 Seteditable(2,["","Size=24","Width=580"]);
 Seteditable(9,["","Size=24","Width=580"]);
-Seteditable(3,["","Size=21","Width=130"]); //St=
+Seteditable(3,["","Size=21","Width=200"]); //St=
 //Seteditable(10,["","Size=18","Width=87"]); //No=
 //Seteditable(32,["","Size=18","Width=80"]);
 inspect(T1,"ptsize",6);

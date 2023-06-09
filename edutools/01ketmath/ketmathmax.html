@@ -2239,13 +2239,13 @@ Tomaxform(str):=(
       sharpL,tmp,tmp1,tmp2,tmp3,tmp4);
   repL=[ //190515from
     ["fr(",["","((xx)/(yy))"]], //220505
-    ["log(",["{log}(xx)","{log}(yy)/{log}(xx)"]],
+    ["log",["{log}(xx)","{log}(yy)/{log}(xx)"]], //230520
     ["ln(",["{log}(xx)"]], //210903
-    ["sq(",["{sqrt}(xx)","(yy)^(1/(xx))"]],
-    ["po(",["","(xx)^(yy)"]],
-    ["sin(",["{sin}(xx)","{sin}(yy)^(xx)"]],
-    ["cos(",["{cos}(xx)","{cos}(yy)^(xx)"]],
-    ["tan(",["{tan}(xx)","{tan}(yy)^(xx)"]],
+    ["sq",["{sqrt}(xx)","(yy)^(1/(xx))"]], //230520
+    ["po",["","(xx)^(yy)"]],
+    ["sin",["{sin}(xx)","{sin}(yy)^(xx)"]], //230520
+    ["cos",["{cos}(xx)","{cos}(yy)^(xx)"]], //230520
+    ["tan",["{tan}(xx)","{tan}(yy)^(xx)"]], //230520
     ["|(",["{abs}(xx)"]], //210902
     ["pi(",["{%pi}()"]]
   ];
@@ -2327,7 +2327,7 @@ Tomaxform(str):=(
   forall(reverse(sharpL),
     out=replace(out,#_1,#_2);
   );
-  out=head+out;
+  out=replace(head+out,"{",""); //230520
   out=replace(out,"e^","(exp(1))^"); //220610
   out;
 );
@@ -3745,7 +3745,10 @@ RRight():=(
 );
 
 
-
+dtpy0=3.2;
+size=[22,22];
+dtpyL=dtpy0/22*size;
+ch=2;
 
 
 ;
@@ -3762,8 +3765,8 @@ if(startflg==1,
   startflg=0;
 ,
   T2.x=T1.x; T4.x=T3.x;
-  if(T1.y-T2.y<dtpy,T2.y=T1.y-dtpy);
-  if(T3.y-T4.y<dtpy,T4.y=T3.y-dtpy);
+  if(T1.y-T2.y<dtpyL_1,T2.y=T1.y-dtpyL_1);
+  if(T3.y-T4.y<dtpyL_2,T4.y=T3.y-dtpyL_2);
 );
 Addax(0);
 nameL=Keyname();
@@ -3808,6 +3811,18 @@ if(funflg==1,
 );
 Str=Textedit(ch,"","");
 Str=replace(Str,"///","//");
+if(indexof(Str,"sz=")>0, //2dr30610
+  tmp=length(Str);
+  if(substring(Str,tmp-2,tmp)=="//",
+    tmp=Strsplit(Str,"=");
+    tmp=replace(tmp_2,"/","");
+    tmp=parse(tmp);
+    size_ch=tmp;
+    dtpyL_ch=dtpy0*tmp/22;
+    tmp=indexof(Str,"sz=");
+    Str=substring(Str,0,tmp-1);
+  );
+);
 Strnq=replace(Str,"?","");
 StrL_ch=Strnq;
 if(Strnq!=Strnow,
@@ -3835,7 +3850,7 @@ forall(1..nch,nc,
     if(flg_1==0,
       strt=Gettexform(tmp1);
       tmp=tp+[1.2,-0.2];
-      Drwletter(tmp,strt,22);
+      Drwletter(tmp,strt,size_nc);
       texstr=texstr+strt;
     );
     if(flg_1>0,
@@ -3846,7 +3861,7 @@ forall(1..nch,nc,
         clr=[0,0,0];
         if(contains(tmp2,mm),clr=[1,0,0]);
         tmp_1=tmp_1+1.25;
-        Drwletter(tmp,tmp3,22,clr);
+        Drwletter(tmp,tmp3,size_nc,clr);
       );
     );
   );
@@ -3995,10 +4010,10 @@ var cdy = CindyJS({
     {name: "Text113", type: "Button", pos: [4.0, -1.9242902208201893, 0.06309148264984227], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==0,name=\"tx(\");if(Shift==1,name=\"par(\");if(Shift==2,name=\"(circ)\");", text: "　　", textsize: 14.0}
   ],
   ports: [{
-    width: 749,
-    height: 623,
+    width: 734,
+    height: 612,
     id: "CSCanvas",
-    transform: [{visibleRect: [2.4161082169250014, 26.063124808105865, 79.42313181168355, -37.989446219310125]}],
+    transform: [{visibleRect: [8.379268922527132, 25.960311692492034, 83.84409578307823, -36.96131506317183]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
