@@ -3849,13 +3849,13 @@ forall(1..nch,nc,
     flg=Errorcheckstr(tmp1);
     if(flg_1==0,
       strt=Gettexform(tmp1);
-      tmp=tp+[1.2,-0.2];
+      tmp=tp+[1.2,-0.2-(nn-1)*dy];
       Drwletter(tmp,strt,size_nc);
       texstr=texstr+strt;
     );
     if(flg_1>0,
       tmp2=flg_2;
-      tmp=tp+[1.2,-0.2];
+      tmp=tp+[1.2,-0.2-(nn-1)*dy];
       forall(1..(length(tmp1)),mm,
         tmp3=tmp1_mm;
         clr=[0,0,0];
@@ -4011,9 +4011,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 734,
-    height: 612,
+    height: 618,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.379268922527132, 25.960311692492034, 83.84409578307823, -36.96131506317183]}],
+    transform: [{visibleRect: [8.379268922527132, 25.960311692492034, 83.84409578307823, -37.57819375685481]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
