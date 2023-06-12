@@ -37,31 +37,6 @@
 
 <script id="csinit" type="text/x-cindyscript">
 Invert(x):=reverse(x);
-Removespace(str):=(
-  regional(tmp,flg,out);
-  tmp=length(str)+1;
-  flg=0;
-  forall(1..(length(str)),
-    if(flg==0,
-      if((str_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(str,tmp-1,length(str));
-  flg=0;
-  tmp=0;
-  forall(reverse(1..(length(out))),
-    if(flg==0,
-      if((out_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(out,0,tmp);
-);
 Getlevel(str):=Getlevel(str,",");
 Getlevel(str,Arg):=Getlevel(str,Arg,"()");
 Getlevel(str,Arg,bra):=(
@@ -2156,6 +2131,31 @@ Letter(list,options):=(
     );
     Nj=Nj+3;
   );
+);
+Removespace(str):=(
+  regional(tmp,flg,out);
+  tmp=length(str)+1;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      if((str_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(str,tmp-1,length(str));
+  flg=0;
+  tmp=0;
+  forall(reverse(1..(length(out))),
+    if(flg==0,
+      if((out_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(out,0,tmp);
 );
 Lettermove(dir,str):=(
   regional(Suu,tmp,tmp1,out,nn);
@@ -4285,27 +4285,34 @@ if(funflg==1,
   );
   funflg=0;
 );
+
 if(stoknow==2,
   flg=0;
   Str=Textedit(2,"","");
+  Str=replace(Str,"///","//");
   tmp=length(Str);
   if(substring(Str,tmp-2,tmp)=="//",
-    tmp=Strsplit(Str,"=");
-    tmp=replace(tmp_2,"/","");
-    tmp=parse(tmp);
-    size_ch=tmp;
-    dtpyL_ch=dtpy0*tmp/22;
-    tmp=indexof(Str,"sz=");
-    Str=substring(Str,0,tmp-1);
-  );
-  if(indexof(shL_nqu,"---")==0,
-    if(length(tmp)>length(shL_nqu),
-      Strnq=replace(Str,"?","");
-      tmp1=StrL_ch;
-      StrL_ch=Strnq;
-      Subsedit(ch,Str);
-      npos=npos+length(Str)-length(tmp1);
-      flg=1;
+    tmp1=indexof(Str,"sz=");
+    if(tmp1>0,
+      tmp2=substring(Str,tmp1-1,tmp);
+      Str=substring(Str,0,tmp1-1);
+      tmp2=replace(tmp2,"//","");
+      tmp2=replace(tmp2,"sz=","");
+      if(tmp2=="+",tmp2=tmp2+"1");
+      if(tmp2=="-",tmp2=tmp2+"1");
+      tmp2=parse(Removespace(tmp2));
+      size_ch=size_ch+tmp2;
+      dtpyL_ch=dtpy0*size_ch/22;
+    );
+    if(indexof(shL_nqu,"---")==0,
+      if(length(tmp)>length(shL_nqu),
+        Strnq=replace(Str,"?","");
+        tmp1=StrL_ch;
+        StrL_ch=Strnq;
+        Subsedit(ch,Str);
+        npos=npos+length(Str)-length(tmp1);
+        flg=1;
+      );
     );
   );
   tmp1=shL_nqu;
@@ -4542,9 +4549,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 836,
-    height: 622,
+    height: 638,
     id: "CSCanvas",
-    transform: [{visibleRect: [9.11628174039871, 27.039818721521595, 95.23166631636845, -37.031675544331485]}],
+    transform: [{visibleRect: [9.11628174039871, 27.039818721521595, 95.23166631636845, -38.679816875928985]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

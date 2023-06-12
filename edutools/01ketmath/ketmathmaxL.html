@@ -37,31 +37,6 @@
 
 <script id="csinit" type="text/x-cindyscript">
 Invert(x):=reverse(x);
-Removespace(str):=(
-  regional(tmp,flg,out);
-  tmp=length(str)+1;
-  flg=0;
-  forall(1..(length(str)),
-    if(flg==0,
-      if((str_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(str,tmp-1,length(str));
-  flg=0;
-  tmp=0;
-  forall(reverse(1..(length(out))),
-    if(flg==0,
-      if((out_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(out,0,tmp);
-);
 Getlevel(str):=Getlevel(str,",");
 Getlevel(str,Arg):=Getlevel(str,Arg,"()");
 Getlevel(str,Arg,bra):=(
@@ -2223,6 +2198,31 @@ tmp1=Textedit(n0); //
   if(length(tmp2)==0,out=str,out=tmp2);
   out;
 ); //210208to
+Removespace(str):=(
+  regional(tmp,flg,out);
+  tmp=length(str)+1;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      if((str_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(str,tmp-1,length(str));
+  flg=0;
+  tmp=0;
+  forall(reverse(1..(length(out))),
+    if(flg==0,
+      if((out_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(out,0,tmp);
+);
 Drwletter(pos,str):=Drwletter(pos,str,[]);
 Drwletter(pos,str,Arg):=(
   regional(sz,clr);
@@ -3809,20 +3809,25 @@ if(funflg==1,
   Subsedit(ch,Str);
   funflg=0;
 );
+
 Str=Textedit(ch,"","");
 Str=replace(Str,"///","//");
-if(indexof(Str,"sz=")>0, //2dr30610
-  tmp=length(Str);
-  if(substring(Str,tmp-2,tmp)=="//",
-    tmp=Strsplit(Str,"=");
-    tmp=replace(tmp_2,"/","");
-    tmp=parse(tmp);
-    size_ch=tmp;
-    dtpyL_ch=dtpy0*tmp/22;
-    tmp=indexof(Str,"sz=");
-    Str=substring(Str,0,tmp-1);
+tmp=length(Str);
+if(substring(Str,tmp-2,tmp)=="//",
+  tmp1=indexof(Str,"sz=");
+  if(tmp1>0,
+    tmp2=substring(Str,tmp1-1,tmp);
+    Str=substring(Str,0,tmp1-1);
+    tmp2=replace(tmp2,"//","");
+    tmp2=replace(tmp2,"sz=","");
+    if(tmp2=="+",tmp2=tmp2+"1");
+    if(tmp2=="-",tmp2=tmp2+"1");
+    tmp2=parse(Removespace(tmp2));
+    size_ch=size_ch+tmp2;
+    dtpyL_ch=dtpy0*size_ch/22;
   );
 );
+
 Strnq=replace(Str,"?","");
 StrL_ch=Strnq;
 if(Strnq!=Strnow,
@@ -4011,9 +4016,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 734,
-    height: 618,
+    height: 625,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.379268922527132, 25.960311692492034, 83.84409578307823, -37.57819375685481]}],
+    transform: [{visibleRect: [8.379268922527132, 25.960311692492034, 83.84409578307823, -38.29788556615161]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

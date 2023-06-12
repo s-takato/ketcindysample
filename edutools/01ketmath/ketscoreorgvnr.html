@@ -37,31 +37,6 @@
 
 <script id="csinit" type="text/x-cindyscript">
 Invert(x):=reverse(x);
-Removespace(str):=(
-  regional(tmp,flg,out);
-  tmp=length(str)+1;
-  flg=0;
-  forall(1..(length(str)),
-    if(flg==0,
-      if((str_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(str,tmp-1,length(str));
-  flg=0;
-  tmp=0;
-  forall(reverse(1..(length(out))),
-    if(flg==0,
-      if((out_#)!=" ",
-        tmp=#;
-        flg=1;
-      );
-    );
-  );
-  out=substring(out,0,tmp);
-);
 Getlevel(str):=Getlevel(str,",");
 Getlevel(str,Arg):=Getlevel(str,Arg,"()");
 Getlevel(str,Arg,bra):=(
@@ -2150,6 +2125,31 @@ Letter(list,options):=(
     );
     Nj=Nj+3;
   );
+);
+Removespace(str):=(
+  regional(tmp,flg,out);
+  tmp=length(str)+1;
+  flg=0;
+  forall(1..(length(str)),
+    if(flg==0,
+      if((str_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(str,tmp-1,length(str));
+  flg=0;
+  tmp=0;
+  forall(reverse(1..(length(out))),
+    if(flg==0,
+      if((out_#)!=" ",
+        tmp=#;
+        flg=1;
+      );
+    );
+  );
+  out=substring(out,0,tmp);
 );
 Lettermove(dir,str):=(
   regional(Suu,tmp,tmp1,out,nn);
@@ -4243,21 +4243,25 @@ if(stnum>0,
     );
     StrL_1=caL_nqu;
     StrL_3=quL_nqu;
-    tmp=Textedit(2,"","");
-    if(indexof(tmp,"sz=")>0, //2dr30610
-      tmp1=length(tmp);
-      if(substring(tmp,tmp1-2,tmp1)=="//",
-        tmp1=Strsplit(tmp,"=");
-        tmp1=replace(tmp1_(-1),"//","");
-        tmp1=parse(tmp1);
-        size_ch=tmp1;
-        dtpyL_ch=dtpy0*tmp 1/22;
-        tmp1=indexof(tmp,"sz=");
-        tmp=substring(tmp,0,tmp1-1);
-        Subsedit(2,tmp);
-        StrL_2=tmp;
-        Str=tmp;
-        Strnq=tmp;
+    stmp=Textedit(2,"","");
+    stmp=replace(stmp,"///","//");
+    tmp=length(stmp);
+    if(substring(stmp,tmp-2,tmp)=="//",
+      tmp1=indexof(stmp,"sz=");
+      if(tmp1>0,
+        tmp2=substring(stmp,tmp1-1,tmp);
+        stmp=substring(stmp,0,tmp1-1);
+        tmp2=replace(tmp2,"//","");
+        tmp2=replace(tmp2,"sz=","");
+        if(tmp2=="+",tmp2=tmp2+"1");
+        if(tmp2=="-",tmp2=tmp2+"1");
+        tmp2=parse(Removespace(tmp2));
+        size_ch=size_ch+tmp2;
+        dtpyL_ch=dtpy0*size_ch/22;
+        Subsedit(2,stmp);
+        StrL_2=stmp;
+        Str=stmp;
+        Strnq=stmp;
       );
     );
   );
@@ -4541,10 +4545,10 @@ var cdy = CindyJS({
     {name: "Text204", type: "Button", pos: [4.0, 0.08648648648648648, 0.12012012012012012], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"Delete()\";", text: "　　", textsize: 14.0}
   ],
   ports: [{
-    width: 740,
-    height: 621,
+    width: 736,
+    height: 588,
     id: "CSCanvas",
-    transform: [{visibleRect: [10.995467718349271, 25.656091342814968, 85.38455796100854, -36.78730557620559]}],
+    transform: [{visibleRect: [6.520357605819449, 27.343873013162437, 87.95016709529001, -37.6606081563049]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
@@ -4559,6 +4563,7 @@ var cdy = CindyJS({
 KeTScore
 </font></p></header>
     <div id="CSCanvas"></div>
+
 <footer><p align="center"><font size="4">&copy; 2021 Setsuo Takato</font></p></footer>
 </body>
 </html>
