@@ -1,0 +1,82 @@
+タイトル::slide0
+
+\def\rad{\;\mathrm{rad}}
+\newcommand{\hako}[2][6mm]{\fbox{$\mathstrut$\Ctab{#1}{#2}}}
+\newcommand{\dint}{\displaystyle\int}
+\newcommand{\dlim}{\displaystyle\lim}
+\newcommand{\dc}{: \hspace{-1.4mm}:}
+\setmargin{25}{150}{15}{100}%
+
+%\setcounter{page}{1}
+
+%%%%%%%%%%%%%
+new::課題ファイル(question)
+%%repeat=3
+\slidepage
+
+itemize
+item::ファイル名\\
+\hspace*{2zw}question識別記号$-$最初の問題番号.txt
+item::識別記号　例えば 月日
+item::指定した問題番号をつける
+item::複数の問題を入れることができる\\
+\hspace*{2zw}問題の間には空白行を入れる\\
+\hspace*{2zw}問題番号は最初から1ずつ増やされる
+item::[例] question0615-1.txt,  question0615-3.txt\\
+　(question0615には2つの問題が含まれる)
+end
+
+%%%%%%%%%%%%%
+new::課題ファイルの書式
+%%repeat=3
+\slidepage
+
+enumerate::[1.]
+item::Q　　　　{\color{red}番号はファイル名から自動的に追加}\vspace{-3mm}
+item::　(問題文)　{\color{red} 2行になるときは // で区切る}\\
+$[1]$　(小問)　{\color{red}ないときも [] とする}\\
+$[2]$　　　(小問の数だけ)\vspace{-3mm}
+item::Sheet　(解答欄)\\
+$[1]$　　{\color{red}\dc の後に配点(Maxima採点しないとき \dc$-1$を追加)}\\
+$[2]$\vspace{-3mm}
+item::Ans　(正解)\\
+$[1]$\\
+$[2]$\vspace{-3mm}
+item::空白行をおいて次の問題を書く
+end
+
+%%%%%%%%%%%%%
+new::課題の作成例
+%%repeat=3
+\slidepage
+
+itemize
+item::[]Q\vspace{-2mm}
+item::[]問いに答えよ\vspace{-2mm}
+item::[]$[1]$sin(2x)を微分せよ\vspace{-2mm}
+item::[]$[2]$sin(2x)の0からfr(pi,2)までの定積分を求めよ\vspace{-2mm}
+item::[]Sheet\vspace{-2mm}
+item::[]$[1]$ =\ \   \dc 5\vspace{-2mm}
+item::[]$[2]$ int(sin(2x),x,0,fr(pi,2))= \ \  \dc 5\vspace{-2mm}
+item::[]Ans\vspace{-2mm}
+item::[]$[1]$ 2cos(2x)\vspace{-2mm}
+item::[]$[2]$ 1
+end
+
+%%%%%%%%%%%%%
+new::Maximaによる正解の出力
+%%repeat=3
+\slidepage
+
+itemize
+item::Ansの直後に次のように書く\\
+Mxcalc\\
+$[1]$ sin(2x)\hfill{\color{red}i1に右辺をMaximaに変換した式を代入}\\
+$[2]$ fr(pi,2)\hfill{\color{red}i2に右辺をMaximaに変換した式を代入}\\
+o1:diff(i1,x)\hfill{\color{red}o1に右辺(Maxima数式)の結果を代入}\\
+o2:integrate(i1,x,0,i2)\\
+return o1\dc o2\hfill{\color{red}o1とo2の値を返す}
+item::toolketmath.cdyで「正解を出力」を実行する\\
+　　$\Longrightarrow$ dataにmxans(qn).txtというファイルができる
+item::出力結果は　\verb|[2*cos(2*x),1]|
+end
