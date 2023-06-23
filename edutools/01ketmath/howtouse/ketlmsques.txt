@@ -16,14 +16,14 @@ new::課題ファイル(question)
 
 itemize
 item::ファイル名\\
-\hspace*{2zw}question識別記号$-$最初の問題番号.txt
-item::識別記号　例えば 月日
+\hspace*{2zw}question識別番号$-$最初の問題番号.txt
+item::識別番号　例えば 月日
 item::指定した問題番号をつける
 item::複数の問題を入れることができる\\
 \hspace*{2zw}問題の間には空白行を入れる\\
 \hspace*{2zw}問題番号は最初から1ずつ増やされる
 item::[例] question0615-1.txt,  question0615-3.txt\\
-　(question0615には2つの問題が含まれる)
+　(question0615-1には2つの問題が含まれる)
 end
 
 %%%%%%%%%%%%%
@@ -37,7 +37,7 @@ item::　(問題文)　{\color{red} 2行になるときは // で区切る}\\
 $[1]$　(小問)　{\color{red}ないときも [] とする}\\
 $[2]$　　　(小問の数だけ)\vspace{-3mm}
 item::Sheet　(解答欄)\\
-$[1]$　　{\color{red}\dc の後に配点(Maxima採点しないとき \dc$-1$を追加)}\\
+$[1]$　　{\color{red}\dc の後に配点(とMaxima不採点のとき \dc$-1$を追加)}\\
 $[2]$\vspace{-3mm}
 item::Ans　(正解)\\
 $[1]$\\
@@ -53,13 +53,13 @@ new::課題の作成例
 itemize
 item::[]Q\vspace{-2mm}
 item::[]問いに答えよ\vspace{-2mm}
-item::[]$[1]$sin(2x)を微分せよ\vspace{-2mm}
+item::[]$[1]$sin(2x)の導関数の定義式をかけ\vspace{-2mm}
 item::[]$[2]$sin(2x)の0からfr(pi,2)までの定積分を求めよ\vspace{-2mm}
 item::[]Sheet\vspace{-2mm}
-item::[]$[1]$ =\ \   \dc 5\vspace{-2mm}
+item::[]$[1]$ =\ \   \dc 5\dc -1\vspace{-2mm}
 item::[]$[2]$ int(sin(2x),x,0,fr(pi,2))= \ \  \dc 5\vspace{-2mm}
 item::[]Ans\vspace{-2mm}
-item::[]$[1]$ 2cos(2x)\vspace{-2mm}
+item::[]$[1]$ lim(z,x,fr(sin(z)-sin(x),z-x))\vspace{-2mm}
 item::[]$[2]$ 1
 end
 
@@ -73,10 +73,13 @@ item::Ansの直後に次のように書く\\
 Mxcalc\\
 $[1]$ sin(2x)\hfill{\color{red}i1に右辺をMaximaに変換した式を代入}\\
 $[2]$ fr(pi,2)\hfill{\color{red}i2に右辺をMaximaに変換した式を代入}\\
-o1:diff(i1,x)\hfill{\color{red}o1に右辺(Maxima数式)の結果を代入}\\
-o2:integrate(i1,x,0,i2)\\
+f(x):i1\hfill{\color{red}関数定義やassume, declareなども入れられる}\\
+o1:diff(f(x),x)\hfill{\color{red}o1に右辺(Maxima数式)の結果を代入}\\
+
+o2:integrate(f(x),x,0,i2)\\
 return o1\dc o2\hfill{\color{red}o1とo2の値を返す}
 item::toolketmath.cdyで「正解を出力」を実行する\\
-　　$\Longrightarrow$ dataにmxans(qn).txtというファイルができる
+　　$\Longrightarrow$ 入力窓に結果が入る\\
+　　\phantom{$\Longrightarrow$} 同時にdataにmxans(qn).txtというファイルができる
 item::出力結果は　\verb|[2*cos(2*x),1]|
 end

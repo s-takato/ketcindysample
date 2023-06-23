@@ -4243,6 +4243,7 @@ if(stnum>0,
     );
     StrL_1=caL_nqu;
     StrL_3=quL_nqu;
+    flg=0;
     stmp=Textedit(2,"","");
     stmp=replace(stmp,"///","//");
     tmp=length(stmp);
@@ -4262,6 +4263,22 @@ if(stnum>0,
         StrL_2=stmp;
         Str=stmp;
         Strnq=stmp;
+        flg=1;
+      );
+    );
+    if(flg==0,
+      tmp=Textedit(2,"","");
+      tmp1=indexof(tmp,ansorgL_nqu);
+      Score="";
+      if((tmp1>0)&(indexof(ansL_nqu,"---")==0),
+        Score=replace(tmp,ansorgL_nqu,"");
+        Str=tmp;
+        Strnq=replace(Str,"?","");
+        npos=length(Str);
+        StrL_2=Str;
+        ansL_nqu=Strnq;
+        ansLL_stnum=ansL;
+        if(nodataflg==0,Subsedit(2,ansL_nqu));
       );
     );
   );
@@ -4546,15 +4563,15 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 736,
-    height: 586,
+    height: 572,
     id: "CSCanvas",
-    transform: [{visibleRect: [6.420810161455809, 27.32577347782356, 87.85061965092639, -37.47961280291647]}],
+    transform: [{visibleRect: [6.420810161455809, 27.32577347782356, 87.85061965092639, -35.886853693097976]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2072, version: [3, 0, 2072]}
+  cinderella: {build: 2074, version: [3, 0, 2074]}
 });
     </script>
 </head>
