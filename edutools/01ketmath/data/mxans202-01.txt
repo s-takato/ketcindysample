@@ -1,10 +1,11 @@
-[x^3/3,2]
+[2*cos(2*x),1]
 
 Script
-q1i1:x^2
-q1i2:sin(x)
-q1o1:integrate(q1i1,x)
-q1o2:integrate(q1i2,x,0,%pi)
+q1i1:sin(2*x)
+q1i2:((%pi)/(2))
+q1f(x):= q1i1
+q1o1:diff(q1f(x),x)
+q1o2:integrate(q1f(x),x,0,q1i2)
 q1o1::q1o2
 end
 

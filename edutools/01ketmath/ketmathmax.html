@@ -3820,8 +3820,14 @@ if(substring(Str,tmp-2,tmp)=="//",
     Str=substring(Str,0,tmp1-1);
     tmp2=replace(tmp2,"//","");
     tmp2=replace(tmp2,"sz=","");
-    if(tmp2=="+",tmp2=tmp2+"1");
-    if(tmp2=="-",tmp2=tmp2+"1");
+    if((indexof(tmp2,"+")>0)%(indexof(tmp2,"-")>0),
+      if(tmp2=="+",tmp2=tmp2+"1");
+      if(tmp2=="-",tmp2=tmp2+"1");
+      tmp2=parse(Removespace(tmp2));
+      size_ch=size_ch+tmp2;
+    ,
+      size_ch=parse(Removespace(tmp2));
+    );
     tmp2=parse(Removespace(tmp2));
     size_ch=size_ch+tmp2;
     dtpyL_ch=dtpy0*size_ch/22;
@@ -3903,13 +3909,13 @@ var cdy = CindyJS({
   angleUnit: "°",
   geometry: [
     {name: "Text1", type: "EditableText", pos: [-2.909090909090909, -4.0, -0.18181818181818182], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
-    {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "NE", type: "Free", pos: [4.0, 1.1283840564974783, 0.05757365765563785], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false, printname: "T1"},
     {name: "Text2", type: "EditableText", pos: [4.0, -0.875, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
-    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.686, 0.686], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.686, 0.686], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.5801622692426767, -4.0, 0.12214258801822592], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text200", type: "Button", pos: [4.0, 0.17888198757763973, 0.2484472049689441], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Push()\";", text: "　　", textsize: 14.0},
     {name: "Text14", type: "Button", pos: [3.8795180722891565, -4.0, 0.24096385542168672], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.5, script: "if(keytype!=5,keytype=5,keytype=1);", text: "　　", textsize: 14.0},
@@ -4015,15 +4021,15 @@ var cdy = CindyJS({
     {name: "Text113", type: "Button", pos: [4.0, -1.9242902208201893, 0.06309148264984227], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;if(Shift==0,name=\"tx(\");if(Shift==1,name=\"par(\");if(Shift==2,name=\"(circ)\");", text: "　　", textsize: 14.0}
   ],
   ports: [{
-    width: 734,
-    height: 625,
+    width: 750,
+    height: 626,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.379268922527132, 25.960311692492034, 83.84409578307823, -38.29788556615161]}],
+    transform: [{visibleRect: [8.379268922527132, 25.960311692492034, 85.48910563289951, -38.40069868176545]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2072, version: [3, 0, 2072]}
+  cinderella: {build: 2074, version: [3, 0, 2074]}
 });
     </script>
 </head>

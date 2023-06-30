@@ -2032,32 +2032,6 @@ Dqq(str):=DqDq(str); //18.02.11
 DqDq(str):=(
   unicode("0022")+str+unicode("0022");
 );
-Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
-Putpoint(name,Ptinit,Pt):=(
-  regional(ptstr); 
-    ptstr=name+".xy="+Textformat(Pcrd(Pt),10)+";";
-    parse(ptstr);
-    Ptpos(name,Pcrd([Pt_1,Pt_2])); //200529
-);
-Ptpos(pt):=Ptpos(pt,[]);
-Ptpos(ptorg,pos):=(
-  regional(pt,out,tmp);
-  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
-  if(length(pos)==0,
-    tmp=pt.name+"position";
-    out=parse(tmp);
-    if(!islist(out),
-      tmp=tmp+"="+Textformat(pt.xy,12)+";";  //200108 6->12
-      parse(tmp);
-    );
-  ,
-    pt.xy=pos;
-    tmp=pt.name+"position="+Textformat(pt.xy,12)+";"; //200108 6->12
-    parse(tmp);
-    out=pt.xy;
-  );
-  out;
-);
 Letter(Pt,Dr,St):=Letter([Pt,Dr,St]);
 Letter(list):=Letter(list,[]);
 Letter(Pt,Dr,St,options):=Letter([Pt,Dr,St],options);//181218
@@ -2517,6 +2491,32 @@ Setwindow(xrange,yrange,msg):=(
   Ptpos(SW,Pcrd([XMIN,YMIN])); //190927from
   Ptpos(NE,Pcrd([XMAX,YMAX]));
   Strictmove("SW"); Strictmove("NE");
+);
+Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
+Putpoint(name,Ptinit,Pt):=(
+  regional(ptstr); 
+    ptstr=name+".xy="+Textformat(Pcrd(Pt),10)+";";
+    parse(ptstr);
+    Ptpos(name,Pcrd([Pt_1,Pt_2])); //200529
+);
+Ptpos(pt):=Ptpos(pt,[]);
+Ptpos(ptorg,pos):=(
+  regional(pt,out,tmp);
+  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
+  if(length(pos)==0,
+    tmp=pt.name+"position";
+    out=parse(tmp);
+    if(!islist(out),
+      tmp=tmp+"="+Textformat(pt.xy,12)+";";  //200108 6->12
+      parse(tmp);
+    );
+  ,
+    pt.xy=pos;
+    tmp=pt.name+"position="+Textformat(pt.xy,12)+";"; //200108 6->12
+    parse(tmp);
+    out=pt.xy;
+  );
+  out;
 );
 Strictmove(pC):=Strictmove(pC,StrictSep); //190831
 Strictmove(pCorg,sep):=(
@@ -4121,6 +4121,7 @@ Ketinit(1.6);
 
 if(startflg==1,
   Kettaskinit();
+  Putpoint("Q2",[33.5,20.5]);
   Subsedit(3,"St=");
   Subsedit(1,"");
   Subsedit(2,"");
@@ -4243,7 +4244,7 @@ if(stoknow==2,
     if(length(tmp)>0,
       tmp1=tmp_(-1);
       tmp=Gettexform(quest_tmp1);
-      drawtext(Text1.xy+[10,-2.5],tmp,size->14);
+      drawtext(Q2.xy+[0.4,-0.2],tmp,size->16);
     );//230411to
   );
 );
@@ -4545,18 +4546,19 @@ var cdy = CindyJS({
     {name: "Text16", type: "Button", pos: [4.0, -0.42271293375394325, 0.06309148264984227], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(Shift!=1,Shift=1,Shift=0);", text: "　　", textsize: 14.0},
     {name: "Text17", type: "Button", pos: [4.0, -0.6309148264984227, 0.06309148264984227], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(Shift!=2,Shift=2,Shift=0);", text: "　　", textsize: 14.0},
     {name: "Text19", type: "Button", pos: [4.0, -0.9676511954992967, 0.05625879043600563], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "stok=stok+1;", text: "O  K", textsize: 16.0},
-    {name: "Text5", type: "Button", pos: [4.0, 0.06095238095238095, 0.0761904761904762], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: "　　", textsize: 14.0}
+    {name: "Text5", type: "Button", pos: [4.0, 0.06095238095238095, 0.0761904761904762], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: "　　", textsize: 14.0},
+    {name: "Q2", type: "Free", pos: [4.0, 2.4477611940298507, 0.11940298507462686], color: [1.0, 0.784, 0.0], size: 6.0, border: false}
   ],
   ports: [{
-    width: 836,
-    height: 638,
+    width: 851,
+    height: 619,
     id: "CSCanvas",
-    transform: [{visibleRect: [9.11628174039871, 27.039818721521595, 95.23166631636845, -38.679816875928985]}],
+    transform: [{visibleRect: [9.11628174039871, 27.039818721521595, 96.7767988147411, -36.72264904465695]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2072, version: [3, 0, 2072]}
+  cinderella: {build: 2074, version: [3, 0, 2074]}
 });
     </script>
 </head>

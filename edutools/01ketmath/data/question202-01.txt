@@ -1,16 +1,17 @@
 Q
-次の積分を求めよ．
-[1] int(x^2,x)
-[2] int(0,pi,sin(x),x)
+f(x)=sin(2x)について次の問いに答えよ．
+[1] f(x)を微分せよ．
+[2] f(x)の0からfr(pi,2)までの定積分を求めよ．
 Sheet
 [1]= ::5
 [2]= ::5
 Ans
-[1] fr(x^3,3) :: diff(CA,x)-diff(SA,x)
-[2] 2
+[1] 
+[2] 
 Mxcalc
-[1] x^2
-[2] sin(x)
-o1:integrate(i1,x)
-o2:integrate(i2,x,0,%pi)
+[1] sin(2x)
+[2] fr(pi,2)
+f(x):= i1
+o1:diff(f(x),x)
+o2:integrate(f(x),x,0,i2)
 return o1::o2

@@ -3689,10 +3689,14 @@ if(substring(Str,tmp-2,tmp)=="//",
     Str=substring(Str,0,tmp1-1);
     tmp2=replace(tmp2,"//","");
     tmp2=replace(tmp2,"sz=","");
-    if(tmp2=="+",tmp2=tmp2+"1");
-    if(tmp2=="-",tmp2=tmp2+"1");
-    tmp2=parse(Removespace(tmp2));
-    size_ch=size_ch+tmp2;
+    if((indexof(tmp2,"+")>0)%(indexof(tmp2,"-")>0),
+      if(tmp2=="+",tmp2=tmp2+"1");
+      if(tmp2=="-",tmp2=tmp2+"1");
+      tmp2=parse(Removespace(tmp2));
+      size_ch=size_ch+tmp2;
+    ,
+      size_ch=parse(Removespace(tmp2));
+    );
     dtpyL_ch=dtpy0*size_ch/22;
   );
 );
@@ -3879,14 +3883,14 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 779,
-    height: 667,
+    height: 673,
     id: "CSCanvas",
-    transform: [{visibleRect: [9.393380108354453, 25.18921332538831, 82.20375925669394, -37.15292132408851]}],
+    transform: [{visibleRect: [9.393380108354453, 25.18921332538831, 82.20375925669394, -37.71372013652758]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2072, version: [3, 0, 2072]}
+  cinderella: {build: 2074, version: [3, 0, 2074]}
 });
     </script>
 </head>
