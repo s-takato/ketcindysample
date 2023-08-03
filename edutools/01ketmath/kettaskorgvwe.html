@@ -4141,7 +4141,7 @@ Quesno(nq,flg):=( //220816
 tail=Readlines(Dircdy,"ketmathrulein.html");
 tail=append(tail,Copyright());
 
-
+ketlibflg=1;
 startflg=1;
 stoknow=0;
 
@@ -4178,7 +4178,7 @@ Returntime(timedata):=(
 );
 
 if(length(quline)==0,
-quline="Q01::導関数y'=tfr(dy,dx)を求めよ．	[1]::y=x^2-3x	[2]::y=sin(x)";
+quline="Q01::Differentiate.	[1]::y=x^2-3x	[2]::y=sin(x)";
 shline="Q01---	[1]y'=	[2]y'=";
 sqline="01AA	2	2	2CR02BB	2	2	2";
 );
