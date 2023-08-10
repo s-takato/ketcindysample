@@ -1,0 +1,7 @@
+Q
+Let m be the slope of the tangent line of y=a^x at (0,1)．
+[] Find a for which m=1
+Sheet
+[] a=  ::4
+Ans
+[] 2.71828182846

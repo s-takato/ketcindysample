@@ -1,0 +1,70 @@
+if(ketlibflg==1,
+  eqG="-((2*G*Q-2*G*G+G^2)*R-g*sin(F))/((P-F)*R-L0)";
+  eqQ="((m1*G^2*P-m1*F*G^2)*R^2+((-g*m1*cos(F))-L0*m1*G^2+g*m2)*R)/((m2+m1)*R^2+I0)";
+  eqP="Q";
+  eqF="G";
+  eq="[P,Q,F,G]'="+text([eqP,eqQ,eqF,eqG]);
+  repnm=["R","I0","m1","m2","g","L0"];
+  repva=[1,0.05,1,1.05,9.8,4];
+  rep=apply(1..(length(repnm)),[repnm_#,repva_#]);
+  rep=flatten(rep);
+  eqn=Assign(eq,rep);
+  vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,0.6],600);
+  m2now=repva_4;
+  ketlibflg=0;
+); // ketlibflg end
+
+tmp=Textedit(2,"","");
+tmp1=indexof(tmp,"M2=");
+if(tmp1>0,
+  tmp2=indexof(tmp,";");
+  tmp=substring(tmp,tmp1+2,tmp2);
+  tmp1=parse(tmp);
+  if(m2now!=tmp1,
+    repva_4=tmp1;
+    rep=apply(1..(length(repnm)),[repnm_#,repva_#]);
+    rep=flatten(rep);
+    eqn=Assign(eq,rep);
+    vL=Deqdata(eqn,"t=[0,60]",0,[0,0,0,0.6],600);
+    m2now=tmp1;
+  );
+);
+
+Setwindow([-3,3],[-7,2]);
+pt0=[0,0];
+R=1;
+L0=4;
+Circledata("1",[pt0,R],["nodisp"]);
+Mvdraw("cr1");
+Shade("m1",["mcr1"],["Color=[0,0,0,0.2]"]);
+
+mf(s):=(
+ regional(tmp,phi,psi,p1,p2,q1,q2);
+ tmp=min(apply(1..(length(vL)),|vL_#_1-s|));
+ tmp=select(1..(length(vL)),|vL_#_1-s|==tmp);
+ tmp=tmp_1;
+ psi=vL_tmp_2;
+ phi=vL_tmp_4;
+ p1=R*[cos(phi),sin(phi)];
+ p2=p1+(L0+R*(phi-psi))*[sin(phi),-cos(phi)];
+ p3=R*[cos(psi),sin(psi)];
+ q1=R*[-1,0];
+ q2=q1+[0,-L0-R*psi];
+ Mvlist("1",[p1,p2],["dr,2"]);
+ Mvlist("2",[q1,q2],["dr,2"]);
+ Mvlist("3",[pt0,p3],["dr,2","Color=blue"]);
+ Partcrv("1",p1,q1,"cr1",["nodisp"]);
+ Mvdraw("part1",["dr,2"]);
+ r=0.2*R;
+ Circledata("w1",[p2,r],["nodisp"]);
+ Mvdraw("crw1",["Color=red"]);
+ Shade(["mcrw1"],["Color=red"]);
+ Circledata("w2",[q2,r],["nodisp"]);
+ Mvdraw("crw2",["Color=red"]);
+ Shade(["mcrw2"],["Color=red"]);
+ Expr(Mvpt(1,1.5),"e","t="+Sprintf(s,2),["Size=1.5"]);
+);
+
+ss=Animationparam(0,1,[0,60]);
+mf(ss);
+Mvdrwxy();

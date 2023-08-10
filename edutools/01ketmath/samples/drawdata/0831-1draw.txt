@@ -1,0 +1,522 @@
+//create(TH,FI)
+
+if(ketlibflg==1,
+
+  //**********************************
+  nZ=3.5;
+  nXs=-2;nXe=2;
+  //***
+  nlendw=120;
+  nlen1dw=floor(nlendw/2);
+  Eps0dw=0.001;
+  Epsdw=0.00001;
+  Eps2dw=Epsdw^2;
+
+  //**********************************
+  //境界線データの作成
+  nlsdw=sqrt(nZ+nXs^2);nledw=sqrt(nZ+nXe^2);
+  //***slxs
+  dydw=2*nlsdw/nlendw;
+  ydw=-nlsdw;
+  slxsdw=[[nXs,ydw,-nZ]];
+  repeat(nlendw,
+    ydw=ydw+dydw;
+    slxsdw=slxsdw++[[nXs,ydw,nXs^2-ydw^2]];
+  );
+
+  //***slxe
+  dydw=2*nledw/nlendw;
+  ydw=-nledw;
+  slxedw=[[nXe,ydw,-nZ]];
+  repeat(nlendw,
+    ydw=ydw+dydw;
+    slxedw=slxedw++[[nXe,ydw,nXe^2-ydw^2]];
+  );
+
+  //***slf
+  dxdw=(nXe-nXs)/nlendw;
+  xdw=nXs;
+  slfdw=[[nXs,sqrt(xdw^2+nZ),-nZ]];
+  repeat(nlendw,
+    xdw=xdw+dxdw;
+    slfdw=slfdw++[[xdw,sqrt(xdw^2+nZ),-nZ]];
+  );
+  //***slb
+  xdw=nXs;
+  slbdw=[[nXs,-sqrt(xdw^2+nZ),-nZ]];
+  repeat(nlendw,
+    xdw=xdw+dxdw;
+    slbdw=slbdw++[[xdw,-sqrt(xdw^2+nZ),-nZ]];
+  );
+  //**********************************
+
+  //**********************************
+  Ths0=20; Ths=Ths0/180*pi;
+  The0=160;The=Ths0/180*pi;
+  Thys=3;  Thye=-3;
+  //***
+  Phs0=1;  Phs=Phs0/180*pi;
+  Phe0=179;Phe=Phe0/180*pi;
+  Phxs=-3; Phxe=3;
+  //***
+ 
+  //**********************************
+  inD(x,y):=(
+    regional(dt);
+    dt=1;
+    if(x<nXs-Eps0dw % x>nXe+Eps0dw,dt=0);
+    if(y^2+Eps0dw>x^2+nZ,dt=0);
+    dt;
+  );
+
+  //**********************************
+  IntCst():=(
+    THETA0=Ths0+(The0-Ths0)*(Thys-TH.y)/(Thys-Thye);
+    THETA0=floor((THETA0+1)/2)*2;
+    THETA=THETA0/180*pi;
+    Expr(TH,"w5",THETA0);
+    PHI0=Phs0+(Phe0-Phs0)*(FI.x-Phxs)/(Phxe-Phxs);
+    PHI0=floor((PHI0+1)/5)*5;
+    PHI=PHI0/180*pi;
+    Expr(FI,"s5",format(PHI0,0));
+    //****
+   CosP=cos(PHI);SinP=sin(PHI);
+   CosP2=CosP^2;SinP2=SinP^2;
+   Cos2P=CosP2-SinP2;Sin2P=2*SinP*CosP;
+    //***
+   CosT=cos(THETA);SinT=sin(THETA);
+   CosT2=CosT^2;SinT2=SinT^2;
+   Cos2T=CosT2-SinT2;Sin2T=2*SinT*CosT;
+    //***
+   nK=CosT/(2*SinT);
+   nD=nK^2+nZ*Cos2P;
+   nA=SinT2*Cos2P;nKx=SinT*CosP;nKy=SinT*SinP;
+  );
+
+  Hasen(ptlst,da):=(
+    regional(k,l,ln,lnlst,pt,pt1,pt2,tmpn0,tmpn,lst,tmplst,tmpda);
+    tmpda=0.05;ln=0;lnlst=[];
+    pt1=ptlst_1;
+    forall(ptlst,pt2,
+      ln=ln+|pt2-pt1|;
+      lnlst=lnlst++[ln];
+      pt1=pt2;
+    );
+    //********************長さの場合わけ
+    if(ln>0.301+2*tmpda,
+    //*****長い
+      k=1;l=0;
+      while(lnlst_k<tmpda,
+        l=l+lnlst_k;k=k+1;
+      );
+      pt1=ptlst_(k-1);pt2=ptlst_(k);
+      pt=pt1+(pt2-pt1)*(tmpda-l)/(lnlst_k-lnlst_(k-1));
+      tmplst=[pt];
+      tmpn0=ceil((ln-2*tmpda)/da);
+      if(temn0<5,tmpn0=5);
+      if(iseven(tmpn0),
+        tmpn=tmpn0+1;tmpn0=round(tmpn0/2);
+      ,
+        tmpn=tmpn0;tmpn0=round((tmpn0-1)/2);
+      );
+      da=(ln-2*tmpda)/tmpn;
+      lst=[];
+      k=1;l=da+tmpda;
+      //**********
+      repeat(tmpn0,j,
+        while(lnlst_k<l,k=k+1);
+        pt1=ptlst_(k-1);
+        pt2=ptlst_k;
+        pt=pt1+(pt2-pt1)*(l-lnlst_(k-1))/|pt2-pt1|;
+        tmplst=tmplst++[pt];
+        lst=lst++[tmplst];
+        l=l+da;
+        //***
+        if(j<tmpn0+1,
+          while(lnlst_k<l,k=k+1);
+          pt1=ptlst_(k-1);
+          pt2=ptlst_k;
+          pt=pt1+(pt2-pt1)*(l-lnlst_(k-1))/|pt2-pt1|;
+          tmplst=[pt];
+          l=l+da;
+        );
+      );//repeat
+      l=tmpn*da+tmpda;
+      while(lnlst_k<l,k=k+1);
+      pt1=ptlst_(k-1);
+      pt2=ptlst_k;
+      pt=pt1+(pt2-pt1)*(l-lnlst_(k-1))/|pt2-pt1|;
+      tmplst=tmplst++[pt];
+      lst=lst++[tmplst];
+    ,//*******************長さの場合わけ
+      pt1=ptlst_1;pt2=ptlst_(length(ptlst));
+      if(ln>0.2,
+        ln=|pt2-pt1|;
+        pt2=(pt2-pt1)/ln;
+        da=(ln-2*tmpda)/5;
+        l=tmpda;lst=[];
+        repeat(3,
+          lst=lst++[[pt1+l*pt2,pt1+(l+da)*pt2]];
+          l=l+2*da;
+        );
+      ,
+        lst=[(2*pt1+pt2)/3,(pt1+2*pt2)/3];
+      );
+    );
+    //********************長さの場合わけ
+    lst;
+  );
+  //**********************************
+  soC=["Color=[0,0,0,0.5]"];
+  Drwdata(nam,lst):=(
+    regional(tmp,tmp1);
+    tmp=["dr,1.5"];
+    if(length(lst_1)>0,Mvlist(nam+"1",lst_1,tmp));
+    if(length(lst_2)>0,Mvlist(nam+"2",Hasen(lst_2,0.08)),soC);
+    if(length(lst_3)>0,Mvlist(nam+"3",lst_3,tmp));
+    if(length(lst_4)>0,Mvlist(nam+"4",Hasen(lst_4,0.08)),soC);
+  );
+  //**********************************
+  Shdpt(x,y):=(//nA!=0のとき
+    regional(dt);
+    if(|nA|<Epsdw,
+      0;
+    ,
+      dt=-(2*(nKx*x-nKy*y)-CosT)/nA;
+      if(dt<=0,
+        0;
+      ,
+        inD(dt*nKx+x,dt*nKy+y);
+      );
+    );
+  );
+  //******************************************
+  ParaXY(pt):=(
+    regional(x,y);
+    x=-pt_1*SinP+pt_2*CosP;
+    y=-pt_1*CosT*CosP-pt_2*CosT*SinP+pt_3*SinT;
+    [x,y];
+  );
+  ParaZ(pt):=(
+    pt_1*SinT*CosP+pt_2*SinT*SinP+pt_3*CosT;
+  );
+  //******************************************
+  Clssfy(ptlst):=(
+    regional(lst,pt,nn,ns,chk,pt0,pt1,ns0,ns1,ptm);
+    lst=[[],[],[],[]];
+    nn=1;ns=0;chk=0;
+    //***
+    forall(ptlst,pt,
+      ns1=Shdpt(pt_1,pt_2);
+      if(ns!=ns1,
+        nn=nn+1;
+        if(chk!=0,
+          ns0=ns;pt1=pt;
+          ptm=(pt0+pt1)/2;
+          repeat(5,
+            if(ns==Shdpt(ptm_1,ptm_2),pt0=ptm;,pt1=ptm;);
+            ptm=(pt0+pt1)/2;
+          );
+          lst_(nn-1)=lst_(nn-1)++[ParaXY(ptm)];
+          lst_nn=lst_nn++[ParaXY(ptm)];
+        );
+        ns=1-ns;
+      );
+      chk=1;
+      pt0=pt;
+      lst_nn=lst_nn++[ParaXY(pt)];
+    );
+  //*****
+    lst;
+  );
+  //**********************************
+  Shdpt(x,y,z):=(
+    regional(dsc,kb,kc,t1,t2,tt);
+    kb=2*(nKx*x-nKy*y)-CosT;kc=x^2-y^2-z;
+    dsc=kb^2-4*nA*kc;
+    if(|nA|<Epsdw,//***nA=0
+      t1=-1;t2=-kc/kb;
+    ,//***else nA!=0
+      if(dsc<0,//***虚数解
+        t1=-2;t2=-1;
+      ,//***実数解
+        if(dsc<Eps2dw,//***重解
+          t1=-1;t2=-kb/(2*nA);
+        ,//***異なる2つの実数解
+          t1=(-kb-sqrt(dsc))/(2*nA);
+          t2=(-kb+sqrt(dsc))/(2*nA);
+          if(t1>t2,tt=t1;t1=t2;t2=tt;);
+        );//***重解と異なる2つ
+      );//***虚数解と実数解
+    );//***nA=0 or not0
+    if(t2<0,//***
+      0;
+    ,//***
+      if(t1<0,//*****
+        inD(t2*nKx+x,t2*nKy+y);
+      ,//*****
+        min(inD(t1*nKx+x,t1*nKy+y)+inD(t2*nKx+x,t2*nKy+y),1);
+      );
+    );//***
+  );
+  //**********************************
+  ClssfyL(ptlst):=(
+    regional(j,lst,ln,nn,ns,ns1,chk,drc,pt,pt0,pt1,ns0,ptm);
+    lst=[[],[],[],[]];
+    nn=1;ns=0;chk=0;
+    ln=ceil((|paraXY(ptlst_1)-ParaXY(ptlst_2)|)/0.05);
+    if(ln<5,ln=5);
+    drc=ptlst_2-ptlst_1;
+    //***
+   forall(0..ln,j,
+     pt=ptlst_1+j*drc/ln;
+     if(|pt|<Epsdw,
+       ns1=ns;
+     ,
+       ns1=Shdpt(pt_1,pt_2,pt_3);
+     );
+     if(ns!=ns1,
+       nn=nn+1;
+       if(chk!=0,
+         ns0=ns;pt1=pt;
+         ptm=(pt0+pt1)/2;
+         repeat(3,
+           if(ns==Shdpt(ptm_1,ptm_2,ptm_3),pt0=ptm;,pt1=ptm;);
+           ptm=(pt0+pt1)/2;
+         );
+         lst_(nn-1)=lst_(nn-1)++[ParaXY(ptm)];
+         lst_nn=lst_nn++[ParaXY(ptm)];
+       );
+       ns=1-ns;
+     );
+     if(chk==0,lst_nn=lst_nn++[ParaXY(pt)]);
+     chk=1;
+     pt0=pt;
+   );
+   lst_nn=lst_nn++[ParaXY(pt)];
+   //*****
+   lst;
+  );
+  //**********************************
+  HasenL(ptlst,da):=(
+    regional(lst,j,k,t1,t2,ln,nn,n0,drc,tmpda);
+    tmpda=0.05;
+    drc=ptlst_2-ptlst_1;
+    ln=|drc|;
+    nn=ceil(ln/da);
+    if(nn<5,nn=5);
+    if(iseven(nn),
+      n0=round(nn/2)+1;nn=nn+1;
+    ,
+      n0=round(nn/2);
+    );
+    lst=[];
+    if(ln>0.3+2*tmpda,
+      da=(ln-2*tmpda)/nn;
+      repeat(n0,j,
+        k=2*j-2;t1=tmpda+k*da;
+        t2=t1+da;
+        lst=lst++[[ptlst_1+t1*drc/ln,ptlst_1+t2*drc/ln]];
+      );
+    ,
+      pt1=ptlst_1;pt2=ptlst_2;
+      if(ln>0.2,
+        ln=|pt2-pt1|;
+        pt2=(pt2-pt1)/ln;
+        da=(ln-2*tmpda)/5;
+        l=tmpda;lst=[];
+        repeat(3,
+          lst=lst++[[pt1+l*pt2,pt1+(l+da)*pt2]];
+          l=l+2*da;
+        );
+      ,
+        lst=[(2*pt1+pt2)/3,(pt1+2*pt2)/3];
+      );
+    );
+    lst;
+  );
+  //**********************************
+  soCL=["Color=[0,0,0,0.6]"];
+  opdr=["dr,1.5","Color=blue"];
+  DrwLdata(nam,lst):=(
+    if(length(lst_1)>0,Mvlist(nam+"1",lst_1,opdr));
+//    if(length(lst_2)>0,Mvlist(nam+"2",HasenL(lst_2,0.08),soCL));
+    if(length(lst_3)>0,Mvlist(nam+"3",lst_3,opdr));
+//    if(length(lst_4)>0,Mvlist(nam+"4",HasenL(lst_4,0.08),soCL));
+  );
+  //**********************************
+  Exprxyz(plst):=(
+    regional(j,ln,pt1,pt2,drcv,dst,nm);
+    dst=0.2;
+    nm=["x","y","z"];
+    //***
+    repeat(3,j,
+      pt1=ParaXY((plst_j)_1);
+      pt2=ParaXY((plst_j)_2);
+      drcv=pt2-pt1;
+      ln=|drcv|;
+      Expr(Mvpt(pt2+dst*drcv/ln),"c",nm_j);
+    );
+  );
+  //**********************************
+
+  //*******************************************
+  Plotgrph(nam,fstr,xs,xe):=(
+   Plotgrph(nam,fstr,xs,xe,[],50);
+  );
+  Plotgrph(nam,fstr,xs,xe,so):=(
+   Plotgrph(nam,fstr,xs,xe,so,50);
+  );
+  Plotgrph(nam,fstr,xs,xe,so,nn):=(
+   regional(tmplst,dx,j,x);
+   dx=(xe-xs)/nn;
+   x=xs;tmplst=[[x,parse(fstr)]];
+   repeat(nn,j,
+    x=xs+j*dx;
+    tmplst=tmplst++[[x,parse(fstr)]];
+   );
+   Mvlist(nam,tmplst,so);
+  );
+  //*******************************************
+  //**********************************
+  nYval=sqrt(nZ+nXs^2);
+  //**********************************
+  nndw=60;
+  dxdw=(nXe-nXs)/nndw;
+  xyDom=[[nXe,0],[nXe,nYval]];
+  xxdw=nXe;
+  repeat(nndw,jdw,
+    xxdw=xxdw-dxdw;
+    xyDom=xyDom++[[xxdw,sqrt(nZ+xxdw^2)]];
+  );
+  xyDom=xyDom++[[nXs,0],[nXs,-nYval]];
+  xxdw=nXs;
+  repeat(nndw,jdw,
+    xxdw=xxdw+dxdw;
+    xyDom=xyDom++[[xxdw,-sqrt(nZ+xxdw^2)]];
+  );
+  xyDom=xyDom++[[nXe,0]];
+  Divlst=[[]];
+  Shdlst=[[],[],[]];
+  //**********************************
+  dcFc(pt):=(
+    if(pt_2>=pt_1*CosP/SinP-CosT/(2*SinT*SinP),1,0);
+  );
+  DivideA():=(
+    regional(j,k,n,nn,lst,l,dc0,dc,pt0,pt1,pt,ptm);
+    Divlst=[[]];
+    n=length(xyDom);
+    nn=1;
+    dc0=dcFc(xyDom_1);
+    forall(xyDom,pt,
+      dc=dcFc(pt);
+      if(dc0!=dc,
+        l=|pt-pt0|;j=0;pt1=pt;
+        while(l>Eps0dw & j<12,
+          ptm=(pt0+pt1)/2;
+          dc0=dcFc(ptm);
+          l=l/2;j=j+1;
+          if(dc0!=dc,pt0=ptm,pt1=ptm);
+        );
+        Divlst_nn=Divlst_nn++[ptm];
+        nn=nn+1;
+        Divlst=Divlst++[[ptm]];
+      );
+      Divlst_nn=Divlst_nn++[pt];
+      pt0=pt;dc0=dc;
+    );
+    Divlst_1=Divlst_1++Divlst_3;
+    Divlst_3=[(Divlst_2)_1,(Divlst_3)_1];
+    Divlst_2=Divlst_2++[(Divlst_2)_1];
+    //*****
+    Shdlst=[[],[],[]];
+    repeat(3,n,
+      pt0=(Divlst_n)_1;
+      forall(Divlst_n,pt,
+        if(|pt-pt0|<0.1,
+          Shdlst_n=Shdlst_n++[ParaXY([pt_1,pt_2,pt_1^2-pt_2^2])];
+          pt0=pt;
+        ,
+          nn=ceil(|pt-pt0|/0.05);
+          pt1=(pt-pt0)/nn;
+          repeat(nn,
+            pt0=pt0+pt1;
+           Shdlst_n=Shdlst_n++[ParaXY([pt0_1,pt0_2,pt0_1^2-pt0 _2^2])];
+          );
+        );
+      );
+    );
+  );  
+  ketlibflg=0;
+); //end ketlibflg
+
+SUBSCR=0;
+Addax(0);
+Skeleton=1;
+Setwindow([-5.5,5.5],[-5.5,5.5]);
+
+Slider("TH",Mvpt(XMIN,Thys),Mvpt(XMIN,Thye),["Color=green"]); 
+Slider("FI",Mvpt(Phxs,YMIN),Mvpt(Phxe,YMIN),["Color=green"]);
+
+IntCst();
+
+DivideA();
+
+if(1==0,
+
+if(dcFc([nXe,0])==1,
+  if(PHI0>=45 & PHI0<=135,
+    Shade([Mvlist("s2",Shdlst_2)],["Color=[0.2,0,0,0.2]"]);
+    Shade([Mvlist("s1",Shdlst_1)],["Color=[0.2,0,0,0]"]);
+  ,
+    Shade([Mvlist("s1",Shdlst_1)],["Color=[0.2,0,0,0]"]);
+    Shade([Mvlist("s2",Shdlst_2)],["Color=[0.2,0,0,0.2]"]);
+  );
+,
+  if(PHI0>=45 & PHI0<=135,
+    Shade([Mvlist("s1",Shdlst_1)],["Color=[0.2,0,0,0.2]"]);
+    Shade([Mvlist("s2",Shdlst_2)],["Color=[0.2,0,0,0]"]);
+  ,
+    Shade([Mvlist("s2",Shdlst_2)],["Color=[0.2,0,0,0]"]);
+    Shade([Mvlist("s1",Shdlst_1)],["Color=[0.2,0,0,0.2]"]);
+  );
+);
+
+);//endskip
+
+//**********************************
+//輪郭線
+Mvlist("BD",Shdlst_3);
+
+//**********************************
+//境界線
+slxscls=Clssfy(slxsdw);
+Drwdata("slxs",slxscls);
+slxecls=Clssfy(slxedw);
+Drwdata("slxe",slxecls);
+slfcls=Clssfy(slfdw);
+Drwdata("slf",slfcls);
+slbcls=Clssfy(slbdw);
+Drwdata("slb",slbcls);
+//**********************************
+
+//**********************************
+Xax=[[-6,0,0],[6,0,0]];
+Xlst=ClssfyL(Xax);
+DrwLdata("Xax",Xlst);
+Yax=[[0,-6,0],[0,6,0]];
+Ylst=ClssfyL(Yax);
+DrwLdata("Yax",Ylst);
+Zax=[[0,0,-6],[0,0,6]];
+Zlst=ClssfyL(Zax);
+DrwLdata("Zax",Zlst);
+//**********************************
+//Exprxyz([Xax,Yax,Zax]);
+tmp=Projpara(Xax);
+Expr(Mvpt(tmp_2),"c","x");
+tmp=Projpara(Yax);
+Expr(Mvpt(tmp_2),"c","y");
+tmp=Projpara(Zax);
+Expr(Mvpt(tmp_2),"c","z");
+
+Expr(Mvpt(0,6.5),"c","z=x^2-y^2");

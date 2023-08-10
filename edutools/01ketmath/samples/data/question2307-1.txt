@@ -1,0 +1,26 @@
+Q
+Differenciate
+[1] y=sin(x)cos(x)
+[2] y=sin(2,x)=sin(x)sin(x)
+[3] y=xtan(x)
+[4] y=tan(x)-x
+Sheet
+[1] y'=  ::2
+[2] y'=  ::2
+[3] y'=  ::2
+[4] y'=  ::2
+Ans
+[1] cos(2,x)-sin(2,x)
+[2] 2sin(x)cos(x)
+[3] tan(x)+fr(x,cos(2,x))
+[4] fr(sin(2,x),cos(2,x))
+Mxcalc
+[1] sin(x)cos(x)
+[2] sin(2,x)
+[3] xtan(x)
+[4] tan(x)-x
+o1:diff(i1,x)
+o2:diff(i2,x)
+o3:diff(i3,x)
+o4:diff(i4,x)
+return o1::o2::o3::o4

@@ -1,0 +1,34 @@
+Setwindow([-2.5,3],[-1,4]);
+Numstr=apply(0..9,text(#));
+ttmp2=Textedit(2,"a=2","");
+tmp2=Strsplit(ttmp2,"=");
+tmp2=Removespace(tmp2_2);
+if(length(tmp2)==0,
+  aa=2;
+,
+  aa=parse(tmp2);
+);
+Expr(Mvpt(0,-1.5),"e","a="+format(aa,12),["Size=1.2"]);
+Plotdata("1","(aa)^x","x=[XMIN,2]",["Num=100","nodisp"]);
+Mvdraw("gr1",["dr,1.5"]);
+Plotdata("2","log(aa)*x+1","x=[-1.5,XMAX]",["Num=1","nodisp"]);
+Mvdraw("gr2",["dr,1.5"]);
+MvList("1",[[1,0],[1,log(aa)+1],[0,log(aa)+1]],["Color=blue"]);
+Mvlist("1h",[[0,1],[1,1]],["Color=blue"]);
+Mvlist("2",[[0,2],[XMAX,2]],["Color=red"]);
+Expr(Mvpt(XMAX,2),"e","2",["Size=1.2"]);
+Pointdata("m1",Mvpt(1,2),["Size=15","Color=red"]);
+Expr(Mvpt(1,0),"s","1",["Size=1.2"]);
+Expr(Mvpt(0,1),"w","1",["Size=1.2"]);
+a1=2.718281828;
+a2=a1+10^(-9);
+if((aa>=a1)&(aa<=a2),
+  tmp1=1+log(a1);
+  tmp2=1+log(a2);
+  v=tmp1+(tmp2-tmp1)*(aa-a1)/(a2-a1);
+,
+  v=1+log(aa);
+);
+Expr(Mvpt(-0.1,log(aa)+1),"w1",Sprintf(v,12),["Size=1.5"]);
+Expr(Mvpt(log(3.5)/log(aa),3.5),"nw","y=a^x",["Size=1.5"]);
+Mvdrwxy();
