@@ -71,14 +71,20 @@ if(ketlibflg==1,
 
   //**********************************
   IntCst():=(
-    THETA0=Ths0+(The0-Ths0)*(Thys-TH.y)/(Thys-Thye);
+    tmp=Rmpt(TH.xy);
+    THETA0=Ths0+(The0-Ths0)*(Thys-tmp_2)/(Thys-Thye);
     THETA0=floor((THETA0+1)/2)*2;
     THETA=THETA0/180*pi;
     Expr(TH,"w5",THETA0);
-    PHI0=Phs0+(Phe0-Phs0)*(FI.x-Phxs)/(Phxe-Phxs);
-    PHI0=floor((PHI0+1)/5)*5;
-    PHI=PHI0/180*pi;
-    Expr(FI,"s5",format(PHI0,0));
+    tmp=Rmpt(FI.xy);
+    PHI0=Phs0+(Phe0-Phs0)*(tmp_1-Phxs)/(Phxe-Phxs);
+    if(PHI0>3 & PHI0<179,
+      PHI0=floor((PHI0+1)/5)*5;
+    ,
+      if(PHI0<=3,PHI0=1);
+    );
+   PHI=PHI0/180*pi;
+   Expr(FI,"s5",format(PHI0,0));
     //****
    CosP=cos(PHI);SinP=sin(PHI);
    CosP2=CosP^2;SinP2=SinP^2;
@@ -446,9 +452,14 @@ if(ketlibflg==1,
         );
       );
     );
-  );  
+  );
+  Putpoint("TH",Mvpt(XMIN,(2*Thys+Thye)/3)); 
+  Putpoint("FI",Mvpt((2*Phxs+Phxe)/3,YMIN));
+
   ketlibflg=0;
 ); //end ketlibflg
+
+//if(nqu==3, //add embed
 
 SUBSCR=0;
 Addax(0);
@@ -461,6 +472,7 @@ Slider("FI",Mvpt(Phxs,YMIN),Mvpt(Phxe,YMIN),["Color=green"]);
 IntCst();
 
 DivideA();
+
 
 if(1==0,
 
@@ -512,11 +524,11 @@ Zlst=ClssfyL(Zax);
 DrwLdata("Zax",Zlst);
 //**********************************
 //Exprxyz([Xax,Yax,Zax]);
-tmp=Projpara(Xax);
-Expr(Mvpt(tmp_2),"c","x");
-tmp=Projpara(Yax);
-Expr(Mvpt(tmp_2),"c","y");
-tmp=Projpara(Zax);
-Expr(Mvpt(tmp_2),"c","z");
+
+Expr(Mvpt(Parapt(Xax_2)),"c","x");
+Expr(Mvpt(Parapt(Yax_2)),"c","y");
+Expr(Mvpt(Parapt(Zax_2)),"c","z");
 
 Expr(Mvpt(0,6.5),"c","z=x^2-y^2");
+
+// ); //add embed
