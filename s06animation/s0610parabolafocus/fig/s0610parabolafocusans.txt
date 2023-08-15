@@ -1,0 +1,41 @@
+NIL
+(%i3) powerdisp:false
+(%i4) display2d:false
+(%i5) linel:1000
+(%i6) line:[x0+u1*t,y0+v1*t]
+(%i7) f:y^2-4*p*x
+(%i8) fl:ev(f,[x = line[1],y = line[2]])
+(%i9) ans:solve(fl = 0,t)
+(%i10) t1:ev(t,ans[1])
+(%i11) t2:ev(t,ans[2])
+(%i12) d:[diff(f,x),diff(f,y)]
+(%i13) d:ev(-d,[x = x1,y = y1])
+(%i14) eq1:d[1]*u1+d[2]*v1 = d[1]*u2+d[2]*v2
+(%i15) eq2:u2^2+v2^2 = u1^2+v1^2
+(%i16) res:solve([eq1,eq2],[u2,v2])
+(%i17) u2:ev(u2,res[2])
+(%i18) v2:ev(v2,res[2])
+(%i19) x1:line[1]
+(%i20) y1:line[2]
+(%i21) t0:t2
+(%i22) assume(p > 0,u1 < 0)
+(%i23) t0l:limit(t0,v1,0)
+(%i24) disp(t0)
+(2*sqrt((-p*u1*v1*y0)+p*v1^2*x0+p^2*u1^2)-v1*y0+2*p*u1)/v1^2
+
+(%i25) disp(x1)
+x0+t*u1
+
+(%i26) disp(y1)
+y0+t*v1
+
+(%i27) disp(u2)
+-(u1*y1^2+4*p*v1*y1-4*p^2*u1)/(y1^2+4*p^2)
+
+(%i28) disp(v2)
+(v1*y1^2-4*p*u1*y1-4*p^2*v1)/(y1^2+4*p^2)
+
+(%i29) disp(t0l)
+(y0^2-4*p*x0)/(4*p*u1)
+
+(%i30) closefile()
