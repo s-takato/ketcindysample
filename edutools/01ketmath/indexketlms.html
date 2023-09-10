@@ -21,7 +21,7 @@ ul li::before {
 <body>  
 <div style="padding: 50px">  
 <p><font size="10">&emsp;KeT-LMSの使い方</font>  
-<font size="6">&emsp;&emsp;&emsp;&emsp;2023-08-03</font></p> 
+<font size="6">&emsp;&emsp;&emsp;&emsp;2023-09-10</font></p> 
 <!--<div style="text-align: center">
 <img class="size2" src="ketmathscreen.png" alt="KeTMath画面">
 </div>-->
@@ -29,12 +29,12 @@ ul li::before {
 <ol>
 <font size="6"><li>準備</font>
   <ol>
-    <li>1. ketcindyを最新版(4.4.37)に更新する</li>
+    <li>1. ketcindyを最新版(4.4.4x)に更新する</li>
     <li>2. <a href="https://github.com/s-takato/ketmath">ket-lms</a>をダウンロード
       <ul>
       <li>右下にあるReleases/Latestバージョンをクリック</li>
       <li>ダウンロードしたzipを解凍</li>
-      <li>適当なフォルダに移動．名称は任意(例えば math01)</li>
+      <li>適当なフォルダに移動．名称は任意(例えば math2023)</li>
       <li>dataにstudent(y).txtとquestion(q-n).txtを入れる</br>
       &emsp;&emsp;yは年度など，q-nは問題記号-番号</li>
      </ul>
@@ -70,7 +70,7 @@ ul li::before {
     </ol>
   <li>2.「2.kettaskに組込」を押す </li>
     <ol>
-    <li>(1) orgvかorgvnr(ketmathルール表付き)を選ぶ</li>
+    <li>(1) orgvかorgvnr(ketmathルール表なし)を選ぶ</li>
     <li>(2) 実行するとkettask(q-n).htmlができる</li>
     <li>(3) urlを学生に配付</li>
     </ol>
@@ -83,10 +83,10 @@ ul li::before {
 <font size="6"><li>[4]  kettaskへのpngの組込み</font>
   <ol>
   <li>1. drawdataに(q-n).pngを入れる</li>
-  <li>2, tooldraw(q).cdyを立ち上げる</br>
+  <li>2, toolembed.cdyを立ち上げる</br>
     &emsp;&emsp;&emsp;エラー(1) HTMLに書き出す を実行</br>
-    &emsp;&emsp;&emsp;エラー(2) kettaskv(q-n).を作っていない
-  </li>
+    &emsp;&emsp;&emsp;エラー(2) kettaskv(q-n).を作っていない</br>
+    &emsp;&emsp;&emsp;エラーを修正したらResetを押す </li>
   <li>3. メディアブラウザに(q-n).pngを登録する</li>
   <li>4. 上の左ボタンが Imagであることを確かめる</br>
    &emsp;&emsp;&emsp;注）クリックするとDrawに変わる</li>
@@ -95,8 +95,8 @@ ul li::before {
     <li>&emsp;(1) (q-n).pngファイルから (q-n)png.txtを作成</li>
     <li>&emsp;(2) 図を表示</br>
     &emsp;&emsp;&emsp;・T3,Sを動かして中心位置とスケールを決める</br>
-    &emsp;&emsp;&emsp;・実行を押すと，(q-n)script.txtを作成</li>
-    <li>&emsp;(3) insert>htmlにして実行すると同名のkettaskvに組込み</li>
+    &emsp;&emsp;&emsp;・Goを押すと，(q-n)script.txtを作成</li>
+    <li>&emsp;(3) embed>htmlにしてGoを押すと同名のkettaskvに組込み(imが付く)</li>
     <li>&emsp;(注）<<, <, >, >> を押すと図ファイルを変更できる</li>
     </ol>
   </ol>
@@ -104,25 +104,28 @@ ul li::before {
   <ol>
   <li>1. スクリプトを記述した(q-n)draw.txtをdrwdataに入れる</br>
   &emsp;&emsp;&emsp; ・Mvpt, Rmpt, Mvdraw, Mviist, Mvplotdata, Mvdrwxyが使える</br>
-  &emsp;&emsp;&emsp; ・幾何点を使うときは1行目に use(A,B,...)</br>
+  &emsp;&emsp;&emsp; ・幾何点を使うときは1行目に //create(A,B,...)</br>
   &emsp;&emsp;&emsp; ・//で始まり最後に // add embed がついた行は，埋め込時に追加される</br>
-  &emsp;&emsp;&emsp; ・if(ketlibflg==1,...)の中身はketlib slotに追加される
+  &emsp;&emsp;&emsp; ・if(ketlibflg==1,...,ketlibflg=0;)は最初に一度だけ実行される
 </li>
-  <li>2. tooldraw(q).cdyの画面でImagをクリックしてDrawに変える</li>
+  <li>2. toolembedcdyの画面でImagをクリックしてDrawに変える</li>
   <li>3. O, Sを動かして図の位置とスケールを決める</li>
-  <li>4. OS保存と実行を押すと，O, Sの位置がkettaskv(q-n)os.txtに保存される</li>
-  <li>5. 組込と実行を押してkettaskvに組込む</li>
+  <li>4. OS保存とGoを押すと，O, Sの位置がkettaskv(q-n)os.txtに保存される</li>
+  <li>5. EmbedとGoを押してkettaskv(drが付く)に組込む</li>
   </ol>
   
 <font size="6"><li>[6] ketscoreによる採点</font>
   <ol>
-  <li>1. 回収したデータをdata/anssheetallにコピーする</li>
-  <li>2. Anssheet分割 を選び，実行する</br>
-  &emsp;&emsp;&emsp;問題ごとのanssheet.txtにコピーされる</li>
+  <li>1. 回収した答案データをdata/anssheetallにコピーする</li>
+  <li>2. anssheet分割 を選び，実行する</br>
+  &emsp;&emsp;&emsp;問題ごとの2anssheet.txtにコピーされる</li>
   <li>3. scoreline作成 を選び，実行する</br>
 　　　　　4scoreline(q-n).txtができる</li>
   <li>4. ketscore組込 を選び，実行する</br>
-　　　　　ketscorev(q-n).htmlができる</li>
+&emsp;&emsp;&emsp;・ketscorev(q-n).htmlができる</br>
+&emsp;&emsp;&emsp;・このファイルを開けば直接採点ができる</br>
+&emsp;&emsp;&emsp;・採点が終わったらRecを押す</br>
+&emsp;&emsp;&emsp;　　最下段のデータを4scoresheet(q-n).txtにコピーする</li>
  <li>5. Maximaによる採点を選び，実行する</br>
 　　　(1) エラーがある場合</br>
 &emsp;&emsp;&emsp;・errormaxima(q).txtに追加される</br>
@@ -138,7 +141,7 @@ ul li::before {
   <li>8. Rec を押し，最下欄の行を4_scoresheetの2行目にコピー</br>
   &emsp;&emsp;&emsp;・Maxima採点しないときは，4scoresheetallにコピー  
   </li>
-  <li>9. scoresheet分割 を押すと，問題別のファイルができる</li>
+  <li>9. scoresheet分割 を押すと，問題別の4scoresheet(q-n).txtができる</li>
   </ol>
 <font size="6"><li>[7] 返却と集計</font>
   <ol>
