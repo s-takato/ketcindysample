@@ -1,0 +1,148 @@
+Setwindow([-1.35,1.35],[-1.35,1.35]);
+Setunitlen("3cm");
+//to move to default positions, delete points
+Putpoint("TH",[-5+ 72/20,-3.0],[TH.x,-3.0]); // -5 ~ -5+180/20=4
+Putpoint("FI",[-5+ 52/40,-3.5],[FI.x,-3.5]); // -5 ~ -5+360/40=4
+//Setangle(72,52); // fixed // view from (sin72cos52,sin72sin52,cos72)
+Start3d();
+Texparent="";
+
+Addax(0);
+Putaxes3d(0);
+
+//Paramplot("xma","[XMAX,t]","t=[YMIN,YMAX]",["dr","Num=50"]);
+//Paramplot("xmi","[XMIN,t]","t=[YMIN,YMAX]",["dr","Num=50"]);
+//Paramplot("yma","[t,YMAX]","t=[XMIN,XMAX]",["dr","Num=50"]);
+//Paramplot("ymi","[t,YMIN]","t=[XMIN,XMAX]",["dr","Num=50"]);
+Defvar("cosTH",cos((TH.x+5)*1/9*pi)); Defvar("cosFI",cos((FI.x+5)*2/9*pi));
+Defvar("sinTH",sin((TH.x+5)*1/9*pi)); Defvar("sinFI",sin((FI.x+5)*2/9*pi));
+Defvar("tanTH",tan((TH.x+5)*1/9*pi)); Defvar("tanFI",tan((FI.x+5)*2/9*pi));
+Defvar("lo",[ cosTH*cosFI,cosTH*sinFI,-sinTH]);
+Defvar("mo",[-      sinFI,      cosFI,   0  ]);
+Defvar("no",[ sinTH*cosFI,sinTH*sinFI, cosTH]);
+Deffun("xyz2xy(VVV)",["regional(WWW)","WWW=[VVV.x,VVV.y]","WWW"]);
+ Deffun("matvec2vec(MMM,VVV)",["regional(WWW)","
+WWW=Op(1,transpose(MMM*transpose([VVV])))
+","WWW"]                      );
+ Deffun("mat3adj(MMM)",["regional(NNN)","
+NNN=[[ Op(2,Op(2,MMM))*Op(3,Op(3,MMM))-Op(3,Op(2,MMM))*Op(2,Op(3,MMM)),
+      -Op(2,Op(1,MMM))*Op(3,Op(3,MMM))+Op(3,Op(1,MMM))*Op(2,Op(3,MMM)),
+       Op(2,Op(1,MMM))*Op(3,Op(2,MMM))-Op(3,Op(1,MMM))*Op(2,Op(2,MMM)) ],
+     [-Op(1,Op(2,MMM))*Op(3,Op(3,MMM))+Op(3,Op(2,MMM))*Op(1,Op(3,MMM)),
+       Op(1,Op(1,MMM))*Op(3,Op(3,MMM))-Op(3,Op(1,MMM))*Op(1,Op(3,MMM)),
+      -Op(1,Op(1,MMM))*Op(3,Op(2,MMM))+Op(3,Op(1,MMM))*Op(1,Op(2,MMM)) ],
+     [ Op(1,Op(2,MMM))*Op(2,Op(3,MMM))-Op(2,Op(2,MMM))*Op(1,Op(3,MMM)),
+      -Op(1,Op(1,MMM))*Op(2,Op(3,MMM))+Op(2,Op(1,MMM))*Op(1,Op(3,MMM)),
+       Op(1,Op(1,MMM))*Op(2,Op(2,MMM))-Op(2,Op(1,MMM))*Op(1,Op(2,MMM)) ] ]
+","NNN"]               );
+ Deffun("mat3det(MMM)",["regional(XXX)","
+XXX= Op(1,Op(1,mat3adj(MMM)))*Op(1,Op(1,MMM))
+    +Op(2,Op(1,mat3adj(MMM)))*Op(1,Op(2,MMM))
+    +Op(3,Op(1,mat3adj(MMM)))*Op(1,Op(3,MMM))
+","XXX"]               );
+ Deffun("mat3inv(MMM)",["regional(LLL)","
+LLL=mat3adj(MMM)/mat3det(MMM)
+","LLL"]               );
+// T.(W-T)=U.(W-U)=V.(W-V)=0
+// W=(T,U,V)((T,U,V)^t.(T,U,V))^{-1}.(|T|^2,|U|^2,|V|^2)^t
+//  =(T,U,V)^t^{-1}.(|T|^2,|U|^2,|V|^2)^t
+ Deffun("perp(TTT,UUU,VVV)",["regional(WWW)","
+WWW=matvec2vec(mat3inv([TTT,UUU,VVV]),[Norm(TTT)^2,Norm(UUU)^2,Norm(VVV)^2]);
+","WWW"]                    );
+
+//Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+Defvar("t43=[-1  ,-1  ,-1  ]");
+Defvar("t24=[-1  ,-1  , 1  ]");
+Defvar("t14=[-1  , 1  ,-1  ]");
+Defvar("t40=[-1  , 1  , 1  ]");
+Defvar("t04=[ 1  ,-1  ,-1  ]");
+Defvar("t41=[ 1  ,-1  , 1  ]");
+Defvar("t42=[ 1  , 1  ,-1  ]");
+Defvar("t34=[ 1  , 1  , 1  ]");
+
+Defvar("s4=[
+[[ 1, 0, 0],[ 0, 0,-1],[ 0, 1, 0]], // [ 1, 0, 0]
+[[ 1, 0, 0],[ 0,-1, 0],[ 0, 0,-1]], // [ 1, 0, 0]
+[[ 1, 0, 0],[ 0, 0, 1],[ 0,-1, 0]], // [ 1, 0, 0]
+[[ 0, 0, 1],[ 0, 1, 0],[-1, 0, 0]], // [ 0, 1, 0]
+[[-1, 0, 0],[ 0, 1, 0],[ 0, 0,-1]], // [ 0, 1, 0]
+[[ 0, 0,-1],[ 0, 1, 0],[ 1, 0, 0]], // [ 0, 1, 0]
+[[ 0,-1, 0],[ 1, 0, 0],[ 0, 0, 1]], // [ 0, 0, 1]
+[[-1, 0, 0],[ 0,-1, 0],[ 0, 0, 1]], // [ 0, 0, 1]
+[[ 0, 1, 0],[-1, 0, 0],[ 0, 0, 1]], // [ 0, 0, 1]
+//
+[[ 0, 1, 0],[ 1, 0, 0],[ 0, 0,-1]], // [ 1, 1, 0]
+[[ 0,-1, 0],[-1, 0, 0],[ 0, 0,-1]], // [ 1,-1, 0]
+[[-1, 0, 0],[ 0, 0, 1],[ 0, 1, 0]], // [ 0, 1, 1]
+[[-1, 0, 0],[ 0, 0,-1],[ 0,-1, 0]], // [ 0, 1,-1]
+[[ 0, 0, 1],[ 0,-1, 0],[ 1, 0, 0]], // [ 1, 0, 1]
+[[ 0, 0,-1],[ 0,-1, 0],[-1, 0, 0]], // [-1, 0, 1]
+//
+[[ 0, 0, 1],[ 1, 0, 0],[ 0, 1, 0]], // [ 1, 1, 1]
+[[ 0, 1, 0],[ 0, 0, 1],[ 1, 0, 0]], // [ 1, 1, 1]
+[[ 0,-1, 0],[ 0, 0, 1],[-1, 0, 0]], // [-1, 1, 1]
+[[ 0, 0,-1],[-1, 0, 0],[ 0, 1, 0]], // [-1, 1, 1]
+[[ 0, 0,-1],[ 1, 0, 0],[ 0,-1, 0]], // [ 1, 1,-1]
+[[ 0, 1, 0],[ 0, 0,-1],[-1, 0, 0]], // [ 1, 1,-1]
+[[ 0,-1, 0],[ 0, 0,-1],[ 1, 0, 0]], // [ 1,-1, 1]
+[[ 0, 0, 1],[-1, 0, 0],[ 0,-1, 0]], // [ 1,-1, 1]
+//
+[[ 1, 0, 0],[ 0, 1, 0],[ 0, 0, 1]]
+           ]");
+
+Defvar("a=sqrt(2)-1");
+Defvar("b=0");
+Defvar("x00=[ 1, 0, 0]");
+Defvar("y00=[ 0, 1, 0]");
+Defvar("z00=[ 0, 0, 1]");
+Defvar("r42=x00+(t42-x00)*a+(t34-x00)*b");
+Defvar("r34=x00+(t34-x00)*a+(t41-x00)*b");
+Defvar("r41=x00+(t41-x00)*a+(t04-x00)*b");
+Defvar("s41=z00+(t41-z00)*a+(t34-z00)*b");
+Defvar("s34=z00+(t34-z00)*a+(t40-z00)*b");
+Defvar("q34=y00+(t34-y00)*a+(t42-y00)*b");
+Defvar("vA=perp(q34,r34,r42)");
+Defvar("vB=perp(s34,r34,q34)");
+//Defvar("vC=perp(s41,r34,s34)");
+  Defvar("vC=perp(r41,r34,s34)");
+//Defvar("vD=perp(r41,r34,s41)");
+Defvar("vE=perp(r42,r34,r41)");
+
+forall(1..24,
+Spaceline(text(#*8-7),[matvec2vec(Op(#,s4),r34),
+                       matvec2vec(Op(#,s4),(r41+r34)/2)],["dr","nodisp"]);
+Spaceline(text(#*8-6),[matvec2vec(Op(#,s4),r34),
+                       matvec2vec(Op(#,s4),(r42+r34)/2)],["dr","nodisp"]);
+Spaceline(text(#*8-5),[matvec2vec(Op(#,s4),r34),
+                       matvec2vec(Op(#,s4),(q34+r34)/2)],["dr","nodisp"]);
+Spaceline(text(#*8-4),[matvec2vec(Op(#,s4),r34),
+                       matvec2vec(Op(#,s4),(s34+r34)/2)],["dr","nodisp"]);
+Spaceline(text(#*8-3),[matvec2vec(Op(#,s4),vA),
+                       matvec2vec(Op(#,s4),(vB+vA)/2)],["dr","nodisp"]);
+Spaceline(text(#*8-2),[matvec2vec(Op(#,s4),vB),
+                       matvec2vec(Op(#,s4),(vC+vB)/2)],["dr","nodisp"]);
+Spaceline(text(#*8-1),[matvec2vec(Op(#,s4),vC),
+                       matvec2vec(Op(#,s4),(vE+vC)/2)],["dr","nodisp"]);
+Spaceline(text(#*8  ),[matvec2vec(Op(#,s4),vE),
+                       matvec2vec(Op(#,s4),(vA+vE)/2)],["dr","nodisp"]);
+      );
+
+//Expr([xyz2xy(Projcoordpara([0,0,0])),"c", "0"]);
+
+Ptseg3data();
+
+edges=[];
+forall(1..192,
+edges=append(edges,"sl3d"+text(#));
+      );
+
+if(Isangle(), //if TH/FI is selected
+   ,
+forall(1..192,
+if(mod(#-1,8)<4,
+Skeletonparadata(text(#),["sl3d"+text(#)],edges,[.2,"dr"]),
+Skeletonparadata(text(#),["sl3d"+text(#)],edges,[.2,"dr,2"])
+  );
+      );
+  );

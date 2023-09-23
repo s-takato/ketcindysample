@@ -2462,7 +2462,7 @@ Arrowhead(nm,pointorg,directionorg,optionsorg):=(//191129remade
        options=remove(options,[#]);
      );
   );
-  list=Arrowheaddata(point,direction,options);
+   list=Arrowheaddata(point,direction,options);
   if(length(point)>1, //210724from
     if(!Inwindow(point),Noflg=2);
     if(isstring(direction),
@@ -2502,9 +2502,18 @@ Arrowhead(nm,pointorg,directionorg,optionsorg):=(//191129remade
 );
 Arrowheaddata(point,direction):=
    Arrowheaddata(point,direction,[YaSize,YaAngle,YaPosition,YaCut]);
-Arrowheaddata(point,direction,options):=( //191127remade
-  regional(scaley,Eps,size,angle,segpos,cut, Houkou,hflg,Str,Ev,Nv,
-       reL,pP,vec,pA,pB,pC,par,out,tmp,tmp1,tmp2);
+Arrowheaddata(pointorg,directionorg,options):=( //191127remade
+  regional(point,direction,scaley,Eps,size,angle,segpos,cut, 
+            Houkou,hflg,Str,Ev,Nv,reL,pP,vec,
+            pA,pB,pC,par,out,tmp,tmp1,tmp2);
+  point=Pcrd(pointorg); //230830from
+  tmp=directionorg;
+  if(isstring(tmp),
+    tmp=parse(tmp);
+    direction=apply(tmp,Pcrd(#)); //230830to 
+  ,
+    direction=Pcrd(tmp);
+  );
   Eps=10^(-4);
   tmp=Divoptions(options);
   reL=tmp_6;
@@ -4513,8 +4522,8 @@ var cdy = CindyJS({
     {name: "Text2", type: "EditableText", pos: [4.0, -0.8516129032258064, 0.25806451612903225], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text3", type: "EditableText", pos: [4.0, -0.8621236133122027, 0.06339144215530904], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "St=", textsize: 21.0},
     {name: "Text9", type: "EditableText", pos: [1.7714285714285714, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
@@ -4627,15 +4636,15 @@ var cdy = CindyJS({
     {name: "Text5", type: "Button", pos: [4.0, 0.06095238095238095, 0.0761904761904762], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: "　　", textsize: 14.0}
   ],
   ports: [{
-    width: 890,
-    height: 647,
+    width: 1018,
+    height: 630,
     id: "CSCanvas",
-    transform: [{visibleRect: [9.11628174039871, 27.039818721521595, 100.79414331051002, -39.60689637495258]}],
+    transform: [{visibleRect: [9.11628174039871, 27.039818721521595, 113.97927396329008, -37.855746210130235]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2074, version: [3, 0, 2074]}
+  cinderella: {build: 2080, version: [3, 0, 2080]}
 });
     </script>
 </head>

@@ -1,0 +1,127 @@
+// c.f. maxima/20221009.mc & 20211019-1-5p2-3.cdy
+Setwindow([-1,1],[-1,1]);
+Setunitlen("5cm");
+//to move to default positions, delete points
+Putpoint("TH",[-5+72/20,-3.0],[TH.x,-3.0]); // -5 ~ -5+180/20=4
+Putpoint("FI",[-5+50/40,-3.5],[FI.x,-3.5]); // -5 ~ -5+360/40=4
+//Setangle(72,50); // fixed // view from (sin72cos50,sin72sin50,cos72)
+Start3d();
+Texparent="";
+
+Addax(0);
+Putaxes3d(0);
+
+//Paramplot("xma","[XMAX,t]","t=[YMIN,YMAX]",["dr","Num=50"]);
+//Paramplot("xmi","[XMIN,t]","t=[YMIN,YMAX]",["dr","Num=50"]);
+//Paramplot("yma","[t,YMAX]","t=[XMIN,XMAX]",["dr","Num=50"]);
+//Paramplot("ymi","[t,YMIN]","t=[XMIN,XMAX]",["dr","Num=50"]);
+
+//Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+Defvar("g",(sqrt(5)-1)/2);
+t43=[-1  ,-1  ,-1  ]/sqrt(3);
+t24=[-1  ,-1  , 1  ]/sqrt(3);
+t14=[-1  , 1  ,-1  ]/sqrt(3);
+t40=[-1  , 1  , 1  ]/sqrt(3);
+t04=[ 1  ,-1  ,-1  ]/sqrt(3);
+t41=[ 1  ,-1  , 1  ]/sqrt(3);
+t42=[ 1  , 1  ,-1  ]/sqrt(3);
+t34=[ 1  , 1  , 1  ]/sqrt(3);
+t20=[  -g, 0  ,-1-g]/sqrt(3);
+t31=[   g, 0  ,-1-g]/sqrt(3);
+t02=[   g, 0  , 1+g]/sqrt(3);
+t13=[  -g, 0  , 1+g]/sqrt(3);
+t01=[-1-g,  -g, 0  ]/sqrt(3);
+t32=[-1-g,   g, 0  ]/sqrt(3);
+t10=[ 1+g,   g, 0  ]/sqrt(3);
+t23=[ 1+g,  -g, 0  ]/sqrt(3);
+t12=[ 0  ,-1-g,  -g]/sqrt(3);
+t30=[ 0  ,-1-g,   g]/sqrt(3);
+t21=[ 0  , 1+g,   g]/sqrt(3);
+t03=[ 0  , 1+g,  -g]/sqrt(3);
+Defvar("h",sqrt((3+g)^2+(4+3*g)^2));
+p12=(t43+t01+t24+t30+t12)*sqrt(3)/h; ip12=p12*5/sqrt(3)/h;
+p01=(t43+t20+t14+t32+t01)*sqrt(3)/h; ip01=p01*5/sqrt(3)/h;
+p20=(t43+t12+t04+t31+t20)*sqrt(3)/h; ip20=p20*5/sqrt(3)/h;
+p32=(t40+t13+t24+t01+t32)*sqrt(3)/h; ip32=p32*5/sqrt(3)/h;
+p21=(t40+t32+t14+t03+t21)*sqrt(3)/h; ip21=p21*5/sqrt(3)/h;
+p13=(t40+t21+t34+t02+t13)*sqrt(3)/h; ip13=p13*5/sqrt(3)/h;
+p02=(t41+t30+t24+t13+t02)*sqrt(3)/h; ip02=p02*5/sqrt(3)/h;
+p30=(t41+t23+t04+t12+t30)*sqrt(3)/h; ip30=p30*5/sqrt(3)/h;
+p23=(t41+t02+t34+t10+t23)*sqrt(3)/h; ip23=p23*5/sqrt(3)/h;
+p31=(t42+t03+t14+t20+t31)*sqrt(3)/h; ip31=p31*5/sqrt(3)/h;
+p10=(t42+t31+t04+t23+t10)*sqrt(3)/h; ip10=p10*5/sqrt(3)/h;
+p03=(t42+t10+t34+t21+t03)*sqrt(3)/h; ip03=p03*5/sqrt(3)/h;
+
+Ptseg3data();
+
+Spaceline("tt00",[t20,t13],["dr","nodisp"]);
+Spaceline("tt01",[t13,t04],["dr","nodisp"]);
+Spaceline("tt02",[t04,t32],["dr","nodisp"]);
+Spaceline("tt03",[t32,t41],["dr","nodisp"]);
+Spaceline("tt04",[t41,t20],["dr","nodisp"]);
+Spaceline("tt05",[t12,t03],["dr","nodisp"]);
+Spaceline("tt06",[t03,t24],["dr","nodisp"]);
+Spaceline("tt07",[t24,t31],["dr","nodisp"]);
+Spaceline("tt08",[t31,t40],["dr","nodisp"]);
+Spaceline("tt09",[t40,t12],["dr","nodisp"]);
+Spaceline("tt10",[t01,t23],["dr","nodisp"]);
+Spaceline("tt11",[t23,t14],["dr","nodisp"]);
+Spaceline("tt12",[t14,t30],["dr","nodisp"]);
+Spaceline("tt13",[t30,t42],["dr","nodisp"]);
+Spaceline("tt14",[t42,t01],["dr","nodisp"]);
+Spaceline("tt15",[t21,t30],["dr","nodisp"]);
+Spaceline("tt16",[t14,t02],["dr","nodisp"]);
+Spaceline("tt17",[t02,t43],["dr","nodisp"]);
+Spaceline("tt18",[t43,t21],["dr","nodisp"]);
+Spaceline("tt19",[t20,t34],["dr","nodisp"]);
+Spaceline("tt20",[t34,t01],["dr","nodisp"]);
+Spaceline("tt21",[t42,t13],["dr","nodisp"]);
+Spaceline("tt22",[t32,t10],["dr","nodisp"]);
+Spaceline("tt23",[t10,t24],["dr","nodisp"]);
+Spaceline("tt24",[t03,t41],["dr","nodisp"]);
+Spaceline("tt25",[t34,t12],["dr","nodisp"]);
+Spaceline("tt26",[t40,t23],["dr","nodisp"]);
+Spaceline("tt27",[t02,t31],["dr","nodisp"]);
+Spaceline("tt28",[t10,t43],["dr","nodisp"]);
+Spaceline("tt29",[t21,t04],["dr","nodisp"]);
+
+if(Isangle(), //if TH/FI is selected
+,
+ Startsurf();
+ phd=Concatobj([
+[ip32,t32,ip01],[ip01,t20,ip20],[ip20,t04,ip30],[ip30,t41,ip02],[ip02,t13,ip32],
+//[t32,ip01,t20,ip20,t04,ip30,t41,ip02,t13,ip32], (p12)
+[ip20,t12,ip12],[ip12,t24,ip32],[ip32,t40,ip21],[ip21,t03,ip31],[ip31,t31,ip20],
+//[t12,ip12,t24,ip32,t40,ip21,t03,ip31,t31,ip20], (p01)
+[ip12,t01,ip01],[ip01,t14,ip31],[ip31,t42,ip10],[ip10,t23,ip30],[ip30,t30,ip12],
+//[t01,ip01,t14,ip31,t42,ip10,t23,ip30,t30,ip12], (p20)
+[ip01,t43,ip12],[ip12,t30,ip02],[ip02,t02,ip13],[ip13,t21,ip21],[ip21,t14,ip01],
+//[t43,ip12,t30,ip02,t02,ip13,t21,ip21,t14,ip01], (p32)
+[ip31,t20,ip01],[ip01,t01,ip32],[ip32,t13,ip13],[ip13,t34,ip03],[ip03,t42,ip31],
+//[t20,ip01,t01,ip32,t13,ip13,t34,ip03,t42,ip31], (p21)
+[ip21,t32,ip32],[ip32,t24,ip02],[ip02,t41,ip23],[ip23,t10,ip03],[ip03,t03,ip21],
+//[t32,ip32,t24,ip02,t41,ip23,t10,ip03,t03,ip21], (p13)
+[ip32,t01,ip12],[ip12,t12,ip30],[ip30,t23,ip23],[ip23,t34,ip13],[ip13,t40,ip32],
+//[t01,ip12,t12,ip30,t23,ip23,t34,ip13,t40,ip32], (p02)
+[ip02,t24,ip12],[ip12,t43,ip20],[ip20,t31,ip10],[ip10,t10,ip23],[ip23,t02,ip02],
+//[t24,ip12,t43,ip20,t31,ip10,t10,ip23,t02,ip02], (p30)
+[ip03,t21,ip13],[ip13,t13,ip02],[ip02,t30,ip30],[ip30,t04,ip10],[ip10,t42,ip03],
+//[t21,ip13,t13,ip02,t30,ip30,t04,ip10,t42,ip03], (p23)
+[ip20,t43,ip01],[ip01,t32,ip21],[ip21,t21,ip03],[ip03,t10,ip10],[ip10,t04,ip20],
+//[t43,ip01,t32,ip21,t21,ip03,t10,ip10,t04,ip20], (p31)
+[ip30,t12,ip20],[ip20,t20,ip31],[ip31,t03,ip03],[ip03,t34,ip23],[ip23,t41,ip30],
+//[t12,ip20,t20,ip31,t03,ip03,t34,ip23,t41,ip30], (p10)
+[ip31,t14,ip21],[ip21,t40,ip13],[ip13,t02,ip23],[ip23,t23,ip10],[ip10,t31,ip31]
+//[t14,ip21,t40,ip13,t02,ip23,t23,ip10,t31,ip31]  (p03)
+              ]);
+ VertexEdgeFace("0",phd);
+ Nohiddenbyfaces("0","phf3d0",[],["nodisp"]);
+  );
+ 
+Listplotc("c1",[ip32,t32,ip01],["nodisp"]);
+Shade(["sgc1"],["Color=[0,1,1,0]"]);
+Listplotc("c2",[ip01,t20,ip20],["nodisp"]);
+Shade(["sgc2"],["Color=[1,1,0,0]"]);
+Listplotc("c3",[ip31,t03,ip03],["nodisp"]);
+Shade(["sgc3"],["Color=[1,0,1,0]"]);

@@ -2462,7 +2462,7 @@ Arrowhead(nm,pointorg,directionorg,optionsorg):=(//191129remade
        options=remove(options,[#]);
      );
   );
-  list=Arrowheaddata(point,direction,options);
+   list=Arrowheaddata(point,direction,options);
   if(length(point)>1, //210724from
     if(!Inwindow(point),Noflg=2);
     if(isstring(direction),
@@ -2502,9 +2502,18 @@ Arrowhead(nm,pointorg,directionorg,optionsorg):=(//191129remade
 );
 Arrowheaddata(point,direction):=
    Arrowheaddata(point,direction,[YaSize,YaAngle,YaPosition,YaCut]);
-Arrowheaddata(point,direction,options):=( //191127remade
-  regional(scaley,Eps,size,angle,segpos,cut, Houkou,hflg,Str,Ev,Nv,
-       reL,pP,vec,pA,pB,pC,par,out,tmp,tmp1,tmp2);
+Arrowheaddata(pointorg,directionorg,options):=( //191127remade
+  regional(point,direction,scaley,Eps,size,angle,segpos,cut, 
+            Houkou,hflg,Str,Ev,Nv,reL,pP,vec,
+            pA,pB,pC,par,out,tmp,tmp1,tmp2);
+  point=Pcrd(pointorg); //230830from
+  tmp=directionorg;
+  if(isstring(tmp),
+    tmp=parse(tmp);
+    direction=apply(tmp,Pcrd(#)); //230830to 
+  ,
+    direction=Pcrd(tmp);
+  );
   Eps=10^(-4);
   tmp=Divoptions(options);
   reL=tmp_6;
@@ -4631,15 +4640,15 @@ var cdy = CindyJS({
     {name: "Text374", type: "Button", pos: [4.0, -1.3130434782608695, 0.043478260869565216], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "Stop", textsize: 18.0}
   ],
   ports: [{
-    width: 980,
-    height: 615,
+    width: 1019,
+    height: 647,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 109.44688530139692, -36.00158721208303]}],
+    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 113.46422979716584, -39.297869875278046]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2074, version: [3, 0, 2074]}
+  cinderella: {build: 2080, version: [3, 0, 2080]}
 });
     </script>
 </head>
