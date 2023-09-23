@@ -1,0 +1,172 @@
+Defvar("g=(sqrt(5)-1)/2");
+Setwindow([-1.6,1.6],[-1.6,1.6]);
+Setunitlen("3cm");
+//to move to default positions, delete points
+Putpoint("TH",[-5+ 72/20,-3.0],[TH.x,-3.0]); // -5 ~ -5+180/20=4
+Putpoint("FI",[-5+ 48/40,-3.5],[FI.x,-3.5]); // -5 ~ -5+360/40=4
+//Setangle(72,48); // fixed // view from (sin72cos48,sin72sin48,cos72)
+Start3d();
+Texparent="";
+
+Addax(0);
+Putaxes3d(0);
+
+//Paramplot("xma","[XMAX,t]","t=[YMIN,YMAX]",["dr","Num=50"]);
+//Paramplot("xmi","[XMIN,t]","t=[YMIN,YMAX]",["dr","Num=50"]);
+//Paramplot("yma","[t,YMAX]","t=[XMIN,XMAX]",["dr","Num=50"]);
+//Paramplot("ymi","[t,YMIN]","t=[XMIN,XMAX]",["dr","Num=50"]);
+Defvar("cosTH=cos((TH.x+5)*1/9*pi)"); Defvar("cosFI=cos((FI.x+5)*2/9*pi)");
+Defvar("sinTH=sin((TH.x+5)*1/9*pi)"); Defvar("sinFI=sin((FI.x+5)*2/9*pi)");
+Defvar("tanTH=tan((TH.x+5)*1/9*pi)"); Defvar("tanFI=tan((FI.x+5)*2/9*pi)");
+Defvar("lo=[ cosTH*cosFI,cosTH*sinFI,-sinTH]");
+Defvar("mo=[-      sinFI,      cosFI,   0  ]");
+Defvar("no=[ sinTH*cosFI,sinTH*sinFI, cosTH]");
+Deffun("xyz2xy(VVV)",["regional(WWW)","WWW=[VVV.x,VVV.y]","WWW"]);
+ Deffun("matvec2vec(MMM,VVV)",["regional(WWW)","
+WWW=Op(1,transpose(MMM*transpose([VVV])))
+","WWW"]                      );
+ Deffun("xyz2xymz(VVV)",["regional(WWW)","
+WWW=[Op(1,VVV),Op(2,VVV),-Op(3,VVV)]
+","WWW"]                );
+ Deffun("mat3adj(MMM)",["regional(NNN)","
+NNN=[[ Op(2,Op(2,MMM))*Op(3,Op(3,MMM))-Op(3,Op(2,MMM))*Op(2,Op(3,MMM)),
+      -Op(2,Op(1,MMM))*Op(3,Op(3,MMM))+Op(3,Op(1,MMM))*Op(2,Op(3,MMM)),
+       Op(2,Op(1,MMM))*Op(3,Op(2,MMM))-Op(3,Op(1,MMM))*Op(2,Op(2,MMM)) ],
+     [-Op(1,Op(2,MMM))*Op(3,Op(3,MMM))+Op(3,Op(2,MMM))*Op(1,Op(3,MMM)),
+       Op(1,Op(1,MMM))*Op(3,Op(3,MMM))-Op(3,Op(1,MMM))*Op(1,Op(3,MMM)),
+      -Op(1,Op(1,MMM))*Op(3,Op(2,MMM))+Op(3,Op(1,MMM))*Op(1,Op(2,MMM)) ],
+     [ Op(1,Op(2,MMM))*Op(2,Op(3,MMM))-Op(2,Op(2,MMM))*Op(1,Op(3,MMM)),
+      -Op(1,Op(1,MMM))*Op(2,Op(3,MMM))+Op(2,Op(1,MMM))*Op(1,Op(3,MMM)),
+       Op(1,Op(1,MMM))*Op(2,Op(2,MMM))-Op(2,Op(1,MMM))*Op(1,Op(2,MMM)) ] ]
+","NNN"]               );
+ Deffun("mat3det(MMM)",["regional(XXX)","
+XXX= Op(1,Op(1,mat3adj(MMM)))*Op(1,Op(1,MMM))
+    +Op(2,Op(1,mat3adj(MMM)))*Op(1,Op(2,MMM))
+    +Op(3,Op(1,mat3adj(MMM)))*Op(1,Op(3,MMM))
+","XXX"]               );
+ Deffun("mat3inv(MMM)",["regional(LLL)","
+LLL=mat3adj(MMM)/mat3det(MMM)
+","LLL"]               );
+// T.(W-T)=U.(W-U)=V.(W-V)=0
+// W=(T,U,V)((T,U,V)^t.(T,U,V))^{-1}.(|T|^2,|U|^2,|V|^2)^t
+//  =(T,U,V)^t^{-1}.(|T|^2,|U|^2,|V|^2)^t
+ Deffun("perp(TTT,UUU,VVV)",["regional(WWW)","
+WWW=matvec2vec(mat3inv([TTT,UUU,VVV]),[Norm(TTT)^2,Norm(UUU)^2,Norm(VVV)^2]);
+","WWW"]                    );
+
+//Xyzax3data("","x=[-5,5]","y=[-5,5]","z=[-5,5]");
+
+Defvar("t43=[-1  ,-1  ,-1  ]");
+Defvar("t24=[-1  ,-1  , 1  ]");
+Defvar("t14=[-1  , 1  ,-1  ]");
+Defvar("t40=[-1  , 1  , 1  ]");
+Defvar("t04=[ 1  ,-1  ,-1  ]");
+Defvar("t41=[ 1  ,-1  , 1  ]");
+Defvar("t42=[ 1  , 1  ,-1  ]");
+Defvar("t34=[ 1  , 1  , 1  ]");
+Defvar("t20=[  -g, 0  ,-1-g]");
+Defvar("t31=[   g, 0  ,-1-g]");
+Defvar("t02=[   g, 0  , 1+g]");
+Defvar("t13=[  -g, 0  , 1+g]");
+Defvar("t01=[-1-g,  -g, 0  ]");
+Defvar("t32=[-1-g,   g, 0  ]");
+Defvar("t10=[ 1+g,   g, 0  ]");
+Defvar("t23=[ 1+g,  -g, 0  ]");
+Defvar("t12=[ 0  ,-1-g,  -g]");
+Defvar("t30=[ 0  ,-1-g,   g]");
+Defvar("t21=[ 0  , 1+g,   g]");
+Defvar("t03=[ 0  , 1+g,  -g]");
+Defvar("p12=(t43+t01+t24+t30+t12)*g/sqrt(5)");
+Defvar("p01=(t43+t20+t14+t32+t01)*g/sqrt(5)");
+Defvar("p20=(t43+t12+t04+t31+t20)*g/sqrt(5)");
+Defvar("p32=(t40+t13+t24+t01+t32)*g/sqrt(5)");
+Defvar("p21=(t40+t32+t14+t03+t21)*g/sqrt(5)");
+Defvar("p13=(t40+t21+t34+t02+t13)*g/sqrt(5)");
+Defvar("p02=(t41+t30+t24+t13+t02)*g/sqrt(5)");
+Defvar("p30=(t41+t23+t04+t12+t30)*g/sqrt(5)");
+Defvar("p23=(t41+t02+t34+t10+t23)*g/sqrt(5)");
+Defvar("p31=(t42+t03+t14+t20+t31)*g/sqrt(5)");
+Defvar("p10=(t42+t31+t04+t23+t10)*g/sqrt(5)");
+Defvar("p03=(t42+t10+t34+t21+t03)*g/sqrt(5)");
+
+Defvar("u=[[ 1 ,  0 , 0],[ 0 ,-1,0 ],[0,0 ,-1  ]]");
+Defvar("t=[[-1 ,  0 , 0],[ 0 ,-1,0 ],[0,0 , 1  ]]");
+Defvar("s=[[  g,-1-g,-1],[1+g, 1,-g],[1,-g, 1+g]]/2");
+
+Defvar("a5=               [ s, s*s, s*s*s, s*s*s*s,
+        t,        t*s,        t*s*s,        t*s*s*s,        t*s*s*s*s,
+      s*t,      s*t*s,      s*t*s*s,      s*t*s*s*s,      s*t*s*s*s*s,
+    s*s*t,    s*s*t*s,    s*s*t*s*s,    s*s*t*s*s*s,    s*s*t*s*s*s*s,
+  s*s*s*t,  s*s*s*t*s,  s*s*s*t*s*s,  s*s*s*t*s*s*s,  s*s*s*t*s*s*s*s,
+s*s*s*s*t,s*s*s*s*t*s,s*s*s*s*t*s*s,s*s*s*s*t*s*s*s,s*s*s*s*t*s*s*s*s,
+u, u*s, u*s*s, u*s*s*s, u*s*s*s*s,
+        u*t,        u*t*s,        u*t*s*s,        u*t*s*s*s,        u*t*s*s*s*s,
+      u*s*t,      u*s*t*s,      u*s*t*s*s,      u*s*t*s*s*s,      u*s*t*s*s*s*s,
+    u*s*s*t,    u*s*s*t*s,    u*s*s*t*s*s,    u*s*s*t*s*s*s,    u*s*s*t*s*s*s*s,
+  u*s*s*s*t,  u*s*s*s*t*s,  u*s*s*s*t*s*s,  u*s*s*s*t*s*s*s,  u*s*s*s*t*s*s*s*s,
+u*s*s*s*s*t,u*s*s*s*s*t*s,u*s*s*s*s*t*s*s,u*s*s*s*s*t*s*s*s,u*s*s*s*s*t*s*s*s*s,
+[[1,0,0],[0,1,0],[0,0,1]] ]");
+
+Defvar("a=0.5060625469660183");
+Defvar("b=0.1340265937291674");
+Defvar("pp23=p23/g/sqrt(5)");
+Defvar("pp13=p13/g/sqrt(5)");
+Defvar("pp03=p03/g/sqrt(5)");
+Defvar("r10=pp23+(t10-pp23)*a+(t34-pp23)*b");
+Defvar("r34=pp23+(t34-pp23)*a+(t02-pp23)*b");
+Defvar("r02=pp23+(t02-pp23)*a+(t41-pp23)*b");
+Defvar("s02=pp13+(t02-pp13)*a+(t34-pp13)*b");
+Defvar("s34=pp13+(t34-pp13)*a+(t21-pp13)*b");
+Defvar("q34=pp03+(t34-pp03)*a+(t10-pp03)*b");
+Defvar("vA=perp(q34,r34,r10)");
+Defvar("vB=perp(q34,s34,r34)");
+Defvar("vC=perp(s34,s02,r34)");
+Defvar("vD=perp(s02,r02,r34)");
+Defvar("vE=perp(r10,r34,r02)");
+
+//Spacecurve("bor","Norm(r34)*(cos(tt)*lo+sin(tt)*mo)","tt=[0,2*pi]",["dr","Num=90","nodisp"]); //ERR
+
+forall(1..60,
+Spaceline(text(#*10-9),[xyz2xymz(matvec2vec(Op(#,a5),r34)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(r02+r34)/2))],["dr","nodisp"]);
+Spaceline(text(#*10-8),[xyz2xymz(matvec2vec(Op(#,a5),r34)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(r10+r34)/2))],["dr","nodisp"]);
+Spaceline(text(#*10-7),[xyz2xymz(matvec2vec(Op(#,a5),r34)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(q34+r34)/2))],["dr","nodisp"]);
+Spaceline(text(#*10-6),[xyz2xymz(matvec2vec(Op(#,a5),r34)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(s34+r34)/2))],["dr","nodisp"]);
+Spaceline(text(#*10-5),[xyz2xymz(matvec2vec(Op(#,a5),r34)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(s02+r34)/2))],["dr","nodisp"]);
+Spaceline(text(#*10-4),[xyz2xymz(matvec2vec(Op(#,a5),vA)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(vB+vA)/2))],["dr","nodisp"]);
+Spaceline(text(#*10-3),[xyz2xymz(matvec2vec(Op(#,a5),vB)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(vC+vB)/2))],["dr","nodisp"]);
+Spaceline(text(#*10-2),[xyz2xymz(matvec2vec(Op(#,a5),vC)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(vD+vC)/2))],["dr","nodisp"]);
+Spaceline(text(#*10-1),[xyz2xymz(matvec2vec(Op(#,a5),vD)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(vE+vD)/2))],["dr","nodisp"]);
+Spaceline(text(#*10  ),[xyz2xymz(matvec2vec(Op(#,a5),vE)),
+                        xyz2xymz(matvec2vec(Op(#,a5),(vA+vE)/2))],["dr","nodisp"]);
+      );
+
+//Expr([xyz2xy(Projcoordpara([0,0,0])),"c", "0"]);
+
+Ptseg3data();
+
+edges=[
+//"sc3dbor" //ERR
+      ];
+forall(1..600,
+edges=append(edges,"sl3d"+text(#));
+      );
+
+if(Isangle(), //if TH/FI is selected
+   ,
+//Skeletonparadata(text(0),["sc3dbor"],edges,[.2,"dr"]); //ERR
+forall(1..600,
+if(mod(#-1,10)<5,
+Skeletonparadata(text(#),["sl3d"+text(#)],edges,[.2,"dr"]),
+Skeletonparadata(text(#),["sl3d"+text(#)],edges,[.2,"dr,2"])
+  );
+      );
+  );
