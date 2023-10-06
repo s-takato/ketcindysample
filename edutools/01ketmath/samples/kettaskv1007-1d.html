@@ -3098,8 +3098,8 @@ Lettermove(dir,str):=(
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 aalinestart=1;
-quline="Q01::原点から角度a(={\theta})，初速度v(=v_0)で物体を投げ上げる．	[1]:: t秒後の位置(x,y)をtで表せ，	[2]:: 落下点が最遠となるa(deg)を求めよ．．";
-shline="Q01---	[1](x,y)= 	[2]a= ";
+quline="Q01::原点から角度{\theta}(deg)，初速度v_0で物体を投げ上げる．	[1]:: {\theta}(deg)に値を入れてPlayを押してみよ．	[2]:: 落下点が最遠となる{\theta}(deg)を求めよ．．";
+shline="Q01---	[1]{\theta}= 	[2]{\theta}= ";
 sqline="01SM	2	2	2CR02RS	2	2	2CR03SY	2	2	2CR04ST	2	2	2";
 quLL=Line2list(quline);
 shL=Line2list(shline);
@@ -4761,16 +4761,17 @@ if(stok==1,
 
 Center=[85.199,4.612];
 Scale=3.456;
-Rbound=[125.556,0];
+Rbound=[130.425,0];
 tmp1=screenbounds();tmp1=[tmp1_2_1,0];
 Center=Center-Rbound+tmp1;
 Setwindow([-0.5,11],[-0.5,4]);
+Expr(Mvpt(0.5,4),"e","x=tv_0\cos\alpha,\ y=-\frac{1}{2}gt^2+t\sin\alpha",["Size=1.5"]);
 v0=10;
 g=9.8;
 if(ketlibflg==1,
   anow=10;
   ketlibflg=0;
-);
+); 
 tmp=Textedit(2,"10");
 a=parse(tmp)*pi/180;
 if(anow!=a,
@@ -4827,7 +4828,7 @@ var cdy = CindyJS({
     {name: "Text7", type: "Button", pos: [-2.0, -4.0, -0.17391304347826086], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=1;initflg=1;", text: "1", textsize: 18.0},
     {name: "Text8", type: "Button", pos: [4.0, -1.1478260869565216, 0.34782608695652173], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=2;initflg=1;", text: "2", textsize: 18.0},
     {name: "Text4", type: "Button", pos: [4.0, 0.0851063829787234, 0.10638297872340424], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1;", text: "　　", textsize: 14.0},
-    {name: "Text120", type: "Button", pos: [4.0, -0.540084388185654, 0.05625879043600563], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "Rset", textsize: 16.0},
+    {name: "Text20", type: "Button", pos: [4.0, -0.5565217391304348, 0.057971014492753624], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "Rset", textsize: 16.0},
     {name: "Text30", type: "Button", pos: [4.0, -1.3137254901960786, 0.19607843137254902], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"La\",\"A\",\"{\\alpha}\",\"\\mathbf{a}\",\"{\\vec{a}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
     {name: "Text31", type: "Button", pos: [4.0, -1.08502024291498, 0.1619433198380567], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lb\",\"B\",\"{\\beta}\",\"\\mathbf{b}\",\"{\\vec{b}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
     {name: "Text32", type: "Button", pos: [4.0, -0.9241379310344828, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lc\",\"C\",\"{\\gamma}\",\"\\mathbf{c}\",\"{\\vec{c}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
@@ -4928,18 +4929,18 @@ var cdy = CindyJS({
     {name: "Text18", type: "Button", pos: [2.111475409836066, -4.0, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "　　", textsize: 14.0},
     {name: "Text16", type: "Button", pos: [4.0, -0.42271293375394325, 0.06309148264984227], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(Shift!=1,Shift=1,Shift=0);", text: "　　", textsize: 14.0},
     {name: "Text17", type: "Button", pos: [4.0, -0.6309148264984227, 0.06309148264984227], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(Shift!=2,Shift=2,Shift=0);", text: "　　", textsize: 14.0},
-    {name: "Text19", type: "Button", pos: [4.0, -0.9676511954992967, 0.05625879043600563], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "stok=stok+1;", text: "O  K", textsize: 16.0},
+    {name: "Text19", type: "Button", pos: [4.0, -0.9971014492753623, 0.057971014492753624], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "stok=stok+1;", text: "O  K", textsize: 16.0},
     {name: "Text5", type: "Button", pos: [4.0, 0.06095238095238095, 0.0761904761904762], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: "　　", textsize: 14.0},
-    {name: "Text371", type: "Button", pos: [4.0, -1.6106666666666667, 0.05333333333333334], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "resetclock();playanimation();Animeflg=1;Dirflg=1;\n        sorg=Current;", text: "Play", textsize: 18.0},
-    {name: "Text372", type: "Button", pos: [4.0, -1.51, 0.05], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "Animeflg=1-Animeflg;if(Animeflg==0,pauseanimation();\n        sorg=sstart;,resetclock();playanimation(););", text: "Pause", textsize: 18.0},
-    {name: "Text373", type: "Button", pos: [4.0, -1.3885057471264368, 0.04597701149425287], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "sorg=sstart;Dirflg=-Dirflg;Animeflg=1;resetclock();\n        playanimation();", text: "Rev", textsize: 18.0},
-    {name: "Text374", type: "Button", pos: [4.0, -1.3130434782608695, 0.043478260869565216], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "Stop", textsize: 18.0}
+    {name: "Text371", type: "Button", pos: [4.0, -0.8947368421052632, 0.05263157894736842], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "resetclock();playanimation();Animeflg=1;Dirflg=1;\n        sorg=Current;", text: "Play", textsize: 18.0},
+    {name: "Text372", type: "Button", pos: [4.0, -1.105263157894737, 0.05263157894736842], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "Animeflg=1-Animeflg;if(Animeflg==0,pauseanimation();\n        sorg=sstart;,resetclock();playanimation(););", text: "Pause", textsize: 18.0},
+    {name: "Text373", type: "Button", pos: [4.0, -1.3157894736842106, 0.05263157894736842], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "sorg=sstart;Dirflg=-Dirflg;Animeflg=1;resetclock();\n        playanimation();", text: "Rev", textsize: 18.0},
+    {name: "Text374", type: "Button", pos: [4.0, -1.5263157894736843, 0.05263157894736842], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "Stop", textsize: 18.0}
   ],
   ports: [{
     width: 1019,
-    height: 647,
+    height: 613,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 113.46422979716584, -39.297869875278046]}],
+    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 113.46422979716584, -35.79556954563334]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
@@ -4953,38 +4954,6 @@ var cdy = CindyJS({
 KeTTask1007-1
 </font></p></header>
     <div id="CSCanvas"></div>
-<div style="padding: 50px">
-<p><font size="10">&emsp;<b>KeTMath数式ルール</b></font></p>
-<ol><font size="5">
-	<li>分数　<b>fr(a,b)</b>　注) 小さい分数 <b>tfr(a,b)</b></li>
-<li>掛け算　<b>ab</b>　注) <b>a*b</b>も可</li>
-<li>べき乗　<b>a^(b)</b>　注) 1文字の場合は<b>a^b</b>も可</li>
-<li>平方根　<b>sq(a)</b>，3乗根　<b>sq(3,a)</b></li>
-<li>三角関数　<b>sin(x)</b>，sin(x)の2乗　<b>sin(2,x)またはsin(x)^(2)</b></li>
-<li>円周率　<b>pi</b>
-<li>度　<b>(deg)</b></li>
-<li>対数関数　<b>log(x)</b>，自然対数　<b>ln(x)</b>，底がa　 <b>log(a,x)</b></li>
-<li>改行　<b>//</b></li>
-<li>スペース　<b>(sp)</b>　注) \;を出力</li>
-<li>立体　<b>100tx(m)</b></li>
-<li>不定積分　<b>int(x^2,x)</b>，定積分　<b>int(a,b,x^2,x)</b><br>
-	　注）定積分の関数の括弧を外すときは先頭に<b>!</b>を追加
-<li>ブラケット　<b>br(f(x),a,b)</b></li>
-<li>極限　<b>lim(x,a,f(x))</b>　注）括弧を外すときは先頭に <b>!</b></li>
-<li>和　<b>sum(k=1,n,k^2)</b>　注）括弧を外すときは先頭に <b>!</b></li></li>
-<li>微分　<b>diff(y,x)</b>，偏微分　<b>par(z,x)</b></li>
-<li>行列　<b>mat(a,b;c,d)</b>，行列式　<b>det(a,b;c,d)</b></li>
-<li>場合分け　<b>case(a,(x<0);c,(x(geq)0))</b>
-<li>ドット　1点　<b>dot()</b>，3点　<b>dot(s)</b>，下3点　<b>dot(l)</b>
-<li>掛け算×　<b>(cross)</b></li>
-<li>複号　<b>(pm),(mp)</b></li>
-<li>不等号　<b><, >, (leq), (geq),(neq)</b></li>
-<li>下添字　<b>a_n</b></li>
-<li>全角文字を混ぜてもよい　<b>2x-3=0の解はx=fr(3,2)</b><br>
-<li>ギリシャ文字 <b>{\alpha},{\beta}</b></li>
-<li>その他のTeX 記号　(sp),コンマ,{}などで区切る</li>
-</ol></font>
-</div>
 <footer><p align="center"><font size="4">&copy; 2021 Setsuo Takato</font></p></footer>
 </body>
 </html>
