@@ -15,8 +15,10 @@ greflg=0;
 boldflg=0;
 vecflg=0;
 
-nch=2;
-ch=2;
+nch=2;// 入力窓の個数
+ch=2;// 入力窓番号の初期値(入力窓が２つならchの候補は2つの連番)
+dch=0;// 使用する入力窓番号の最小値からdchを引いたとき1となるように調整;
+// 例えば入力窓の識別番号が5,6 なら，dch=4として，5-dch=1, 6-dch=2;
 StrL=apply(1..nch,"");
 StrpL=apply(1..nch,"");
 startflg=1;
@@ -33,10 +35,10 @@ npos=0;
 
 
 //nt=4;
-px=15;
+px=9.75;
 dtpy=3.2;
-tposL=apply(1..4,[px+0.5,17.4-(#-1)*dtpy]);
-posyL=[23,-2.5,-34];
+tposL=apply(1..4,[px+1.5,15.4-(#-1)*dtpy]);
+posyL=[20.75,-1.5,-34];
 
 //Setwindow([-20,65],[-17,15]);
 
@@ -53,7 +55,7 @@ posyL=[23,-2.5,-34];
 //actL3=["$>$","$>\!>$"];
 //forall(1..2,drawtext([62.5+(#-1)*2.5,1],actL3_#,size->20));
 
-poskey=[19.5,-17.67];
+poskey=[11.88,-17.75];
 dxL=apply(10..19,42);
 //dxL_4=42; dxL_5=42;
 dxL2=apply(1..9,42);
@@ -79,12 +81,8 @@ inspect(T3,"ptsize",6);
 inspect(T4,"ptsize",6);
 // no ketjs off
 
-CtrkeyL=[
-  [["PS","PL","AC","CL","BS","$<\!<$","$<$","$>$","$>\!>$"]],
-  [["Cap"],["Gre"],["Bld"],["Vec"]],
-  [["Cal"],["Lin"]],
-  [["TeX"]]
-];
+ctrkey=[["BS","CL","$<\!<$","$<$","$>$","$>\!>$",
+   "AC","PS","PL"]];
 
 Keyname():=(
   regional(nL,nL2,nL3,tmp1);
@@ -95,17 +93,23 @@ Keyname():=(
     ["w","_","=","log","ln","^","0",".","sp","／"]
   ];
   nL2=[
-    ["°","＠","[","]","|","d","e","f","g","lim","pi"],
-    ["$\times$","!","{","}","$\neq$","h","i","j","k","int","$\infty$"],
-    ["dot",":",";","$\leq$","$\geq","l","m","n","o","'","cs"],
-    ["\","$\pm$","$\mp$","<",">","p","q","u","v","sum","tx"]
+    ["°","＠","[","]","|","d","e","f","g"],
+    ["$\times$","!","{","}","$\neq$","h","i","j","k"],
+    ["・",":",";","$\leq$","$\geq","l","m","n","o"],
+    ["\","$\pm$","$\mp$","<",">","p","q","u","v"]
+  ];
+  nL3=[
+    ["lim","pi"],
+    ["int","$\infty$"],
+    ["'","cs"],
+    ["sum","tx"]
   ];
 
   if(Shift==1,
-    nL2_3_11="$d$"; nL2_4_10="$[.]_{}^{}$"; nL2_4_11="$\partial$"; //210923
+    nL3_3_2="$d$"; nL3_4_1="$[.]_{}^{}$"; nL3_4_2="$\partial$"; //210923
   );
   if(Shift==2,
-    nL2_1_10="mat"; nL2_2_10="det"; nL2_4_11="$\circ$"; //210923
+    nL3_1_1="mat"; nL3_2_1="det"; nL3_4_2="$\circ$"; //210923
   );
   if(keytype==2,
     tmp1=["A","B","C"]; forall(1..3,nL_1_(#)=tmp1_#);
@@ -170,7 +174,7 @@ Keyname():=(
     forall(1..1,nL_4_(#)=tmp1_#);
     tmp1=apply(["p","q","r","s"],"$\vec{"+#+"}$");
     forall(1..4,nL2_4_(#+5)=tmp1_#);
-  );  [nL,nL2];
+  );  [nL,nL2,nL3];
 );
 
 
@@ -182,16 +186,15 @@ Manifun=["Allclear()","Clearnow()","Delete()","Push()","Pull()",
 Allclear():=(
   Str="";
   Strnq="";
-  StrL_ch="";
-  StrpL_ch="";
+  StrL_(ch-dch)="";
+  StrpL_(ch-dch)="";
   npos=0;
   Subsedit(ch,"");
   funflg=0;
 );
 
 Clearnow():=(
-  Str="";
-  StrL_ch="";
+  StrL_(ch-dch)="";
   npos=0;
   Subsedit(ch,"");
   funflg=0;
@@ -212,11 +215,11 @@ Delete():=( //220814dbg
       );
       Strnq=replace(Str,"?","");
       Strnow=Str;
-      StrL_ch=Strnq;
+      StrL_(ch-dch)=Strnq;
       npos=npos-1;
     ,
       Pull();
-      npos=length(StrL_ch);
+      npos=length(StrL_(ch-dch));
       Delete();
     );
   );
@@ -224,33 +227,33 @@ Delete():=( //220814dbg
 
 Push():=(
   regional(tmp,tmp1);
-  tmp1=StrL_ch;
+  tmp1=StrL_(ch-dch);
   tmp=indexof(tmp1,"//");
   if(tmp==0,
-    StrpL_ch=StrpL_ch+tmp1+"//";
+    StrpL_(ch-dch)=StrpL_(ch-dch)+tmp1+"//";
     Str="";
     npos=0;
   ,
-    StrpL_ch=StrpL_ch+substring(tmp1,0,tmp+1);
+    StrpL_(ch-dch)=StrpL_(ch-dch)+substring(tmp1,0,tmp+1);
     Str=substring(tmp1,tmp+1,length(tmp1));
     npos=max([0,npos-(tmp+1)]);
   );
-  StrL_ch=Str;
+  StrL_(ch-dch)=Str;
   Strnq=Str;
   Subsedit(ch,Str);
 );
 
 Pull():=(
   regional(tmp,tmp1,tmp2);
-  tmp1=StrpL_ch;
+  tmp1=StrpL_(ch-dch);
   tmp=indexall(tmp1,"//");
   if(length(tmp)>1,tmp=tmp_(-2)+1,tmp=0);
   tmp2=substring(tmp1,0,tmp);
-  StrpL_ch=tmp2;
+  StrpL_(ch-dch)=tmp2;
   tmp1=substring(tmp1,tmp,length(tmp1));
-  Str=tmp1+StrL_ch;
+  Str=tmp1+StrL_(ch-dch);
   Strnq=Str;
-  StrL_ch=Str;
+  StrL_(ch-dch)=Str;
   npos=length(tmp1)+npos;
   Subsedit(ch,Str);
 );
@@ -316,143 +319,3 @@ RRight():=(
     npos=length(Str);
   );
 );
-
-//no ketjs on
-rLL1=[30..39,40..49,50..59,60..69];
-rLL2=[70..80,81..91,92..102,103..113];
-sLL1=
-[
- [
-  ["La","A","{\alpha}","\mathbf{a}","{\vec{a}\;}"],
-  ["Lb","B","{\beta}","\mathbf{b}","{\vec{b}\;}"],
-  ["Lc","C","{\gamma}","\mathbf{c}","{\vec{c}\;}"],
-  "sin(","sq(",")","n7","n8","n9","+"
- ],
- [
-  ["Lx","X","{\kappa}","\mathbf{x}","{\vec{x}\;}"],
-  ["Ly","Y","{\iota}","\mathbf{y}","{\vec{y}\;}"],
-  ["Lz","Z","{\eta}","\mathbf{z}","{\vec{z}\;}"],
-  "cos(","fr(",",","n4","n5","n6","-"
- ],
- [
-  ["Lr","R","{\rho}","\mathbf{r}","{\vec{r}\;}"],
-  ["Ls","S","{\sigma}","\mathbf{s}","\vec{s}\;"],
-  ["Lt","T","{\tau}","\mathbf{t}","{\vec{t}\;}"],
-  "tan(","tfr(","(","n1","n2","n3","*"
- ],
- [
-   ["Lw","W","{\omega}","\mathbf{w}","{\vec{w}\;}"],
-  "_(","=","log(","ln(","^(","n0",".","(sp)","/"
- ]
-];
-sLL2=
-[
- [
-  "(deg)","@","[","]","|",
-  ["Ld","D","{\Delta}","\mathbf{d}","{\vec{d}\;}"],
-  ["Le","E","{\delta}","\mathbf{e}","{\vec{e}\;}"],
-  ["Lf","F","{\varepsilon}","\mathbf{f}","{\vec{f}\;}"],
-  ["Lg","G","{\varphi}","\mathbf{g}","{\vec{g}\;}"],
-  [0,"lim(",1,"lim(",2,"mat("],
-  "pi"
- ],
- [
-  "(cross)","!","{","}","(neq)",
-  ["Lh","H","{\Theta}","\mathbf{h}","{\vec{h}\;}"],
-  ["Li","I","{\theta}","\mathbf{i}","{\vec{i}\;}"],
-  ["Lj","J","{\chi}","\mathbf{j}","{\vec{j}\;}"],
-  ["Lk","K","{\xi}","\mathbf{k}","{\vec{k}\;}"],
-  [0,"int(",1,"int(",2,"det("],
-  [0,"(inf)",1,"(inf)",2,"det("],
-  "(inf)"
- ],
- [
-  "dot(",":",";","(leq)","(geq)",
-  ["Ll","L","{\lambda}","\mathbf{l}","{\vec{l}\;}"],
-  ["Lm","M","{\mu}","\mathbf{m}","{\vec{m}\;}"],
-  ["Ln","N","{\nu}","\mathbf{n}","{\vec{n}\;}"],
-  ["Lo","O","{\omega}","\mathbf{o}","{\vec{o}\;}"],
-  "'",
-  [1,"diff(",2,"case(",0,"case("]
- ],
- [
-  "\","(pm)","(mp)","<",">",
-  ["Lp","P","{\Psi}","\mathbf{p}","{\vec{p}\;}"],
-  ["Lq","Q","{\psi}","\mathbf{q}","{\vec{q}\;}"],
-  ["Lu","U","{\Phi}","\mathbf{u}","{\vec{u}\;}"],
-  ["Lv","V","{\lambda}","\mathbf{v}","{\vec{v}\;}"],
-  [1,"br(",2,"sum(",0,"sum("],
-  [0,"tx(",1,"par(",2,"(circ)"]
- ]
-];
-
-Makescript(sLL):=(
-  regional(pre,pre1,nr,nc,scr,out,
-       tmp,tmp1,tmp2,tmp3);
-  pre="funflg=1;";
-  pre1=pre+"name=";
-  out=sLL;
-  forall(1..(length(sLL)),nr,
-    forall(1..(length(sLL_1)),nc,
-      scr=sLL_nr_nc;
-      if(islist(scr),
-        if(isstring(scr_1),
-          tmp=apply(scr,Dqq(#));
-          tmp1=pre1+tmp+"_keytype;";
-        ,
-          tmp1="";
-          forall(1..(length(scr)/2),
-            tmp2=scr_(2*#-1);
-            tmp3=scr_(2*#);
-            tmp1=tmp1+"if(Shift=="+tmp2+",name=";
-            tmp1=tmp1+Dqq(tmp3)+");";
-          );
-          tmp1=pre+tmp1;
-        );
-      ,
-        tmp1=pre1+Dqq(scr)+";";
-      );
-      out_nr_nc=tmp1;
-    );
-  );
-  out;
-);
-
-Settext(sLLorg,rLLorg,yinit):=(
-  regional(sLL,rLL,nr,nc,txn,pos);
-  sLL=Makescript(sLLorg);
-  rLL=rLLorg;
-  forall(1..(length(sLL)),nr,
-    forall(1..(length(sLL_1)),nc,
-      txn=rLL_nr_nc;
-      pos=[20.4+4.3*(nc-1),yinit-3.3*(nr-1)];
-      Settextkey(txn,pos,"　　",sLL_nr_nc,14);
-    );
-  );
-);
-
-Settext(sLL1,rLL1,-6.7);
-Settext(sLL2,rLL2,-20.6);
-
-tmp=Text30.xy;
-Text11.xy=tmp+[-4.3,0];
-Text12.xy=tmp+[-4.3,-3.3];
-Text13.xy=tmp+[-4.3,-3.3*2];
-Text14.xy=tmp+[-4.3,-3.3*3];
-tmp=Text103.xy;
-Text18.xy=tmp+[-4.3,0];
-tmp=Text39.xy;
-Text16.xy=tmp+[4.3,0];
-Text17.xy=tmp+[4.3,-3.3];
-tmp1="　　";
-tmp=Text30.xy-[4.3,0];
-tmp2=[
-  "Push()","Pull()","Allclear()","Clearnow()","Delete()",
-  "LLeft()","Left()","Right()","RRight()"
-];
-tmp2=apply(tmp2,"funflg=1;name="+Dqq(#)+";");
-forall(0..8,
-  Settextkey(200+#,[tmp_1+#*4.3,0.72],tmp1,tmp2_(#+1),14);
-);
-
-//no ketjs off
