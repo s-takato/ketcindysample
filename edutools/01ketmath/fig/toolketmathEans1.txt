@@ -1,0 +1,16 @@
+NIL
+(%i3) powerdisp:false
+(%i4) display2d:false
+(%i5) linel:1000
+(%i6) q1i1:sin(2*x)
+(%i7) q1i2:%pi/2
+(%i8) q1f(x):=q1i1
+(%i9) q1o1:diff(q1f(x),x)
+(%i10) q1o2:integrate(q1f(x),x,0,q1i2)
+(%i11) disp(q1o1)
+2*cos(2*x)
+
+(%i12) disp(q1o2)
+1
+
+(%i13) closefile()

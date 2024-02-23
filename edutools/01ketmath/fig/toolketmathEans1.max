@@ -1,0 +1,13 @@
+writefile("/Users/takatoosetsuo/ketcindysample.git/edutools/01ketmath/fig/toolketmathEans1.txt")$/*##*/
+powerdisp:false$/*##*/
+display2d:false$/*##*/
+linel:1000$/*##*/
+q1i1:sin(2*x)$/*##*/
+q1i2:((%pi)/(2))$/*##*/
+q1f(x):= q1i1$/*##*/
+q1o1:diff(q1f(x),x)$/*##*/
+q1o2:integrate(q1f(x),x,0,q1i2)$/*##*/
+disp(q1o1)$/*##*/
+disp(q1o2)$/*##*/
+closefile()$/*##*/
+quit()$/*##*/
