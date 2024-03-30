@@ -1,0 +1,2 @@
+Center=[98.81,12.5];Scale=1.61;Rbound=[120.43,0];Tbound=[0,31.35];
+drawimage(Center,"001-1.png",scale->Scale);

@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>kettaskorgva2024.cdy</title>
+    <title>kettaskorgvai.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -3824,8 +3824,8 @@ Kettaskinit():=(
   boldflg=0;
   vecflg=0;
   nch=2;
-  StrL=apply(1..4,""); 
-  StrpL=apply(1..4,"");
+  StrL=apply(1..5,""); //240224[2lines]
+  StrpL=apply(1..5,"");
   nqu=0; //220820
   stfixed=0;
   stok=0;
@@ -4666,19 +4666,21 @@ var cdy = CindyJS({
     {name: "Text19", type: "Button", pos: [4.0, -0.9352112676056338, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "stok=stok+1;", text: "O  K", textsize: 16.0},
     {name: "Text5", type: "Button", pos: [4.0, 0.06095238095238095, 0.0761904761904762], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: "　　", textsize: 14.0},
     {name: "Text371", type: "Button", pos: [4.0, -1.1605633802816901, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "resetclock();playanimation();Animeflg=1;Dirflg=1;\n        sorg=Current;", text: "Play", textsize: 18.0},
-    {name: "Text372", type: "Button", pos: [4.0, -1.3464788732394366, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "Animeflg=1-Animeflg;if(Animeflg==0,pauseanimation();\n        sorg=sstart;,resetclock();playanimation(););", text: "Pau", textsize: 18.0},
+    {name: "Text372", type: "Button", pos: [4.0, -1.3464788732394366, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.47, script: "Animeflg=1-Animeflg;if(Animeflg==0,pauseanimation();\n        sorg=sstart;,resetclock();playanimation(););", text: "Pau", textsize: 18.0},
     {name: "Text373", type: "Button", pos: [4.0, -1.5323943661971828, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "sorg=sstart;Dirflg=-Dirflg;Animeflg=1;resetclock();\n        playanimation();", text: "Rev", textsize: 18.0},
-    {name: "Text374", type: "Button", pos: [4.0, -1.7183098591549293, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "Stp", textsize: 18.0}
+    {name: "Text374", type: "Button", pos: [4.0, -1.7183098591549293, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.47, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "Stp", textsize: 18.0},
+    {name: "Text10", type: "EditableText", pos: [4.0, -1.7391304347826086, 0.049689440993788817], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, textsize: 21.0}
   ],
   ports: [{
     width: 1033,
-    height: 787,
+    height: 631,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 114.90635346231366, -53.71910652675623]}],
+    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 114.90635346231366, -37.64972854368054]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
+  use: ["katex"],
   cinderella: {build: 2082, version: [3, 0, 2082]}
 });
     </script>

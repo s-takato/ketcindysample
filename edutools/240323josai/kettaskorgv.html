@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>kettaskorgva.cdy</title>
+    <title>kettaskorgvai.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -133,9 +133,9 @@ Toupper(str):=(
   );
   out;
 );
-Totexform(str):=( //210803from[renew]
-  regional(plv,funL,repL,parL,out,head,flg,rep,fun,pre,post,ctr,clv,nn,
-      tmp,tmp1,tmp2,tmp3,tmp4);
+Totexform(str):=( //231215
+  regional(plv,funL,repL,parL,out,head,flg,rep,fun,pre,
+    post,ctr,clv,nn,tmp,tmp1,tmp2,tmp3,tmp4);
   tmp1="\displaystyle\int"; //210831from
   tmp2="\displaystyle\lim";
   tmp3="\displaystyle\sum"; //210831to
@@ -144,7 +144,7 @@ Totexform(str):=( //210803from[renew]
     ["_(",["_{xx}"]], //210831
     ["tx(",["\text{xx}"]], //210907
     ["tfr(",["","\frac{xx}{yy}"]], //210831,220523
-    ["fr(",["","\dfrac{xx}{yy}"]], //210228from
+    ["fr(",["","\displaystyle\frac{xx}{yy}"]], //210228from 231224
     ["log(",["\log xx ","\log_{xx} yy"]], //210405
     ["ln(",["\ln xx "]], //210903
     ["sq(",["\sqrt{xx}","\sqrt[xx]{yy}"]],
@@ -153,7 +153,7 @@ Totexform(str):=( //210803from[renew]
     ["cos(",["\cos xx ","\cos^{xx}\! yy "]], //210405
     ["tan(",["\tan xx ","\tan^{xx}\! yy "]],  //210228to  //210405
     ["lim(", ["",tmp2+"_{xx \to yy} ",tmp2+"_{xx \to yy} zz"]], //210831from
-    ["int(", [tmp1+" ",tmp1+" xx dyy ",tmp1+" yy dzz ",tmp1+"_{xx}^{yy} zz dww "]],  //211027
+    ["int(", [tmp1+" ",tmp1+" xx yy ",tmp1+" yy zz ",tmp1+"_{xx}^{yy} zz ww "]],  //211027
     ["sum(", ["",tmp3+"_{xx}^{yy} ", tmp3+"_{xx}^{yy} zz"]], //210831to
     ["diff(", ["d ","\frac{dxx}{dyy}"]], //210913
     ["par(", ["\partial ","\frac{\partial xx}{\partial yy}"]] ,//210913
@@ -161,6 +161,27 @@ Totexform(str):=( //210803from[renew]
   ];
   parL=["log(","sin(","cos(","tan(","lim(","int(","sum("]; //210901
   out=replace(str,"pi","{\pi}"); //210805
+  out=replace(out,"frac(","fr(");//231227
+  out=replace(out,"sqrt(","sq(");//231215 from
+  tmp=indexof(out,")/(");
+  ctr=1;
+  while((tmp>0)&(ctr<20),
+    tmp1=substring(out,0,tmp);
+    tmp2=substring(out,tmp+1,length(out));
+    tmp=Bracket(tmp1);
+    tmp3=tmp_(-1)_2;
+    tmp=select(tmp,#_2==-tmp3);
+    tmp=tmp_(-1)_1;
+    tmp1=substring(tmp1,0,tmp-1)+"fr("+
+           substring(tmp1,tmp,length(tmp1)-1)+",";
+    tmp=Bracket(tmp2);
+    tmp=select(tmp,#_2==-1);
+    tmp=tmp_1_1;
+    tmp2=substring(tmp2,1,length(tmp2));
+    out=tmp1+tmp2;
+    tmp=indexof(out,")/(");
+    ctr=ctr+1;
+  );//231215 to
   head="";
   flg=0;
   plv=Bracket(out,"()");
@@ -205,6 +226,11 @@ Totexform(str):=( //210803from[renew]
        if(nn==2,
           tmp1=substring(out,plv_1_1,clv_1_1-1);
           tmp2=substring(out,clv_1_1,length(out)-1);
+		  if(indexof(out,"int(")>0, //231227from
+		    if((length(tmp2)>0)&(substring(tmp2,0,1)!="d"),
+			  tmp2="d"+tmp2;
+            );
+          ); //231227to
           if(contains(parL,fun), //210901from
             tmp2=Addpar(tmp2); //211029
           ); //210901to
@@ -230,6 +256,11 @@ Totexform(str):=( //210803from[renew]
             tmp3=Addpar(tmp3); //211029
           ); //210901to
           tmp4=substring(out,clv_3_1,length(out)-1);
+		  if(indexof(out,"int(")>0, //231227from
+		    if((length(tmp4)>0)&(substring(tmp4,0,1)!="d"),
+			  tmp4="d"+tmp4;
+            );
+          );//231227to
           tmp=replace(rep_2_4,"xx",tmp1);
           tmp=replace(tmp,"yy",tmp2);
           tmp=replace(tmp,"zz",tmp3);
@@ -3793,8 +3824,8 @@ Kettaskinit():=(
   boldflg=0;
   vecflg=0;
   nch=2;
-  StrL=apply(1..4,""); 
-  StrpL=apply(1..4,"");
+  StrL=apply(1..5,""); //240224[2lines]
+  StrpL=apply(1..5,"");
   nqu=0; //220820
   stfixed=0;
   stok=0;
@@ -4522,16 +4553,16 @@ var cdy = CindyJS({
     {name: "Text2", type: "EditableText", pos: [4.0, -0.8516129032258064, 0.25806451612903225], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "Text3", type: "EditableText", pos: [4.0, -0.8621236133122027, 0.06339144215530904], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 200, text: "St=", textsize: 21.0},
+    {name: "Text3", type: "EditableText", pos: [4.0, -0.8621236133122027, 0.06339144215530904], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 115, text: "St=", textsize: 21.0},
     {name: "Text9", type: "EditableText", pos: [1.7714285714285714, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "Q2", type: "Free", pos: [4.0, 2.4477611940298507, 0.11940298507462686], color: [1.0, 0.784, 0.0], size: 6.0, border: false},
     {name: "Text7", type: "Button", pos: [-2.0, -4.0, -0.17391304347826086], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=1;initflg=1;", text: "1", textsize: 18.0},
     {name: "Text8", type: "Button", pos: [4.0, -1.1478260869565216, 0.34782608695652173], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=2;initflg=1;", text: "2", textsize: 18.0},
     {name: "Text4", type: "Button", pos: [4.0, 0.0851063829787234, 0.10638297872340424], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1;", text: "　　", textsize: 14.0},
-    {name: "Text20", type: "Button", pos: [4.0, -0.5565217391304348, 0.057971014492753624], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "Rset", textsize: 16.0},
+    {name: "Text20", type: "Button", pos: [4.0, -0.5633802816901408, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "Rset", textsize: 16.0},
     {name: "Text30", type: "Button", pos: [4.0, -1.3137254901960786, 0.19607843137254902], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"La\",\"A\",\"{\\alpha}\",\"\\mathbf{a}\",\"{\\vec{a}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
     {name: "Text31", type: "Button", pos: [4.0, -1.08502024291498, 0.1619433198380567], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lb\",\"B\",\"{\\beta}\",\"\\mathbf{b}\",\"{\\vec{b}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
     {name: "Text32", type: "Button", pos: [4.0, -0.9241379310344828, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lc\",\"C\",\"{\\gamma}\",\"\\mathbf{c}\",\"{\\vec{c}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
@@ -4632,23 +4663,25 @@ var cdy = CindyJS({
     {name: "Text18", type: "Button", pos: [2.111475409836066, -4.0, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recflg=1;", text: "　　", textsize: 14.0},
     {name: "Text16", type: "Button", pos: [4.0, -0.42271293375394325, 0.06309148264984227], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(Shift!=1,Shift=1,Shift=0);", text: "　　", textsize: 14.0},
     {name: "Text17", type: "Button", pos: [4.0, -0.6309148264984227, 0.06309148264984227], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "if(Shift!=2,Shift=2,Shift=0);", text: "　　", textsize: 14.0},
-    {name: "Text19", type: "Button", pos: [4.0, -0.9971014492753623, 0.057971014492753624], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "stok=stok+1;", text: "O  K", textsize: 16.0},
+    {name: "Text19", type: "Button", pos: [4.0, -0.9352112676056338, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "stok=stok+1;", text: "O  K", textsize: 16.0},
     {name: "Text5", type: "Button", pos: [4.0, 0.06095238095238095, 0.0761904761904762], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=1;", text: "　　", textsize: 14.0},
-    {name: "Text371", type: "Button", pos: [4.0, -0.8947368421052632, 0.05263157894736842], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "resetclock();playanimation();Animeflg=1;Dirflg=1;\n        sorg=Current;", text: "Play", textsize: 18.0},
-    {name: "Text372", type: "Button", pos: [4.0, -1.105263157894737, 0.05263157894736842], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "Animeflg=1-Animeflg;if(Animeflg==0,pauseanimation();\n        sorg=sstart;,resetclock();playanimation(););", text: "Pause", textsize: 18.0},
-    {name: "Text373", type: "Button", pos: [4.0, -1.3157894736842106, 0.05263157894736842], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "sorg=sstart;Dirflg=-Dirflg;Animeflg=1;resetclock();\n        playanimation();", text: "Rev", textsize: 18.0},
-    {name: "Text374", type: "Button", pos: [4.0, -1.5263157894736843, 0.05263157894736842], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "Stop", textsize: 18.0}
+    {name: "Text371", type: "Button", pos: [4.0, -1.1605633802816901, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "resetclock();playanimation();Animeflg=1;Dirflg=1;\n        sorg=Current;", text: "Play", textsize: 18.0},
+    {name: "Text372", type: "Button", pos: [4.0, -1.3464788732394366, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.47, script: "Animeflg=1-Animeflg;if(Animeflg==0,pauseanimation();\n        sorg=sstart;,resetclock();playanimation(););", text: "Pau", textsize: 18.0},
+    {name: "Text373", type: "Button", pos: [4.0, -1.5323943661971828, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "sorg=sstart;Dirflg=-Dirflg;Animeflg=1;resetclock();\n        playanimation();", text: "Rev", textsize: 18.0},
+    {name: "Text374", type: "Button", pos: [4.0, -1.7183098591549293, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.47, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "Stp", textsize: 18.0},
+    {name: "Text10", type: "EditableText", pos: [4.0, -1.7391304347826086, 0.049689440993788817], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, textsize: 21.0}
   ],
   ports: [{
-    width: 1019,
-    height: 613,
+    width: 1033,
+    height: 631,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 113.46422979716584, -35.79556954563334]}],
+    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 114.90635346231366, -37.64972854368054]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2080, version: [3, 0, 2080]}
+  use: ["katex"],
+  cinderella: {build: 2082, version: [3, 0, 2082]}
 });
     </script>
 </head>
@@ -4657,6 +4690,38 @@ var cdy = CindyJS({
 KeTTask
 </font></p></header>
     <div id="CSCanvas"></div>
+<div style="padding: 50px">
+<p><font size="10">&emsp;<b>KeTMath数式ルール</b></font></p>
+<ol><font size="5">
+	<li>分数　<b>fr(a,b)</b>　注) 小さい分数 <b>tfr(a,b)</b></li>
+<li>掛け算　<b>ab</b>　注) <b>a*b</b>も可</li>
+<li>べき乗　<b>a^(b)</b>　注) 1文字の場合は<b>a^b</b>も可</li>
+<li>平方根　<b>sq(a)</b>，3乗根　<b>sq(3,a)</b></li>
+<li>三角関数　<b>sin(x)</b>，sin(x)の2乗　<b>sin(2,x)またはsin(x)^(2)</b></li>
+<li>円周率　<b>pi</b>
+<li>度　<b>(deg)</b></li>
+<li>対数関数　<b>log(x)</b>，自然対数　<b>ln(x)</b>，底がa　 <b>log(a,x)</b></li>
+<li>改行　<b>//</b></li>
+<li>スペース　<b>(sp)</b>　注) \;を出力</li>
+<li>立体　<b>100tx(m)</b></li>
+<li>不定積分　<b>int(x^2,dx)</b>，定積分　<b>int(a,b,x^2,dx)</b><br>
+	　注）定積分の関数の括弧を外すときは先頭に<b>!</b>を追加
+<li>ブラケット　<b>br(f(x),a,b)</b></li>
+<li>極限　<b>lim(x,a,f(x))</b>　注）括弧を外すときは先頭に <b>!</b></li>
+<li>和　<b>sum(k=1,n,k^2)</b>　注）括弧を外すときは先頭に <b>!</b></li></li>
+<li>微分　<b>diff(y,x)</b>，偏微分　<b>par(z,x)</b></li>
+<li>行列　<b>mat(a,b;c,d)</b>，行列式　<b>det(a,b;c,d)</b></li>
+<li>場合分け　<b>case(a,(x<0);c,(x(geq)0))</b>
+<li>ドット　1点　<b>dot()</b>，3点　<b>dot(s)</b>，下3点　<b>dot(l)</b>
+<li>掛け算×　<b>(cross)</b></li>
+<li>複号　<b>(pm),(mp)</b></li>
+<li>不等号　<b><, >, (leq), (geq),(neq)</b></li>
+<li>下添字　<b>a_n</b></li>
+<li>全角文字を混ぜてもよい　<b>2x-3=0の解はx=fr(3,2)</b><br>
+<li>ギリシャ文字 <b>{\alpha},{\beta}</b></li>
+<li>その他のTeX 記号　(sp),コンマ,{}などで区切る</li>
+</ol></font>
+</div>
 <footer><p align="center"><font size="4">&copy; 2021 Setsuo Takato</font></p></footer>
 </body>
 </html>

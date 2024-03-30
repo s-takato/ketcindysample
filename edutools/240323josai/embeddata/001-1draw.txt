@@ -1,0 +1,60 @@
+//create(M);
+Slider("M",[90,-30],[100,-30]);
+m=(M.x-70)/40;
+n=0.7;
+r=1;
+
+pAs=[((n-m)*r)/(1-m*n),((m*n+1)*r)/(1-m*n)];
+pBs=[-r/m,-r];
+pCs=[r/n,-r];
+
+Ca=[((m-n)*r)/(m*n),-((m*n+1)*r)/(m*n)];
+Ra=r/(m*n);
+Cb=[-((m^2+1)*r)/(m*(1-m*n)),((m^2+1)*n*r)/(m*(1-m*n))];
+Rb=((n+m)*r)/(m*(1-m*n));
+Cc=[((n^2+1)*r)/(n*(1-m*n)),(m*(n^2+1)*r)/(n*(1-m*n))];
+Rc=((n+m)*r)/(n*(1-m*n));
+
+Ds=[-((n-m)*r)/(m*n),-(((m^3-m)*n^3+((-4*m^2)-2)*n^2+((-m^3)-3*m)*n-2*m^2)*r)/((m^3-m)*n^3-4*m^2*n^2+(m-m^3)*n)];
+Es=[-(((m^2-1)*n^4-4*n^2+((-2*m^3)-2*m)*n+m^2-1)*r)/((m^3-m)*n^4+(1-m^2)*n^3+(m^3-m)*n^2+(1-m^2)*n),-(((m^2-1)*n^3+2*m*n^2+(3*m^2+1)*n+2*m)*r)/((m^2-1)*n^3+(m^2-1)*n)];
+Fs=[-((2*m*n^3+((-m^4)-1)*n^2+2*m*n+m^4+4*m^2+1)*r)/((m^4+m^2)*n^3+((-m^3)-m)*n^2+((-m^4)-m^2)*n+m^3+m),-(((m^3+3*m)*n^2+(2*m^2+2)*n-m^3+m)*r)/((m^3+m)*n^2-m^3-m)];
+CRs=[-((n-m)*r)/(m*n),-((3*m^2*n^2+n^2+m^2-1)*r)/(2*m*n*(m*n-1))];
+Rs=-((m^2*n^2-n^2-2*m*n-m^2-1)*r)/(2*m*n*(m*n-1));
+
+Mvcircledata("a",[Ca,Ra]);
+Mvcircledata("b",[Cb,Rb]);
+Mvcircledata("c",[Cc,Rc]);
+Mvlist("1",[pAs,pBs,pCs,pAs]);
+Mvcircledata("r",[[0,0],1],[]);
+Mvlist("2",[Ds,Es,Fs,Ds]);
+Mvcircledata("R",[CRs,Rs],["Color=red"]);
+Letter(Mvpt(Ca),"c","1");
+Letter(Mvpt(Cb),"c","2");
+Letter(Mvpt(Cc),"c","3");
+Letter(M.xy+[0,2],"c","m="+format(m,2));
+
+//if(nqu<6, //add embed
+op=["Size=1.5"];
+posy=-16;
+Expr([80,posy],"e","r_0="+format(r,2),op);
+Expr([80,posy-2.5],"e","r_1="+format(Ra,2),op);
+Expr([80,posy-5],"e","r_2="+format(Rb,2),op);
+Expr([80,posy-7.5],"e","r_3="+format(Rc,2),op);
+op=append(op,"Color=red");
+Expr([80,posy-10],"e","R="+format(abs(Rs),2),op);
+//); //add embed
+
+//if(nqu==6, //add embed
+ rr="r=1";
+ Ra=Totexform("r_1=fr(1,mn)");
+ Rb=Totexform("r_2=fr(n+m,m(1-m*n))");
+ Rc=Totexform("r_3=fr(n+m,n*(1-m*n))");
+ Sm=Totexform("S=-fr(m^2*n^2-n^2-2mn-m^2-1,mn(mn-1))");
+ Rs=Totexform("R=-fr(m^2*n^2-n^2-2mn-m^2-1,2mn(mn-1))");
+ posy=-8;
+ Expr([80,posy-0],"e",rr);
+ Expr([80,posy-4],"e",Ra);
+ Expr([80,posy-8],"e",Rb);
+ Expr([80,posy-12],"e",Rc);
+ Expr([80,posy-16],"e",Rs);
+//); //add embed

@@ -4774,13 +4774,17 @@ Mvlist(nm,lst):=Mvlist(nm,lst,[]);
 Mvlist(nm,lst,op):=Listplot(nm,apply(lst,Mvpt(#)),op);
 Setwindow([-2.5,3],[-1,4]);
 Numstr=apply(0..9,text(#));
-tmp2=Textedit(2,"a=2","");
-tmp2=Strsplit(tmp2,"=");
-tmp2=Removespace(tmp2_2);
-if(length(tmp2)==0,
-  aa=2;
+if(nqu==1,
+ aa=2;
 ,
+ tmp2=Textedit(2,"a=2","");
+ tmp2=Strsplit(tmp2,"=");
+ tmp2=Removespace(tmp2_2);
+ if(length(tmp2)==0,
+  aa=2;
+ ,
   aa=parse(tmp2);
+ );
 );
 drawtext(T4.xy," "+aa,size->15);
 Expr(Mvpt(0,-1.5),"e","a="+format(aa,12),["Size=1.2"]);

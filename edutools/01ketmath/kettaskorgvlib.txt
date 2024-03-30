@@ -1,3 +1,5 @@
+//   240330 Left,Right,LLeft,RRight,Delete,Allclear
+//   240225 text10 for inputbox
 //   240223 text19(width)
 //   230410 Delete,...
 //   220820 pexpr added, kettaskinit changed(nqu=0)
@@ -98,7 +100,7 @@ Seteditable(1,["","Size=24","Width=500"]);
 Seteditable(2,["","Size=24","Width=580"]);
 Seteditable(9,["","Size=24","Width=580"]);
 Seteditable(3,["","Size=21","Width=115"]); //St=
-//Seteditable(10,["","Size=18","Width=87"]); //No=
+Seteditable(10,["","Size=24","Width=350"]);
 //Seteditable(32,["","Size=18","Width=80"]);
 inspect(T1,"ptsize",6);
 inspect(T2,"ptsize",6);
@@ -311,7 +313,8 @@ Pull():=(
 Left():=(
   regional(preL,pre,tmp,tmp1,tmp2,tmp3);
   //global ch,shL,nqu,Str,npos
-  preL=["",shL_nqu,"St="];
+  tmp=substring(shL_nqu,0,shminL_nqu);
+  preL=["",tmp,"St="];
   pre=preL_ch;
   if(length(Str)>length(pre),
     tmp=indexof(Str,"?");
@@ -328,8 +331,7 @@ Left():=(
       Str=tmp1+tmp3;  
       npos=length(tmp1);
     );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
+    StrL_ch=Str;
   );
   funflg=0;
 );
@@ -354,8 +356,8 @@ Right():=(
         npos=length(Str);
       );
     );
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
+    StrL_ch=Str;
+	Subsedit(ch,Str);
   );
   funflg=0;
 );
@@ -363,15 +365,16 @@ Right():=(
 LLeft():=(
   regional(preL,pre,tmp,tmp1,tmp2,tmp3);
   //global ch,shL,nqu,Str,npos
-  preL=["",shL_nqu,"St="];
+  tmp=substring(shL_nqu,0,shminL_nqu);
+  preL=["",tmp,"St="];
   pre=preL_ch;
   tmp=replace(Str,"?","");
   if(length(tmp)>length(pre),
     tmp=substring(tmp,length(pre),length(tmp));
     Str=pre+"?"+tmp;
     npos=length(pre)+1;
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
+    StrL_ch=Str;
+	Subsedit(ch,Str);
   );
   funflg=0;
 );
@@ -382,8 +385,8 @@ RRight():=(
   if(length(Str)>0,
     Str=replace(Str,"?","");
     npos=length(Str);
-    Strnq=replace(Str,"?","");
-    StrL_ch=Strnq;
+    StrL_ch=Str;
+	Subsedit(ch,Str);
   );
   funflg=0;
 );
@@ -569,8 +572,8 @@ Settextkey(5,[tmp_1+2+8*4.3,0.8],tmp1,"nqinc=1;",14);
 Text1.xy=[poskey_1+4,posyL_1];
 Text2.xy=[poskey_1-4,posyL_2];
 Text9.xy=[poskey_1-4,posyL_3];
+Text10.xy=[poskey_1-4+65,posyL_3];
 Text3.xy=Text17.xy+[-0.3,-3.3-0.3];
 Text120.xy=Text3.xy+[8,3.3+0.7];
 Text19.xy=Text3.xy;//+[8,-3.3-0.3];
-println([575,Text19.xy]);
 //no ketjs off
