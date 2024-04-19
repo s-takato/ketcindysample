@@ -1,4 +1,4 @@
-//   240419 Pos of Left...RRight,Undo,Delete...Pull changed
+//   240407 sin(?),... added
 //   240330 Left,Right,LLeft,RRight,Delete,Allclear
 //   240225 text10 for inputbox
 //   240223 text19(width)
@@ -110,12 +110,12 @@ inspect(T4,"ptsize",6);
 // no ketjs off
 
 CtrkeyL=[
-  [["PS","PL","AC","CL","BS"]],
+  [["DL","AC","PS","PL"]],//"BS"]],
   [["Cap"],["Gre"],["Bld"],["Vec"]],
   [["Cal"],["Lin"],[""]],
   [["Rec"]],
-  [["＜","","＞"]],
-  [["$<\!<$","$<$","$>$","$>\!>$"]]
+  [["$<\!\!=$","","$=\!\!>$"]],
+  [["$<\!<$","$<$","$>$","$>\!>$","Un"]]
 ];
 
 Keyname():=(
@@ -215,10 +215,10 @@ Adddrw(str):=(
 );
 
 ///////
-Manifun=["Allclear()","Clearnow()","Delete()","Push()","Pull()",
+Manifun=["Allclear()","Undo()","Delete()","Push()","Pull()",
   "Left()","Right()","LLeft()","RRight()"];
 
-Clearnow():=(
+Delete():=(
   regional(preL,pre,tmp,tmp1,tmp2,tmp3);
   //global ch,shL,nqu,Str,npos
   preL=["",shL_nqu,"St="];
@@ -230,30 +230,33 @@ Clearnow():=(
   funflg=0;
 );
 
-Delete():=(
+Undo():=(
   regional(preL,pre,tmp,tmp1,tmp2,tmp3);
   //global ch,shL,nqu,Str,npos
-  preL=["",shL_nqu,"St="];
-  pre=preL_ch;
-  tmp=indexof(Str,"?");
-  if(tmp>0,npos=tmp,npos=length(Str));
-  if(length(Str)>length(pre),
-    if(npos==length(Str),
-      Str=substring(Str,0,npos-1);
-    ,
-      tmp1=substring(Str,0,npos-2);
-      tmp2=substring(Str,npos-1,length(Str));
-      Str=tmp1+tmp2;
-    );
-    Strnq=replace(Str,"?","");
-    Strnow=Str;
-    StrL_ch=Strnq;
-    npos=npos-1;
+  if(ch==2,
+    if(length(StrLL)>1,
+	  Str=StrLL_(-1);
+	  StrLL=StrLL_(1..(length(StrLL)-1));
+	);
+    tmp=indexof(Str,"?");
+    if(tmp>0,npos=tmp,npos=length(Str));
   ,
-//    Pull();
-//    npos=length(StrL_ch);
-//    Delete();
+    preL=["",shL_nqu,"St="];
+    pre=preL_ch;
+    tmp=indexof(Str,"?");
+    if(tmp>0,npos=tmp,npos=length(Str));
+    if(length(Str)>length(pre),
+      if(npos==length(Str),
+        Str=substring(Str,0,npos-1);
+      ,
+        tmp1=substring(Str,0,npos-2);
+        tmp2=substring(Str,npos-1,length(Str));
+        Str=tmp1+tmp2;
+      );
+    );
   );
+  Strnow=Str;
+  StrL_ch=Str;
   funflg=0;
 );
 
@@ -263,18 +266,27 @@ Allclear():=(
   preL=["",shL_nqu,"St="];
   pre=preL_ch;
   Str=pre;
-  Strnq=Str;
+  Strp="";
+  StrLL=[];
   StrL_ch=Str;
-  StrpL_ch="";
-  npos=length(Str);
+  StrpL_ch=Strp;
+  npos=indexof(Str,"?");
+  if(npos==0,npos=length(Str));
   funflg=0;
 );
 
-Clear():=( 
-  Str="";
-  Strnq=Str;
-  StrL_ch=Str;
-  npos=0;
+Delete():=(
+  regional(tmp1,tmp2);
+  if(npos>1,
+    StrLL=ppend(StrLL,Str);
+    if(npos<length(Str),
+	  tmp1=substring(Str,0,npos-2);
+	  Str=tmp1+"?"+substring(Str,npos,length(Str));
+    ,
+	  Str=substring(Str,0,length(Str)-1);
+    );
+	npos=npos-1;
+  );
   funflg=0;
 );
 
@@ -282,32 +294,36 @@ Push():=(
   regional(tmp,tmp1);
   tmp1=StrL_ch;
   tmp=indexof(tmp1,"//");
-  if(tmp==0,
-    StrpL_ch=StrpL_ch+tmp1+"//";
-    Str="";
-    npos=0;
-  ,
+  if(tmp>0,
     StrpL_ch=StrpL_ch+substring(tmp1,0,tmp+1);
+	Strp=StrpL_ch;
     Str=substring(tmp1,tmp+1,length(tmp1));
     npos=max([0,npos-(tmp+1)]);
+    StrL_ch=Str;
+	Subsedit(ch,Str);
   );
-  StrL_ch=Str;
-  Strnq=Str;
   funflg=0;
 );
 
 Pull():=(
   regional(tmp,tmp1,tmp2);
-  tmp1=StrpL_ch;
-  tmp=indexall(tmp1,"//");
-  if(length(tmp)>1,tmp=tmp_(-2)+1,tmp=0);
-  tmp2=substring(tmp1,0,tmp);
-  StrpL_ch=tmp2;
-  tmp1=substring(tmp1,tmp,length(tmp1));
-  Str=tmp1+StrL_ch;
-  Strnq=Str;
-  StrL_ch=Str;
-  npos=length(tmp1)+npos;
+  if(length(Strp)>0,
+    tmp=Indexall(Strp,"//");
+    if(length(tmp)>1,
+	  tmp1=tmp_(-2)+1;
+	,
+      tmp1=0;
+    );
+	tmp=substring(Strp,tmp1,length(Strp));
+	Strp=substring(Strp,0,tmp1);
+	StrpL_ch=Strp;
+    Str=tmp+Str;
+	StrL_ch=Str;
+	npos=indexof(Str,"?");
+	if(npos==0,npos=length(Str));
+	Subsedit(ch,Str);
+	TexL_ch=GettexformL(Str);
+  );
   funflg=0;
 );
 
@@ -318,6 +334,7 @@ Left():=(
   preL=["",tmp,"St="];
   pre=preL_ch;
   if(length(Str)>length(pre),
+    StrLL=append(StrLL,Str);
     tmp=indexof(Str,"?");
     if(tmp>length(pre)+1,
       tmp1=substring(Str,0,tmp-2)+"?";
@@ -341,6 +358,7 @@ Right():=(
   regional(tmp,tmp1,tmp2,tmp3);
   //global Str,npos
   if(length(Str)>0,
+    StrLL=append(StrLL,Str);
     tmp=indexof(Str,"?");
     if(tmp>0,
       if(tmp<length(Str)-1,
@@ -371,6 +389,7 @@ LLeft():=(
   pre=preL_ch;
   tmp=replace(Str,"?","");
   if(length(tmp)>length(pre),
+    StrLL=append(StrLL,Str);
     tmp=substring(tmp,length(pre),length(tmp));
     Str=pre+"?"+tmp;
     npos=length(pre)+1;
@@ -384,6 +403,7 @@ RRight():=(
   regional(tmp,tmp1,tmp2,tmp3);
   //global Str,npos
   if(length(Str)>0,
+    StrLL=append(StrLL,Str);
     Str=replace(Str,"?","");
     npos=length(Str);
     StrL_ch=Str;
@@ -400,7 +420,7 @@ Quesno(nq,flg):=( //220816
   if(length(tmp)>0,
     tmp1=tmp_(-1);
     out=quL_tmp1;
-    if(islist(out),out=out_1); /////
+    if(islist(out),out=out_1);
     tmp=indexof(out," ");
     if(tmp>0,
       out=substring(out,0,tmp-1);
@@ -423,23 +443,23 @@ sLL1=
   ["La","A","{\alpha}","\mathbf{a}","{\vec{a}\;}"],
   ["Lb","B","{\beta}","\mathbf{b}","{\vec{b}\;}"],
   ["Lc","C","{\gamma}","\mathbf{c}","{\vec{c}\;}"],
-  "sin(","sq(",")","n7","n8","n9","+"
+  "sin(?)","sq(?)",")","n7","n8","n9","+"
  ],
  [
   ["Lx","X","{\kappa}","\mathbf{x}","{\vec{x}\;}"],
   ["Ly","Y","{\iota}","\mathbf{y}","{\vec{y}\;}"],
   ["Lz","Z","{\eta}","\mathbf{z}","{\vec{z}\;}"],
-  "cos(","fr(",",","n4","n5","n6","-"
+  "cos(?)","fr(?,)",",","n4","n5","n6","-"
  ],
  [
   ["Lr","R","{\rho}","\mathbf{r}","{\vec{r}\;}"],
   ["Ls","S","{\sigma}","\mathbf{s}","\vec{s}\;"],
   ["Lt","T","{\tau}","\mathbf{t}","{\vec{t}\;}"],
-  "tan(","tfr(","(","n1","n2","n3","*"
+  "tan(?)","tfr(?,)","(","n1","n2","n3","*"
  ],
  [
    ["Lw","W","{\omega}","\mathbf{w}","{\vec{w}\;}"],
-  "_(","=","log(","ln(","^(","n0",".","(sp)","/"
+  "_(","=","log(?)","ln(?)","^(?)","n0",".","(sp)","/"
  ]
 ];
 sLL2=
@@ -450,7 +470,7 @@ sLL2=
   ["Le","E","{\delta}","\mathbf{e}","{\vec{e}\;}"],
   ["Lf","F","{\varepsilon}","\mathbf{f}","{\vec{f}\;}"],
   ["Lg","G","{\varphi}","\mathbf{g}","{\vec{g}\;}"],
-  [0,"lim(",1,"lim(",2,"mat("],
+  [0,"lim(?)",1,"lim(?)",2,"mat(?)"],
   "pi"
  ],
  [
@@ -470,7 +490,7 @@ sLL2=
   ["Ln","N","{\nu}","\mathbf{n}","{\vec{n}\;}"],
   ["Lo","O","{\omega}","\mathbf{o}","{\vec{o}\;}"],
   "'",
-  [1,"diff(",2,"case(",0,"case("]
+  [1,"diff(?,)",2,"case(?)",0,"case(?)"]
  ],
  [
   "\","(pm)","(mp)","<",">",
@@ -478,8 +498,8 @@ sLL2=
   ["Lq","Q","{\psi}","\mathbf{q}","{\vec{q}\;}"],
   ["Lu","U","{\Phi}","\mathbf{u}","{\vec{u}\;}"],
   ["Lv","V","{\lambda}","\mathbf{v}","{\vec{v}\;}"],
-  [1,"br(",2,"sum(",0,"sum("],
-  [0,"tx(",1,"par(",2,"(circ)"]
+  [1,"br(?)",2,"sum(?)",0,"sum(?)"],
+  [0,"tx(?)",1,"par(?)",2,"(circ)"]
  ]
 ];
 
@@ -557,8 +577,8 @@ forall(1..2,
 tmp=Text39.xy;
 tmp=Text30.xy-[4.3,0];
 tmp2=[
-  "Push()","Pull()","Allclear()","Clearnow()","Delete()",
-  "LLeft()","Left()","Right()","RRight()"
+  "LLeft()","Left()","Right()","RRight()","Undo()",
+  "Delete()","Allclear()","Push()","Pull()"
 ];
 tmp2=apply(tmp2,"funflg=1;name="+Dqq(#)+";");
 forall(0..4,

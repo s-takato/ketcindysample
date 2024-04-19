@@ -21,7 +21,7 @@ ul li::before {
 <body>  
 <div style="padding: 50px">  
 <p><font size="10">&emsp;KeT-LMSの課題ファイル</font>  
-<font size="6">&emsp;&emsp;&emsp;&emsp;2023-09-10</font></p> 
+<font size="6">&emsp;&emsp;&emsp;&emsp;2024-03-30</font></p> 
 <font size="5">
 <ol>
 <font size="6"><li>1. 名前　question識別記号-最初の大問番号.txt</li></font>
@@ -42,10 +42,12 @@ ul li::before {
     <li>(大問文)&emsp;&emsp;<font color="red">2行になるときは // で区切る</font></li>
     <li>[1] (小問)&emsp;&emsp;<font color="red">ないときも [] とする</font></li>
     <li>[2] &emsp;&emsp;<font color="red">小問の数だけ</font></li>
-    <li>Sheet &emsp;&emsp;<font color="red">解答欄</font></li>
-    <li>[1] &emsp;&emsp;<font color="red">:: の後に配点(とMaxima不採点のとき ::-1 を追加)</font></li>
+          <li>Sheet &emsp;&emsp;<font color="red">解答欄</font></li>
+          <li>[1] &emsp;&emsp;<font color="red">:: の後に配点(とMaxima不採点のとき ::-1 を追加)</font></br>
+    &emsp;&emsp;&emsp;・?によって入力ポイントを指定できる　例 P=[?,]
+</li>
     <li>[2]</li>
-    <li>Ans &emsp;&emsp;<font color="red">正解</font></li>
+          <li>Ans &emsp;<font color="red">正解</font></li>
     <li>[1]</li>
     <li>[2]</li>
     <li><font color="red">空白行をおいて次の問題を書く</font></li>
@@ -59,8 +61,8 @@ ul li::before {
     <li>[1] sin(2x)の導関数の定義式をかけ</li>
     <li>[2] sin(2x)の0からfr(pi,2)までの定積分を求めよ</li>
     <li>Sheet</li>
-    <li>[1] =&emsp; ::5::-1</li>
-    <li>[2] int(sin(2x),x,0,fr(pi,2))=&emsp; ::5</li>
+          <li>[1] f'(x)=lim(z,x,fr(?,z-x)) &emsp; ::5::-1</li>
+    <li>[2] int(0,fr(pi,2),sin(2x),dx)=&emsp; ::5</li>
     <li>Ans</li>
     <li>[1] lim(z,x,fr(sin(z)-sin(x),z-x))</li>
     <li>[2] 1</li>

@@ -1,3 +1,15 @@
+<!-- Copyright (C)  2014  Setsuo Takato, KETCindy Japan project team
+* This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version. 
+* This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>
+ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,36 +32,1067 @@
             width: 100%;
         }
     </style>
-    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
-    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
-    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/KetCindyPlugin.js"></script>
+    <link rel="stylesheet" href="ketcindyjs/CindyJS.css">
+   <script type="text/javascript" src="ketcindyjs/Cindy.js"></script>
+
 <script id="csinit" type="text/x-cindyscript">
-//KETlib
-use("KetCindyPlugin");
-Dircdy=loaddirectory;
-setdirectory(gethome());
-import("ketcindy.ini");
-setdirectory(Dircdy); //no ketjs
-import("ketcindylibkey.cs");
-import("kettaskorgvlib.txt");
+Invert(x):=reverse(x);
+Ketcindyjsfigure=0;
+Ketcindyjsscale=1;
+aalinestart=1;
+quline="";
+shline="";
+sqline="";
+zzlineend=1;
+
+
+
+ch=0;
+funflg=0;
+texflg=0;
+capflg=0;
+initflg=1;
+initpos=4;
+StrL=apply(1..8,"");
+BoxL=apply(1..8,#);
+strnow="";
+npos=0;
+
+Modifyfortex(str):=(
+  regional(rep1L,rep2L,nn,tmp,tmp1,out);
+  rep1L=["(sp)","(cross)","(cdot)","(deg)","(circ)","(neq)",
+         "(geq)","(leq)","(pm)","(mp)","(inf)"];
+  rep2L=["\;","{\times}","{\cdot}","^{\circ}","\circ","{\neq}",
+         "{\geq}","{\leq}","{\pm}","{\mp}","{\infty}"];
+  out=str;
+  forall(1..(length(rep1L)),nn,
+    out=replace(out,rep1L_nn,rep2L_nn);
+  );
+  out;
+);
+
+Extractvar(strorg):=Extractvar(strorg,",");
+Extractvar(strorg,mark):=(
+  regional(out,parL,str,cma,nc,first,last,
+     tmp,tmp1,tmp2);
+  str=strorg;
+  out=[];
+  first=0; last=0;
+  parL=Bracket(str,"()");
+  tmp1=select(parL,#_2==1);
+  tmp2=select(parL,#_2==-1);
+  if(length(tmp1)*length(tmp2)>0,
+    first=tmp1_1_1;
+    last=tmp2_1_1;
+    str=substring(str,0,last);
+    cma=Indexall(str,mark);
+    parL=select(parL,#_1<=last);
+    if(length(cma)==0,
+      out=[substring(str,first,last-1)];
+    ,
+      tmp1=first;
+      forall(1..(length(cma)),nc,
+        tmp=select(parL,#_1<cma_nc);
+        tmp=tmp_(-1)_2;
+        if(tmp>0,tmp=tmp,tmp=-tmp-1);
+        if(tmp==1,
+          tmp2=cma_(nc)-1;
+          out=append(out,substring(str,tmp1,tmp2));
+          tmp1=tmp2+1;
+          if(nc==length(cma),
+            out=append(out,substring(str,tmp1,length(str)-1));
+          );
+        );
+      );
+    );
+  );
+  [first,last,out];
+);
+
+Replacematdet(str):=(
+  regional(sym,out,rest,ctr,eL,np,nc,tmp,tmp1,tmp2,tmp3);
+  out=str;
+  forall(["mat(","det(","case("],sym,  //210902 case
+    tmp=indexof(out,sym);
+    ctr=0;
+    while((tmp>0)&(ctr<20),
+      rest=substring(out,tmp-1,length(out));
+      out=substring(out,0,tmp-1);
+      tmp1=Bracket(rest,"()");
+      tmp1=select(tmp1,#_2==-1);
+      if(length(tmp1)>0,tmp1=tmp1_1_1,tmp1=length(rest));
+      tmp2=substring(rest,0,tmp1);
+      rest=substring(rest,tmp1,length(rest));
+      eL=Extractvar(tmp2,";");
+      tmp3=eL_3;
+      forall(1..(length(tmp3)),np,
+        tmp=tmp3_np;
+        tmp1=Getlevel(tmp);
+        tmp1=select(tmp1,#_2==0);
+        tmp1=apply(tmp1,#_1);
+        nc=length(tmp1)+1;
+        forall(tmp1,
+          tmp_#="&";
+        );
+        tmp3_np=tmp;
+      );
+      tmp2="\begin{array}{";
+      forall(1..nc,tmp2=tmp2+"c");
+      tmp2=tmp2+"}";
+      forall(tmp3,tmp2=tmp2+#+"\\");
+      tmp2=substring(tmp2,0,length(tmp2)-2);
+      tmp2=tmp2+"\end{array}";
+      if(sym=="mat(",
+        tmp2="\left("+tmp2+"\right)";
+      );
+      if(sym=="det(",
+        tmp2="\left|"+tmp2+"\right|";
+      );
+      if(sym=="case(", //210902from
+        tmp2="\left\{"+tmp2+"\right.";
+      );
+
+      out=out+tmp2+rest;
+      tmp=indexof(out,sym);
+      ctr=ctr+1;      
+    );
+  );
+  out;
+);
+
+Replacedot(str):=(  //220819
+  regional(out,rest,flg,tmp,tmp1,tmp2);
+  out=str;
+  tmp1=indexof(out,"dot(");
+  while(tmp1>0,
+    tmp=Indexall(out,")");
+    tmp=select(tmp,#>tmp1);
+    if(length(tmp)>0,
+      tmp2=tmp_1;
+    ,
+      tmp2=length(out);
+    );
+    rest=substring(out,tmp2,length(out));
+    tmp=substring(out,tmp1+3,tmp2-1);
+    tmp=Removespace(tmp);
+    out=substring(out,0,tmp1-1);
+    flg=0;
+    if((tmp=="")%(tmp=="1"),tmp2="{\cdot}";flg=1);
+    if((tmp=="3")%(tmp=="s"),tmp2="{\cdots}";flg=1);
+    if(tmp=="d",tmp2="{\ddots}";flg=1);
+    if(tmp=="l",tmp2="{\ldots}";flg=1);
+    if(tmp=="v",tmp2="{\vdots}";flg=1);
+    if(flg==0,tmp2="{\cdot}");
+    out=out+tmp2+rest;
+    tmp1=indexof(out,"dot(");
+  );
+  out;
+);
+
+Replacefun(str,name,repL):=(  //new 210604
+  regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
+     tmp,tmp1,tmp2);
+  out="";
+  pre=""; post=str; sub="";
+  tmp=indexof(post,name);
+  ctr=1;
+  while((tmp>0)&(ctr<50),
+    pre=substring(post,0,tmp-1);
+    sub=substring(post,tmp+length(name)-2,length(post));
+    tmp1=Bracket(sub,"()");
+    tmp1=select(tmp1,#_2==-1);
+    tmp1=tmp1_1_1;
+    post=substring(sub,tmp1,length(sub));
+    sub=substring(sub,0,tmp1);
+    tmp1=Bracket(sub,"()");
+    tmp2=Getlevel(sub,",");
+    if(length(tmp2)==0,
+      if(name=="int(",
+        pre=pre+"\displaystyle\int\,";
+      );
+    ,
+      tmp2=select(tmp2,#_2==1);
+      tmp2=apply(tmp2,#_1);
+      tmp2=prepend(1,tmp2);
+      tmp2=append(tmp2,length(sub));
+      if(length(tmp2)==length(repL),
+        forall(1..(length(tmp2)-1),
+          tmp=substring(sub,tmp2_#,tmp2_(#+1)-1);
+          if(!contains(["e^("],name),
+            if(indexof(tmp,"-")+indexof(tmp,"+")>0,tmp="("+tmp+")");
+          );
+          pre=pre+repL_#+tmp;
+        );
+        pre=pre+repL_(length(tmp2));
+      );
+    );
+    out=out+pre;
+    tmp=indexof(post,name);
+    ctr=ctr+1;
+  );
+  out=out+post;
+  out;
+);
+
+Morefunction(str):=( //new 210604
+  regional(out,name,repL);
+  out=str;
+  out=Replacematdet(out); //210606
+  out=Replacedot(out); //220819
+  out;
+);
+
+Togreek(str):=(
+  regional(chr,alph,Alph,grk,Grk,out,flg,tmp);
+  alph="abgdezhtiklmnxprstufcqov";
+  grk=["alpha","beta","gamma","delta","epsilon","zeta",
+       "eta","theta","iota","kappa","lambda","mu","nu",
+       "xi","pi","rho","sigma","tau","upsilon",
+       "phi","chi","psi","omega","varphi"];
+  Alph="GDTLPSFQO";
+  Grk=["Gamma","Delta","Theta","Lambda","Pi",
+       "Sigma","Phi","Psi","Omega"];
+  out="";
+  forall(1..(length(str)),
+    chr=str_#;
+    flg=0;
+    tmp=indexof(alph,chr);
+    if(tmp>0,
+      out=out+"\"+grk_(tmp)+" ";
+      flg=1;
+    );
+    if(flg==0,
+      tmp=indexof(Alph,chr);
+      if(tmp>0,
+        out=out+"\"+Grk_(tmp)+" ";
+        flg=1;
+      );
+    );
+    if(flg==0,out=out+chr);
+  );
+  out;
+);
+
+Noascii(str):=(
+  regional(ascii,out,tmp,tmp1);
+  ascii=apply(32..126,unicode(text(#),base->10));
+  out="";
+  forall(1..(length(str)),
+    tmp=Op(#,str);
+    if(!contains(ascii,tmp),
+      out=out+tmp;
+    );
+  );
+  out;
+);
+
+
+Charstyle(str):=(
+  regional(ctr,tmp,tmp1,tmp2,tmp3,out);
+  out=str;
+  tmp=indexof(out,"{C}");
+  ctr=0;
+  while((tmp>0)&(ctr<20),
+    tmp3=substring(out,tmp+2,tmp+3);
+    tmp3=Toupper(tmp3);
+    tmp3=substring(out,0,tmp-1)+tmp3;
+    out=tmp3+substring(out,tmp+3,length(out));
+    tmp=indexof(out,"{C}");
+    ctr=ctr+1;
+  );
+  tmp=indexof(out,"{G}");
+  ctr=0;
+  while((tmp>0)&(ctr<20),
+    tmp3=substring(out,tmp+2,tmp+3);
+    tmp3=Togreek(tmp3);
+    tmp3=substring(out,0,tmp-1)+tmp3;
+    out=tmp3+substring(out,tmp+3,length(out));
+    tmp=indexof(out,"{G}");
+    ctr=ctr+1;
+  );
+  tmp=indexof(out,"{B}");
+  ctr=0;
+  while((tmp>0)&(ctr<20),
+    tmp3=substring(out,tmp+2,tmp+3);
+    tmp3="\mathbf{"+tmp3+"}";
+    tmp3=substring(out,0,tmp-1)+tmp3;
+    out=tmp3+substring(out,tmp+3,length(out));
+    tmp=indexof(out,"{B}");
+    ctr=ctr+1;
+  );
+  out;
+);
+
+Addat(str):=(
+  regional(ascii,out,flg,tmp);
+  ascii=apply(32..126,unicode(text(#),base->10));
+  ascii=remove(ascii,["@"]);
+  out="";
+  flg=0;
+  forall(1..(length(str)),
+    tmp=str_#;
+    if(tmp=="@",
+      flg=1-flg
+    ,
+      if(!contains(ascii,tmp),
+        if(flg==0,
+          tmp="@"+tmp+"@";
+        );
+      );
+    );
+    out=out+tmp;
+  );
+  out=replace(out,"@@","");
+  out;
+);
+
+Sepchar(strorg):=(
+  regional(str,out,flg,sharp,tctr,err,tmp,tmp1,tmp2);
+  tmp1=strorg; //210907from
+  str="";
+  tctr=0;
+  sharp=[];
+  tmp=indexof(tmp1,"tx(");
+  while(tmp>0,
+    tctr=tctr+1;
+    tmp2=substring(tmp1,0,tmp+1);
+    tmp1=substring(tmp1,tmp+1,length(tmp1));
+    str=str+tmp2+"(#"+text(tctr)+")";
+    tmp=indexof(tmp1,")");
+    tmp2=substring(tmp1,1,tmp-1);
+    sharp=append(sharp,tmp2);
+    tmp1=substring(tmp1,tmp,length(tmp1));
+    tmp=indexof(tmp1,"tx(");
+  );
+  str=str+tmp1; //210907to
+  str=Addat(str); 
+  err="";
+  out=[];
+  tmp1=Indexall(str,"@");
+  tmp=length(tmp1);
+  if((length(str)==0)%(tmp==0)%(mod(tmp,2)==1),
+    if((length(str)==0)%(tmp==0),
+      if(length(str)==0,out=[],out=[str]);
+    ,
+      err="@の数";
+    );
+  ,
+    tmp=tmp1_1;
+    if(tmp>1,
+      out=[substring(str,0,tmp-1)];
+    );
+    start=tmp;
+    flg=1;
+    forall(2..(length(tmp1)),
+      if(flg==1,
+        tmp2=substring(str,start-1,tmp1_#-1);
+      ,
+        tmp2=substring(str,start,tmp1_#-1);
+      );
+      out=append(out,tmp2);
+      start=tmp1_#;
+      flg=1-flg;
+    );
+    if(start<length(str),
+      tmp2=substring(str,start,length(str));
+      out=append(out,tmp2);
+    );
+  );
+  forall(1..(length(sharp)),tmp,  //210907from
+    out=apply(out,replace(#,"#"+tmp,sharp_tmp));
+  ); //210907to
+  [out,err];
+);
+
+Instr(key):=(
+  regional(out,tmp,tmp1);
+  if(length(key)==1,out=key);
+  if(length(key)==2,
+    tmp=substring(key,0,1);
+    tmp1=substring(key,1,2);
+    if((tmp=="L")%(tmp=="n"),
+      out=tmp1;
+      if(capflg==1,
+        if((out>="a")&(out<="z"),
+          out=Toupper(out);
+        );
+        capflg=0;
+      );
+    ,
+      out=key;
+    );
+  );
+  if(length(key)>=3,
+    out=key;
+    if(indexof(key,"()")>0,
+      if(indexof(key,"Delete")>0,out="";Delete());
+      if(indexof(key,"Allclear")>0,out="";Allclear());
+    );
+  );
+  out;
+);
+
+Greekletter(str):=(
+  regional(tmp,tmp1,tmp2,tmp3,tmp4,out,ctr);
+  out=replace(str,"g r(","gr(");
+  tmp2=indexof(out,"gr(");
+  ctr=1;
+  while((tmp2>0)&(ctr<100),
+    tmp=Bracket(out,"()");
+    tmp=select(tmp,(tmp2<#_1)&(#_2<0));
+    tmp3=tmp_1_1;
+    tmp=substring(out,tmp2+2,tmp3-1);
+    tmp4=Togreek(tmp);
+    tmp=substring(out,0,tmp2-1)+tmp4;
+    out=tmp+substring(out,tmp3,length(out));
+    tmp2=indexof(out,"gr(");
+    ctr=ctr+1;
+  );
+  out;
+);
+
+Capitalletter(str):=(
+  regional(tmp,tmp1,tmp2,tmp3,tmp4,out,ctr);
+  out=replace(str,"c a(","ca(");
+  tmp2=indexof(out,"ca(");
+  ctr=1;
+  while((tmp2>0)&(ctr<100),
+    tmp=Bracket(out,"()");
+    tmp=select(tmp,(tmp2<#_1)&(#_2<0));
+    tmp3=tmp_1_1;
+    tmp=substring(out,tmp2+2,tmp3-1);
+    tmp4=Toupper(tmp);
+    tmp=substring(out,0,tmp2-1)+tmp4;
+    out=tmp+substring(out,tmp3,length(out));
+    tmp2=indexof(out,"ca(");
+    ctr=ctr+1;
+  );
+  out;
+);
+
+Boldletter(str):=(
+  regional(tmp,tmp1,tmp2,tmp3,tmp4,out,ctr);
+  out=replace(str,"b o(","bo(");
+  tmp2=indexof(out,"bo(");
+  ctr=1;
+  while((tmp2>0)&(ctr<100),
+    tmp=Bracket(out,"()");
+    tmp=select(tmp,(tmp2<#_1)&(#_2<0));
+    tmp3=tmp_1_1;
+    tmp=substring(out,tmp2+2,tmp3-1);
+    tmp4="\mathbf{"+tmp+"}";
+    tmp=substring(out,0,tmp2-1)+tmp4;
+    out=tmp+substring(out,tmp3,length(out));
+    tmp2=indexof(out,"bo(");
+    ctr=ctr+1;
+  );
+  out;
+);
+
+Gettexform(str):=(
+  regional(err,subL,strt,tmp,tmp1,tmp2,tmp3,tmp4);
+  err="";
+  tmp=Sepchar(str);
+  subL=tmp_1;
+  err=tmp_2;
+  strt="";
+  forall(subL,
+    if(substring(#,0,1)=="@",
+      strt=strt+substring(#,1,length(#));
+    ,
+      tmp=#;
+      tmp=replace(#," ","(sp)");
+      tmp=Modifyfortex(tmp);
+      tmp=Morefunction(tmp);
+      tmp1=Totexform(tmp);
+      tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
+      repeat(5,tmp1=replace(tmp1,"c c","cc"));
+      tmp1=replace(tmp1,"c i r c","\circ");
+      tmp1=Greekletter(tmp1); //210514[3lines]
+      tmp1=Capitalletter(tmp1);
+      tmp1=Boldletter(tmp1);
+      strt=strt+"$"+tmp1+"$";
+    );
+  );
+  strt;
+);
+
+Dispposition(pos,npos,str):=Dispposition(pos,3,npos,str);
+Dispposition(pos,len,npos,str):=(
+  regional(ascii,tmp,tmp1,tmp2,dp,p1,p2,p3,p4,n,ctr);
+  ascii=apply(32..126,unicode(text(#),base->10));
+  dp=[0,len];
+  tmp=[0.1,0];
+  p1=pos-tmp;  p2=pos+tmp;
+  p3=p1+dp; p4=p2+dp;
+  Listplot("-disp",[p1,p2,p4,p3,p1],["nodisp","Msg=n"]);
+  Shade(["disp"],["Color=red"]);
+  if(length(str)>0, //211109from
+    n=npos;
+    ctr=0;
+    while((n>0)&(ctr<4),
+      tmp=substring(str,n-1,n);
+      if(contains(ascii,tmp),ctr=ctr+1,ctr=ctr+2);
+      n=n-1;
+    ); 
+    tmp1=substring(str,n,npos);
+    n=npos+1;
+    ctr=0;
+    while((n<=length(str))&(ctr<4),
+      tmp=substring(str,n-1,n);
+      if(contains(ascii,tmp),ctr=ctr+1,ctr=ctr+2);
+      n=n+1;
+    );  
+    tmp2=substring(str,npos,n-1);
+    p1=pos+1/3*dp;
+    drawtext(p1,tmp1,size->22,align->"right");
+    drawtext(p1,tmp2,size->22,align->"left");
+  ); //211109to
+);
+
+Addfunstr(name,npos,strnow):=(
+  regional(str,tmp,out);
+  str=Instr(name);
+  tmp="";
+  tmp=substring(strnow,0,npos)+str;
+  tmp=tmp+substring(strnow,npos,length(strnow));
+  out=[tmp,npos+length(str)];
+  funflg=0;
+  out;
+);
+
+Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22,1); //210629
+Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=( //230406
+  regional(xL,yL,plt,prt,prb,row,col,name,tmp,tmp2,pos);
+  if(nx>0,  //211012from
+    xL=apply(0..nx,#/10*dx+plb_1);
+  ,
+    xL=[plb_1];
+    forall(dx,
+      tmp=xL_(-1)+#/10;
+      xL=append(xL,tmp);
+    );
+  );
+  if(ny>0,
+    yL=apply(0..ny,(ny-#)/10*dy+plb_2);
+  ,
+    yL=[plb_2];
+    forall(dy,
+      tmp=yL_(-1)+#/10;
+      yL=append(yL,tmp);
+    );
+  );  //211012to
+  plt=[xL_1,yL_1]; prt=[xL_(-1),yL_1]; prb=[xL_(-1),yL_(-1)];
+  if(clr!=0,//shade==1, 230406
+    fillpoly([plb,plt,prt,prb,plb],color->clr);
+  );
+  forall(xL,draw([#,plb_2],[#,plt_2],color->[0,0,0]));
+  forall(yL,draw([plb_1,#],[prb_1,#],color->[0,0,0]));
+  if(length(nameL)>0,
+    forall(1..(length(yL)-1),row,
+      tmp1=yL_row;
+      tmp2=yL_(row+1);
+      pos=[0,(tmp1+tmp2)/2];
+      forall(1..(length(xL)-1),col,
+        name=nameL_row_col;
+        tmp1=xL_col;
+        tmp2=xL_(col+1);
+        pos_1=(tmp1+tmp2)/2;
+        tmp=indexof(name,",");
+       drawtext(pos+nmove,name,align->"mid",size->sz);
+      );
+    );
+  );
+);
+
+Allclear():=(
+  StrL_ch="";
+  strnow="";
+  npos=0;
+  Subsedit(BoxL_ch,"");
+  funflg=0;
+);
+
+Deletekey():=(
+  regional(tmp1,tmp2);
+  if(npos>0,
+    tmp1=substring(strnow,0,npos-1);
+    tmp2=substring(strnow,npos,length(strnow));
+    StrL_ch=tmp1+tmp2;
+    strnow=StrL_ch;
+    Subsedit(BoxL_ch,strnow);
+    npos=npos-1;
+    funflg=0;
+  );
+);
+
+LFmark=unicode("000a");
+CRmark=unicode("000d");
+Dq=unicode("0022");
+Dqq(str):=(
+  unicode("0022")+str+unicode("0022");
+);
+
+
+
+
+List2line(stLL):=(
+  regional(tab,nn,nc,tmp,str,st,out);
+  tab=unicode("0009");
+  out="";
+  forall(1..(length(stLL)),nn,
+    st=stLL_nn;
+    str="";
+    forall(1..(length(st)),
+      tmp=st_#;
+      if(!isstring(tmp),tmp=format(tmp,10));
+      str=str+tmp+tab;
+    );
+    str=substring(str,0,length(str)-1);
+    out=out+str;
+    if(nn<length(stLL),out=out+"CR");
+  );
+  out;  
+);
+
+Line2list(strorg):=(
+  regional(tab,stL,st,nn,tL,mx,flg,tmp);
+  tab=unicode("0009");
+  str=replace(strorg,";;",tab);
+  flg=indexof(str,"::");
+   tL=[];
+  if(indexof(str,"CR")>0,
+    stL=Strsplit(str,"CR");
+    forall(1..(length(stL)),nn,
+      st=stL_nn;
+      if(!isstring(st),st=format(st,10));
+      stL_nn=Strsplit(st,tab);
+    );
+  ,
+    stL=Strsplit(str,tab);
+    forall(1..(length(stL)),
+      tmp=stL_#;
+      if(indexof(tmp,"::")>0,tmp=Strsplit(tmp,"::"));
+      stL_#=tmp;
+    );
+  );
+  stL;
+);
+
+
+Errorcheckstr(str):=(
+  regional(flg,tmp,tmp1,tmp2,tmp3);
+  flg=[0,[]];
+  if(length(str)==0,flg=3);
+  if(flg_1==0,
+    tmp3=Indexall(str,"^");
+    tmp2=[];
+    forall(tmp3,
+      if(#==1,
+        tmp2=append(tmp2,#);
+      ,
+        if(str_(#-1)=="(",
+          tmp2=append(tmp2,#);
+        ,
+          if(#>=4,
+            tmp=substring(str,#-4,#-1);
+            println(tmp);
+            
+            if(contains(["sin","cos","tan"],tmp),
+              tmp2=append(tmp2,#);
+            );
+          );    
+        );
+        if(length(tmp2)>0,
+          flg=[2,tmp2]; // pos of hats different
+        );
+      );
+    );
+  );
+  if(flg_1==0,
+    if(indexof(str,"(")>0,
+      tmp2=Bracket(str);
+      tmp=tmp2_(-1);
+      if(tmp_2!=-1, // brackets mismach
+        tmp2=select(tmp2,abs(#_2)==1);
+        tmp2=apply(tmp2,#_1);
+        flg=[1,tmp2]; 
+      );
+    );
+  ); 
+  flg;
+);
+
+posyL=[23,-3.3,-35];
+poskey=[19.5,-17.67]; 
+
+Kettaskinit():=(
+  regional(tmp,tmp1,tmp2);
+  Shift=0;
+  keytype=1;
+  capflg=0;
+  greflg=0;
+  boldflg=0;
+  vecflg=0;
+  nch=2;
+  StrL=apply(1..4,""); 
+  StrpL=apply(1..4,"");
+  nqu=0; //220820
+  stfixed=0;
+  stok=0;
+  initflg=1;
+  choose=0;
+  DrwL=[];
+  dpos=[10,14];
+ 
+  ch=3;
+  Str="";
+  Strp="";
+  Strnq="";
+  Strnow="";
+  Strt="";
+  npos=0;
+
+  px=15;
+  dtpy=3.2;
+  tposL=apply(1..4,[px+0.5,17.4-(#-1)*dtpy]);
+  dxL=apply(10..19,35.5);
+  dxL_4=42; dxL_5=42;
+  dxL2=apply(1..9,35.5);
+  dxL3=[42,42];
+  forall(1..(length(tposL)),
+    tmp="T"+text(#);
+    Putpoint(tmp,tposL_#);
+  );
+   ch=3;
+  Str="Student=";
+  Strnq=replace(Str,"?","");
+  StrL_ch=Strnq;
+  npos=length(Str);
+  tab=unicode("0009");
+  quL=Line2list(quline);
+  quall=length(quL);
+  shL=Line2list(shline);
+  ansL=shL;
+  sqLL=Line2list(sqline);
+  sqall=length(sqLL);
+  stall=sqall;
+  stquLL=[];
+  forall(1..stall,ns,
+    tmp=sqLL_ns;
+    name=tmp_1;
+    tmp2=tmp_(2..(length(tmp)));
+    tmp2=apply(tmp2,parse(#));
+    qu=[];
+    sh=[];
+    forall(1..(length(quL)),nn,
+      tmp=quL_nn;
+      qu=append(qu,tmp_1+" "+tmp_(tmp2_nn));
+      tmp=shL_nn;
+      sh=append(sh,tmp_1+" "+tmp_2);
+    );
+    stquLL=append(stquLL,[name,qu,sh]);
+  );
+); // end init
+
+
+CtrkeyL=[
+  [["PS","PL","AC","CL","BS"]],
+  [["Cap"],["Gre"],["Bld"],["Vec"]],
+  [["Cal"],["Lin"],[""]],
+  [["Rec"]],
+  [["＜","","＞"]],
+  [["$<\!<$","$<$","$>$","$>\!>$"]]
+];
+
+Keyname():=(
+  regional(nL,nL2,nL3,tmp1);
+  nL=[
+    ["a","b","c","sin","sq",")","7","8","9","＋"],
+    ["x","y","z","cos","fr",",","4","5","6","ー"],
+    ["r","s","t","tan","tfr","(","1","2","3","＊","'"],
+    ["w","_","=","log","ln","^","0",".","sp","／"]
+  ];
+  nL2=[
+    ["°","＠","[","]","|","d","e","f","g","lim","pi"],
+    ["$\times$","!","{","}","$\neq$","h","i","j","k","int","$\infty$"],
+    ["dot",":",";","$\leq$","$\geq","l","m","n","o","'","cs"],
+    ["\","$\pm$","$\mp$","<",">","p","q","u","v","sum","tx"]
+  ];
+  
+  if(Shift==1,
+    nL2_3_11="$d$"; nL2_4_10="$[.]_{}^{}$"; nL2_4_11="$\partial$";
+  );
+  if(Shift==2,
+    nL2_1_10="mat"; nL2_2_10="det"; nL2_4_11="$\circ$";
+  );
+
+  if(keytype==2,
+    tmp1=["A","B","C"]; forall(1..3,nL_1_(#)=tmp1_#);
+    tmp1=["D","E","F","G"]; forall(1..4,nL2_1_(#+5)=tmp1_#);
+    tmp1=["X","Y","Z"]; forall(1..3,nL_2_(#)=tmp1_#);
+    tmp1=["H","I","J","K"]; forall(1..4,nL2_2_(#+5)=tmp1_#);
+    tmp1=["R","S","T"]; forall(1..3,nL_3_(#)=tmp1_#);
+    tmp1=["L","M","N","O"]; forall(1..4,nL2_3_(#+5)=tmp1_#);
+    tmp1=["W"]; forall(1..1,nL_4_(#)=tmp1_#);
+    tmp1=["P","Q","U","V"]; forall(1..4,nL2_4_(#+5)=tmp1_#);
+  );
+  if(keytype==3,
+    tmp1=["$\alpha$","$\beta$","$\gamma$"];
+    forall(1..3,nL_1_(#)=tmp1_#);
+    tmp1=["$\Delta$","$\delta$","$\varepsilon$","$\varphi$"];
+    forall(1..4,nL2_1_(#+5)=tmp1_#);
+    tmp1=["$\kappa$","$\iota$","$\zeta$"];
+    forall(1..3,nL_2_(#)=tmp1_#);
+    tmp1=["$\Theta$","$\theta$","$\chi$","$\xi$"];
+    forall(1..4,nL2_2_(#+5)=tmp1_#);
+    tmp1=["$\rho$","$\sigma$","$\tau$"];
+    forall(1..3,nL_3_(#)=tmp1_#);
+    tmp1=["$\lambda","$\mu$","$\nu$","$\omega$"];
+    forall(1..4,nL2_3_(#+5)=tmp1_#);
+    tmp1=["$\Omega$"];
+    forall(1..1,nL_4_(#)=tmp1_#);
+    tmp1=["$\Psi$","$\psi$","$\Phi$","$\Lambda$"];
+    forall(1..4,nL2_4_(#+5)=tmp1_#);
+  );
+  if(keytype==4,
+    tmp1=apply(["a","b","c"],"$\mathbf{"+#+"}$");
+    forall(1..3,nL_1_(#)=tmp1_#);
+    tmp1=apply(["d","e","f","g"],"$\mathbf{"+#+"}$");
+    forall(1..4,nL2_1_(#+5)=tmp1_(#));
+    tmp1=apply(["x","y","z"],"$\mathbf{"+#+"}$");
+    forall(1..3,nL_2_(#)=tmp1_#);
+    tmp1=apply(["h","i","j","k"],"$\mathbf{"+#+"}$");
+    forall(1..4,nL2_2_(#+5)=tmp1_#);
+    tmp1=apply(["r","s","t"],"$\mathbf{"+#+"}$");
+    forall(1..3,nL_3_(#)=tmp1_#);
+    tmp1=apply(["l","m","n","o"],"$\mathbf{"+#+"}$");
+    forall(1..4,nL2_3_(#+5)=tmp1_#);
+    tmp1=apply(["w"],"$\mathbf{"+#+"}$");
+    forall(1..1,nL_4_(#)=tmp1_#);
+    tmp1=apply(["p","q","r","s"],"$\mathbf{"+#+"}$");
+    forall(1..4,nL2_4_(#+5)=tmp1_#);
+  );
+  if(keytype==5,
+    tmp1=apply(["a","b","c"],"$\vec{"+#+"}$");
+    forall(1..3,nL_1_(#)=tmp1_#);
+    tmp1=apply(["d","e","f","g"],"$\vec{"+#+"}$");
+    forall(1..4,nL2_1_(#+5)=tmp1_(#));
+    tmp1=apply(["x","y","z"],"$\vec{"+#+"}$");
+    forall(1..3,nL_2_(#)=tmp1_#);
+    tmp1=apply(["h","i","j","k"],"$\vec{"+#+"}$");
+    forall(1..4,nL2_2_(#+5)=tmp1_#);
+    tmp1=apply(["r","s","t"],"$\vec{"+#+"}$");
+    forall(1..3,nL_3_(#)=tmp1_#);
+    tmp1=apply(["l","m","n","o"],"$\vec{"+#+"}$");
+    forall(1..4,nL2_3_(#+5)=tmp1_#);
+    tmp1=apply(["w"],"$\vec{"+#+"}$");
+    forall(1..1,nL_4_(#)=tmp1_#);
+    tmp1=apply(["p","q","r","s"],"$\vec{"+#+"}$");
+    forall(1..4,nL2_4_(#+5)=tmp1_#);
+  );
+  [nL,nL2];
+);
+
+
+
+Adddrw(str):=(
+  DrwL=append(DrwL,[dpos,str,18]);
+  dpos=dpos-[0,2];
+);
+
+Manifun=["Allclear()","Clearnow()","Delete()","Push()","Pull()",
+  "Left()","Right()","LLeft()","RRight()"];
+
+Clearnow():=(
+  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
+  preL=["",shL_nqu,"St="];
+  pre=preL_ch;
+  if(StrpL_ch=="",Str=pre,Str="");
+  StrL_ch=Str;
+  npos=length(Str);
+  Subsedit(ch,Str);
+  funflg=0;
+);
+
+Delete():=(
+  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
+  preL=["",shL_nqu,"St="];
+  pre=preL_ch;
+  tmp=indexof(Str,"?");
+  if(tmp>0,npos=tmp,npos=length(Str));
+  if(length(Str)>length(pre),
+    if(npos==length(Str),
+      Str=substring(Str,0,npos-1);
+    ,
+      tmp1=substring(Str,0,npos-2);
+      tmp2=substring(Str,npos-1,length(Str));
+      Str=tmp1+tmp2;
+    );
+    Strnq=replace(Str,"?","");
+    Strnow=Str;
+    StrL_ch=Strnq;
+    npos=npos-1;
+  ,
+  );
+  funflg=0;
+);
+
+Allclear():=(
+  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
+  preL=["",shL_nqu,"St="];
+  pre=preL_ch;
+  Str=pre;
+  Strnq=Str;
+  StrL_ch=Str;
+  StrpL_ch="";
+  npos=length(Str);
+  funflg=0;
+);
+
+Clear():=( 
+  Str="";
+  Strnq=Str;
+  StrL_ch=Str;
+  npos=0;
+  funflg=0;
+);
+
+Push():=(
+  regional(tmp,tmp1);
+  tmp1=StrL_ch;
+  tmp=indexof(tmp1,"//");
+  if(tmp==0,
+    StrpL_ch=StrpL_ch+tmp1+"//";
+    Str="";
+    npos=0;
+  ,
+    StrpL_ch=StrpL_ch+substring(tmp1,0,tmp+1);
+    Str=substring(tmp1,tmp+1,length(tmp1));
+    npos=max([0,npos-(tmp+1)]);
+  );
+  StrL_ch=Str;
+  Strnq=Str;
+  funflg=0;
+);
+
+Pull():=(
+  regional(tmp,tmp1,tmp2);
+  tmp1=StrpL_ch;
+  tmp=indexall(tmp1,"//");
+  if(length(tmp)>1,tmp=tmp_(-2)+1,tmp=0);
+  tmp2=substring(tmp1,0,tmp);
+  StrpL_ch=tmp2;
+  tmp1=substring(tmp1,tmp,length(tmp1));
+  Str=tmp1+StrL_ch;
+  Strnq=Str;
+  StrL_ch=Str;
+  npos=length(tmp1)+npos;
+  funflg=0;
+);
+
+Left():=(
+  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
+  tmp=substring(shL_nqu,0,shminL_nqu);
+  preL=["",tmp,"St="];
+  pre=preL_ch;
+  if(length(Str)>length(pre),
+    tmp=indexof(Str,"?");
+    if(tmp>length(pre)+1,
+      tmp1=substring(Str,0,tmp-2)+"?";
+      tmp2=substring(Str,tmp-2,tmp-1);
+      tmp3=substring(Str,tmp,length(Str));
+      Str=tmp1+tmp2+tmp3;
+      npos=length(tmp1+"?");
+    );
+    if(tmp==0,
+      tmp1=substring(Str,0,length(Str)-1)+"?";
+      tmp3=substring(Str,length(Str)-1,length(Str));
+      Str=tmp1+tmp3;  
+      npos=length(tmp1);
+    );
+    StrL_ch=Str;
+  );
+  funflg=0;
+);
+
+Right():=(
+  regional(tmp,tmp1,tmp2,tmp3);
+  if(length(Str)>0,
+    tmp=indexof(Str,"?");
+    if(tmp>0,
+      if(tmp<length(Str)-1,
+        tmp1=substring(Str,0,tmp-1);
+        tmp2=substring(Str,tmp,tmp+1)+"?";
+        tmp3=substring(Str,tmp+1,length(Str));
+        Str=tmp1+tmp2+tmp3;
+        npos=length(tmp1+"?");
+      );
+      if(tmp==length(Str)-1,
+        tmp1=substring(Str,0,tmp-1);
+        tmp3=substring(Str,tmp,length(Str));
+        Str=tmp1+tmp3;
+        npos=length(Str);
+      );
+    );
+    StrL_ch=Str;
+	Subsedit(ch,Str);
+  );
+  funflg=0;
+);
+
+LLeft():=(
+  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
+  tmp=substring(shL_nqu,0,shminL_nqu);
+  preL=["",tmp,"St="];
+  pre=preL_ch;
+  tmp=replace(Str,"?","");
+  if(length(tmp)>length(pre),
+    tmp=substring(tmp,length(pre),length(tmp));
+    Str=pre+"?"+tmp;
+    npos=length(pre)+1;
+    StrL_ch=Str;
+	Subsedit(ch,Str);
+  );
+  funflg=0;
+);
+
+RRight():=(
+  regional(tmp,tmp1,tmp2,tmp3);
+  if(length(Str)>0,
+    Str=replace(Str,"?","");
+    npos=length(Str);
+    StrL_ch=Str;
+	Subsedit(ch,Str);
+  );
+  funflg=0;
+);
+
+Quesno():=Quesno(nqu,1); //220816
+Quesno(nq,flg):=( //220816
+  regional(tmp,tmp1,out);
+  out="";
+  tmp=select(1..nq,substring(quL_#_1,0,1)=="Q");
+  if(length(tmp)>0,
+    tmp1=tmp_(-1);
+    out=quL_tmp1;
+    if(islist(out),out=out_1); /////
+    tmp=indexof(out," ");
+    if(tmp>0,
+      out=substring(out,0,tmp-1);
+    ,
+      out=substring(out,0,3); //220903
+    );
+    if(flg>0, //220816from
+      out=out+"-"+text(nq-tmp1+1);
+    );
+  ); //220816to
+  out;
+);
+
 tail=Readlines(Dircdy,"ketmathrulein.html");
 tail=append(tail,Copyright());
 
-//Alltextkey(1,"keylisttaskv23");
-//Setkeystyle("keylisttaskv23");
-//Setkeypos("keylisttaskv23");
-//Animationkey([371,372,373,374],[75,80,87,92],-30.2);//no ketjs
-tmp1=Text17.xy;tmp2=Text69.xy;//no ketjs on
-tmp=71;
-tmp1=Op(2,Text17.xy);
-tmp2=Op(2,Text80.xy);
-Text19.xy=[tmp,Op(2,Text69.xy)];
-Text20.xy=[tmp,tmp1+0.4];
-Text371.xy=[tmp,tmp2];
-//println([Text80.xy,Text91.xy]);
-Text372.xy=[tmp,tmp2-3.3];
-Text373.xy=[tmp,tmp2-3.3*2];
-Text374.xy=[tmp,tmp2-3.3*3];//no ketjs off
 
 ketlibflg=1;
 
@@ -104,16 +1147,8 @@ ch=2;
 
 </script>
 <script id="csdraw" type="text/x-cindyscript">
-//figures
-//20240329
-//20230417
 Ketinit(1);
 
-Setketcindyjs(["Label=[]","Size=1"]);//no ketjs on
-Ketcindyjsbody(License(),Headline("KeTTask"),tail);
-Ketcindyjsdata(["aalinestart",1,"quline","",
-  "shline","","sqline","","zzlineend",1]);//no ketjs off
-//println(A.xy);
 
 if(startflg==1,
   Kettaskinit();
@@ -131,7 +1166,6 @@ if(startflg==1,
   StrL=apply(1..3,"");
   TexL=apply(1..2,"");
   Putpoint("Q2",[33.5,20.5]);
-  inspect(Q2,"ptsize",6); // no ketjs222211222222
   Subsedit(3,"St=");
   Subsedit(1,"");
   Subsedit(2,"");
@@ -161,12 +1195,8 @@ if(stok<=1,
   );
 );
 
-//T2.x=T1.x; T4.x=T3.x;
-//if(T1.y-T2.y<dtpyL_1,T2.y=T1.y-dtpyL_1);
-//if(T3.y-T4.y<dtpyL_2,T4.y=T3.y-dtpyL_2);
 
 Addax(0);
-//Setwindow([-20,65],[-17,15]);
 nameL=Keyname();
 Keytable(10,43,4,33,poskey,[1,1,0],nameL_1,[0,-0.5],21);
 tmp=poskey+[0,-14];
@@ -402,6 +1432,7 @@ Windispg();
     <script type="text/javascript">
 var cdy = CindyJS({
   scripts: "cs*",
+  use: ["katex"],
   defaultAppearance: {
     dimDependent: 0.7,
     fontFamily: "sans-serif",
@@ -412,21 +1443,19 @@ var cdy = CindyJS({
   angleUnit: "°",
   geometry: [
     {name: "Text1", type: "EditableText", pos: [4.0, 3.9148936170212765, 0.1702127659574468], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
-    {name: "NE", type: "Free", pos: [4.0, 1.0067746650167269, 0.05318084682256492], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "NE", type: "Free", pos: [4.0, 1.0067746650167269, 0.05318084682256492], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text2", type: "EditableText", pos: [4.0, -0.8516129032258064, 0.25806451612903225], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
-    {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: true, size: 6.0, border: false},
-    {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: true, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: true, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: true, size: 6.0, border: false},
-    {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text3", type: "EditableText", pos: [4.0, -0.8621236133122027, 0.06339144215530904], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 115, text: "St=", textsize: 21.0},
     {name: "Text9", type: "EditableText", pos: [1.7714285714285714, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "Q2", type: "Free", pos: [4.0, 2.4477611940298507, 0.11940298507462686], color: [1.0, 0.784, 0.0], size: 6.0, border: false},
     {name: "Text10", type: "EditableText", pos: [4.0, -1.7391304347826086, 0.049689440993788817], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 350, textsize: 24.0},
-    {name: "Text0", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.44, script: "Mkketcindyjs(append(KETJSOP,\"Web=n\"));", text: "Ketjsoff", textsize: 18.0, dock: {corner: "UL", offset: [487.0, -20.0]}},
     {name: "Text7", type: "Button", pos: [-2.0, -4.0, -0.17391304347826086], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=1;initflg=1;", text: "1", textsize: 18.0},
     {name: "Text8", type: "Button", pos: [4.0, -1.1478260869565216, 0.34782608695652173], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=2;initflg=1;", text: "2", textsize: 18.0},
-    {name: "Text6", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.44, script: "Mkketcindyjs(append(KETJSOP,\"Web=y\"));", text: "Ketjson", textsize: 18.0, dock: {corner: "UL", offset: [408.0, -20.0]}},
     {name: "Text4", type: "Button", pos: [4.0, 0.0851063829787234, 0.10638297872340424], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "nqinc=-1;", text: "　　", textsize: 14.0},
     {name: "Text20", type: "Button", pos: [4.0, -0.540845070422535, 0.056338028169014086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.27272728085517883, script: "startflg=1;", text: "Rset", textsize: 16.0},
     {name: "Text30", type: "Button", pos: [4.0, -1.3137254901960786, 0.19607843137254902], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"La\",\"A\",\"{\\alpha}\",\"\\mathbf{a}\",\"{\\vec{a}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
@@ -542,7 +1571,7 @@ var cdy = CindyJS({
     id: "CSCanvas",
     transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 118.71768029163289, -36.31061371175757]}],
     grid: 5.0,
-    background: "rgb(168,176,192)"
+    background: "rgb(247,247,247)"
   }],
   csconsole: false,
   cinderella: {build: 2083, version: [3, 0, 2083]}
@@ -550,6 +1579,42 @@ var cdy = CindyJS({
     </script>
 </head>
 <body>
+<header><p><font size="6">
+KeTTask
+</font></p></header>
     <div id="CSCanvas"></div>
+<div style="padding: 50px">
+<p><font size="10">&emsp;<b>KeTMath数式ルール</b></font></p>
+<ol><font size="5">
+	<li>分数　<b>fr(a,b)</b>　注) 小さい分数 <b>tfr(a,b)</b></li>
+<li>掛け算　<b>ab</b>　注) <b>a*b</b>も可</li>
+<li>べき乗　<b>a^(b)</b>　注) 1文字の場合は<b>a^b</b>も可</li>
+<li>平方根　<b>sq(a)</b>，3乗根　<b>sq(3,a)</b></li>
+<li>三角関数　<b>sin(x)</b>，sin(x)の2乗　<b>sin(2,x)またはsin(x)^(2)</b></li>
+<li>円周率　<b>pi</b>
+<li>度　<b>(deg)</b></li>
+<li>対数関数　<b>log(x)</b>，自然対数　<b>ln(x)</b>，底がa　 <b>log(a,x)</b></li>
+<li>改行　<b>//</b></li>
+<li>スペース　<b>(sp)</b>　注) \;を出力</li>
+<li>立体　<b>100tx(m)</b></li>
+<li>不定積分　<b>int(x^2,dx)</b>，定積分　<b>int(a,b,x^2,dx)</b><br>
+	　注）定積分の関数の括弧を外すときは先頭に<b>!</b>を追加
+<li>ブラケット　<b>br(f(x),a,b)</b></li>
+<li>極限　<b>lim(x,a,f(x))</b>　注）括弧を外すときは先頭に <b>!</b></li>
+<li>和　<b>sum(k=1,n,k^2)</b>　注）括弧を外すときは先頭に <b>!</b></li></li>
+<li>微分　<b>diff(y,x)</b>，偏微分　<b>par(z,x)</b></li>
+<li>行列　<b>mat(a,b;c,d)</b>，行列式　<b>det(a,b;c,d)</b></li>
+<li>場合分け　<b>case(a,(x<0);c,(x(geq)0))</b>
+<li>ドット　1点　<b>dot()</b>，3点　<b>dot(s)</b>，下3点　<b>dot(l)</b>
+<li>掛け算×　<b>(cross)</b></li>
+<li>複号　<b>(pm),(mp)</b></li>
+<li>不等号　<b><, >, (leq), (geq),(neq)</b></li>
+<li>下添字　<b>a_n</b></li>
+<li>全角文字を混ぜてもよい　<b>2x-3=0の解はx=fr(3,2)</b><br>
+<li>ギリシャ文字 <b>{\alpha},{\beta}</b></li>
+<li>その他のTeX 記号　(sp),コンマ,{}などで区切る</li>
+</ol></font>
+</div>
+<footer><p align="center"><font size="4">&copy; 2021 Setsuo Takato</font></p></footer>
 </body>
 </html>

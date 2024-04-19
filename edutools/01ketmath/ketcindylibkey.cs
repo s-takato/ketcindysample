@@ -16,6 +16,7 @@
 
 println("ketcindylibkey[20230406 loaded"); // no ketjs
 
+// 240409 GettexformL added
 // 230406 Errorcheckstr dbg &changed  (flg returned as list )
 // 230406 Replacedot changed  (cdot in other case )
 // 230406 Keytable changed  ( no painting when clr==0 )
@@ -512,13 +513,9 @@ Gettexform(str):=(
       tmp=Modifyfortex(tmp);
       tmp=Morefunction(tmp);
       tmp1=Totexform(tmp);
-//      tmp=Addasterisk(tmp);
-//      tmp=replace(tmp,"\exp(","e^(");
-//      tmp1=Totexform(tmp);
       tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
       repeat(5,tmp1=replace(tmp1,"c c","cc"));
       tmp1=replace(tmp1,"c i r c","\circ");
-//      tmp1=replace(tmp1,"\frac","\dfrac"); //220523(//)
       tmp1=Greekletter(tmp1); //210514[3lines]
       tmp1=Capitalletter(tmp1);
       tmp1=Boldletter(tmp1);
@@ -526,6 +523,18 @@ Gettexform(str):=(
     );
   );
   strt;
+);
+
+GettexformL(strorg):=(
+  regional(strL,str,tmp,out);
+  strL=Strsplit(strorg,"//");
+  out=[];
+  forall(strL,str,
+    tmp=Convtrigpow(str);
+	tmp=Gettexform(tmp);
+	out=append(out,tmp);
+  );
+  out;
 );
 
 Dispposition(pos,npos,str):=Dispposition(pos,3,npos,str);
@@ -847,7 +856,7 @@ Errorcheckstr(str):=(
     if(indexof(str,"(")>0,
       tmp2=Bracket(str);
       tmp=tmp2_(-1);
-      if(tmp_2!=-1, // brackets mismach
+      if(tmp_2!=-1, // brackets mismatch
         tmp2=select(tmp2,abs(#_2)==1);
         tmp2=apply(tmp2,#_1);
         flg=[1,tmp2]; 
