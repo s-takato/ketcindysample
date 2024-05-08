@@ -17,7 +17,6 @@
 
 posyL=[23,-3.3,-35];
 poskey=[19.5,-17.67]; 
-
 Kettaskinit():=(
   regional(tmp,tmp1,tmp2);
   Shift=0;
@@ -110,12 +109,12 @@ inspect(T4,"ptsize",6);
 // no ketjs off
 
 CtrkeyL=[
-  [["DL","AC","PS","PL"]],//"BS"]],
+  [["Un","DL","AC","PS","PL"]], //240423
   [["Cap"],["Gre"],["Bld"],["Vec"]],
   [["Cal"],["Lin"],[""]],
   [["Rec"]],
   [["$<\!\!=$","","$=\!\!>$"]],
-  [["$<\!<$","$<$","$>$","$>\!>$","Un"]]
+  [["$<\!<$","$<$","$>$","$>\!>$"]] //240423
 ];
 
 Keyname():=(
@@ -574,21 +573,30 @@ forall(1..2,
   Settextkey(15+#,tmp+[0,-(#-1)*3.3],tmp1,tmp2_(#),14);
 );
 //tmp=Text103.xy;
-tmp=Text39.xy;
+tmp=Text38.xy; //240423
 tmp=Text30.xy-[4.3,0];
 tmp2=[
-  "LLeft()","Left()","Right()","RRight()","Undo()",
-  "Delete()","Allclear()","Push()","Pull()"
+  "LLeft()","Left()","Right()","RRight()",
+  "Undo()","Delete()","Allclear()","Push()","Pull()"
 ];
 tmp2=apply(tmp2,"funflg=1;name="+Dqq(#)+";");
-forall(0..4,
+tmp=Text11.xy; //240423from
+forall(0..3,
+//  Settextkey(200+#,[tmp_1+#*4.3,0.8],tmp1,tmp2_(#+1),14);
   Settextkey(200+#,[tmp_1+#*4.3,0.8],tmp1,tmp2_(#+1),14);
 );
-forall(5..8,
-  Settextkey(200+#,[tmp_1+(#+5)*4.3,0.8],tmp1,tmp2_(#+1),14);
+tmp=Text38.xy;
+forall(4..8,
+//  Settextkey(200+#,[tmp_1+(#+5)*4.3,0.8],tmp1,tmp2_(#+1),14);
+  Settextkey(200+#,[tmp_1+(#-4)*4.3,0.8],tmp1,tmp2_(#+1),14);
+);//240423to
+tmp=Op(1,Text33.xy)+1.5;
+forall(4..5,
+  Settextkey(#,[tmp+(#-4)*4.6*3,0.8],tmp1,"nqinc=-1;",14);
 );
-Settextkey(4,[tmp_1+5*4.3,0.8],tmp1,"nqinc=-1;",14);
-Settextkey(5,[tmp_1+2+8*4.3,0.8],tmp1,"nqinc=1;",14);
+//Settextkey(4,[tmp_1+5*4.3,0.8],tmp1,"nqinc=-1;",14);
+//Settextkey(5,[tmp_1+2+8*4.3,0.8],tmp1,"nqinc=1;",14);
+//240423to
 
 Text1.xy=[poskey_1+4,posyL_1];
 Text2.xy=[poskey_1-4,posyL_2];
@@ -596,5 +604,7 @@ Text9.xy=[poskey_1-4,posyL_3];
 Text10.xy=[poskey_1-4+65,posyL_3];
 Text3.xy=Text17.xy+[-0.3,-3.3-0.3];
 Text120.xy=Text3.xy+[8,3.3+0.7];
-Text19.xy=Text3.xy;//+[8,-3.3-0.3];
+tmp1=Text3.xy;
+tmp2=Text68.xy;
+Text19.xy=[tmp1_1+2.15,tmp2_2-0.1];//+[8,-3.3-0.3];
 //no ketjs off
