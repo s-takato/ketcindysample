@@ -1,3 +1,4 @@
+//   240510 ctrL, pos of key, Delete changed
 //   240407 sin(?),... added
 //   240330 Left,Right,LLeft,RRight,Delete,Allclear
 //   240225 text10 for inputbox
@@ -109,12 +110,14 @@ inspect(T4,"ptsize",6);
 // no ketjs off
 
 CtrkeyL=[
-  [["Un","DL","AC","PS","PL"]], //240423
+  [["Un","AC","PS","PL"]], //240510
   [["Cap"],["Gre"],["Bld"],["Vec"]],
   [["Cal"],["Lin"],[""]],
   [["Rec"]],
-  [["$<\!\!=$","","$=\!\!>$"]],
-  [["$<\!<$","$<$","$>$","$>\!>$"]] //240423
+//  [["BF","","Nxt"]],
+  [["前","","次"]], //240510
+  [["AC","$<\!\!\!\!\!-\!\!-$",
+      "$-\!\!-\!\!\!\!\!>$","DL","OK"]] //240514
 ];
 
 Keyname():=(
@@ -217,18 +220,6 @@ Adddrw(str):=(
 Manifun=["Allclear()","Undo()","Delete()","Push()","Pull()",
   "Left()","Right()","LLeft()","RRight()"];
 
-Delete():=(
-  regional(preL,pre,tmp,tmp1,tmp2,tmp3);
-  //global ch,shL,nqu,Str,npos
-  preL=["",shL_nqu,"St="];
-  pre=preL_ch;
-  if(StrpL_ch=="",Str=pre,Str="");
-  StrL_ch=Str;
-  npos=length(Str);
-  Subsedit(ch,Str);
-  funflg=0;
-);
-
 Undo():=(
   regional(preL,pre,tmp,tmp1,tmp2,tmp3);
   //global ch,shL,nqu,Str,npos
@@ -275,17 +266,39 @@ Allclear():=(
 );
 
 Delete():=(
-  regional(tmp1,tmp2);
-  if(npos>1,
-    StrLL=ppend(StrLL,Str);
-    if(npos<length(Str),
-	  tmp1=substring(Str,0,npos-2);
-	  Str=tmp1+"?"+substring(Str,npos,length(Str));
-    ,
-	  Str=substring(Str,0,length(Str)-1);
-    );
-	npos=npos-1;
+  regional(preL,pre,tmp,tmp1,tmp2);
+  Str=Removespace(Str);
+  preL=["",shL_nqu,"St="];
+  pre=preL_ch;
+  tmp1=indexof(pre,"?");
+  tmp2=indexof(Str,"?");
+  if((tmp1==0)&(tmp2==0),
+    if(length(Str)>length(pre),
+      Str=substring(Str,0,length(Str)-1);
+      npos=length(Str);
+    );     
   );
+  if((tmp1==0)&(tmp2>0),
+    if(tmp2>length(pre),
+      tmp=substring(Str,0,tmp2-2);
+	  Str=tmp+"?"+substring(Str,npos,length(Str));
+      npos=indexof(Str,"?");
+    );     
+  );
+  if((tmp1>0)&(tmp2==0),
+    if(tmp1-1<length(Str),
+      Str=substring(Str,0,length(Str)-1);
+      npos=length(Str);
+    );
+  );
+  if((tmp1>0)&(tmp2>0),
+    if(tmp1<tmp2,
+      tmp=substring(Str,0,npos-2);
+      Str=tmp+"?"+substring(Str,npos,length(Str));
+      npos=npos-1;
+	);
+  );
+  StrL_ch=Str;
   funflg=0;
 );
 
@@ -569,6 +582,7 @@ tmp2=[
   "if(Shift!=1,Shift=1,Shift=0);",
   "if(Shift!=2,Shift=2,Shift=0);"
 ];
+tmp1="　　";
 forall(1..2,
   Settextkey(15+#,tmp+[0,-(#-1)*3.3],tmp1,tmp2_(#),14);
 );
@@ -576,21 +590,22 @@ forall(1..2,
 tmp=Text38.xy; //240423
 tmp=Text30.xy-[4.3,0];
 tmp2=[
-  "LLeft()","Left()","Right()","RRight()",
-  "Undo()","Delete()","Allclear()","Push()","Pull()"
+  "Allclear()","Left()","Right()","RRight()","Delete()",
+  "Undo()","Allclear()","Push()","Pull()"
 ];
 tmp2=apply(tmp2,"funflg=1;name="+Dqq(#)+";");
 tmp=Text11.xy; //240423from
-forall(0..3,
-//  Settextkey(200+#,[tmp_1+#*4.3,0.8],tmp1,tmp2_(#+1),14);
-  Settextkey(200+#,[tmp_1+#*4.3,0.8],tmp1,tmp2_(#+1),14);
-);
-tmp=Text38.xy;
-forall(4..8,
-//  Settextkey(200+#,[tmp_1+(#+5)*4.3,0.8],tmp1,tmp2_(#+1),14);
-  Settextkey(200+#,[tmp_1+(#-4)*4.3,0.8],tmp1,tmp2_(#+1),14);
-);//240423to
-tmp=Op(1,Text33.xy)+1.5;
+Settextkey(200,[tmp_1,0.8],tmp1,tmp2_1,14);
+Settextkey(201,[tmp_1+4.3,0.8],tmp1,tmp2_2,14);
+Settextkey(202,[tmp_1+2*4.3,0.8],tmp1,tmp2_3,14);
+Settextkey(203,[tmp_1+3*4.3,0.8],tmp1,tmp2_5,14);
+Settextkey(205,[tmp_1+4*4.3,0.8],tmp1,tmp2_4,14);
+tmp=Text39.xy;
+Settextkey(204,[tmp_1,0.8],tmp1,tmp2_(6),14);
+Settextkey(206,[tmp_1+1*4.3,0.8],tmp1,tmp2_(7),14);
+Settextkey(207,[tmp_1+2*4.3,0.8],tmp1,tmp2_(8),14);
+Settextkey(208,[tmp_1+3*4.3,0.8],tmp1,tmp2_(9),14);
+tmp=Op(1,Text34.xy)+1.5;
 forall(4..5,
   Settextkey(#,[tmp+(#-4)*4.6*3,0.8],tmp1,"nqinc=-1;",14);
 );
