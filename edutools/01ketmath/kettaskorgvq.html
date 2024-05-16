@@ -4002,32 +4002,23 @@ Adddrw(str):=(
   dpos=dpos-[0,2];
 );
 
+
 Manifun=["Allclear()","Undo()","Delete()","Push()","Pull()",
   "Left()","Right()","LLeft()","RRight()"];
 
 Undo():=(
   regional(preL,pre,tmp,tmp1,tmp2,tmp3);
   if(ch==2,
+    if(length(StrLL)==1,
+      Str=shL_nqu;
+      StrLL=[Str];
+	);
     if(length(StrLL)>1,
-	  Str=StrLL_(-1);
-	  StrLL=StrLL_(1..(length(StrLL)-1));
+      Str=StrLL_(-2);
+      StrLL=StrLL_(1..(length(StrLL)-1));
 	);
     tmp=indexof(Str,"?");
     if(tmp>0,npos=tmp,npos=length(Str));
-  ,
-    preL=["",shL_nqu,"St="];
-    pre=preL_ch;
-    tmp=indexof(Str,"?");
-    if(tmp>0,npos=tmp,npos=length(Str));
-    if(length(Str)>length(pre),
-      if(npos==length(Str),
-        Str=substring(Str,0,npos-1);
-      ,
-        tmp1=substring(Str,0,npos-2);
-        tmp2=substring(Str,npos-1,length(Str));
-        Str=tmp1+tmp2;
-      );
-    );
   );
   Strnow=Str;
   StrL_ch=Str;
@@ -4313,7 +4304,7 @@ if(startflg==1,
   Subsedit(2,"");
   Subsedit(9,"");
   pghead="";
-
+  stok=1;
   startflg=0;
 );
 
@@ -4417,16 +4408,15 @@ if(stok>=2,
       sel=apply(sel,if(isstring(#),parse(#),#));
       quest=apply(1..(length(sel)),
               quL_#_1+" "+quL_#_(sel_#));
-	  TexL_1=GettexformL(quest_1);
+      TexL_1=GettexformL(quest_1);
       rechead=text(stno)+";;"+text(stno);
       Str=ansL_1;
-	  StrL_2=Str;
-	  Subsedit(2,Str);
-      StrLL=append(StrLL,Str);
+      StrL_2=Str;
+      Subsedit(2,Str);
       tmp=indexof(Str,"?");
       if(tmp>0,npos=tmp,npos=length(Str));
-	  tmp=replace(Str,"?","");
-	  TexL_2=GettexformL(tmp);
+      tmp=replace(Str,"?","");
+      TexL_2=GettexformL(tmp);
       ch=2;
       nqu=1;
     );
@@ -4522,7 +4512,7 @@ if(funflg==1,
           npos=length(tmp1);
         );
       );
-      StrLL=append(StrLL,StrL_2);
+      StrLL=append(StrLL,Str);
       StrL_ch=Str;
       tmp=replace(Str,"?","");
       tmp=Convtrigpow(tmp);
@@ -4543,7 +4533,6 @@ if(stoknow==2,
       Str=tmp1;
     );
   );
-  StrLL=append(StrLL,Str);
   StrL_2=Str;
   Subsedit(2,Str);
   npos=indexof(Str,"?");
@@ -4589,8 +4578,8 @@ var cdy = CindyJS({
     {name: "Text2", type: "EditableText", pos: [4.0, -0.8516129032258064, 0.25806451612903225], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text3", type: "EditableText", pos: [4.0, -0.8621236133122027, 0.06339144215530904], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 115, text: "St=", textsize: 21.0},
     {name: "Text9", type: "EditableText", pos: [1.7714285714285714, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
@@ -4709,9 +4698,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 1074,
-    height: 637,
+    height: 620,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 119.12971562453227, -38.267781543029606]}],
+    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 119.12971562453227, -36.51663137820725]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

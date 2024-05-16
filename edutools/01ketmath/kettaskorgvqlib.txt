@@ -216,34 +216,23 @@ Adddrw(str):=(
   dpos=dpos-[0,2];
 );
 
-///////
+
 Manifun=["Allclear()","Undo()","Delete()","Push()","Pull()",
   "Left()","Right()","LLeft()","RRight()"];
 
 Undo():=(
   regional(preL,pre,tmp,tmp1,tmp2,tmp3);
-  //global ch,shL,nqu,Str,npos
   if(ch==2,
+    if(length(StrLL)==1,
+      Str=shL_nqu;
+      StrLL=[Str];
+	);
     if(length(StrLL)>1,
-	  Str=StrLL_(-1);
-	  StrLL=StrLL_(1..(length(StrLL)-1));
+      Str=StrLL_(-2);
+      StrLL=StrLL_(1..(length(StrLL)-1));
 	);
     tmp=indexof(Str,"?");
     if(tmp>0,npos=tmp,npos=length(Str));
-  ,
-    preL=["",shL_nqu,"St="];
-    pre=preL_ch;
-    tmp=indexof(Str,"?");
-    if(tmp>0,npos=tmp,npos=length(Str));
-    if(length(Str)>length(pre),
-      if(npos==length(Str),
-        Str=substring(Str,0,npos-1);
-      ,
-        tmp1=substring(Str,0,npos-2);
-        tmp2=substring(Str,npos-1,length(Str));
-        Str=tmp1+tmp2;
-      );
-    );
   );
   Strnow=Str;
   StrL_ch=Str;
