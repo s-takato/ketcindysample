@@ -1,3 +1,4 @@
+//   240521 dot(-> dot(?)
 //   240510 ctrL, pos of key, Delete changed
 //   240407 sin(?),... added
 //   240330 Left,Right,LLeft,RRight,Delete,Allclear
@@ -115,7 +116,7 @@ CtrkeyL=[
   [["Cal"],["Lin"],[""]],
   [["Rec"]],
 //  [["BF","","Nxt"]],
-  [["前","","次"]], //240510
+  [["次","","戻"]], //240510
   [["AC","$<\!\!\!\!\!-\!\!-$",
       "$-\!\!-\!\!\!\!\!>$","DL","OK"]] //240514
 ];
@@ -485,7 +486,7 @@ sLL2=
   "(inf)"
  ],
  [
-  "dot(",":",";","(leq)","(geq)",
+  "dot(?)",":",";","(leq)","(geq)",
   ["Ll","L","{\lambda}","\mathbf{l}","{\vec{l}\;}"],
   ["Lm","M","{\mu}","\mathbf{m}","{\vec{m}\;}"],
   ["Ln","N","{\nu}","\mathbf{n}","{\vec{n}\;}"],
@@ -584,22 +585,22 @@ tmp2=[
 ];
 tmp2=apply(tmp2,"funflg=1;name="+Dqq(#)+";");
 tmp=Text11.xy; //240423from
-Settextkey(200,[tmp_1,0.8],tmp1,tmp2_1,14);
-Settextkey(201,[tmp_1+4.3,0.8],tmp1,tmp2_2,14);
-Settextkey(202,[tmp_1+2*4.3,0.8],tmp1,tmp2_3,14);
-Settextkey(203,[tmp_1+3*4.3,0.8],tmp1,tmp2_5,14);
-Settextkey(205,[tmp_1+4*4.3,0.8],tmp1,tmp2_4,14);
+Settextkey(200,[tmp_1,0.9],tmp1,tmp2_1,13);
+Settextkey(201,[tmp_1+4.3,0.95],tmp1,tmp2_2,13);
+Settextkey(202,[tmp_1+2*4.3,0.95],tmp1,tmp2_3,13);
+Settextkey(203,[tmp_1+3*4.3,0.95],tmp1,tmp2_5,13);
+Settextkey(205,[tmp_1+4*4.3,0.95],tmp1,tmp2_4,13);
 tmp=Text39.xy;
-Settextkey(204,[tmp_1,0.8],tmp1,tmp2_(6),14);
-Settextkey(206,[tmp_1+1*4.3,0.8],tmp1,tmp2_(7),14);
-Settextkey(207,[tmp_1+2*4.3,0.8],tmp1,tmp2_(8),14);
-Settextkey(208,[tmp_1+3*4.3,0.8],tmp1,tmp2_(9),14);
+Settextkey(204,[tmp_1,0.95],tmp1,tmp2_(6),13);
+Settextkey(206,[tmp_1+1*4.3,0.95],tmp1,tmp2_(7),13);
+Settextkey(207,[tmp_1+2*4.3,0.95],tmp1,tmp2_(8),13);
+Settextkey(208,[tmp_1+3*4.3,0.95],tmp1,tmp2_(9),13);
 tmp=Op(1,Text34.xy)+1.5;
-forall(4..5,
-  Settextkey(#,[tmp+(#-4)*4.6*3,0.8],tmp1,"nqinc=-1;",14);
-);
-//Settextkey(4,[tmp_1+5*4.3,0.8],tmp1,"nqinc=-1;",14);
-//Settextkey(5,[tmp_1+2+8*4.3,0.8],tmp1,"nqinc=1;",14);
+//forall(4..5,
+//  Settextkey(#,[tmp+(#-4)*4.6*3,0.95],tmp1,"nqinc=-1;",13);
+//);
+Settextkey(4,[tmp,0.95],tmp1,"nqinc=1;",13);
+Settextkey(5,[tmp+4.6*3,0.95],tmp1,"nqinc=-1;",13);
 //240423to
 
 Text1.xy=[poskey_1+4,posyL_1];
