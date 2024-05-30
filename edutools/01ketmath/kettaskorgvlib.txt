@@ -423,23 +423,23 @@ sLL1=
   ["La","A","{\alpha}","\mathbf{a}","{\vec{a}\;}"],
   ["Lb","B","{\beta}","\mathbf{b}","{\vec{b}\;}"],
   ["Lc","C","{\gamma}","\mathbf{c}","{\vec{c}\;}"],
-  "sin(","sq(",")","n7","n8","n9","+"
+  "sin(?)","sq(?)",")","n7","n8","n9","+"
  ],
  [
   ["Lx","X","{\kappa}","\mathbf{x}","{\vec{x}\;}"],
   ["Ly","Y","{\iota}","\mathbf{y}","{\vec{y}\;}"],
   ["Lz","Z","{\eta}","\mathbf{z}","{\vec{z}\;}"],
-  "cos(","fr(",",","n4","n5","n6","-"
+  "cos(?)","fr(?,)",",","n4","n5","n6","-"
  ],
  [
   ["Lr","R","{\rho}","\mathbf{r}","{\vec{r}\;}"],
   ["Ls","S","{\sigma}","\mathbf{s}","\vec{s}\;"],
   ["Lt","T","{\tau}","\mathbf{t}","{\vec{t}\;}"],
-  "tan(","tfr(","(","n1","n2","n3","*"
+  "tan(?)","tfr(?,)","(","n1","n2","n3","*"
  ],
  [
    ["Lw","W","{\omega}","\mathbf{w}","{\vec{w}\;}"],
-  "_(","=","log(","ln(","^(","n0",".","(sp)","/"
+  "_(","=","log(?)","ln(?)","^(?)","n0",".","(sp)","/"
  ]
 ];
 sLL2=
@@ -450,7 +450,7 @@ sLL2=
   ["Le","E","{\delta}","\mathbf{e}","{\vec{e}\;}"],
   ["Lf","F","{\varepsilon}","\mathbf{f}","{\vec{f}\;}"],
   ["Lg","G","{\varphi}","\mathbf{g}","{\vec{g}\;}"],
-  [0,"lim(",1,"lim(",2,"mat("],
+  [0,"lim(?)",1,"lim(?)",2,"mat(?)"],
   "pi"
  ],
  [
@@ -464,13 +464,13 @@ sLL2=
   "(inf)"
  ],
  [
-  "dot(",":",";","(leq)","(geq)",
+  "dot(?)",":",";","(leq)","(geq)",
   ["Ll","L","{\lambda}","\mathbf{l}","{\vec{l}\;}"],
   ["Lm","M","{\mu}","\mathbf{m}","{\vec{m}\;}"],
   ["Ln","N","{\nu}","\mathbf{n}","{\vec{n}\;}"],
   ["Lo","O","{\omega}","\mathbf{o}","{\vec{o}\;}"],
   "'",
-  [1,"diff(",2,"case(",0,"case("]
+  [1,"diff(?,)",2,"case(?)",0,"case(?)"]
  ],
  [
   "\","(pm)","(mp)","<",">",
@@ -478,8 +478,8 @@ sLL2=
   ["Lq","Q","{\psi}","\mathbf{q}","{\vec{q}\;}"],
   ["Lu","U","{\Phi}","\mathbf{u}","{\vec{u}\;}"],
   ["Lv","V","{\lambda}","\mathbf{v}","{\vec{v}\;}"],
-  [1,"br(",2,"sum(",0,"sum("],
-  [0,"tx(",1,"par(",2,"(circ)"]
+  [1,"br(?)",2,"sum(?)",0,"sum(?)"],
+  [0,"tx(?)",1,"par(?)",2,"(circ)"]
  ]
 ];
 
