@@ -1,3 +1,4 @@
+//   240531  some keys, ctrL
 //   220814  Delete
 //   220720  key width
 //   220718  lic,cpr
@@ -495,7 +496,6 @@ Settext(sLLorg,rLLorg,yinit):=(
 Settext(sLL1,rLL1,-6.7);
 Settext(sLL2,rLL2,-20.6);
 
-if
 tmp1="　　";
 tmp=Text30.xy-[4.3,0];
 tmp2=[
@@ -537,9 +537,14 @@ Settextkey(204,[tmp_1,0.95],tmp1,tmp2_(6),13);
 Settextkey(206,[tmp_1+1*4.3,0.95],tmp1,tmp2_(7),13);
 Settextkey(207,[tmp_1+2*4.3,0.95],tmp1,tmp2_(8),13);
 Settextkey(208,[tmp_1+3*4.3,0.95],tmp1,tmp2_(9),13);
-tmp=[Op(1,Text16.xy)-1.4,0.95];
-Settextkey(20,tmp,tmp1,"startflg=1;",13);
+tmp=[Op(1,Text16.xy)-0.5.4,0.95];
+Settextkey(20,tmp,"　　　","startflg=1;",13);
 
+
+stmp1="ch=1;Putpoint("+Dqq("J")+",posredL_1);";
+stmp2="ch=2;Putpoint("+Dqq("J")+",posredL_2);";
+Settextkey(7,[12.8,21.5],"1",stmp1,20);
+Settextkey(8,[12.8,-2.9],"2",stmp2,20);
 
 
 //no ketjs off
