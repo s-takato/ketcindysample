@@ -116,7 +116,7 @@ CtrkeyL=[
   [["Cal"],["Lin"],[""]],
   [["Rec"]],
 //  [["BF","","Nxt"]],
-  [["次","","戻"]], //240510
+  [["Nxt","","Pre"]], //240510
   [["AC","$<\!\!\!\!\!-\!\!-$",
       "$-\!\!-\!\!\!\!\!>$","DL","OK"]] //240514
 ];
@@ -368,7 +368,7 @@ Right():=(
         tmp2=substring(Str,tmp,tmp+1)+"?";
         tmp3=substring(Str,tmp+1,length(Str));
         Str=tmp1+tmp2+tmp3;
-        npos=length(tmp1+"?");
+        Str=replace(Str,"??","?"); //240725
       );
       if(tmp==length(Str)-1,
         tmp1=substring(Str,0,tmp-1);
@@ -562,9 +562,9 @@ tmp2=[
   "if(keytype!=5,keytype=5,keytype=1);"
 ];
 forall(1..4,
-  Settextkey(10+#,tmp+[0,-(#-1)*3.3],tmp1,tmp2_(#),14);
+  Settextkey(10+#,tmp+[-1,-(#-1)*3.3],tmp1,tmp2_(#),14);
 );
-tmp=Text103.xy-[4.3,0];
+tmp=Text103.xy-[4.3+1,0];
 Settextkey(18,tmp,tmp1,"recflg=1;",14);
 
 tmp=Text39.xy+[4.3,0];
@@ -574,7 +574,7 @@ tmp2=[
 ];
 tmp1="　　";
 forall(1..2,
-  Settextkey(15+#,tmp+[0,-(#-1)*3.3],tmp1,tmp2_(#),14);
+  Settextkey(15+#,tmp+[1,-(#-1)*3.3],tmp1,tmp2_(#),14);
 );
 //tmp=Text103.xy;
 tmp=Text38.xy; //240423
@@ -604,9 +604,9 @@ Text1.xy=[poskey_1+4,posyL_1];
 Text2.xy=[poskey_1-4,posyL_2];
 Text9.xy=[poskey_1-4,posyL_3];
 Text10.xy=[poskey_1-4+65,posyL_3];
-Text3.xy=Text17.xy+[-0.3,-3.3-0.3];
-Text120.xy=Text3.xy+[8,3.3+0.7];
+Text3.xy=Text17.xy+[-0.35,-3.3-0.35];
+Text120.xy=Text3.xy+[8-2,3.3+0.7];
 tmp1=Text3.xy;
 tmp2=Text68.xy;
-Text19.xy=[tmp1_1+2.15,tmp2_2-0.1];//+[8,-3.3-0.3];
+Text19.xy=[tmp1_1+2.15-2,tmp2_2-0.2];//+[8,-3.3-0.3];
 //no ketjs off

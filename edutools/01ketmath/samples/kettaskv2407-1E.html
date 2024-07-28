@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>kettaskorgvq24E.cdy</title>
+    <title>kettask2407-1</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -3129,9 +3129,12 @@ Lettermove(dir,str):=(
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 aalinestart=1;
-quline="";
-shline="";
-sqline="";
+quline="Q01::Let the right weight M_1=1;	[1]:: M_2=1; What happens?	[2]:: M_2=1.1; What happens?	[3]:: M_2=1.05; What happens?";
+shline="Q01---	[1] M_2=1; 	[2] M_2=1.1; 	[3] M_2=1.05;";
+sqline="0001AC	2	2	2	2CR0005AH	2	2	2	2CR0013AH	2	2	2	2CR0028AH	2	2	2	2CR0034AH	2	2	2	2CR0047AH	2	2	2	2CR0048AH	2	2	2	2CR0050AH	2	2	2	2CR0055AH	2	2	2	2CR0059AH	2	2	2	2CR0061AH	2	2	2	2CR0064AH	2	2	2	2CR0070AH	2	2	2	2CR0084AH	2	2	2	2CR0085AH	2	2	2	2CR0086AH	2	2	2	2CR0088AH	2	2	2	2CR0089AH	2	2	2	2CR0090AH	2	2	2	2CR0091AH	2	2	2	2CR0092AH	2	2	2	2CR0098AH	2	2	2	2CR0099AH	2	2	2	2CR0102AH	2	2	2	2CR1003AH	2	2	2	2CR3002MH	2	2	2	2CR1006AH	2	2	2	2CR1054AH	2	2	2	2CR1100AH	2	2	2	2CR0029BN	2	2	2	2CR1004BN	2	2	2	2CR1061BN	2	2	2	2CR0044BV	2	2	2	2CR1072MF	2	2	2	2CR3042MF	2	2	2	2CR3072MF	2	2	2	2CR3118MF	2	2	2	2";
+quLL=Line2list(quline);
+shL=Line2list(shline);
+sqLL=Line2list(sqline);
 zzlineend=1;
 
 
@@ -4150,7 +4153,7 @@ Right():=(
         tmp2=substring(Str,tmp,tmp+1)+"?";
         tmp3=substring(Str,tmp+1,length(Str));
         Str=tmp1+tmp2+tmp3;
-        Str=replace(Str,"??","?"); //240725
+        npos=length(tmp1+"?");
       );
       if(tmp==length(Str)-1,
         tmp1=substring(Str,0,tmp-1);
@@ -4261,7 +4264,7 @@ Returntime(timedata):=(
 );
 
 if(length(quline)==0,
-quline="Q01::Find y'=tfr(dy,dx)	[1]::y=x^2-3x	[2]::y=sin(x)";
+quline="Q01::@Find @y'=tfr(dy,dx)	[1]::y=x^2-3x	[2]::y=sin(x)";
 shline="Q01---	[1]y'=	[2]y'=";
 sqline="01AA	2	2	2CR02BB	2	2	2";
 );
@@ -4578,8 +4581,8 @@ var cdy = CindyJS({
     {name: "Text2", type: "EditableText", pos: [4.0, -0.8516129032258064, 0.25806451612903225], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text3", type: "EditableText", pos: [4.0, -0.8524590163934426, 0.06245120999219359], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 115, text: "St=", textsize: 21.0},
     {name: "Text9", type: "EditableText", pos: [1.7714285714285714, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
@@ -4698,20 +4701,20 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 1078,
-    height: 623,
+    height: 630,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 119.54175095743165, -36.82565787788179]}],
+    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 119.54175095743165, -37.5467197104557]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2087, version: [3, 0, 2087]}
+  cinderella: {build: 2085, version: [3, 0, 2085]}
 });
     </script>
 </head>
 <body>
 <header><p><font size="6">
-KeTTask
+KeTTask2407-1
 </font></p></header>
     <div id="CSCanvas"></div>
 <div style="padding: 50px">
