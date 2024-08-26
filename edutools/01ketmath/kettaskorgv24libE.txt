@@ -1,3 +1,4 @@
+//   240821 Right( not remove ?)
 //   240521 dot(-> dot(?)
 //   240510 ctrL, pos of key, Delete changed
 //   240407 sin(?),... added
@@ -373,7 +374,7 @@ Right():=(
       if(tmp==length(Str)-1,
         tmp1=substring(Str,0,tmp-1);
         tmp3=substring(Str,tmp,length(Str));
-        Str=tmp1+tmp3;
+        Str=tmp1+tmp3+"?"; //240821
         npos=length(Str);
       );
     );

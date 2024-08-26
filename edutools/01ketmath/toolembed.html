@@ -808,6 +808,7 @@ if(imdrflg==2,
              size->20,color->[1,0,0]);
       goflg=0;
     );
+
     if(goflg==1,
       if(changeflg==1,
         dirket=Dirhead+"/ketlib";
@@ -973,8 +974,8 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "Text1", type: "EditableText", pos: [4.0, 3.9148936170212765, 0.1702127659574468], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, text: "001-1draw.txt", textsize: 24.0},
-    {name: "Text2", type: "EditableText", pos: [4.0, -0.8516129032258064, 0.25806451612903225], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, text: "kettaskv001-1.html", textsize: 24.0},
+    {name: "Text1", type: "EditableText", pos: [4.0, 3.9148936170212765, 0.1702127659574468], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, text: "001-1Edraw.txt", textsize: 24.0},
+    {name: "Text2", type: "EditableText", pos: [4.0, -0.8516129032258064, 0.25806451612903225], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, text: "kettaskv001-1E.html", textsize: 24.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: true, size: 6.0, border: false},
     {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: true, size: 6.0, border: false},
     {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: true, size: 6.0, border: false},
@@ -982,12 +983,12 @@ var cdy = CindyJS({
     {name: "Text3", type: "EditableText", pos: [4.0, -0.8621236133122027, 0.06339144215530904], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 130, text: "St=", textsize: 21.0},
     {name: "Text9", type: "EditableText", pos: [1.7714285714285714, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: true, size: 7.0},
-    {name: "O", type: "Free", pos: [4.0, 0.440199888950583, 0.04441976679622432], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "O", type: "Free", pos: [4.0, 0.44767182053802845, 0.04468674591116275], color: [1.0, 0.0, 0.0], labeled: true},
     {name: "NE", type: "Free", pos: [4.0, 0.9523809523809523, 0.19047619047619047], color: [1.0, 0.0, 0.0], labeled: true},
-    {name: "S", type: "Free", pos: [4.0, 0.343043536961733, 0.08576088424043325], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "S", type: "Free", pos: [4.0, 0.3430435369617326, 0.08576088424043316], color: [1.0, 0.0, 0.0], labeled: true},
     {name: "M", type: "Free", pos: [4.0, -1.0426884650317787, 0.03372823347993923], color: [1.0, 0.0, 0.0], labeled: true},
     {name: "Text10", type: "EditableText", pos: [4.0, -1.75, 0.05], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, textsize: 24.0},
-    {name: "A", type: "Free", pos: [4.0, 0.6215937971139349, 0.04307559767391772], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "A", type: "Free", pos: [4.0, 0.3289817232375882, 0.048478831672862974], color: [1.0, 0.0, 0.0], labeled: true},
     {name: "Text0", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.44, script: "Mkketcindyjs(append(KETJSOP,\"Web=n\"));", text: "Ketjsoff", textsize: 18.0, dock: {corner: "UL", offset: [712.0, -20.0]}},
     {name: "Text7", type: "Button", pos: [-2.0, -4.0, -0.17391304347826086], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=1;initflg=1;", text: "1", textsize: 18.0},
     {name: "Text8", type: "Button", pos: [4.0, -1.1478260869565216, 0.34782608695652173], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=2;initflg=1;", text: "2", textsize: 18.0},
@@ -1009,16 +1010,16 @@ var cdy = CindyJS({
     {name: "Text373", type: "Button", pos: [4.0, -1.4801762114537445, 0.05452978716800747], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "sorg=sstart;Dirflg=-Dirflg;Animeflg=1;resetclock();\n        playanimation();", text: "Rev", textsize: 18.0},
     {name: "Text374", type: "Button", pos: [4.0, -1.6764705882352944, 0.05460997803148984], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.737, 0.467], fillalpha: 0.47, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "Stop", textsize: 18.0},
     {name: "Text4", type: "Text", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.686, 0.686], fillalpha: 0.4700854700854701, text: "2024", textsize: 24.0, dock: {corner: "UL", offset: [552.0, -20.0]}},
-    {name: "Text31", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "addflg=1-addflg;\nnfnow=0;", text: "Add", textsize: 24.0, dock: {corner: "UL", offset: [294.0, -20.0]}}
+    {name: "Text31", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "addflg=1-addflg;\nnfnow=0;", text: "Rep", textsize: 24.0, dock: {corner: "UL", offset: [294.0, -20.0]}}
   ],
   behavior: [
     {type: "Environment", friction: 0.13488372093023257}
   ],
   ports: [{
     width: 1009,
-    height: 644,
+    height: 627,
     id: "CSCanvas",
-    transform: [{visibleRect: [6.624516597932853, 31.399131517031332, 115.30967509084748, -37.969790256444405]}],
+    transform: [{visibleRect: [6.624516597932853, 31.399131517031332, 115.30967509084748, -36.138623066771906]}],
     axes: true,
     grid: 5.0,
     background: "rgb(225,225,225)"
