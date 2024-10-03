@@ -4521,6 +4521,10 @@ if(funflg==1,
 
 if(stoknow==2,
   Str=Textedit(2,"","");
+  tmp=indexof(shL_nqu,"---"); //241004from
+  if(tmp>0,
+    Str=shL_nqu;
+  ); //241004to
   if(Str!=StrL_2, //240515from
     tmp1=shL_nqu;
     tmp2=substring(Str,0,length(tmp1));
@@ -4707,10 +4711,10 @@ var cdy = CindyJS({
     {name: "Text374", type: "Button", pos: [4.0, -1.7183098591549293, 0.056338028169014086], color: [0.467, 0.0, 0.718], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "stopanimation();Animeflg=\"\";sstart=Current;", text: "　  　", textsize: 14.0}
   ],
   ports: [{
-    width: 1081,
-    height: 631,
+    width: 1075,
+    height: 626,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 119.85077745710618, -37.64972854368054]}],
+    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 119.23272445775712, -37.13468437755632]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
