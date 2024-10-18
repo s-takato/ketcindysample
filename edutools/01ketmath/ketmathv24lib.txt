@@ -142,7 +142,7 @@ Keyname():=(
     forall(1..4,nL2_4_(#+5)=tmp1_#);
   );
   if(keytype==4,
-    tmp1=apply(["a","b","c"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["a","b","c"],"{\mathbf "+#+"}");
     forall(1..3,nL_1_(#)=tmp1_#);
     tmp1=apply(["d","e","f","g"],"$\mathbf{"+#+"}$");
     forall(1..4,nL2_1_(#+5)=tmp1_(#));
@@ -386,9 +386,9 @@ rLL2=[70..80,81..91,92..102,103..113];
 sLL1=
 [
  [
-  ["La","A","{\alpha}","\mathbf{a}","{\vec{a}\;}"],
-  ["Lb","B","{\beta}","\mathbf{b}","{\vec{b}\;}"],
-  ["Lc","C","{\gamma}","\mathbf{c}","{\vec{c}\;}"],
+  ["La","A","{\alpha}","{\mathbf a}","{\vec{a}\;}"],
+  ["Lb","B","{\beta}","{\mathbf b}","{\vec{b}\;}"],
+  ["Lc","C","{\gamma}","{\mathbf c}","{\vec{c}\;}"],
   "sin(?)","sq(?)",")","n7","n8","n9","+"
  ],
  [

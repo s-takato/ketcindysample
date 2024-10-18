@@ -4152,6 +4152,7 @@ Right():=(
         Str=tmp1+tmp2+tmp3;
         Str=replace(Str,"??","?"); //240725
       );
+      tmp=indexof(Str,"?"); //241018
       if(tmp==length(Str)-1,
         tmp1=substring(Str,0,tmp-1);
         tmp3=substring(Str,tmp,length(Str));
@@ -4261,8 +4262,8 @@ Returntime(timedata):=(
 );
 
 if(length(quline)==0,
-quline="Q01::Find y'=tfr(dy,dx)	[1]::y=x^2-3x	[2]::y=sin(x)";
-shline="Q01---	[1]y'=	[2]y'=";
+quline="Q01::Let y=x^3-3x	[1]::Find y'	[2]::Solve y'=0";
+shline="Q01---	[1]y'=	[2]x=?,?";
 sqline="01AA	2	2	2CR02BB	2	2	2";
 );
 
@@ -4478,7 +4479,7 @@ if(funflg==1,
         tmp2="";
       ,
 	      tmp1=substring(Str,0,npos-1);
-	      tmp2=substring(Str,npos,length(Str));
+	      tmp2=substring(Str,npos-1,length(Str));
       );
       out=Addfunstr(name,npos,tmp1);
       tmp1=out_1;
@@ -4496,6 +4497,7 @@ if(funflg==1,
       );
     );
   );
+  Str=replace(Str,"??","?");
   StrLL=append(StrLL,Str);
   StrL_ch=Str;
   StrpL_ch=Strp;
@@ -4719,7 +4721,7 @@ var cdy = CindyJS({
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2087, version: [3, 0, 2087]}
+  cinderella: {build: 2088, version: [3, 0, 2088]}
 });
     </script>
 </head>
