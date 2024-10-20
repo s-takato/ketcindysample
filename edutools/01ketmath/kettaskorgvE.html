@@ -4416,8 +4416,7 @@ if(stok>=2,
       Subsedit(2,Str);
       tmp=indexof(Str,"?");
       if(tmp>0,npos=tmp,npos=length(Str));
-      tmp=replace(Str,"?","");
-      TexL_2=GettexformL(tmp);
+      TexL_2=GettexformL(Str);
       ch=2;
       nqu=1;
     );
@@ -4503,8 +4502,7 @@ if(funflg==1,
   StrpL_ch=Strp;
   ansL_nqu=Str;
   anspL_nqu=Strp;
-  tmp=replace(Str,"?","");
-  tmp=Convtrigpow(tmp);
+  tmp=Convtrigpow(Str);
   TexL_ch=Gettexform(tmp);
   Subsedit(ch,Str);
   name="";
@@ -4512,8 +4510,7 @@ if(funflg==1,
 ,
   tmp=Textedit(ch,"","");
   if(Str!=tmp,
-    tmp=replace(tmp,"?","");
-	Str=tmp;
+    Str=tmp;
     Subsedit(ch,Str);
     StrLL=append(StrLL,Str);
     StrL_ch=Str;
@@ -4540,8 +4537,7 @@ if(stoknow==2,
   if(npos==0,
     npos=length(Str);
   );
-  tmp=replace(Strp+Str,"?","");
-  TexL_2=GettexformL(tmp);
+  TexL_2=GettexformL(Strp+Str);
 );
 
 if(stoknow==2,
@@ -4563,7 +4559,6 @@ if((recflg==1)&(stoknow==2),
   str="";
   forall(1..quall,n,
     tmp=anspL_n+ansL_n; //240621
-    tmp=replace(tmp,"?","");
     str=str+tmp+";;";
   );
   rec=rec+substring(str,0,length(str)-2);
@@ -4714,9 +4709,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 1075,
-    height: 626,
+    height: 630,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 119.23272445775712, -37.13468437755632]}],
+    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 119.23272445775712, -37.5467197104557]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

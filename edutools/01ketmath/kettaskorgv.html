@@ -3907,8 +3907,8 @@ Kettaskinit():=(
   );
    ch=3;
   Str="Student=";
-  Strnq=replace(Str,"?","");
-  StrL_ch=Strnq;
+//  Strnq=replace(Str,"?","");/////
+  StrL_ch=Str;///////
   npos=length(Str);
   tab=unicode("0009");
   quL=Line2list(quline);
@@ -4212,7 +4212,7 @@ Right():=(
       tmp=indexof(Str,"?"); //241018
       if(tmp==length(Str)-1,
         tmp1=substring(Str,0,tmp-1);
-        tmp3=substring(Str,tmp,length(Str));
+        tmp3=substring(Str,tmp,length(Str));//////
         Str=tmp1+tmp3+"?"; //240821
         npos=length(Str);
       );
@@ -4644,8 +4644,8 @@ if(stok>=2,
       Subsedit(2,Str);
       tmp=indexof(Str,"?");
       if(tmp>0,npos=tmp,npos=length(Str));
-      tmp=replace(Str,"?","");
-      TexL_2=GettexformL(tmp);
+      tmp=replace(Str,"?","");///////
+      TexL_2=GettexformL(Str);
       ch=2;
       nqu=1;
     );
@@ -4731,8 +4731,8 @@ if(funflg==1,
   StrpL_ch=Strp;
   ansL_nqu=Str;
   anspL_nqu=Strp;
-  tmp=replace(Str,"?","");
-  tmp=Convtrigpow(tmp);
+//  tmp=replace(Str,"?","");//////
+  tmp=Convtrigpow(Str);
   TexL_ch=Gettexform(tmp);
   Subsedit(ch,Str);
   name="";
@@ -4740,7 +4740,7 @@ if(funflg==1,
 ,
   tmp=Textedit(ch,"","");
   if(Str!=tmp,
-    tmp=replace(tmp,"?","");
+//    tmp=replace(tmp,"?","");///////
 	Str=tmp;
     Subsedit(ch,Str);
     StrLL=append(StrLL,Str);
@@ -4768,8 +4768,8 @@ if(stoknow==2,
   if(npos==0,
     npos=length(Str);
   );
-  tmp=replace(Strp+Str,"?","");
-  TexL_2=GettexformL(tmp);
+//  tmp=replace(Strp+Str,"?","");/////
+  TexL_2=GettexformL(Strp+Str);
 );
 
 if(stoknow==2,
@@ -4791,7 +4791,7 @@ if((recflg==1)&(stoknow==2),
   str="";
   forall(1..quall,n,
     tmp=anspL_n+ansL_n; //240621
-    tmp=replace(tmp,"?","");
+//    tmp=replace(tmp,"?","");//////
     str=str+tmp+";;";
   );
   rec=rec+substring(str,0,length(str)-2);

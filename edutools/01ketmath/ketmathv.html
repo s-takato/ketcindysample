@@ -3894,7 +3894,7 @@ Keyname():=(
     forall(1..4,nL2_4_(#+5)=tmp1_#);
   );
   if(keytype==4,
-    tmp1=apply(["a","b","c"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["a","b","c"],"{\mathbf "+#+"}");
     forall(1..3,nL_1_(#)=tmp1_#);
     tmp1=apply(["d","e","f","g"],"$\mathbf{"+#+"}$");
     forall(1..4,nL2_1_(#+5)=tmp1_(#));
@@ -4244,7 +4244,7 @@ if(substring(Str,tmp-2,tmp)=="//",
   );
 );
 
-Strnq=replace(Str,"?","");
+Strnq=Str;
 StrL_ch=Strnq;
 if(Strnq!=Strnow,
   Strnow=Strnq;
@@ -4314,13 +4314,13 @@ var cdy = CindyJS({
   angleUnit: "°",
   geometry: [
     {name: "Text1", type: "EditableText", pos: [-3.004694835680751, -4.0, -0.18779342723004694], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
-    {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
-    {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T2", type: "Free", pos: [4.0, 3.664516129032258, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: false, size: 6.0, border: false},
+    {name: "T3", type: "Free", pos: [4.0, 2.8387096774193545, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false},
     {name: "NE", type: "Free", pos: [4.0, 1.1283840564974783, 0.05757365765563785], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: false, size: 6.0, border: false, printname: "T1"},
     {name: "Text2", type: "EditableText", pos: [4.0, -0.8, 0.25], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
     {name: "Text3", type: "EditableText", pos: [1.8285714285714285, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 535, textsize: 24.0},
-    {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.686, 0.686], labeled: false, size: 6.0, border: false},
+    {name: "T4", type: "Free", pos: [4.0, 2.012903225806451, 0.25806451612903225], color: [1.0, 0.686, 0.686], labeled: false, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.5801622692426767, -4.0, 0.12214258801822592], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "J", type: "Free", pos: [4.0, -0.64, 0.26666666666666666], color: [1.0, 0.0, 0.0], labeled: false, size: 4.8, border: true },
     {name: "Text200", type: "Button", pos: [4.0, 0.2236024844720497, 0.2484472049689441], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Allclear()\";", text: "　　", textsize: 13.0},
@@ -4341,9 +4341,9 @@ var cdy = CindyJS({
     {name: "Text202", type: "Button", pos: [4.0, 0.15384615384615385, 0.1619433198380567], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Right()\";", text: "　　", textsize: 13.0},
     {name: "Text18", type: "Button", pos: [2.111475409836066, -4.0, 0.13114754098360656], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "texflg=1;", text: "　　", textsize: 14.0},
     {name: "Text201", type: "Button", pos: [4.0, 0.18627450980392157, 0.19607843137254902], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"Left()\";", text: "　　", textsize: 13.0},
-    {name: "Text30", type: "Button", pos: [4.0, -1.3137254901960786, 0.19607843137254902], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"La\",\"A\",\"{\\alpha}\",\"\\mathbf{a}\",\"{\\vec{a}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
-    {name: "Text31", type: "Button", pos: [4.0, -1.08502024291498, 0.1619433198380567], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lb\",\"B\",\"{\\beta}\",\"\\mathbf{b}\",\"{\\vec{b}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
-    {name: "Text32", type: "Button", pos: [4.0, -0.9241379310344828, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lc\",\"C\",\"{\\gamma}\",\"\\mathbf{c}\",\"{\\vec{c}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text30", type: "Button", pos: [4.0, -1.3137254901960786, 0.19607843137254902], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"La\",\"A\",\"{\\alpha}\",\"{\\mathbf a}\",\"{\\vec{a}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text31", type: "Button", pos: [4.0, -1.08502024291498, 0.1619433198380567], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lb\",\"B\",\"{\\beta}\",\"{\\mathbf b}\",\"{\\vec{b}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
+    {name: "Text32", type: "Button", pos: [4.0, -0.9241379310344828, 0.13793103448275862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=[\"Lc\",\"C\",\"{\\gamma}\",\"{\\mathbf c}\",\"{\\vec{c}\\;}\"]_keytype;", text: "　　", textsize: 14.0},
     {name: "Text33", type: "Button", pos: [4.0, -0.8048048048048049, 0.12012012012012012], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"sin(?)\";", text: "　　", textsize: 14.0},
     {name: "Text34", type: "Button", pos: [4.0, -0.7127659574468085, 0.10638297872340424], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\"sq(?)\";", text: "　　", textsize: 14.0},
     {name: "Text35", type: "Button", pos: [4.0, -0.6396181384248211, 0.0954653937947494], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "funflg=1;name=\")\";", text: "　　", textsize: 14.0},
@@ -4429,14 +4429,14 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 704,
-    height: 634,
+    height: 625,
     id: "CSCanvas",
-    transform: [{visibleRect: [6.179301914563023, 25.973163331943766, 76.91472545687796, -37.72890843769781]}],
+    transform: [{visibleRect: [6.179301914563023, 25.973163331943766, 76.91472545687796, -36.824620352639805]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  cinderella: {build: 2087, version: [3, 0, 2087]}
+  cinderella: {build: 2088, version: [3, 0, 2088]}
 });
     </script>
 </head>
