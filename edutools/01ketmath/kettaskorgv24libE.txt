@@ -114,7 +114,7 @@ inspect(T4,"ptsize",6);
 
 CtrkeyL=[
   [["Un","AC","PS","PL"]], //240510
-  [["Cap"],["Gre"],["Bld"],["Vec"]],
+  [["Cap"],["Gre"],["Txt"],["Vec"]],
   [["Cal"],["Lin"],[""]],
   [["Rec"]],
 //  [["BF","","Nxt"]],
@@ -174,21 +174,21 @@ Keyname():=(
     forall(1..4,nL2_4_(#+5)=tmp1_#);
   );
   if(keytype==4,
-    tmp1=apply(["a","b","c"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["a","b","c"],"$\text{"+#+"}$");
     forall(1..3,nL_1_(#)=tmp1_#);
-    tmp1=apply(["d","e","f","g"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["d","e","f","g"],"$\text{"+#+"}$");;
     forall(1..4,nL2_1_(#+5)=tmp1_(#));
-    tmp1=apply(["x","y","z"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["x","y","z"],"$\text{"+#+"}$");
     forall(1..3,nL_2_(#)=tmp1_#);
-    tmp1=apply(["h","i","j","k"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["h","i","j","k"],"$\text{"+#+"}$");
     forall(1..4,nL2_2_(#+5)=tmp1_#);
-    tmp1=apply(["r","s","t"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["r","s","t"],"$\text{"+#+"}$");
     forall(1..3,nL_3_(#)=tmp1_#);
-    tmp1=apply(["l","m","n","o"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["l","m","n","o"],"$\text{"+#+"}$");
     forall(1..4,nL2_3_(#+5)=tmp1_#);
-    tmp1=apply(["w"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["w"],"$\text{"+#+"}$");
     forall(1..1,nL_4_(#)=tmp1_#);
-    tmp1=apply(["p","q","r","s"],"$\mathbf{"+#+"}$");
+    tmp1=apply(["p","q","r","s"],"$\text{"+#+"}$");
     forall(1..4,nL2_4_(#+5)=tmp1_#);
   );
   if(keytype==5,
@@ -371,6 +371,7 @@ Right():=(
         tmp3=substring(Str,tmp+1,length(Str));
         Str=tmp1+tmp2+tmp3;
         Str=replace(Str,"??","?"); //240725
+        npos=length(tmp1+"?");
       );
       tmp=indexof(Str,"?"); //241018
       if(tmp==length(Str)-1,
@@ -445,25 +446,25 @@ rLL2=[70..80,81..91,92..102,103..113];
 sLL1=
 [
  [
-  ["La","A","{\alpha}","\mathbf{a}","{\vec{a}\;}"],
-  ["Lb","B","{\beta}","\mathbf{b}","{\vec{b}\;}"],
-  ["Lc","C","{\gamma}","\mathbf{c}","{\vec{c}\;}"],
+  ["La","A","{\alpha}","\text{a}","{\vec{a}\;}"],
+  ["Lb","B","{\beta}","\text{b}","{\vec{b}\;}"],
+  ["Lc","C","{\gamma}","\text{c}","{\vec{c}\;}"],
   "sin(?)","sq(?)",")","n7","n8","n9","+"
  ],
  [
-  ["Lx","X","{\kappa}","\mathbf{x}","{\vec{x}\;}"],
-  ["Ly","Y","{\iota}","\mathbf{y}","{\vec{y}\;}"],
-  ["Lz","Z","{\eta}","\mathbf{z}","{\vec{z}\;}"],
+  ["Lx","X","{\kappa}","\text{x}","{\vec{x}\;}"],
+  ["Ly","Y","{\iota}","\text{y}","{\vec{y}\;}"],
+  ["Lz","Z","{\eta}","\text{z}","{\vec{z}\;}"],
   "cos(?)","fr(?,?)",",","n4","n5","n6","-"
  ],
  [
-  ["Lr","R","{\rho}","\mathbf{r}","{\vec{r}\;}"],
-  ["Ls","S","{\sigma}","\mathbf{s}","\vec{s}\;"],
-  ["Lt","T","{\tau}","\mathbf{t}","{\vec{t}\;}"],
+  ["Lr","R","{\rho}","\text{r}","{\vec{r}\;}"],
+  ["Ls","S","{\sigma}","\text{s}","\vec{s}\;"],
+  ["Lt","T","{\tau}","\text{t}","{\vec{t}\;}"],
   "tan(?)","tfr(?,?)","(","n1","n2","n3","*"
  ],
  [
-   ["Lw","W","{\omega}","\mathbf{w}","{\vec{w}\;}"],
+   ["Lw","W","{\omega}","\text{w}","{\vec{w}\;}"],
   "_(?)","=","log(?)","ln(?)","^(?)","n0",".","(sp)","/"
  ]
 ];
@@ -471,38 +472,38 @@ sLL2=
 [
  [
   "(deg)","@","[","]","|",
-  ["Ld","D","{\Delta}","\mathbf{d}","{\vec{d}\;}"],
-  ["Le","E","{\delta}","\mathbf{e}","{\vec{e}\;}"],
-  ["Lf","F","{\varepsilon}","\mathbf{f}","{\vec{f}\;}"],
-  ["Lg","G","{\varphi}","\mathbf{g}","{\vec{g}\;}"],
+  ["Ld","D","{\Delta}","\text{d}","{\vec{d}\;}"],
+  ["Le","E","{\delta}","\text{e}","{\vec{e}\;}"],
+  ["Lf","F","{\varepsilon}","\text{f}","{\vec{f}\;}"],
+  ["Lg","G","{\varphi}","\text{g}","{\vec{g}\;}"],
   [0,"lim(?)",1,"lim(?)",2,"mat(?)"],
   "pi"
  ],
  [
   "(cross)","!","{","}","(neq)",
-  ["Lh","H","{\Theta}","\mathbf{h}","{\vec{h}\;}"],
-  ["Li","I","{\theta}","\mathbf{i}","{\vec{i}\;}"],
-  ["Lj","J","{\chi}","\mathbf{j}","{\vec{j}\;}"],
-  ["Lk","K","{\xi}","\mathbf{k}","{\vec{k}\;}"],
+  ["Lh","H","{\Theta}","\text{h}","{\vec{h}\;}"],
+  ["Li","I","{\theta}","\text{i}","{\vec{i}\;}"],
+  ["Lj","J","{\chi}","\text{j}","{\vec{j}\;}"],
+  ["Lk","K","{\xi}","\text{k}","{\vec{k}\;}"],
   [0,"int(",1,"int(",2,"det("],
   [0,"(inf)",1,"(inf)",2,"det("],
   "(inf)"
  ],
  [
   "dot(?)",":",";","(leq)","(geq)",
-  ["Ll","L","{\lambda}","\mathbf{l}","{\vec{l}\;}"],
-  ["Lm","M","{\mu}","\mathbf{m}","{\vec{m}\;}"],
-  ["Ln","N","{\nu}","\mathbf{n}","{\vec{n}\;}"],
-  ["Lo","O","{\omega}","\mathbf{o}","{\vec{o}\;}"],
+  ["Ll","L","{\lambda}","\text{l}","{\vec{l}\;}"],
+  ["Lm","M","{\mu}","\text{m}","{\vec{m}\;}"],
+  ["Ln","N","{\nu}","\text{n}","{\vec{n}\;}"],
+  ["Lo","O","{\omega}","\text{o}","{\vec{o}\;}"],
   "'",
   [1,"diff(?,)",2,"case(?)",0,"case(?)"]
  ],
  [
   "\","(pm)","(mp)","<",">",
-  ["Lp","P","{\Psi}","\mathbf{p}","{\vec{p}\;}"],
-  ["Lq","Q","{\psi}","\mathbf{q}","{\vec{q}\;}"],
-  ["Lu","U","{\Phi}","\mathbf{u}","{\vec{u}\;}"],
-  ["Lv","V","{\lambda}","\mathbf{v}","{\vec{v}\;}"],
+  ["Lp","P","{\Psi}","\text{p}","{\vec{p}\;}"],
+  ["Lq","Q","{\psi}","\text{q}","{\vec{q}\;}"],
+  ["Lu","U","{\Phi}","\text{u}","{\vec{u}\;}"],
+  ["Lv","V","{\lambda}","\text{v}","{\vec{v}\;}"],
   [1,"br(?)",2,"sum(?)",0,"sum(?)"],
   [0,"tx(?)",1,"par(?)",2,"(circ)"]
  ]

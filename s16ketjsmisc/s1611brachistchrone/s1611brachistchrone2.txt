@@ -1,19 +1,7 @@
-//ketlib
-use("KetCindyPlugin");
-Dircdy=loaddirectory;
-setdirectory(plugindirectory);
-import("ketcindy.ini");
-
-Ch=[0];
-Ctr=0;
-resetflg=0;
-pCorg=[0,0];
-pDorg=[0,0];
-
-//figures
 Ketinit();
 Setwindow([-1,6],[-6,1]);
-Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n"]);//no ketjs on
+//Setketcindyjs(["Sc=1.5","No=all","Fig=y","Ax=n"]);
+Setketcindyjs(["Sc=1.5","Color=offwhite"]);//no ketjs on
 Movetojs(30,[2,0.5],16);
 Movetojs(0,[3.5,0.5],16);
 Movetojs(80,[2,-0.5],12);
@@ -21,12 +9,20 @@ Setplaybuttons(0,-6,16);
 Putpoint("A",[0,0]);
 Putpoint("B",[5,-5]);
 inspect(A,"ptsize",2);
-inspect(B,"ptsize",2); //no ketjs off
+inspect(B,"ptsize",2);
+inspect(C,"ptsize",5.2);
+inspect(D,"ptsize",5.2);
+ //no ketjs off
+Text71.xy=[2.5,-5.7];
+Text72.xy=[3.3,-5.7];
+Text73.xy=[4.3,-5.7];
+Text74.xy=[5.1,-5.7];
 //A.xy=[0,0]; B.xy=[5,-5]; //only ketjs
 if(resetflg==1,
  Putpoint("C",[5/3,-5/3]);
  Putpoint("D",[10/3,-10/3]);
  Ptpos(C,C.xy); Ptpos(D,D.xy);
+ tmin=10;
  resetflg=0;
 );
 
@@ -76,11 +72,11 @@ if(|pCorg-pC|+|pDorg-pD|>Eps,
 //Slider("T",[0,-5.5],[2,-5.5]);
 //tt=T.x;
 
-str="sp=1"; //no ketjs
-//str=Textedit(80); only ketjs
+str="sp=1";
+//str=Textedit(80);
 tmp=Strsplit(str,"=");
 sp=tmp_2;
-sp=if(isstring(sp),sp=Reparse(sp));
+if(isstring(sp),sp=Reparse(sp));
 tt=Animationparam(0,sp,[0,te]);
 
 if(tt<=ts,
@@ -88,17 +84,25 @@ if(tt<=ts,
 ,
   Listplot("2",[[tt,0],[tt,1]],["nodisp"]);
   tmp=Intersectcrvs(de1,sg2);
-  ut=tmp_1_2;
-  p2=fxyr(ut);
-  Pointdata("t",p2,["Color=blue","Size=4"]);
+  if(length(tmp)>0,
+    ut=tmp_1_2;
+    p2=fxyr(ut);
+    Pointdata("t",p2,["Color=blue","Size=4"]);
+  );
 );
 Letter([[6,-3.1],"w",Sprintf(tt*1000,2)+"ms"],["Size=1.6"]);
-Letter([[6,-2.1],"w",Sprintf(te*1000,2)+"ms"],["Size=1.6"]);
+if(tt>te-Eps,
+  tmin=min([tmin,te]);
+);
+if(tmin<2,
+  Letter([[6,-2.1],"w",Sprintf(tmin*1000,2)+"ms"],["Size=1.6"]);
+);
 
 if(contains(Ch,1),
  fun="2.864585*[u-sin(u),-(1-cos(u))]";
  Paramplot("1",fun,"u=[0,2.412011]",["Color=red"]);
- Letter([[6,-1.1],"w","1304.06ms"],["Size=1.6","Color=red"]);
+
+// Letter([[6,-1.1],"w","1304.06ms"],["Size=1.6","Color=red"]);
 );
 
 Windispg();

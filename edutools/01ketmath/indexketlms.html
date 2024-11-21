@@ -21,7 +21,7 @@ ul li::before {
 <body>  
 <div style="padding: 50px">  
 <p><font size="10">&emsp;KeT-LMSの使い方</font>  
-<font size="6">&emsp;&emsp;&emsp;&emsp;2023-09-10</font></p> 
+<font size="6">&emsp;&emsp;&emsp;&emsp;2024-10-23</font></p> 
 <!--<div style="text-align: center">
 <img class="size2" src="ketmathscreen.png" alt="KeTMath画面">
 </div>-->
@@ -29,17 +29,22 @@ ul li::before {
 <ol>
 <font size="6"><li>準備</font>
   <ol>
-    <li>1. ketcindyを最新版(4.4.4x)に更新する</li>
-    <li>2. <a href="https://github.com/s-takato/ketmath">ket-lms</a>をダウンロード
+    <li>1. <a href="https://beta.cinderella.de">Cinderella</a>を最新版(b2088)に更新する</li>
+    <li>2. <a href="https://github.com/ketpic/ketcindy">KeTCindy</a>を最新版(4.4.97)に更新する</li>
       <ul>
-      <li>右下にあるReleases/Latestバージョンをクリック</li>
+      <li>Releases/Latestバージョンをクリック</li>
       <li>ダウンロードしたzipを解凍</li>
-      <li>適当なフォルダに移動．名称は任意(例えば math2023)</li>
+      <li>Windowsの場合，ファイル名のマイナス(-)をとる</li>
+      </ul>      
+    <li>3. <a href="https://github.com/s-takato/ketmath">ket-lms</a>をダウンロード
+      <ul>
+      <li>Windowsの場合，ファイル名のマイナス(-)をとる</li>
+      <li>subject01を適当なフォルダに移動．名称は任意(例えば math24)</li>
       <li>dataにstudent(y).txtとquestion(q-n).txtを入れる</br>
       &emsp;&emsp;yは年度など，q-nは問題記号-番号</li>
      </ul>
     </li>
-    <li>3. 複数のクラス(例えばA,B)があるとき
+    <li>3. 複数のクラス(例えばA,B)があるとき <font color="red">(修正中)</font>
       <ul>
       <li>dataA,dataBを作る</li>
       <li>questionは同名でもよい</li>
@@ -51,7 +56,7 @@ ul li::before {
   <ol>
   <li>&emsp;&emsp;<a href="indexketlmsques.html">KeT-LMSの課題ファイル</a>を参照</li>
   </ol>
-<font size="6"><li>[2] Maximaによる正解のチェック</font>
+<font size="6"><li>[2] Maximaによる正解のチェック <font color="red">(修正中)</font></font>
   <ol>
   <li>1. toolkemath.cdyを立ち上げる</li>
   <li>2.「Mxansを作成」を選ぶ
@@ -66,18 +71,20 @@ ul li::before {
   <ol>
   <li>1.「1.tasklineを作成」を押す</li>
     <ol>
-    <li>&emsp;・1taskline(q-n)と2anssheet(q-n)ができる</li>
+    <li>&emsp;・問題一覧が青字で表示される</li>
+    <li>&emsp;・ファイルを選ぶと赤字になり，そのファイルだけが使われる</li>
+    <li>&emsp;・「実行」を押すと1taskline(q-n)と2anssheet(q-n)ができる</li>
     </ol>
   <li>2.「2.kettaskに組込」を押す </li>
     <ol>
-    <li>(1) orgvかorgvnr(ketmathルール表なし)を選ぶ</li>
-    <li>(2) 実行するとkettask(q-n).htmlができる</li>
-    <li>(3) urlを学生に配付</li>
+    <li>(1) orgv(黒字)を選ぶとtaskline一覧が表示される(選択可)</li>
+    <li>(2) 「実行」を押すとkettask(q-n).htmlができる</li>
+    <li>(3) GCなどのプラットフォームにアップしてurlを学生に配付</li>
     </ol>
   <li>注)「総括ファイル作成」を実行しておくと問題の確認に便利</br>
     &emsp;&emsp;&emsp;sumqueall(q-n).txt（問題データすべて）</br>
     &emsp;&emsp;&emsp;sumqueque(q-n).txt（問のみ）</br>
-    &emsp;&emsp;&emsp;sumtable(q-n).csv（一覧表．ここでは無意味） 
+    &emsp;&emsp;&emsp;sumtable(q-n).csv（anschartがあると一覧表作成） 
   </ol> 
   
 <font size="6"><li>[4]  kettaskへのpngの組込み</font>

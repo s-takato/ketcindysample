@@ -1,3 +1,5 @@
+20241023
+kettaskorg changed (? etc )
 20220807
 Maxima dbg  ( case when errors occurred )
 20220705
