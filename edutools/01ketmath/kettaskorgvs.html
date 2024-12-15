@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>kettaskorgvE.cdy</title>
+    <title>kettaskorgvs.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -31,13 +31,14 @@ setdirectory(gethome());
 import("ketcindy.ini");
 setdirectory(Dircdy); //no ketjs
 import("ketcindylibkey.cs");
-import("kettaskorgvlibE.txt");
+import("kettaskorgvlib.txt");
 //inspect(Text5,"button.script","nqinc=1;");
 
-tail=Readlines(Dircdy,"ketmathruleinE.html");
+tail=Readlines(Dircdy,"ketmathrulein.html");
 tail=append(tail,Copyright());
 
-
+dispT2="";
+disptT4="";
 
 //Alltextkey(1,"keylisttaskvq");
 //Setkeystyle("keylisttaskvq");
@@ -93,7 +94,7 @@ Returntime(timedata):=(
 );
 
 if(length(quline)==0,
-quline="Q01::Let y=x^3-3x	[1]::Find y'	[2]::Solve y'=0";
+quline="Q01::関数y=x^3-3xについて答えよ	[1]::y'を求めよ	[2]::y'=0となるxを求めよ";
 shline="Q01---	[1]y'=	[2]x=?,?";
 sqline="01AA	2	2	2CR02BB	2	2	2";
 );
@@ -109,6 +110,8 @@ ch=2;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 //figures
+//20241021 ? retained
+//20241004 case of "---"
 //20240627 funflg (ansL,anspL)
 //20240621
 //20230417
@@ -148,7 +151,10 @@ if(startflg==1,
   Subsedit(9,"");
   pghead="";
 //  pgpos=[41.82,1.1];
-  stok=1;
+//  stok=1;
+  stno=0;
+  stok=2;
+  Subsedit(3,"St="+stno);
   startflg=0;
 );
 
@@ -189,15 +195,15 @@ Keytable(11,43,4,33,tmp,[1,1,0],nameL_2,[0,-0.5],21);
 
 //println(Colorcode("cmyk","rgb",[0,0.5,0.7,0]));
 
-tmp=[Op(1,Text11.xy)-1,-0.2];
+tmp=[Op(1,Text11.xy)-0.5,-0.2];
 Keytable(5,43,1,33,tmp,[0.74,0.95,1],CtrkeyL_6,[0,-0.5],21);
-tmp=[Op(1,Text39.xy)-0.5,-0.2];
+tmp=[Op(1,Text39.xy)-1,-0.2];
 Keytable(4,43,1,33,tmp,[1,0.79,0.85],CtrkeyL_1,[0,-0.5],21);
 tmp=poskey-[1*4.3+1,0];
 Keytable(1,43,4,33,tmp,0,CtrkeyL_2,[0,-0.5],21);
 tmp=poskey+[4.3*10+1,2*3.3];
 Keytable(1,43,2,33,tmp,0,CtrkeyL_3,[0,-0.5],21);
-tmp=[Op(1,Text34.xy)-1.0,-0.2];
+tmp=[Op(1,Text34.xy)-1.0,-0.2];//241215
 Keytable(0,[46,46,92],1,33,tmp,[0.9,1,0.7]
 ,CtrkeyL_5,[0,-0.5],21);
 tmp=poskey+[-4.3-1,-14];
@@ -266,8 +272,8 @@ if(stok>=2,
 //      StrLL=append(StrLL,Str);
       tmp=indexof(Str,"?");
       if(tmp>0,npos=tmp,npos=length(Str));
-//      tmp=replace(Str,"?","");
-      TexL_2=GettexformL(Str);
+      tmp=replace(Str,"?","");
+      TexL_2=GettexformL(tmp);
       ch=2;
       nqu=1;
     );
@@ -347,7 +353,7 @@ if(funflg==1,
       );
     );
   );
-  Str=replace(Str,"??","?");
+  Str=replace(Str,"??","?"); //241018
   StrLL=append(StrLL,Str);
   StrL_ch=Str;
   StrpL_ch=Strp;
@@ -423,6 +429,9 @@ if((recflg==1)&(stoknow==2),
   recflg=0;
 );
 
+if(length(dispT2)>0,drawtext(T2.xy,"   "+dispT2));
+if(length(dispT4)>0,drawtext(T4.xy,"   "+dispT4));
+
 Windispg();
 ;
 
@@ -440,14 +449,14 @@ var cdy = CindyJS({
   angleUnit: "°",
   geometry: [
     {name: "Text1", type: "EditableText", pos: [4.0, 3.9148936170212765, 0.1702127659574468], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 500, textsize: 24.0},
-    {name: "NE", type: "Free", pos: [4.0, 0.9905277401894178, 0.05254617222904457], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "NE", type: "Free", pos: [4.0, 1.0067746650167269, 0.05318084682256492], color: [1.0, 0.0, 0.0], labeled: true},
     {name: "Text2", type: "EditableText", pos: [4.0, -0.8516129032258064, 0.25806451612903225], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "T1", type: "Free", pos: [-3.5632183908045985, -4.0, -0.2298850574712644], color: [0.0, 0.0, 0.0], labeled: true, size: 6.0, border: false},
     {name: "T2", type: "Free", pos: [4.0, 3.664516129032257, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: true, size: 6.0, border: false},
     {name: "T3", type: "Free", pos: [4.0, 2.838709677419355, 0.25806451612903225], color: [0.0, 0.0, 0.0], labeled: true, size: 6.0, border: false},
     {name: "T4", type: "Free", pos: [4.0, 2.0129032258064514, 0.25806451612903225], color: [1.0, 0.784, 0.0], labeled: true, size: 6.0, border: false},
     {name: "SW", type: "Free", pos: [1.4694412402425423, -4.0, 0.12563238528778808], color: [1.0, 0.0, 0.0], labeled: true},
-    {name: "Text3", type: "EditableText", pos: [4.0, -0.8524590163934426, 0.06245120999219359], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 115, text: "St=", textsize: 21.0},
+    {name: "Text3", type: "EditableText", pos: [4.0, -0.8524590163934426, 0.06245120999219359], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 115, text: "St=0", textsize: 21.0},
     {name: "Text9", type: "EditableText", pos: [1.7714285714285714, -4.0, 0.11428571428571428], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 580, textsize: 24.0},
     {name: "Q2", type: "Free", pos: [4.0, 2.4477611940298507, 0.11940298507462686], color: [1.0, 0.784, 0.0], size: 6.0, border: false},
     {name: "Text10", type: "EditableText", pos: [4.0, -1.7391304347826086, 0.049689440993788817], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 350, textsize: 24.0},
@@ -566,9 +575,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     width: 1084,
-    height: 625,
+    height: 627,
     id: "CSCanvas",
-    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 120.1598039567807, -37.03167554433148]}],
+    transform: [{visibleRect: [8.498228741049642, 27.348845221196125, 120.1598039567807, -37.23769321078116]}],
     grid: 5.0,
     background: "rgb(168,176,192)"
   }],
